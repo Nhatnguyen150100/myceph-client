@@ -1,0 +1,52 @@
+@font-face {
+	font-family: "QuicksandBold";
+	src: local("QuicksandBold"), url("../fonts/Quicksand/static/Quicksand-Bold.ttf") format ("truetype");
+}
+
+@font-face {
+	font-family: "QuicksandLight";
+	src: local("QuicksandLight"), url("../fonts/Quicksand/static/Quicksand-Light.ttf") format ("truetype");
+}
+
+@font-face {
+	font-family: "QuicksandMedium";
+	src: local("QuicksandMedium"), url("../fonts/Quicksand/static/Quicksand-Medium.ttf") format ("truetype");
+}
+
+@font-face {
+	font-family: "QuicksandRegular";
+	src: local("QuicksandRegular"), url("../fonts/Quicksand/static/Quicksand-Regular.ttf") format ("truetype");
+}
+
+@font-face {
+	font-family: "QuicksandSemiBold";
+	src: local("QuicksandSemiBold"), url("../fonts/Quicksand/static/Quicksand-SemiBold.ttf") format ("truetype");
+}
+
+.bluedark-background{
+  background-color: #003366;
+}
+
+.greenlight-background{
+  background-color: #40bab5;
+}
+
+.bluedark-color{
+  color: #003366 !important;
+}
+
+.greenlight-color{
+  color: #40bab5 !important
+}
+
+.text-gray{
+  color: #4e4e4e !important;
+}
+
+.greenlight-color-hover:hover{
+  color: #40bab5;
+}
+
+.hoverGreenLight:hover{
+  background-color: #40bab5;
+}

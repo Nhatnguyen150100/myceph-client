@@ -4,10 +4,9 @@ const InterpolateHtmlPlugin = require("interpolate-html-plugin");
 
 module.exports = ({ mode } = { mode: "production" }) => {
   console.log(`mode is: ${mode}`);
-
   return {
     mode,
-    entry: "./src/index.js",
+    entry: "./src/index.jsx",
     output: {
       publicPath: "/",
       path: path.resolve(__dirname, "build"),
@@ -16,7 +15,7 @@ module.exports = ({ mode } = { mode: "production" }) => {
     module: {
       rules: [
         {
-          test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
+          test: /\.(png|svg|jpg|jpeg|gif|ico|ttf)$/,
           exclude: /node_modules/,
           use: ["url-loader", "file-loader"]
         },
