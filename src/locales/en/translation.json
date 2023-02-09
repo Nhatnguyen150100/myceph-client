@@ -1,5 +1,6 @@
 {
-    "functional": "Functional",
-    "class": "Class",
-    "text": "This is text"
+    "login": "login",
+    "register":"register",
+    "schedule":"schedule",
+    "patient list":"patient list"
 }

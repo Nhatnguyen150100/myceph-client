@@ -1,6 +1,7 @@
 {
-    "functional": "Hàm",
-    "class": "Lớp",
-    "text": "Đây là văn bản"
+    "login": "đăng nhập",
+    "register":"đăng kí",
+    "schedule":"Lịch hẹn",
+    "patient list":"danh sách bệnh nhân"
 }
 

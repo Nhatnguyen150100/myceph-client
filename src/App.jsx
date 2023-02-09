@@ -1,11 +1,12 @@
 import React from "react";
-import NavbarComponent from "./component/NavbarComponent.jsx";
+import { Routes, Route } from 'react-router-dom';
+import HomePage from "./pages/HomePage.jsx";
 
 function App() {
   return (
-    <div className="App">
-      <NavbarComponent />
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+    </Routes>
   );
 }
 

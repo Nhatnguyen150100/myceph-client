@@ -4,19 +4,17 @@ import App from './App.jsx';
 import reportWebVitals from './reportWebVitals.jsx';
 import i18n from './translation/i18n.jsx';
 import { I18nextProvider } from 'react-i18next';
+import { BrowserRouter as Router } from 'react-router-dom';
 import '../public/stylesheets/style.css';
+import '../public/stylesheets/font.css';
 import './index.css';
 
 //bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-//fonts
-import '../public/fonts/Quicksand/static/Quicksand-Bold.ttf';
-import '../public/fonts/Quicksand/static/Quicksand-Light.ttf';
-import '../public/fonts/Quicksand/static/Quicksand-Medium.ttf';
-import '../public/fonts/Quicksand/static/Quicksand-Regular.ttf';
-import '../public/fonts/Quicksand/static/Quicksand-SemiBold.ttf';
+import '../public/fonts/UTM Avo.ttf';
+import '../public/fonts/UTM AvoBold.ttf';
 
 //redux
 import { Provider } from 'react-redux';
@@ -31,7 +29,9 @@ root.render(
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
 		    <PersistGate loading={null} persistor={persistor}>
-          <App />
+          <Router>
+            <App />
+          </Router>
           <LoadingModal />
         </PersistGate>
 	    </Provider>
