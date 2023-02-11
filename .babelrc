@@ -1,25 +1,4 @@
 {
-    "presets": [
-        ["@babel/preset-react", {"runtime": "automatic"}],
-        [
-            "@babel/preset-env",
-            {
-                "targets": {
-                    "browsers": "last 2 versions"
-                },
-                "modules": false,
-                "loose": false
-            }
-        ]
-    ],
-    "plugins": [
-        "transform-class-properties"
-    ],
-    "env": {
-        "test": {
-            "plugins": [
-                "transform-es2015-modules-commonjs"
-            ]
-        }
-    }
+  "plugins": ["@babel/syntax-dynamic-import"],
+  "presets": ["@babel/preset-env", "@babel/preset-react"]
 }

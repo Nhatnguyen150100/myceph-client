@@ -22,6 +22,7 @@ import { Provider } from 'react-redux';
 import { store, persistor } from './redux/ReduxStore.jsx';
 import { PersistGate } from 'redux-persist/integration/react';
 import LoadingModal from './component/LoadingModal.jsx';
+import ToastContainerComponent from './component/ToastContainerComponent.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -31,6 +32,7 @@ root.render(
 		    <PersistGate loading={null} persistor={persistor}>
           <Router>
             <App />
+            <ToastContainerComponent />
           </Router>
           <LoadingModal />
         </PersistGate>

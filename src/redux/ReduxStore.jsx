@@ -8,6 +8,7 @@ const persistConfig = {
 	key: 'root',
 	version: 1,
 	storage,
+	backList: ['general']
 };
 
 const rootReducer = combineReducers({doctor: DoctorSlice, general: GeneralSlice});

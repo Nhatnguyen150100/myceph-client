@@ -1,16 +1,16 @@
-.bluedark-background{
+.mc-background{
   background-color: #003366;
 }
 
-.greenlight-background{
+.mc-pale-background{
   background-color: #40bab5;
 }
 
-.bluedark-color{
+.mc-color{
   color: #003366 !important;
 }
 
-.greenlight-color{
+.mc-pale-color{
   color: #40bab5 !important
 }
 
@@ -18,12 +18,12 @@
   color: #4e4e4e !important;
 }
 
-.bluedark-color-hover:hover{
+.mc-color-hover:hover{
   color: #003366 !important;
 }
 
-.pinklight-color-hover:hover{
-  color: #9abceb !important;
+.mc-color-hover:hover{
+  color: #40bab5 !important;
 }
 
 .hoverGreenLight:hover{
@@ -37,4 +37,33 @@
   min-height: 1em;
   background-color: currentcolor;
   opacity: .25;
+}
+
+.mc-heading{
+  font-family: sans-serif;
+  font-weight: 700;
+  color: #043d5d;
+}
+
+.btn-hover-bg:hover{
+  color: white !important;
+  background-color: #40bab5 !important;
+  border-color: #40bab5 !important;
+  --bs-btn-color:#40bab5 !important;
+}
+
+.btn-outline-light{
+  --bs-btn-hover-color: #043d5d !important;
+  --bs-btn-active-color: #043d5d !important;
+}
+
+.btn-primary{
+  --bs-btn-bg: #043d5d !important;
+  --bs-btn-border-color: #043d5d !important;
+  --bs-btn-hover-bg: #40bab5 !important;
+  --bs-btn-hover-border-color: #40bab5 !important;
+  --bs-btn-active-bg: #40bab5 !important;
+  --bs-btn-active-border-color: #40bab5 !important;
+  --bs-btn-disabled-bg: #043d5d !important;
+  --bs-btn-disabled-border-color: #043d5d !important;
 }
