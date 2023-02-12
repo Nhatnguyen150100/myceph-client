@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import NavbarComponent from '../component/NavbarComponent.jsx';
 import { useTranslation } from 'react-i18next';
-import { isValidEmail, SITE_KEY_RECAPTCHA } from '../common/Untility.jsx';
+import { isValidEmail, SITE_KEY_RECAPTCHA } from '../common/Utility.jsx';
 import { useDispatch } from 'react-redux';
 import { setAppName } from '../redux/GeneralSlice.jsx';
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
@@ -25,7 +25,7 @@ function RegisterPage(props) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   useEffect(()=>{
-    dispatch(setAppName(`Myceph - ${t('register')}`));
+    dispatch(setAppName(`Myceph - ${t('sign up')}`));
   },[])
 
   const onRegistration = (e) => {

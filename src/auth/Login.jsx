@@ -7,7 +7,7 @@ import ButtonComponent from "../common/ButtonComponent.jsx";
 import NavbarComponent from "../component/NavbarComponent.jsx";
 import { postToServer } from "../services/getAPI.jsx";
 import { setDataDoctor } from "../redux/DoctorSlice.jsx";
-import { cookies, isValidEmail, SITE_KEY_RECAPTCHA } from "../common/Untility.jsx";
+import { cookies, isValidEmail, SITE_KEY_RECAPTCHA } from "../common/Utility.jsx";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { setAppName } from "../redux/GeneralSlice.jsx";
 

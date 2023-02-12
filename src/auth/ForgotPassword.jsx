@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ButtonComponent from "../common/ButtonComponent.jsx";
-import { isValidEmail, SITE_KEY_RECAPTCHA } from "../common/Untility.jsx";
+import { isValidEmail, SITE_KEY_RECAPTCHA } from "../common/Utility.jsx";
 import NavbarComponent from "../component/NavbarComponent.jsx";
 import { setAppName } from "../redux/GeneralSlice.jsx";
 import { getToServer, postToServer } from "../services/getAPI.jsx";
