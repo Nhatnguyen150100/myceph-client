@@ -1,61 +1,127 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { convertISOToVNDateString, toISODateString } from "../../common/Utility.jsx";
+import UploadImage from "../../common/UploadImage.jsx";
+import { convertISOToVNDateString, deleteImage, splitAvatar, splitPublic_id, toISODateString, upLoadImage } from "../../common/Utility.jsx";
+import { logOutDoctor, setDataDoctor } from "../../redux/DoctorSlice.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
-import { getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
+import { getToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
 
 const WIDTH_HEAD = "150px";
 
 export default function DoctorSetting(props){
-  const loading = useSelector(state=>state.general.loading);
   const doctor = useSelector(state=>state.doctor.data);
+  const [image,setImage] = useState('');
+  const [newAvatarUrl,setNewAvatarUrl] = useState();
   const [selectedTab,setSelectedTab] = useState(0);
-  const {t} = useTranslation();
-  const dispatch = useDispatch();
   const [editMode,setEditMode] = useState(false);
   const [fullName,setFullName] = useState();
+  const [avatar,setAavatar] = useState();
+  const [publicIdAvatar,setPublicIdAvatar] = useState();
   const [gender,setGender] = useState();
   const [birthday,setBirthday] = useState();
   const [phoneNumber,setPhoneNumber] = useState();
   const [description,setDescription] = useState();
+
+  let currentTab = null;
+  
+  const {t} = useTranslation();
+  const dispatch = useDispatch();
+  const nav = useNavigate();
 
   useEffect(()=>{
     getInformation();
   },[])
 
   const getInformation = () =>{
-    dispatch(setLoadingModal(true));
-    getToServerWithToken(`/v1/doctor/getInformationDoctor/${doctor.email}`).then(result => {
-      setFullName(result.data.fullName);
-      setGender(result.data.gender);
-      setBirthday(result.data.birthday);
-      setPhoneNumber(result.data.phoneNumber);
-      setDescription(result.data.description);
-    }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)))
+    return new Promise((resolve, reject) =>{
+      dispatch(setLoadingModal(true));
+      getToServerWithToken(`/v1/doctor/getInformationDoctor/${doctor.email}`,dispatch).then(result => {
+        dispatch(setDataDoctor(result.data));
+        setFullName(result.data.fullName);
+        setGender(result.data.gender);
+        setBirthday(result.data.birthday);
+        setPhoneNumber(result.data.phoneNumber);
+        setDescription(result.data.description);
+        setAavatar(splitAvatar(result.data.avatar));
+        setPublicIdAvatar(splitPublic_id(result.data.avatar));
+        resolve();
+      }).catch((err) => {
+    
+        if(!err.isLogin){
+          dispatch(logOutDoctor());
+          toast.warning(t(err.message));
+          nav("/login");
+        }else{
+          toast.error(t(err.message));
+        }
+      }).finally(() => dispatch(setLoadingModal(false)))
+    });
   }
 
   const onCancel = () => {
+    setFullName(doctor.fullName);
+    setGender(doctor.gender);
+    setBirthday(doctor.birthday);
+    setPhoneNumber(doctor.phoneNumber);
+    setDescription(doctor.description);
+    setImage('');
+    setNewAvatarUrl('');
     setEditMode(false);
-    getInformation();
   }
 
-  const onUpdate = () => {
+  const onUpdate = async () => {
     dispatch(setLoadingModal(true));
-    putToServerWithToken(`/v1/doctor/updateInformation/${doctor.id}`,{
-      fullName: fullName,
-      gender: gender,
-      birthday: birthday,
-      phoneNumber: phoneNumber,
-      description: description
-    }).then(result => {
-      onCancel();
-      getInformation();
-    }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)))
+    if(image){
+      if(avatar!=='/assets/images/doctor.png'){
+        deleteImage(publicIdAvatar).then(async (response) => {
+          if(response.data.result==="ok"){
+            const responseData = await upLoadImage(image);
+            const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
+            putToServerWithToken(`/v1/doctor/updateInformation/${doctor.id}`,{
+              fullName: fullName,
+              avatar: newAvatar,
+              gender: gender,
+              birthday: birthday,
+              phoneNumber: phoneNumber,
+              description: description
+            }).then(result => {
+              getInformation().then(()=>onCancel());
+            }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
+          }else{
+            toast.error(t('update avatar failed'));
+            dispatch(setLoadingModal(false))
+          }
+        })
+      }else{
+        const responseData = await upLoadImage(image);
+        const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
+        putToServerWithToken(`/v1/doctor/updateInformation/${doctor.id}`,{
+          fullName: fullName,
+          avatar: newAvatar,
+          gender: gender,
+          birthday: birthday,
+          phoneNumber: phoneNumber,
+          description: description
+        }).then(result => {
+          getInformation().then(()=>onCancel());
+        }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
+      }
+    }else{
+      putToServerWithToken(`/v1/doctor/updateInformation/${doctor.id}`,{
+        fullName: fullName,
+        avatar: avatar,
+        gender: gender,
+        birthday: birthday,
+        phoneNumber: phoneNumber,
+        description: description
+      }).then(result => {
+        getInformation().then(()=>onCancel());
+      }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
+    }
   }
-
-  let currentTab = null;
 
   switch(selectedTab){
     case 0: currentTab = <div className="d-flex flex-column h-100">
@@ -83,8 +149,11 @@ export default function DoctorSetting(props){
         }
       </div>
       <div className="d-flex flex-row flex-grow-1">
-        <div className="border d-flex justify-content-center align-items-center rounded mc-background-color-white" style={{height:"400px",width:"300px"}}>
-          <img alt="avatar" src="/assets/images/doctor.png" height={"250px"}/>
+        <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:"400px",width:"300px"}}>
+          {
+            editMode && <UploadImage className="position-absolute" style={{height:"50px",width:"50px",top:"0px",right:"0px"}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
+          }
+          <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatar):avatar}`} style={{height:"400px",width:"300px",objectFit:"contain"}}/>
         </div>
         <div className="d-flex flex-column flex-grow-1 ms-5">
           <div className="d-flex border-bottom mb-4">
@@ -149,7 +218,6 @@ export default function DoctorSetting(props){
     </div>
     break;
     case 1: currentTab = <div className="d-flex my-3">
-      other profile
     </div>
     break;
     default: currentTab = <div>error</div>
