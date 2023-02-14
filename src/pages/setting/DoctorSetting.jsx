@@ -72,6 +72,19 @@ export default function DoctorSetting(props){
     setEditMode(false);
   }
 
+  const pushDataToServer = (avatar) =>{
+    putToServerWithToken(`/v1/doctor/updateInformation/${doctor.id}`,{
+      fullName: fullName,
+      avatar: avatar,
+      gender: gender,
+      birthday: birthday,
+      phoneNumber: phoneNumber,
+      description: description
+    }).then(result => {
+      getInformation().then(()=>onCancel());
+    }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
+  }
+
   const onUpdate = async () => {
     dispatch(setLoadingModal(true));
     if(image){
@@ -80,16 +93,7 @@ export default function DoctorSetting(props){
           if(response.data.result==="ok"){
             const responseData = await upLoadImage(image);
             const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
-            putToServerWithToken(`/v1/doctor/updateInformation/${doctor.id}`,{
-              fullName: fullName,
-              avatar: newAvatar,
-              gender: gender,
-              birthday: birthday,
-              phoneNumber: phoneNumber,
-              description: description
-            }).then(result => {
-              getInformation().then(()=>onCancel());
-            }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
+            pushDataToServer(newAvatar);
           }else{
             toast.error(t('update avatar failed'));
             dispatch(setLoadingModal(false))
@@ -98,28 +102,10 @@ export default function DoctorSetting(props){
       }else{
         const responseData = await upLoadImage(image);
         const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
-        putToServerWithToken(`/v1/doctor/updateInformation/${doctor.id}`,{
-          fullName: fullName,
-          avatar: newAvatar,
-          gender: gender,
-          birthday: birthday,
-          phoneNumber: phoneNumber,
-          description: description
-        }).then(result => {
-          getInformation().then(()=>onCancel());
-        }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
+        pushDataToServer(newAvatar);
       }
     }else{
-      putToServerWithToken(`/v1/doctor/updateInformation/${doctor.id}`,{
-        fullName: fullName,
-        avatar: avatar,
-        gender: gender,
-        birthday: birthday,
-        phoneNumber: phoneNumber,
-        description: description
-      }).then(result => {
-        getInformation().then(()=>onCancel());
-      }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
+      pushDataToServer('');
     }
   }
 
