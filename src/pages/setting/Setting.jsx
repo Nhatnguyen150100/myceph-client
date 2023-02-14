@@ -1,34 +1,58 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
-import { setAppName } from "../../redux/GeneralSlice.jsx";
-import DoctorSetting from "./DoctorSetting.jsx";
+import { setDataClinic } from "../../redux/ClinicSlice.jsx";
+import { logOutDoctor } from "../../redux/DoctorSlice.jsx";
+import { setAppName, setLoadingModal } from "../../redux/GeneralSlice.jsx";
+import { getToServerWithToken } from "../../services/getAPI.jsx";
+import ClinicSetting from "./clinic/ClinicSetting.jsx";
+import DoctorSetting from "./doctor/DoctorSetting.jsx";
 
-const FONT_SIZE = '17px';
-const FONT_SIZE_HEADER = '20px';
+
+const FONT_SIZE = '15px';
+const FONT_SIZE_HEADER = '17px';
 
 export default function Setting(props){
-    const {t} = useTranslation();
-    const dispatch = useDispatch();
-    const [selectedTab,setSelectedTab] = useState(0);
-    const [tabName,setTabName] = useState('doctor');
+  const {t} = useTranslation();
+  const dispatch = useDispatch();
+  const [selectedTab,setSelectedTab] = useState(0);
+  const [tabName,setTabName] = useState('doctor');
+  const doctor = useSelector(state=>state.doctor.data);
+  const nav = useNavigate();
 
-    let currentTab = null;
-
-    switch(selectedTab){
-      case 0: currentTab = <DoctorSetting FONT_SIZE={FONT_SIZE}/>
-      break;
-      case 1: currentTab = <div>
-        clinic
-      </div>
-      break;
-      default: currentTab = <div>Error</div>
+  const getAllClinic = () => {
+    dispatch(setLoadingModal(true));
+    getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
+      dispatch(setDataClinic(result.data));
+    }).catch((err) =>{
+      if(!err.isLogin){
+        dispatch(logOutDoctor());
+        toast.info(t(err.message));
+        nav("/login");
+      }else{
+        toast.error(t(err.message));
+      }
     }
+    ).finally(() => dispatch(setLoadingModal(false)));
+  }
 
-    useEffect(()=>{
-      dispatch(setAppName(`Myceph - ${t('setting')}`));
-    },[])
+  let currentTab = null;
+
+  switch(selectedTab){
+    case 0: currentTab = <DoctorSetting FONT_SIZE={FONT_SIZE}/>
+      break;
+    case 1: currentTab = <ClinicSetting FONT_SIZE={FONT_SIZE}/>
+      break;
+    default: currentTab = <div>Error</div>
+  }
+
+  useEffect(()=>{
+    dispatch(setAppName(`Myceph - ${t('setting')}`));
+    getAllClinic();
+  },[])
 
   return <div className="d-flex flex-column justify-content-start align-items-center">
     <NavbarComponent />
@@ -64,7 +88,7 @@ export default function Setting(props){
         }
       </div>
       <div className="w-100 mc-background py-1 d-flex justify-content-center">
-        <span className="text-white text-center text-capitalize" style={{fontSize:FONT_SIZE_HEADER}}>{tabName}</span>
+        <span className="text-white text-center text-uppercase fw-bold " style={{fontSize:FONT_SIZE_HEADER}}>{tabName}</span>
       </div>
       {currentTab}
     </div>
