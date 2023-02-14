@@ -23,6 +23,9 @@ export default function DoctorSetting(props){
   const [gender,setGender] = useState();
   const [birthday,setBirthday] = useState();
   const [phoneNumber,setPhoneNumber] = useState();
+  const [speciality,setSpeciality] = useState();
+  const [diploma,setDiploma] = useState();
+  const [position,setPosition] = useState();
   const [description,setDescription] = useState();
 
   let currentTab = null;
@@ -44,12 +47,14 @@ export default function DoctorSetting(props){
         setGender(result.data.gender);
         setBirthday(result.data.birthday);
         setPhoneNumber(result.data.phoneNumber);
+        setSpeciality(result.data.speciality);
+        setDiploma(result.data.diploma);
+        setPosition(result.data.position);
         setDescription(result.data.description);
         setAavatar(splitAvatar(result.data.avatar));
         setPublicIdAvatar(splitPublic_id(result.data.avatar));
         resolve();
       }).catch((err) => {
-    
         if(!err.isLogin){
           dispatch(logOutDoctor());
           toast.warning(t(err.message));
@@ -57,6 +62,7 @@ export default function DoctorSetting(props){
         }else{
           toast.error(t(err.message));
         }
+        reject(err.message);
       }).finally(() => dispatch(setLoadingModal(false)))
     });
   }
@@ -66,6 +72,9 @@ export default function DoctorSetting(props){
     setGender(doctor.gender);
     setBirthday(doctor.birthday);
     setPhoneNumber(doctor.phoneNumber);
+    setSpeciality(doctor.speciality);
+    setDiploma(doctor.diploma);
+    setPosition(doctor.position);
     setDescription(doctor.description);
     setImage('');
     setNewAvatarUrl('');
@@ -79,9 +88,12 @@ export default function DoctorSetting(props){
       gender: gender,
       birthday: birthday,
       phoneNumber: phoneNumber,
+      speciality: speciality,
+      diploma: diploma,
+      position: position,
       description: description
     }).then(result => {
-      getInformation().then(()=>onCancel());
+      getInformation().then(()=>setEditMode(false));
     }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
   }
 
@@ -135,11 +147,11 @@ export default function DoctorSetting(props){
         }
       </div>
       <div className="d-flex flex-row flex-grow-1">
-        <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:"400px",width:"300px"}}>
+        <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:"350px",width:"250px"}}>
           {
             editMode && <UploadImage className="position-absolute" style={{height:"50px",width:"50px",top:"0px",right:"0px"}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
           }
-          <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatar):avatar}`} style={{height:"400px",width:"300px",objectFit:"contain"}}/>
+          <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatar):avatar}`} style={{height:"350px",width:"250px",objectFit:"cover"}}/>
         </div>
         <div className="d-flex flex-column flex-grow-1 ms-5">
           <div className="d-flex border-bottom mb-4">
@@ -188,6 +200,33 @@ export default function DoctorSetting(props){
               <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none"}} type="number" value={phoneNumber} onChange={e=>setPhoneNumber(e.target.value)}/>
               :
               <span className="text-capitalize text-gray fw-bold">{phoneNumber?phoneNumber:'no data'}</span>
+            }
+          </div>
+          <div className="d-flex border-bottom mb-4">
+            <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('speciality')}:</label>
+            {
+              editMode ? 
+              <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none"}} value={speciality} onChange={e=>setSpeciality(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray fw-bold">{speciality?speciality:'no data'}</span>
+            }
+          </div>
+          <div className="d-flex border-bottom mb-4">
+            <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('diploma')}:</label>
+            {
+              editMode ? 
+              <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none"}} value={diploma} onChange={e=>setDiploma(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray fw-bold">{diploma?diploma:'no data'}</span>
+            }
+          </div>
+          <div className="d-flex border-bottom mb-4">
+            <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('position')}:</label>
+            {
+              editMode ? 
+              <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none"}} value={position} onChange={e=>setPosition(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray fw-bold">{position?position:'no data'}</span>
             }
           </div>
           <div className="d-flex border-bottom">

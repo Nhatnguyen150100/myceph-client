@@ -37,12 +37,14 @@ function RegisterPage(props) {
     else {
       setLoading(true);
       executeRecaptcha('register').then(token => 
-        postToServer('/v1/doctor/register', { email: email, password: password, tokenRecaptcha: token }).then((result) => {
+        postToServer(`/v1/doctor/${process.env.NODE_ENV==='development'?'registerDev':'register'}`, { email: email, password: password, tokenRecaptcha: token }).then((result) => {
           toast.success(result.message);
           setEmail('');
           setPassword('');
           setConfirmPassword('');
-          setIsDone(true);
+          if(process.env.NODE_ENV==='production') {
+            setIsDone(true);
+          }
         })
         .catch((err) => toast.error(t(err.message))).finally(() => setLoading(false))
       );
@@ -67,6 +69,10 @@ function RegisterPage(props) {
         </div>
         <div className="mt-3" style={{width:"300px"}}>
           <ButtonComponent label={t("going to email")} onClick={e=>window.open("https://mail.google.com")}/>
+        </div>
+        <div className="mt-3 d-flex flex-row justify-content-end">
+          <span className="me-1">{t('Back to login:')}</span>
+          <Link className="text-capitalize mc-color mc-color-hover" style={{textDecoration:"none"}} to={'/login'}>{t('login')}</Link>
         </div>
       </div>
       :     
