@@ -9,7 +9,7 @@ import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
 import { convertISOToVNDateString, deleteImage, splitAvatar, splitFirst, splitLast, splitPublic_id, toISODateString, upLoadImage } from "../../../common/Utility.jsx";
 import { clearClinicSlice, setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
-import { logOutDoctor, setDataDoctor } from "../../../redux/DoctorSlice.jsx";
+import { logOutDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 
@@ -43,7 +43,7 @@ export default function Myclinic(props){
 
   useEffect(()=>{
     if(clinic.idClinicDefault) getInformation();
-  },[clinic.idClinicDefault])
+  },[clinic.idClinicDefault]);
 
   const getInformation = () =>{
     return new Promise((resolve, reject) =>{
@@ -58,7 +58,7 @@ export default function Myclinic(props){
         setPublicIdAvatar(splitPublic_id(result.data.avatarClinic));
         resolve();
       }).catch((err) => {
-        if(!err.isLogin){
+        if(err.isLogin===false){
           dispatch(logOutDoctor());
           dispatch(clearClinicSlice());
           nav("/login");
@@ -81,7 +81,7 @@ export default function Myclinic(props){
         setNewClinic('');
         getAllClinic().then(()=>resolve());
       }).catch((err) => {
-        if(!err.isLogin){
+        if(err.isLogin===false){
           dispatch(logOutDoctor());
           dispatch(clearClinicSlice());
           nav("/login");
@@ -187,26 +187,14 @@ export default function Myclinic(props){
           {
             editMode ?
             <div>
-              <button type="button" className="btn btn-outline-success p-0 text-white-hover me-2" title={t('save')} onClick={onUpdate}>
-                <span className="material-symbols-outlined mt-1 mx-1" style={{fontSize:FONT_SIZE_ICON}}>
-                  done
-                </span>
-              </button>
-              <button type="button" className="btn btn-outline-danger p-0 text-white-hover" title={t('cancel')} onClick={onCancel}>
-                <span className="material-symbols-outlined mt-1 mx-1" style={{fontSize:FONT_SIZE_ICON}}>
-                  close
-                </span>
-              </button>
+              <IconButtonComponent className="btn-outline-success me-2" onClick={onUpdate} icon="done" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("save")}/>
+              <IconButtonComponent className="btn-outline-danger" onClick={onCancel} icon="close" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("cancel")}/>
             </div>
             :
             <div>
               {
                 clinic.roleOfDoctor === 'admin' &&
-                <button type="button" className="btn btn-outline-warning p-0 text-white-hover" title={t('edit profile')} onClick={e=>setEditMode(true)}>
-                  <span className="material-symbols-outlined mt-1 mx-1" style={{fontSize:FONT_SIZE_ICON}}>
-                    edit
-                  </span>
-                </button>
+                <IconButtonComponent className="btn-outline-warning" onClick={e=>setEditMode(true)} icon="edit" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("edit")}/>
               }
             </div>
           }

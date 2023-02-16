@@ -43,6 +43,11 @@
   background-color: #f7f7f7;
 }
 
+.mc-heading-middle{
+  font-family: sans-serif;
+  font-weight: 400;
+}
+
 .mc-heading{
   font-family: sans-serif;
   font-weight: 700;

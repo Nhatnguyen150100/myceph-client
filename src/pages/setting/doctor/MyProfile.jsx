@@ -60,7 +60,7 @@ export default function MyProfile(props){
         setPublicIdAvatar(splitPublic_id(result.data.avatar));
         resolve();
       }).catch((err) => {
-        if(!err.isLogin){
+        if(err.isLogin===false){
           dispatch(logOutDoctor());
           dispatch(clearClinicSlice());
           nav("/login");

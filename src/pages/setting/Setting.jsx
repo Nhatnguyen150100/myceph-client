@@ -18,7 +18,7 @@ const FONT_SIZE_HEADER = '17px';
 export default function Setting(props){
   const {t} = useTranslation();
   const dispatch = useDispatch();
-  const [selectedTab,setSelectedTab] = useState(0);
+  const [selectedTab,setSelectedTab] = useState(1);
   const [tabName,setTabName] = useState('doctor');
   const doctor = useSelector(state=>state.doctor.data);
   const nav = useNavigate();
@@ -34,7 +34,7 @@ export default function Setting(props){
       })
       dispatch(setDataClinic(result.data));
     }).catch((err) =>{
-      if(!err.isLogin){
+      if(err.isLogin===false){
         dispatch(logOutDoctor());
         dispatch(clearClinicSlice())
         nav("/login");

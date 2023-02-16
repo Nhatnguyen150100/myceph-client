@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import MemberOfClinic from "./MemberOfClinic.jsx";
 import Myclinic from "./Myclinic.jsx";
 
 export default function ClinicSetting(props){
-  const [selectedTab,setSelectedTab] = useState(0);
+  const [selectedTab,setSelectedTab] = useState(1);
   const {t} = useTranslation();
   let currentTab = null;
 
   switch(selectedTab){
     case 0: currentTab = <Myclinic FONT_SIZE={props.FONT_SIZE} />;
     break;
-    case 1: currentTab = <div>
-      member of clinic
-    </div>
+    case 1: currentTab = <MemberOfClinic FONT_SIZE={props.FONT_SIZE} />;
     break;
     default : currentTab = <div>error</div>
   }
