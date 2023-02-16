@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { cookies } from "../common/Utility.jsx";
+import { clearClinicSlice } from "../redux/ClinicSlice.jsx";
 import { logOutDoctor } from "../redux/DoctorSlice.jsx";
 
 export const baseURL = process.env.BASE_URL_DEVELOPMENT;
@@ -38,6 +39,7 @@ export function postToServerWithToken(url, bodyObject,dispatch) {
 				if(response.status==403){
 					if(response.isLogin===false){
 						dispatch(logOutDoctor());
+						dispatch(clearClinicSlice());
 					}
 				}
 				if (response.status === 419) {

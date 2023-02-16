@@ -4,15 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
-import { setDataClinic } from "../../redux/ClinicSlice.jsx";
+import { clearClinicSlice, setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
 import { logOutDoctor } from "../../redux/DoctorSlice.jsx";
 import { setAppName, setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../../services/getAPI.jsx";
 import ClinicSetting from "./clinic/ClinicSetting.jsx";
 import DoctorSetting from "./doctor/DoctorSetting.jsx";
 
-
 const FONT_SIZE = '15px';
+const FONT_SIZE_ICONS = '45px';
 const FONT_SIZE_HEADER = '17px';
 
 export default function Setting(props){
@@ -26,11 +26,17 @@ export default function Setting(props){
   const getAllClinic = () => {
     dispatch(setLoadingModal(true));
     getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
+      result.data.map(clinic=> {
+        if(clinic.roleOfDoctor==='admin'){
+          dispatch(setIdClinicDefault(clinic.id));
+          dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
+        }
+      })
       dispatch(setDataClinic(result.data));
     }).catch((err) =>{
       if(!err.isLogin){
         dispatch(logOutDoctor());
-        toast.info(t(err.message));
+        dispatch(clearClinicSlice())
         nav("/login");
       }else{
         toast.error(t(err.message));
@@ -42,9 +48,9 @@ export default function Setting(props){
   let currentTab = null;
 
   switch(selectedTab){
-    case 0: currentTab = <DoctorSetting FONT_SIZE={FONT_SIZE}/>
+    case 0: currentTab = <DoctorSetting FONT_SIZE={FONT_SIZE} setSelectedTab={setSelectedTab}/>
       break;
-    case 1: currentTab = <ClinicSetting FONT_SIZE={FONT_SIZE}/>
+    case 1: currentTab = <ClinicSetting FONT_SIZE={FONT_SIZE} setSelectedTab={setSelectedTab}/>
       break;
     default: currentTab = <div>Error</div>
   }
@@ -54,34 +60,34 @@ export default function Setting(props){
     getAllClinic();
   },[])
 
-  return <div className="d-flex flex-column justify-content-start align-items-center">
+  return <div className="d-flex flex-column justify-content-start align-items-center h-100">
     <NavbarComponent />
     <div className="d-flex flex-column h-100 container">
       <div className="d-flex w-100 justify-content-start align-items-center my-2">
         {
           selectedTab === 0 ? 
-          <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white' style={{height:"50px"}}>
-            <span className="material-symbols-outlined m-0" style={{fontSize:"50px",fontWeight:"100"}}>
+          <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white' style={{height:FONT_SIZE_ICONS}}>
+            <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               clinical_notes
             </span>
           </div>
           :
-          <button className='btn btn-hover-bg p-0 me-3 border-0' style={{height:"50px"}} onClick={e=>{setSelectedTab(0);setTabName(t('doctor'))}}>
-            <span className="material-symbols-outlined m-0" style={{fontSize:"50px",fontWeight:"100"}}>
+          <button className='btn btn-hover-bg p-0 me-3 border-0' style={{height:FONT_SIZE_ICONS}} onClick={e=>{setSelectedTab(0);setTabName(t('doctor'))}}>
+            <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               clinical_notes
             </span>
           </button>
         }
         {
           selectedTab === 1 ? 
-          <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white' style={{height:"50px"}}>
-            <span className="material-symbols-outlined m-0" style={{fontSize:"50px",fontWeight:"100"}}>
+          <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white' style={{height:FONT_SIZE_ICONS}}>
+            <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               local_hospital
             </span>
           </div>
           :
-          <button className='btn btn-hover-bg p-0 me-3 border-0' style={{height:"50px"}} onClick={e=>{setSelectedTab(1);setTabName(t('clinic'))}}>
-            <span className="material-symbols-outlined m-0" style={{fontSize:"50px",fontWeight:"100"}}>
+          <button className='btn btn-hover-bg p-0 me-3 border-0' style={{height:FONT_SIZE_ICONS}} onClick={e=>{setSelectedTab(1);setTabName(t('clinic'))}}>
+            <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               local_hospital
             </span>
           </button>

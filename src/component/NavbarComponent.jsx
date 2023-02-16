@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { baseURL } from "../services/getAPI.jsx";
 import { logOutDoctor } from "../redux/DoctorSlice.jsx";
 import { splitEmail } from "../common/Utility.jsx";
+import { clearClinicSlice } from "../redux/ClinicSlice.jsx";
 
 const FONT_SIZE = '17px';
 
@@ -98,7 +99,7 @@ export default function NavbarComponent(props) {
                       </li>
                     </Link>
                     <li className="w-100 mc-color-hover">
-                      <button className="btn d-flex flex-row align-items-center w-100 border-0" onClick={e=>{dispatch(logOutDoctor());nav("/login")}}>
+                      <button className="btn d-flex flex-row align-items-center w-100 border-0" onClick={e=>{dispatch(logOutDoctor());dispatch(clearClinicSlice());nav("/login")}}>
                         <span className="text-capitalize" style={{fontSize:FONT_SIZE,background:"transparent"}}>{t('log out')}</span>
                       </button>
                     </li>

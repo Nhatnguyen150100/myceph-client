@@ -19,12 +19,22 @@ export function splitEmail(email) {
   return nameEmail[0];
 }
 
-export function splitAvatar(url) {
+export function splitAvatar(url,imageUrl) {
   if(url){
     const avatarUrl = url.split('_');
     return avatarUrl[0];
   }
-  return '/assets/images/doctor.png';
+  return imageUrl;
+}
+
+export function splitFirst(string) {
+  const stringSplit = string.split('_');
+  return stringSplit[0];
+}
+
+export function splitLast(string) {
+  const stringSplit = string.split('_');
+  return stringSplit[1];
 }
 
 export function splitPublic_id(url) {
