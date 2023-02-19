@@ -3,15 +3,16 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
-import { convertISOToVNDateString, deleteImage, splitAvatar, splitFirst, splitLast, splitPublic_id, toISODateString, upLoadImage } from "../../../common/Utility.jsx";
+import { convertISOToVNDateString, deleteImage, isValidEmail, splitAvatar, splitFirst, splitLast, splitPublic_id, toISODateString, upLoadImage } from "../../../common/Utility.jsx";
 import { clearClinicSlice, setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { logOutDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
-import { getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
+import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 
 const WIDTH_HEAD = "150px";
 const WIDTH_CHILD = "300px";
@@ -36,6 +37,8 @@ export default function Myclinic(props){
   const [publicIdAvatar,setPublicIdAvatar] = useState();
   const [addressClinic,setAddressClinic] = useState();
   const [description,setDescription] = useState();
+
+  const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
   
   const {t} = useTranslation();
   const dispatch = useDispatch();
@@ -105,6 +108,26 @@ export default function Myclinic(props){
     setEditMode(false);
   }
 
+  const onDeleteHandle = () =>{
+    setOpenDeleteConfirm(true);
+  }
+
+  const deleteClinic = (idClinicCheck) => {
+    if(idClinicCheck===clinic.idClinicDefault){
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        deleteToServerWithToken(`/v1/clinic/deleteClinic/${clinic.idClinicDefault}`).then((result) => {
+          toast.success(t(result.message));
+          setOpenDeleteConfirm(false);
+          setEditMode(false);
+          getAllClinicAndSetDefault().then(()=>resolve());
+        }).catch((err) => {toast.error(t(err.message));reject(err)}).finally(() => dispatch(setLoadingModal(false)));
+      })
+    }else{
+      toast.error(t('id clinic not match'))
+    }    
+  }
+
   const pushDataToServer = (avatar) =>{
     putToServerWithToken(`/v1/clinic/updateInformationClinic/${clinic.idClinicDefault}`,{
       nameClinic: nameClinic,
@@ -119,43 +142,74 @@ export default function Myclinic(props){
   }
 
   const onUpdate = async () => {
-    dispatch(setLoadingModal(true));
-    if(image){
-      if(avatarClinic!=='/assets/images/clinic.png'){
-        deleteImage(publicIdAvatar).then(async (response) => {
-          if(response.data.result==="ok"){
-            const responseData = await upLoadImage(image);
-            const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
-            pushDataToServer(newAvatar);
-          }else{
-            toast.error(t('update avatar failed'));
-            dispatch(setLoadingModal(false))
-          }
-        })
+    if(!isValidEmail(emailClinic) && emailClinic) toast.error(t("email is incorrect format"))
+    else{
+      dispatch(setLoadingModal(true));
+      if(image){
+        if(avatarClinic!=='/assets/images/clinic.png'){
+          deleteImage(publicIdAvatar).then(async (response) => {
+            if(response.data.result==="ok"){
+              const responseData = await upLoadImage(image);
+              const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
+              pushDataToServer(newAvatar);
+            }else{
+              toast.error(t('update avatar failed'));
+              dispatch(setLoadingModal(false))
+            }
+          })
+        }else{
+          const responseData = await upLoadImage(image);
+          const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
+          pushDataToServer(newAvatar);
+        }
       }else{
-        const responseData = await upLoadImage(image);
-        const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
-        pushDataToServer(newAvatar);
-      }
-    }else{
-      if(avatarClinic!=='/assets/images/clinic.png'){
-        pushDataToServer(clinic.data.avatarClinic);
-      }else{
-        pushDataToServer('');
+        if(avatarClinic!=='/assets/images/clinic.png'){
+          pushDataToServer(clinic.data.avatarClinic);
+        }else{
+          pushDataToServer('');
+        }
       }
     }
   }
 
   const getAllClinic = () => {
     return new Promise((resolve, reject) =>{
+      dispatch(setLoadingModal(true));
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
         dispatch(setDataClinic(result.data));
         resolve();
       }).catch((err) =>{
         reject(err);
-      }
-      )
+      }).finally(()=>dispatch(setLoadingModal(false)))
     })
+  }
+
+  const getAllClinicAndSetDefault = () => {
+    return new Promise((resolve,reject) =>{
+      dispatch(setLoadingModal(true));
+      getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
+        result.data.map(clinic=> {
+          if(clinic.roleOfDoctor==='admin'){
+            dispatch(setIdClinicDefault(clinic.id));
+            dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
+          }
+        })
+        dispatch(setDataClinic(result.data));
+      }).catch((err) =>{
+        if(err.isLogin===false){
+          dispatch(logOutDoctor());
+          dispatch(clearClinicSlice())
+          nav("/login");
+        }else{
+          toast.error(t(err.message));
+        }
+      }
+      ).finally(() => dispatch(setLoadingModal(false)));
+    })
+  }
+
+  const handleClose = () => {
+    setOpenDeleteConfirm(false);
   }
 
   return <div className="d-flex flex-column h-100 py-3">
@@ -223,7 +277,7 @@ export default function Myclinic(props){
                 editMode ? 
                 <input className="text-gray border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={emailClinic} onChange={e=>setEmailClinic(e.target.value)}/>
                 :
-                <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{emailClinic?emailClinic:'no data'}</span>
+                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{emailClinic?emailClinic:'no data'}</span>
               }
             </div>
             <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
@@ -271,5 +325,35 @@ export default function Myclinic(props){
         <span className="text-danger text-capitalize mt-2">{t("can't found your clinic")}</span>
       </div>
     }
+    <div className="my-3 d-flex align-items-center justify-content-center w-100 flex-column">
+      <div className="d-flex flex-row align-items-center justify-content-center">
+        <hr style={{ width: '140px' }} />
+        <span className="mx-3 mc-color fw-bold text-uppercase">{t('my clinic')}</span>
+        <hr style={{ width: '140px' }} />
+      </div>
+      {
+        editMode && clinic.roleOfDoctor==='admin' && <button type="button" class="btn btn-outline-danger mt-2 d-flex flex-row align-items-center justify-content-center" onClick={onDeleteHandle}>
+          <span className="material-symbols-outlined me-2">
+            delete
+          </span>
+          <span className="fw-bold text-uppercase">{t('delete clinic')}</span>
+        </button>
+      }
+    </div>
+    <ConfirmComponent 
+      FONT_SIZE={props.FONT_SIZE}
+      open={openDeleteConfirm} 
+      title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this clinic')}</span>} 
+      content={
+        <div>
+          <span className="me-1" style={{fontSize:props.FONT_SIZE}}>{t('To delete this this clinic, enter the id clinic')}</span>
+          <span style={{fontSize:props.FONT_SIZE}} className="text-danger fw-bold">{clinic.idClinicDefault}</span>
+          <span className="ms-1" style={{fontSize:props.FONT_SIZE}}>{t('in the box below and press agree')}</span>
+        </div>
+      } 
+      label={t('Id clinic')}
+      handleClose={handleClose} 
+      handleSubmit={value=>deleteClinic(value)}
+    />
   </div>
 }

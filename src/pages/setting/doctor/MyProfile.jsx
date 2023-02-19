@@ -19,6 +19,7 @@ const AVATAR_HEIGHT = "300px";
 const AVATAR_WIDTH = "200px";
 
 export default function MyProfile(props){
+  const loading = useSelector(state=>state.general.loading);
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic.data);
   const [image,setImage] = useState('');
@@ -153,108 +154,118 @@ export default function MyProfile(props){
       <span className="text-capitalize mc-color fw-bold me-2">{t('update at')}: </span>
       {convertISOToVNDateString(toISODateString(new Date(doctor.updatedAt?doctor.updatedAt:new Date())))}
     </span>
-    <div className="d-flex flex-row flex-grow-1">
-      <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
-        {
-          editMode && <UploadImage className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:props.FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
-        }
-        <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatar):avatar}`} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
-      </div>
-      <div className="d-flex flex-column flex-grow-1 ms-5">
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-          <span className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('email')}:</span>
-          <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{doctor.email}</span>
-          <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('full name')}:</label>
+    {
+      !loading && <div className="d-flex flex-row flex-grow-1">
+        <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
           {
-            editMode ? 
-            <input className="text-gray border-0 flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={fullName} onChange={e=>setFullName(e.target.value)}/>
-            :
-            <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{fullName?fullName:'no data'}</span>
+            editMode && <UploadImage className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:props.FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
           }
+          <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatar):avatar}`} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
         </div>
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-          <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('gender')}:</label>
-          {
-            editMode ? 
-            <select className="text-gray border-0 p-0 text-capitalize" style={{outline:"none",width:WIDTH_CHILD}} value={gender} onChange={e=>setGender(e.target.value)}>
-              <option selected disabled={true}>no data</option>
-              <option className="text-gray border-0 text-capitalize" value={'male'} style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>
-                {t('male')}
-              </option>
-              <option className="text-gray border-0 text-capitalize" value={'female'} style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>
-                {t('female')}
-              </option>
-            </select>
-            :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{gender?gender:'no data'}</span>
-          }
-          <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('birth of day')}:</label>
-          {
-            editMode ? 
-            <input className="text-gray border-0 flex-grow-1" style={{outline:"none",fontSize:props.FONT_SIZE}} onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} type="date" value={toISODateString(new Date(birthday?birthday:new Date()))} onChange={e=>setBirthday(e.target.value)}/>
-            :
-            <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(birthday?birthday:new Date())))}</span>
-          }
-        </div>
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-          <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
-          {
-            editMode ? 
-            <input className="text-gray border-0" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE,width:WIDTH_CHILD}} type="number" value={phoneNumber} onChange={e=>setPhoneNumber(e.target.value)}/>
-            :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumber?phoneNumber:'no data'}</span>
-          }
-          <span className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('clinics')}:</span>
-          <div className="d-flex flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
-          {
-            clinic?.map(clinic => {
-              return <span className="px-2 hoverGreenLight rounded mc-background text-white text-capitalize shadow me-3 mb-1" style={{fontSize:props.FONT_SIZE,cursor:"pointer"}} onClick={e=>onToClinic(clinic.id,clinic.roleOfDoctor)}>
-                {
-                  clinic.roleOfDoctor === 'admin' && <img alt="logo" className="me-1 mb-1" src="/assets/icons/user.png" height={"15px"}/>
-                }
-                <span>{clinic.nameClinic}</span>
-              </span>
-            })
-          }
+        <div className="d-flex flex-column flex-grow-1 ms-5">
+          <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+            <span className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('email')}:</span>
+            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{doctor.email}</span>
+            <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('full name')}:</label>
+            {
+              editMode ? 
+              <input className="text-gray border-0 flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={fullName} onChange={e=>setFullName(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{fullName?fullName:'no data'}</span>
+            }
+          </div>
+          <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+            <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('gender')}:</label>
+            {
+              editMode ? 
+              <select className="text-gray border-0 p-0 text-capitalize" style={{outline:"none",width:WIDTH_CHILD}} value={gender} onChange={e=>setGender(e.target.value)}>
+                <option selected disabled={true}>no data</option>
+                <option className="text-gray border-0 text-capitalize" value={'male'} style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>
+                  {t('male')}
+                </option>
+                <option className="text-gray border-0 text-capitalize" value={'female'} style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>
+                  {t('female')}
+                </option>
+              </select>
+              :
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{gender?gender:'no data'}</span>
+            }
+            <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('birth of day')}:</label>
+            {
+              editMode ? 
+              <input className="text-gray border-0 flex-grow-1" style={{outline:"none",fontSize:props.FONT_SIZE}} onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} type="date" value={toISODateString(new Date(birthday?birthday:new Date()))} onChange={e=>setBirthday(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(birthday?birthday:new Date())))}</span>
+            }
+          </div>
+          <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+            <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
+            {
+              editMode ? 
+              <input className="text-gray border-0" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE,width:WIDTH_CHILD}} type="number" value={phoneNumber} onChange={e=>setPhoneNumber(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumber?phoneNumber:'no data'}</span>
+            }
+            
+            <div className="d-flex flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
+            <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('speciality')}:</label>
+            {
+              editMode ? 
+              <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={speciality} onChange={e=>setSpeciality(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{speciality?speciality:'no data'}</span>
+            }
+            </div>
+          </div>
+          <div className={`d-flex flex-row mb-3 ${editMode?'border-bottom':''}`}>
+            <span className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('clinics')}:</span>
+            <div className="d-flex flex-row flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
+              {
+                clinic?.map(clinic => {
+                  return <button key={clinic.id} type="button" className="btn btn-primary px-2 text-capitalize shadow me-3 mb-1" style={{fontSize:props.FONT_SIZE}} onClick={e=>onToClinic(clinic.id,clinic.roleOfDoctor)}>
+                    {
+                      clinic.roleOfDoctor === 'admin' && <img alt="logo" className="me-1 mb-1" src="/assets/icons/user.png" height={"15px"}/>
+                    }
+                    <span>{clinic.nameClinic}</span>
+                  </button>
+                })
+              }
+            </div>
+          </div>
+          <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+            <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('diploma')}:</label>
+            {
+              editMode ? 
+              <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={diploma} onChange={e=>setDiploma(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{diploma?diploma:'no data'}</span>
+            }
+          </div>
+          <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+            <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('position')}:</label>
+            {
+              editMode ? 
+              <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={position} onChange={e=>setPosition(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{position?position:'no data'}</span>
+            }
+          </div>
+          <div className={`d-flex ${editMode?'border-bottom':''}`}>
+            <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
+            {
+              editMode ? 
+              <textarea className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={description} onChange={e=>setDescription(e.target.value)}/>
+              :
+              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{description?description:'no data'}</span>
+            }
           </div>
         </div>
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-          <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('speciality')}:</label>
-          {
-            editMode ? 
-            <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={speciality} onChange={e=>setSpeciality(e.target.value)}/>
-            :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{speciality?speciality:'no data'}</span>
-          }
-        </div>
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-          <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('diploma')}:</label>
-          {
-            editMode ? 
-            <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={diploma} onChange={e=>setDiploma(e.target.value)}/>
-            :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{diploma?diploma:'no data'}</span>
-          }
-        </div>
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-          <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('position')}:</label>
-          {
-            editMode ? 
-            <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={position} onChange={e=>setPosition(e.target.value)}/>
-            :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{position?position:'no data'}</span>
-          }
-        </div>
-        <div className={`d-flex ${editMode?'border-bottom':''}`}>
-          <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
-          {
-            editMode ? 
-            <textarea className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={description} onChange={e=>setDescription(e.target.value)}/>
-            :
-            <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{description?description:'no data'}</span>
-          }
-        </div>
       </div>
+    }
+    <div className="my-3 d-flex align-items-center justify-content-center w-100">
+      <hr style={{ width: '140px' }} />
+      <span className="mx-3 mc-color fw-bold text-uppercase">{t('my profile')}</span>
+      <hr style={{ width: '140px' }} />
     </div>
   </div>
 }

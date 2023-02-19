@@ -18,7 +18,7 @@ const FONT_SIZE_HEADER = '17px';
 export default function Setting(props){
   const {t} = useTranslation();
   const dispatch = useDispatch();
-  const [selectedTab,setSelectedTab] = useState(1);
+  const [selectedTab,setSelectedTab] = useState(0);
   const [tabName,setTabName] = useState('doctor');
   const doctor = useSelector(state=>state.doctor.data);
   const nav = useNavigate();
