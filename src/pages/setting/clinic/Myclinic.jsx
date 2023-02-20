@@ -8,9 +8,8 @@ import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
-import { convertISOToVNDateString, deleteImage, isValidEmail, splitAvatar, splitFirst, splitLast, splitPublic_id, toISODateString, upLoadImage } from "../../../common/Utility.jsx";
-import { clearClinicSlice, setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
-import { logOutDoctor } from "../../../redux/DoctorSlice.jsx";
+import { clearAllSclice, convertISOToVNDateString, deleteImage, isValidEmail, splitAvatar, splitFirst, splitLast, splitPublic_id, toISODateString, upLoadImage } from "../../../common/Utility.jsx";
+import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 
@@ -62,8 +61,7 @@ export default function Myclinic(props){
         resolve();
       }).catch((err) => {
         if(err.isLogin===false){
-          dispatch(logOutDoctor());
-          dispatch(clearClinicSlice());
+          clearAllSclice(dispatch);
           nav("/login");
         }else{
           toast.error(t(err.message));
@@ -85,8 +83,7 @@ export default function Myclinic(props){
         getAllClinic().then(()=>resolve());
       }).catch((err) => {
         if(err.isLogin===false){
-          dispatch(logOutDoctor());
-          dispatch(clearClinicSlice());
+          clearAllSclice(dispatch);
           nav("/login");
         }else{
           toast.error(t(err.message));
@@ -197,8 +194,7 @@ export default function Myclinic(props){
         dispatch(setDataClinic(result.data));
       }).catch((err) =>{
         if(err.isLogin===false){
-          dispatch(logOutDoctor());
-          dispatch(clearClinicSlice())
+          clearAllSclice(dispatch);
           nav("/login");
         }else{
           toast.error(t(err.message));

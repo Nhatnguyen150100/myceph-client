@@ -9,22 +9,23 @@ import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
-import { isValidEmail, moveElementToStartArray, splitFirst, splitLast } from "../../../common/Utility.jsx";
-import { clearClinicSlice, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
-import { logOutDoctor } from "../../../redux/DoctorSlice.jsx";
-import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
+import { clearAllSclice, isValidEmail, moveElementToStartArray, splitAvatar, splitFirst, splitLast } from "../../../common/Utility.jsx";
+import { setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
+import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
+import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import DoctorRows from "./DoctorRows.jsx";
 
 const PAGE_SIZE = 4;
 let nameSearchTimeout = null;
+let emailSearchTimeout = null;
 
 export default function MemberOfClinic(props){
-  const loading = useSelector(state=>state.general.loading);
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic);
   const [listDoctor,setListDoctor] = useState([]);
   const [nameSearch,setNameSearch] = useState('');
+  const [listEmailSearch,setListEmailSearch] = useState([]);
   const [newDoctor,setNewDoctor] = useState();
   const [count,setCount] = useState();
   const [page,setPage] = useState(1);
@@ -45,10 +46,25 @@ export default function MemberOfClinic(props){
   },[clinic.idClinicDefault,page])
 
   const onNameSearchChange = e => {
-    console.log(e.target.value);
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
-    nameSearchTimeout = setTimeout(getAllDoctorInClinic,500,e.target.value);
+    nameSearchTimeout = setTimeout(getAllDoctorInClinic,300,e.target.value);
+  }
+
+  const onEmailSearchChange = value => {
+    setNewDoctor(value);
+    if (emailSearchTimeout) clearTimeout(emailSearchTimeout);
+    emailSearchTimeout = setTimeout(getAllEmailSearch,300,value);
+  }
+
+  const getAllEmailSearch = (email) => {
+    if(!email){
+      setListEmailSearch([]);
+    }else{
+      getToServerWithToken(`/v1/doctor/getAllDoctorFromEmailSearch/${email}?currentEmailDoctor=${doctor.email}`).then(result=>{
+        setListEmailSearch(result.data);
+      }).catch(err => console.log(err));
+    }
   }
 
   const getAllDoctorInClinic = (name) => {
@@ -65,8 +81,7 @@ export default function MemberOfClinic(props){
         resolve();
       }).catch((err) => {
         if(err.isLogin===false){
-          dispatch(logOutDoctor());
-          dispatch(clearClinicSlice());
+          clearAllSclice(dispatch);
           nav("/login");
         }else{
           toast.error(t(err.message));
@@ -102,8 +117,7 @@ export default function MemberOfClinic(props){
         resolve();
       }).catch((err) => {
         if(err.isLogin===false){
-          dispatch(logOutDoctor());
-          dispatch(clearClinicSlice());
+          clearAllSclice(dispatch);
           nav("/login");
         }else{
           toast.error(t(err.message));
@@ -128,8 +142,7 @@ export default function MemberOfClinic(props){
           resolve();
         }).catch((err) => {
           if(err.isLogin===false){
-            dispatch(logOutDoctor());
-            dispatch(clearClinicSlice());
+            clearAllSclice(dispatch);
             nav("/login");
           }else{
             toast.error(t(err.message));
@@ -156,8 +169,7 @@ export default function MemberOfClinic(props){
           });
         }).catch((err) => {
           if(err.isLogin===false){
-            dispatch(logOutDoctor());
-            dispatch(clearClinicSlice());
+            clearAllSclice(dispatch);
             nav("/login");
           }else{
             toast.error(t(err.message));
@@ -177,11 +189,17 @@ export default function MemberOfClinic(props){
     setOpenDeleteConfirm(false);
   };
 
+  const toOtherDoctorProfile = (email) => {
+    dispatch(setOtherEmailDoctor(email));
+    dispatch(setSettingTab(0));
+    dispatch(setDoctorSettingTab(1));
+  }
+
   return <div className="d-flex flex-column align-items-start justify-content-start h-100 py-3">
     <div className="d-flex flex-row w-100 flex-wrap justify-content-between mb-2">
       <div style={{width:"400px"}}>
         {
-          clinic.idClinicDefault && <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
+          clinic.idClinicDefault && <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)));setNewDoctor('');setListEmailSearch([])}}>
             {
               clinic.data?.map(clinic=>{
                 return <option selected={clinic.roleOfDoctor==='admin'} className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
@@ -194,10 +212,28 @@ export default function MemberOfClinic(props){
       </div>
       {
         clinic.roleOfDoctor==='admin' && <div className="d-flex flex-row align-items-end">
-          <div style={{width:"400px"}}>
-            <TextFieldInput className="p-1 me-2" legend={t('Add new doctor to clinic')} placeholder={t('Name of new doctor')} value={newDoctor} onChange={value=>setNewDoctor(value)}/>
+          <div className="position-relative" style={{width:"300px"}}>
+            <TextFieldInput className="p-1" legend={t('Add new doctor to clinic')} placeholder={t('Email of new doctor')} value={newDoctor} onChange={value=>onEmailSearchChange(value)}/>
+            <ul className={`position-absolute d-flex flex-grow-1 p-0 w-100 flex-column me-2 bg-white border-start border-end ${listEmailSearch.length>0?'border-bottom':''}`} style={{zIndex:"1"}}>
+              {
+                listEmailSearch?.map(doctor=>{
+                  return <button className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-between" type="button" onClick={e=>{setNewDoctor(doctor.email);setListEmailSearch([])}}>
+                    <img alt="avatar" className="rounded" src={splitAvatar(doctor.avatar,'/assets/images/doctor.png')} style={{height:"50px",width:"40px",objectFit:"cover"}}/>
+                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center">
+                      <span className="mc-color" style={{fontSize:props.FONT_SIZE}}>{doctor.email}</span>
+                      <span className="text-capitalize" style={{fontSize:props.FONT_SIZE}}>{'('}{doctor.fullName?doctor.fullName:t('no data')}{')'}</span>
+                    </div>
+                    <button type="button" className="btn btn-outline-info border-0 p-0 m-0 text-white-hover" onClick={e=>toOtherDoctorProfile(doctor.email)}>
+                      <span class="material-symbols-outlined mt-1 mx-1">
+                        info
+                      </span>
+                    </button>
+                  </button>
+                })
+              }
+            </ul>
           </div>
-          <IconButtonComponent className="btn-outline-success" styleButton={{height:"50px",width:"50px"}} onClick={addDoctorToClinic} icon="add" FONT_SIZE_ICON={"40px"} title={t("add doctor")}/>
+          <IconButtonComponent className="btn-outline-success ms-2" styleButton={{height:"50px",width:"50px"}} onClick={addDoctorToClinic} icon="add" FONT_SIZE_ICON={"40px"} title={t("add doctor")}/>
         </div>
       }
     </div>
@@ -205,7 +241,7 @@ export default function MemberOfClinic(props){
       <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:props.FONT_SIZE}}>{t('you are')}: </span>
       <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
     </div>
-    <React.Fragment>
+    <div className="h-100 w-100">
       <div className="w-100">
         <table className="table table-bordered table-striped text-center rounded">
           <thead className='mc-background text-white text-uppercase'>
@@ -228,7 +264,10 @@ export default function MemberOfClinic(props){
           </thead>
           {
             loadingSearch ? 
-            <div className="spinner-grow"></div>
+            <div className="d-flex flex-grow-1 justify-content-center w-100">
+              <div className="spinner-grow"></div>
+            </div>
+            
             :
             <React.Fragment>
               <tbody>{listDoctor.map((doctor, index) => <DoctorRows key={index} doctor={doctor} changeRoleOfDoctor={(idDoctor,roleOfDoctor)=>onChangeRoleOfDoctor(idDoctor,roleOfDoctor)} deleteDoctorFromClinic={onDeleteHandle} FONT_SIZE={props.FONT_SIZE}/>)}</tbody>
@@ -281,6 +320,13 @@ export default function MemberOfClinic(props){
         handleClose={handleClose} 
         handleSubmit={updateRoleOfDoctor}
       />
-    </React.Fragment>
+    </div>
+    <div className="my-3 d-flex align-items-center justify-content-center w-100 flex-column">
+        <div className="d-flex flex-row align-items-center justify-content-center">
+          <hr style={{ width: '140px' }} />
+          <span className="mx-3 mc-color fw-bold text-uppercase">{t('member clinic')}</span>
+          <hr style={{ width: '140px' }} />
+        </div>
+      </div>
   </div>
 }

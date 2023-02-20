@@ -5,7 +5,10 @@ export const GeneralSlice = createSlice({
   initialState:{
     appName: 'Myceph',
     loading: false,
-    language: 'vi'
+    language: 'vi',
+    settingTab: 0,
+    doctorSettingTab: 0,
+    clinicSettingTab: 0
   },
   reducers:{
     setAppName: (state,action) => {
@@ -16,12 +19,26 @@ export const GeneralSlice = createSlice({
     },
     setLanguage: (state,action) => {
       state.language = action.payload;
+    },
+    setSettingTab: (state,action) => {
+      state.settingTab = action.payload;
+    },
+    setDoctorSettingTab: (state,action) => {
+      state.doctorSettingTab = action.payload;
+    },
+    setClinicSettingTab: (state,action) => {
+      state.clinicSettingTab = action.payload;
+    },
+    clearGeneralSlice: (state) => {
+      state.settingTab = 0;
+      state.doctorSettingTab = 0;
+      state.clinicSettingTab = 0;
     }
   }
 })
 
 export const {
-  setLoadingModal,setLanguage,setAppName
+  setLoadingModal,setLanguage,setAppName,setSettingTab,setDoctorSettingTab,setClinicSettingTab,clearGeneralSlice
 } = GeneralSlice.actions;
 
 export default GeneralSlice.reducer;

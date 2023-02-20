@@ -5,7 +5,8 @@ import { cookies } from "../common/Utility.jsx";
 export const DoctorSlice = createSlice({
   name: 'doctor',
   initialState:{
-    data: null
+    data: null,
+    otherEmailDoctor: null
   },
   reducers:{
     setDataDoctor: (state,action) => {
@@ -15,12 +16,16 @@ export const DoctorSlice = createSlice({
       storage.removeItem('persist:root');
       cookies.remove('accessToken', {path: '/'});
       state.data = null;
+      state.otherEmailDoctor = null;
+    },
+    setOtherEmailDoctor: (state,action) => {
+      state.otherEmailDoctor = action.payload
     }
   }
 })
 
 export const {
-  setDataDoctor,logOutDoctor
+  setDataDoctor,logOutDoctor,setOtherEmailDoctor
 } = DoctorSlice.actions;
 
 export default DoctorSlice.reducer;

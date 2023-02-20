@@ -5,18 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
-import { convertISOToVNDateString, deleteImage, splitAvatar, splitPublic_id, toISODateString, upLoadImage } from "../../../common/Utility.jsx";
+import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, deleteImage, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
 import { clearClinicSlice, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
-import { logOutDoctor, setDataDoctor } from "../../../redux/DoctorSlice.jsx";
-import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
+import { setDataDoctor } from "../../../redux/DoctorSlice.jsx";
+import { setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
-
-const WIDTH_HEAD = "150px";
-const WIDTH_CHILD = "300px";
-const FONT_SIZE_ICON = "18px";
-const FONT_SIZE_BUTTON_ICON = "40px";
-const AVATAR_HEIGHT = "300px";
-const AVATAR_WIDTH = "200px";
 
 export default function MyProfile(props){
   const loading = useSelector(state=>state.general.loading);
@@ -62,8 +55,7 @@ export default function MyProfile(props){
         resolve();
       }).catch((err) => {
         if(err.isLogin===false){
-          dispatch(logOutDoctor());
-          dispatch(clearClinicSlice());
+          clearAllSclice(dispatch);
           nav("/login");
         }else{
           toast.error(t(err.message));
@@ -134,7 +126,7 @@ export default function MyProfile(props){
   const onToClinic = (idClinic,roleOfDoctor) => {
     dispatch(setIdClinicDefault(idClinic));
     dispatch(setRoleOfDoctor(roleOfDoctor));
-    props.setSelectedTab(1);
+    dispatch(setSettingTab(1));
   }
 
 

@@ -20,7 +20,6 @@ export default function HomePage(props) {
       backgroundSize: 'cover',
     }}>
       <div className="container h-100">
-        <h1 className="mt-5">Day la Homepage</h1>
       </div>
     </div>
     

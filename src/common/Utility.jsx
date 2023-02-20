@@ -1,6 +1,9 @@
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 import sha1 from 'sha1';
+import { logOutDoctor } from '../redux/DoctorSlice.jsx';
+import { clearClinicSlice } from '../redux/ClinicSlice.jsx';
+import { clearGeneralSlice } from '../redux/GeneralSlice.jsx';
  
 export const cookies = new Cookies();
 
@@ -10,6 +13,13 @@ export const CLOUDINARY_KEY = '621123368244999';
 export const CLOUDINARY_SECRET = 'bg5jrQ0D-YvLgDTDU1fKtFqCyMI';
 export const CLOUDINARY_BASE_URL = 'https://api.cloudinary.com/v1_1/dvzgiho5t';
 
+export const WIDTH_HEAD = "150px";
+export const WIDTH_CHILD = "300px";
+export const FONT_SIZE_ICON = "18px";
+export const FONT_SIZE_BUTTON_ICON = "40px";
+export const AVATAR_HEIGHT = "300px";
+export const AVATAR_WIDTH = "200px";
+
 export function moveElementToStartArray(array,email){
   const indexOfElement = array.findIndex(element => 
     element.email === email
@@ -18,6 +28,18 @@ export function moveElementToStartArray(array,email){
   array.splice(indexOfElement,1);
   array.unshift(elementIndex);
   return array;
+}
+
+export const clearAllSclice = (dispatch) => {
+  dispatch(logOutDoctor());
+  dispatch(clearGeneralSlice());
+  dispatch(clearClinicSlice());
+}
+ 
+export const expireDateCookies = () => {
+  const timestamp = new Date().getTime();
+  const expire = timestamp + (1000*60*60);
+  return new Date(expire);
 }
 
 export function isValidEmail(email) {

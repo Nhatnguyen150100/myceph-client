@@ -1,9 +1,11 @@
 import { Switch } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import { convertISOToVNDateString, splitAvatar, toISODateString } from "../../../common/Utility.jsx";
+import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
+import { setDoctorSettingTab, setSettingTab } from "../../../redux/GeneralSlice.jsx";
 
 const AVATAR_HEIGHT = "70px";
 const AVATAR_WIDTH = "50px";
@@ -12,7 +14,19 @@ export default function DoctorRows(props){
   const clinic = useSelector(state=>state.clinic);
   const doctor = useSelector(state=>state.doctor.data);
   const {t} = useTranslation();
-  return <tr className={`align-middle ${props.doctor.roleOfDoctor === 'admin' && 'mc-pale-background'}`}>
+  const disatch = useDispatch();
+
+  const toProfile = (email) => {
+    if(doctor.email===email){
+      disatch(setSettingTab(0));
+    }else{
+      disatch(setSettingTab(0));
+      disatch(setDoctorSettingTab(1));
+      disatch(setOtherEmailDoctor(email));
+    }
+  }
+
+  return <tr className={`align-middle hover-font-weight ${props.doctor.roleOfDoctor === 'admin' && 'mc-pale-background'}`} onClick={e=>toProfile(props.doctor.email)} style={{cursor:"pointer"}}>
     <td className="d-lg-table-cell d-none">
       <img alt="avatar" className="rounded" src={splitAvatar(props.doctor.avatar,'/assets/images/doctor.png')} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
     </td>

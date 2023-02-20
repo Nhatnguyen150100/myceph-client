@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { clearAllSclice } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
 import { clearClinicSlice, setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
-import { logOutDoctor } from "../../redux/DoctorSlice.jsx";
-import { setAppName, setLoadingModal } from "../../redux/GeneralSlice.jsx";
+import { setAppName, setLoadingModal, setSettingTab } from "../../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../../services/getAPI.jsx";
 import ClinicSetting from "./clinic/ClinicSetting.jsx";
 import DoctorSetting from "./doctor/DoctorSetting.jsx";
@@ -18,7 +18,7 @@ const FONT_SIZE_HEADER = '17px';
 export default function Setting(props){
   const {t} = useTranslation();
   const dispatch = useDispatch();
-  const [selectedTab,setSelectedTab] = useState(0);
+  const selectedTab = useSelector(state=>state.general.settingTab);
   const [tabName,setTabName] = useState('doctor');
   const doctor = useSelector(state=>state.doctor.data);
   const nav = useNavigate();
@@ -35,8 +35,7 @@ export default function Setting(props){
       dispatch(setDataClinic(result.data));
     }).catch((err) =>{
       if(err.isLogin===false){
-        dispatch(logOutDoctor());
-        dispatch(clearClinicSlice())
+        clearAllSclice(dispatch);
         nav("/login");
       }else{
         toast.error(t(err.message));
@@ -48,9 +47,9 @@ export default function Setting(props){
   let currentTab = null;
 
   switch(selectedTab){
-    case 0: currentTab = <DoctorSetting FONT_SIZE={FONT_SIZE} setSelectedTab={setSelectedTab}/>
+    case 0: currentTab = <DoctorSetting FONT_SIZE={FONT_SIZE}/>
       break;
-    case 1: currentTab = <ClinicSetting FONT_SIZE={FONT_SIZE} setSelectedTab={setSelectedTab}/>
+    case 1: currentTab = <ClinicSetting FONT_SIZE={FONT_SIZE}/>
       break;
     default: currentTab = <div>Error</div>
   }
@@ -72,7 +71,7 @@ export default function Setting(props){
             </span>
           </div>
           :
-          <button className='btn btn-hover-bg p-0 me-3 border-0' style={{height:FONT_SIZE_ICONS}} onClick={e=>{setSelectedTab(0);setTabName(t('doctor'))}}>
+          <button className='btn btn-hover-bg p-0 me-3 border-0' style={{height:FONT_SIZE_ICONS}} onClick={e=>{dispatch(setSettingTab(0));setTabName(t('doctor'))}}>
             <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               clinical_notes
             </span>
@@ -86,7 +85,7 @@ export default function Setting(props){
             </span>
           </div>
           :
-          <button className='btn btn-hover-bg p-0 me-3 border-0' style={{height:FONT_SIZE_ICONS}} onClick={e=>{setSelectedTab(1);setTabName(t('clinic'))}}>
+          <button className='btn btn-hover-bg p-0 me-3 border-0' style={{height:FONT_SIZE_ICONS}} onClick={e=>{dispatch(setSettingTab(1));setTabName(t('clinic'))}}>
             <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               local_hospital
             </span>
