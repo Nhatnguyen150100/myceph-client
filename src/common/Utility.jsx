@@ -20,16 +20,6 @@ export const FONT_SIZE_BUTTON_ICON = "40px";
 export const AVATAR_HEIGHT = "300px";
 export const AVATAR_WIDTH = "200px";
 
-export function moveElementToStartArray(array,email){
-  const indexOfElement = array.findIndex(element => 
-    element.email === email
-  );
-  const elementIndex = array[indexOfElement];
-  array.splice(indexOfElement,1);
-  array.unshift(elementIndex);
-  return array;
-}
-
 export const clearAllSclice = (dispatch) => {
   dispatch(logOutDoctor());
   dispatch(clearGeneralSlice());

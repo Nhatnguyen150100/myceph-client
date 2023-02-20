@@ -324,7 +324,7 @@ export default function Myclinic(props){
     <div className="my-3 d-flex align-items-center justify-content-center w-100 flex-column">
       <div className="d-flex flex-row align-items-center justify-content-center">
         <hr style={{ width: '140px' }} />
-        <span className="mx-3 mc-color fw-bold text-uppercase">{t('my clinic')}</span>
+        <span className="mx-3 mc-color fw-bold text-uppercase text-center">{t('my clinic')}</span>
         <hr style={{ width: '140px' }} />
       </div>
       {

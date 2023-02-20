@@ -19,6 +19,7 @@ export default function DoctorRows(props){
   const toProfile = (email) => {
     if(doctor.email===email){
       disatch(setSettingTab(0));
+      disatch(setDoctorSettingTab(0));
     }else{
       disatch(setSettingTab(0));
       disatch(setDoctorSettingTab(1));
@@ -26,7 +27,7 @@ export default function DoctorRows(props){
     }
   }
 
-  return <tr className={`align-middle hover-font-weight ${props.doctor.roleOfDoctor === 'admin' && 'mc-pale-background'}`} onClick={e=>toProfile(props.doctor.email)} style={{cursor:"pointer"}}>
+  return <tr className={`align-middle hover-font-weight ${props.doctor.roleOfDoctor === 'admin' && 'mc-pale-background'}`} style={{cursor:"pointer"}}>
     <td className="d-lg-table-cell d-none">
       <img alt="avatar" className="rounded" src={splitAvatar(props.doctor.avatar,'/assets/images/doctor.png')} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
     </td>
@@ -42,7 +43,7 @@ export default function DoctorRows(props){
     <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:props.FONT_SIZE}}>
       {props.doctor.gender?props.doctor.gender:t('no data')}
     </td>
-    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`}>
+    <td className={`d-lg-table-cell ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`}>
       <div className="form-check form-switch d-flex justify-content-center">
         <input 
           className="form-check-input" 
@@ -61,10 +62,11 @@ export default function DoctorRows(props){
     <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:props.FONT_SIZE}}>
       {props.doctor.speciality?props.doctor.speciality:t('no data')}
     </td>
-    {
-      clinic.roleOfDoctor==='admin' && <td className="d-lg-table-cell d-none">
-        <IconButtonComponent className="btn-outline-danger border-0 p-0" icon="delete" FONT_SIZE_ICON={"25px"} title={t("delete doctor from clinic")} onClick={e=>props.deleteDoctorFromClinic(props.doctor.idDoctor)} disabled={props.doctor.email===doctor.email}/>
-      </td>
-    }
+     <td className="d-lg-table-cell">
+      <IconButtonComponent className="btn-outline-info border-0 p-0" icon="info" FONT_SIZE_ICON={"25px"} title={t("information doctor from clinic")} onClick={e=>toProfile(props.doctor.email)}/>
+      {
+        clinic.roleOfDoctor==='admin' && <IconButtonComponent className="btn-outline-danger border-0 p-0" icon="delete" FONT_SIZE_ICON={"25px"} title={t("delete doctor from clinic")} onClick={e=>props.deleteDoctorFromClinic(props.doctor.idDoctor)} disabled={props.doctor.email===doctor.email}/>
+      }
+    </td>
   </tr>
 }

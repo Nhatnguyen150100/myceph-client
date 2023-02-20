@@ -103,7 +103,7 @@ export default function OtherProfile(props){
   return <div className="d-flex flex-column h-100">
     <div className="position-relative mt-4" style={{width:"300px"}}>
       <TextFieldInput className="p-1" legend={t('find other doctor')} placeholder={t('Email of other doctor')} value={otherDoctor} onChange={value=>onEmailSearchChange(value)}/>
-      <ul className={`position-absolute d-flex flex-grow-1 p-0 w-100 flex-column me-2 bg-white border-start border-end ${listEmailSearch.length>0?'border-bottom':''}`} style={{zIndex:"1"}}>
+      <ul className={`position-absolute d-flex flex-grow-1 p-0 w-100 flex-column me-2 bg-white border-start border-end ${(listEmailSearch.length>=0 && otherDoctor)?'border-bottom':''}`} style={{zIndex:"1"}}>
         {
           listEmailSearch?.map(doctor=>{
             return <button className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-start" type="button" onClick={e=>onSelectOtherDoctor(doctor)}>
@@ -115,20 +115,26 @@ export default function OtherProfile(props){
             </button>
           })
         }
+        {
+          listEmailSearch.length===0 && otherDoctor && <div className="d-flex justify-content-center flex-row align-items-center h-100 py-2" style={{zIndex:"1"}}>
+            <img className="text-capitalize me-2" src="/assets/images/notFound.png" height={"35px"} alt={t("can't found doctor profile")} />
+            <span className="text-danger text-capitalize mt-2">{t("can't found doctor profile")}</span>
+          </div>
+        }
       </ul>
     </div>
     {
-      email && <div className="d-flex flex-column h-100">
+      email ? <div className="d-flex flex-column h-100 mt-2">
         <div className="flex-row d-flex justify-content-end">
         <IconButtonComponent 
           className="btn-outline-danger" 
           onClick={onRemoveDoctor} 
-          icon="cancel" 
+          icon="close" 
           FONT_SIZE_ICON={props.FONT_SIZE_ICON} 
-          title={t("remove")}
+          title={t("close")}
         />
         </div>
-        <div className="d-flex flex-row flex-grow-1 mt-1">
+        <div className="d-flex flex-row flex-grow-1 mt-2">
           <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
             <img alt="avatar" className="rounded" src={`${avatar}`} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
           </div>
@@ -168,11 +174,16 @@ export default function OtherProfile(props){
           </div>
         </div>
       </div>
+      :
+      <div className="d-flex justify-content-center flex-column align-items-center h-100">
+        <img className="text-capitalize" src="/assets/images/notFound.png" height={"150px"} alt={t("can't found other doctor profile")} />
+        <span className="text-danger text-capitalize mt-2">{t("can't found other doctor profile")}</span>
+      </div>
     }
     <div className="my-3 d-flex align-items-end justify-content-center w- h-100">
       <div className="d-flex flex-row align-items-center justify-content-center">
         <hr style={{ width: '140px' }} />
-        <span className="mx-3 mc-color fw-bold text-uppercase">{t('other doctor profile')}</span>
+        <span className="mx-3 mc-color fw-bold text-uppercase text-center">{t('other doctor profile')}</span>
         <hr style={{ width: '140px' }} />
       </div>
     </div>

@@ -9,7 +9,7 @@ import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
-import { clearAllSclice, isValidEmail, moveElementToStartArray, splitAvatar, splitFirst, splitLast } from "../../../common/Utility.jsx";
+import { clearAllSclice, isValidEmail, splitAvatar, splitFirst, splitLast } from "../../../common/Utility.jsx";
 import { setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
@@ -70,13 +70,8 @@ export default function MemberOfClinic(props){
   const getAllDoctorInClinic = (name) => {
     return new Promise((resolve, reject) =>{
       setLoadingSearch(true);
-      getToServerWithToken(`/v1/clinic/getAllDoctorFromClinic/${clinic.idClinicDefault}?page=${page}&pageSize=${PAGE_SIZE}&nameSearch=${name?name:''}`).then(result => {
-        if(page===1 && !name && !nameSearch){
-          const newData = moveElementToStartArray(result.data,doctor.email);
-          setListDoctor(newData);
-        }else{
-          setListDoctor(result.data);
-        }
+      getToServerWithToken(`/v1/clinic/getAllDoctorFromClinic/${clinic.idClinicDefault}?page=${page}&pageSize=${PAGE_SIZE}&nameSearch=${name?name:''}&currentEmailDoctor=${doctor.email}`).then(result => {
+        setListDoctor(result.data);
         setCount(result.count);
         resolve();
       }).catch((err) => {
@@ -231,6 +226,12 @@ export default function MemberOfClinic(props){
                   </button>
                 })
               }
+              {
+                listEmailSearch.length===0 && newDoctor && <div className="d-flex justify-content-center flex-row align-items-center h-100 py-2" style={{zIndex:"1"}}>
+                  <img className="text-capitalize me-2" src="/assets/images/notFound.png" height={"35px"} alt={t("can't found doctor profile")} />
+                  <span className="text-danger text-capitalize mt-2">{t("can't found doctor profile")}</span>
+                </div>
+              }
             </ul>
           </div>
           <IconButtonComponent className="btn-outline-success ms-2" styleButton={{height:"50px",width:"50px"}} onClick={addDoctorToClinic} icon="add" FONT_SIZE_ICON={"40px"} title={t("add doctor")}/>
@@ -258,7 +259,7 @@ export default function MemberOfClinic(props){
               <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"50px",fontSize:props.FONT_SIZE}}>{t("admin")}</th>
               <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:props.FONT_SIZE}}>{t("speciality")}</th>
               {
-                clinic.roleOfDoctor==='admin' && <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:props.FONT_SIZE}}>{t("Delete")}</th>
+                clinic.roleOfDoctor==='admin' && <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:props.FONT_SIZE}}>{t("action")}</th>
               }
             </tr>
           </thead>
@@ -324,7 +325,7 @@ export default function MemberOfClinic(props){
     <div className="my-3 d-flex align-items-center justify-content-center w-100 flex-column">
         <div className="d-flex flex-row align-items-center justify-content-center">
           <hr style={{ width: '140px' }} />
-          <span className="mx-3 mc-color fw-bold text-uppercase">{t('member clinic')}</span>
+          <span className="mx-3 mc-color fw-bold text-uppercase text-center">{t('member clinic')}</span>
           <hr style={{ width: '140px' }} />
         </div>
       </div>
