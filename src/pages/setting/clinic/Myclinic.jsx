@@ -12,6 +12,7 @@ import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, 
 import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
+import { refreshToken } from "../../../services/refreshToken.jsx";
 
 
 export default function Myclinic(props){
@@ -54,11 +55,10 @@ export default function Myclinic(props){
         setPublicIdAvatar(splitPublic_id(result.data.avatarClinic));
         resolve();
       }).catch((err) => {
-        if(err.isLogin===false){
-          clearAllSclice(dispatch);
-          nav("/login");
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getInformation());
         }else{
-          toast.error(t(err.message));
+          toast.info(t(err.message));
         }
         reject(err.message);
       }).finally(() => dispatch(setLoadingModal(false)))
@@ -76,12 +76,7 @@ export default function Myclinic(props){
         setNewClinic('');
         getAllClinic().then(()=>resolve());
       }).catch((err) => {
-        if(err.isLogin===false){
-          clearAllSclice(dispatch);
-          nav("/login");
-        }else{
-          toast.error(t(err.message));
-        }
+        toast.error(t(err.message));
         reject(err.message);
       }).finally(() => dispatch(setLoadingModal(false)))
     });
@@ -186,12 +181,12 @@ export default function Myclinic(props){
           }
         })
         dispatch(setDataClinic(result.data));
+        resolve();
       }).catch((err) =>{
-        if(err.isLogin===false){
-          clearAllSclice(dispatch);
-          nav("/login");
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getAllClinicAndSetDefault());
         }else{
-          toast.error(t(err.message));
+          toast.info(t(err.message));
         }
       }
       ).finally(() => dispatch(setLoadingModal(false)));

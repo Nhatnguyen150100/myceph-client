@@ -9,6 +9,7 @@ import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, 
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../../../services/getAPI.jsx";
+import { refreshToken } from "../../../services/refreshToken.jsx";
 
 let emailSearchTimeout = null;
 
@@ -65,11 +66,10 @@ export default function OtherProfile(props){
         setAavatar(splitAvatar(result.data.avatar,'/assets/images/doctor.png'));
         resolve();
       }).catch((err) => {
-        if(err.isLogin===false){
-          clearAllSclice(dispatch);
-          nav("/login");
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getInformation());
         }else{
-          toast.error(t(err.message));
+          toast.info(t(err.message));
         }
         reject(err.message);
       }).finally(() => dispatch(setLoadingModal(false)))

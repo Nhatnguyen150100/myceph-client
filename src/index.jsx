@@ -26,19 +26,17 @@ import ToastContainerComponent from './component/ToastContainerComponent.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <I18nextProvider i18n={i18n}>
-      <Provider store={store}>
-		    <PersistGate loading={null} persistor={persistor}>
-          <Router>
-            <App />
-            <ToastContainerComponent />
-          </Router>
-          <LoadingModal />
-        </PersistGate>
-	    </Provider>
-    </I18nextProvider>
-  </React.StrictMode>,
+  <I18nextProvider i18n={i18n}>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Router>
+          <App />
+          <ToastContainerComponent />
+        </Router>
+        <LoadingModal />
+      </PersistGate>
+    </Provider>
+  </I18nextProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

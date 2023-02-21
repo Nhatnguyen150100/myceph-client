@@ -14,6 +14,7 @@ import { setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
+import { refreshToken } from "../../../services/refreshToken.jsx";
 import DoctorRows from "./DoctorRows.jsx";
 
 const PAGE_SIZE = 4;
@@ -75,11 +76,10 @@ export default function MemberOfClinic(props){
         setCount(result.count);
         resolve();
       }).catch((err) => {
-        if(err.isLogin===false){
-          clearAllSclice(dispatch);
-          nav("/login");
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getAllDoctorInClinic(name));
         }else{
-          toast.error(t(err.message));
+          toast.info(t(err.message));
         }
         reject(err.message);
       }).finally(() =>setLoadingSearch(false));
@@ -111,12 +111,7 @@ export default function MemberOfClinic(props){
         });
         resolve();
       }).catch((err) => {
-        if(err.isLogin===false){
-          clearAllSclice(dispatch);
-          nav("/login");
-        }else{
-          toast.error(t(err.message));
-        }
+        toast.error(t(err.message));
         reject(err.message);
       }).finally(() => dispatch(setLoadingModal(false)))
     });
@@ -136,12 +131,7 @@ export default function MemberOfClinic(props){
           });
           resolve();
         }).catch((err) => {
-          if(err.isLogin===false){
-            clearAllSclice(dispatch);
-            nav("/login");
-          }else{
-            toast.error(t(err.message));
-          }
+          toast.error(t(err.message));
           reject(err.message);
         }).finally(() => dispatch(setLoadingModal(false)))
       });
@@ -163,12 +153,7 @@ export default function MemberOfClinic(props){
             resolve()
           });
         }).catch((err) => {
-          if(err.isLogin===false){
-            clearAllSclice(dispatch);
-            nav("/login");
-          }else{
-            toast.error(t(err.message));
-          }
+          toast.error(t(err.message));
           reject(err.message);
         }).finally(() => dispatch(setLoadingModal(false)))
       }

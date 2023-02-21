@@ -8,6 +8,7 @@ import NavbarComponent from "../../component/NavbarComponent.jsx";
 import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
 import { setAppName, setLoadingModal, setSettingTab } from "../../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../../services/getAPI.jsx";
+import { refreshToken } from "../../services/refreshToken.jsx";
 import ClinicSetting from "./clinic/ClinicSetting.jsx";
 import DoctorSetting from "./doctor/DoctorSetting.jsx";
 
@@ -30,12 +31,7 @@ export default function Setting(props){
       })
       dispatch(setDataClinic(result.data));
     }).catch((err) =>{
-      if(err.isLogin===false){
-        clearAllSclice(dispatch);
-        nav("/login");
-      }else{
-        toast.error(t(err.message));
-      }
+      toast.error(t(err.message));
     }
     ).finally(() => dispatch(setLoadingModal(false)));
   }

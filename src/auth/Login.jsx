@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import ButtonComponent from "../common/ButtonComponent.jsx";
 import NavbarComponent from "../component/NavbarComponent.jsx";
 import { postToServer } from "../services/getAPI.jsx";
 import { setDataDoctor } from "../redux/DoctorSlice.jsx";
-import { cookies, expireDateCookies, isValidEmail, SITE_KEY_RECAPTCHA } from "../common/Utility.jsx";
+import { cookies, isValidEmail, SITE_KEY_RECAPTCHA } from "../common/Utility.jsx";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { setAppName } from "../redux/GeneralSlice.jsx";
 
@@ -34,9 +34,10 @@ function LoginPage(props){
 			setLoading(true);
       executeRecaptcha('login').then(token => 
         postToServer('/v1/auth/login', { email: email, password: password, tokenRecaptcha: token }).then((result) => {
-          const expireDate = expireDateCookies();
-          cookies.set('accessToken', result.data.accessToken, { path: '/', expires: expireDate, sameSite: true, secure: true });
+          cookies.set('accessToken', result.data.accessToken, { path: '/', sameSite: true, secure: true });
+          cookies.set('refreshToken', result.data.refreshToken, { path: '/', sameSite: true, secure: true });
           delete result.data.accessToken;
+          delete result.data.refreshToken;
           dispatch(setDataDoctor(result.data));
           nav("/");
         })

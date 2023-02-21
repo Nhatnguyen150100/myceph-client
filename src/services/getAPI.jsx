@@ -33,10 +33,8 @@ export function postToServerWithToken(url, bodyObject,dispatch) {
 			body: JSON.stringify(bodyObject)
 		})
 			.then((response) => {
-				if(response.status==403){
-					if(response.isLogin===false){
-						clearAllSclice(dispatch);
-					}
+				if(response.status===403){
+					response.json().then(json => reject(json))
 				}
 				if (response.status === 419) {
 					alert('Your session is already expired because you are idle for too long. Page will automatic refesh.');

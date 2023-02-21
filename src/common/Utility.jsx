@@ -30,12 +30,12 @@ export const clearAllSclice = (dispatch) => {
   dispatch(clearGeneralSlice());
   dispatch(clearClinicSlice());
 }
- 
-export const expireDateCookies = () => {
-  const timestamp = new Date().getTime();
-  const expire = timestamp + (1000*60*60);
-  return new Date(expire);
-}
+
+// export const expireDateCookies = () => {
+//   const timestamp = new Date().getTime();
+//   const expire = timestamp + (1000*60*30);
+//   return new Date(expire);
+// }
 
 export function isValidEmail(email) {
   return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)

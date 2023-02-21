@@ -5,18 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
-import { clearAllSclice, FONT_SIZE } from "../../common/Utility.jsx";
-import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
+import { FONT_SIZE } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken } from "../../services/getAPI.jsx";
+import { refreshToken } from "../../services/refreshToken.jsx";
 import PatientRows from "./PatientRows.jsx";
 
 const PAGE_SIZE = 5;
 let nameSearchTimeout = null;
 
 export default function MyPatient(props){
-  const getAllPatient = useSelector(state=>state.patient.getAllPatient);
+  const getAllPatientDoctor = useSelector(state=>state.patient.getAllPatientDoctor);
   const doctor = useSelector(state=>state.doctor.data);
   const {t} = useTranslation();
   const dispatch = useDispatch();
@@ -46,14 +46,13 @@ export default function MyPatient(props){
         dispatch(setGetAllPatientDoctor(false));
         resolve();
       }).catch((err) =>{
-        if(err.isLogin===false){
-          clearAllSclice(dispatch);
-          nav("/login");
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getAllPaitentForDoctor(name));
         }else{
           reject(err);
+          toast.info(err.message);
         }
-      }
-      ).finally(() =>{
+      }).finally(() =>{
         setLoadingSearch(false);
       });
     })
@@ -70,12 +69,7 @@ export default function MyPatient(props){
             resolve();
           });
         }).catch((err) =>{
-          if(err.isLogin===false){
-            clearAllSclice(dispatch);
-            nav("/login");
-          }else{
-            reject(err);
-          }
+          reject(err);
         }
         ).finally(() =>{
           dispatch(setLoadingModal(false));
@@ -93,12 +87,8 @@ export default function MyPatient(props){
   },[page])
 
   useEffect(()=>{
-    if(getAllPatient) getAllPaitentForDoctor();
-  },[getAllPatient])
-
-  useEffect(()=>{
-    getAllPaitentForDoctor();
-  },[])
+    if(getAllPatientDoctor) getAllPaitentForDoctor();
+  },[getAllPatientDoctor])
 
   const handleClose = () => {
     setOpenDeleteConfirm(false);
@@ -110,7 +100,7 @@ export default function MyPatient(props){
   }
 
   return <div className="h-100 w-100 container">
-      <table className="table table-bordered table-striped text-center rounded mt-3">
+      <table className="table table-bordered table-striped text-center rounded my-4">
         <thead className='mc-background text-white text-uppercase'>
           <tr>
             <th colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>

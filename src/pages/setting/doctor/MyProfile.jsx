@@ -10,6 +10,7 @@ import { clearClinicSlice, setIdClinicDefault, setRoleOfDoctor } from "../../../
 import { setDataDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
+import { refreshToken } from "../../../services/refreshToken.jsx";
 
 export default function MyProfile(props){
   const loading = useSelector(state=>state.general.loading);
@@ -54,11 +55,10 @@ export default function MyProfile(props){
         setPublicIdAvatar(splitPublic_id(result.data.avatar));
         resolve();
       }).catch((err) => {
-        if(err.isLogin===false){
-          clearAllSclice(dispatch);
-          nav("/login");
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getInformation());
         }else{
-          toast.error(t(err.message));
+          toast.info(t(err.message));
         }
         reject(err.message);
       }).finally(() => dispatch(setLoadingModal(false)))
