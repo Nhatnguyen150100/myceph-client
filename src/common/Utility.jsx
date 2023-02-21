@@ -19,6 +19,11 @@ export const FONT_SIZE_ICON = "18px";
 export const FONT_SIZE_BUTTON_ICON = "40px";
 export const AVATAR_HEIGHT = "300px";
 export const AVATAR_WIDTH = "200px";
+export const FONT_SIZE_HEAD = '19px';
+export const FONT_SIZE = '15px';
+export const FONT_SIZE_ICONS = '45px';
+export const FONT_SIZE_HEADER = '17px';
+
 
 export const clearAllSclice = (dispatch) => {
   dispatch(logOutDoctor());

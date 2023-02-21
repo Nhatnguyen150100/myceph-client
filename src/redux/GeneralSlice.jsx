@@ -8,7 +8,8 @@ export const GeneralSlice = createSlice({
     language: 'vi',
     settingTab: 0,
     doctorSettingTab: 0,
-    clinicSettingTab: 0
+    clinicSettingTab: 0,
+    patientListTab: 0
   },
   reducers:{
     setAppName: (state,action) => {
@@ -29,16 +30,21 @@ export const GeneralSlice = createSlice({
     setClinicSettingTab: (state,action) => {
       state.clinicSettingTab = action.payload;
     },
+    setpatientListTab: (state,action) => {
+      state.patientListTab = action.payload;
+    },
     clearGeneralSlice: (state) => {
       state.settingTab = 0;
       state.doctorSettingTab = 0;
       state.clinicSettingTab = 0;
+      state.patientListTab = 0;
+      state.loading = false;
     }
   }
 })
 
 export const {
-  setLoadingModal,setLanguage,setAppName,setSettingTab,setDoctorSettingTab,setClinicSettingTab,clearGeneralSlice
+  setLoadingModal,setLanguage,setAppName,setSettingTab,setDoctorSettingTab,setClinicSettingTab,clearGeneralSlice,setpatientListTab
 } = GeneralSlice.actions;
 
 export default GeneralSlice.reducer;

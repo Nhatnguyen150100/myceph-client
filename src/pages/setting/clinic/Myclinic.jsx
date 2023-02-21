@@ -8,17 +8,11 @@ import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
-import { clearAllSclice, convertISOToVNDateString, deleteImage, isValidEmail, splitAvatar, splitFirst, splitLast, splitPublic_id, toISODateString, upLoadImage } from "../../../common/Utility.jsx";
+import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, deleteImage, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, isValidEmail, splitAvatar, splitFirst, splitLast, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
 import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 
-const WIDTH_HEAD = "150px";
-const WIDTH_CHILD = "300px";
-const FONT_SIZE_ICON = "18px";
-const FONT_SIZE_BUTTON_ICON = "40px";
-const AVATAR_HEIGHT = "250px";
-const AVATAR_WIDTH = "200px";
 
 export default function Myclinic(props){
   const doctor = useSelector(state=>state.doctor.data);
@@ -251,65 +245,65 @@ export default function Myclinic(props){
         </div>
         <div className="w-100 d-flex justify-content-between mb-2">
           <div>
-            <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:props.FONT_SIZE}}>{t('you are')}: </span>
+            <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
             <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
           </div>
           <div>
-            <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:props.FONT_SIZE}}>{t('update at')}: </span>
+            <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('update at')}: </span>
             <span>{convertISOToVNDateString(toISODateString(new Date(clinic.data?.updatedAt?clinic.data?.updatedAt:new Date())))}</span>
           </div>
         </div>
         <div className="d-flex flex-row flex-grow-1">
           <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
             {
-              editMode && <UploadImage className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:props.FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
+              editMode && <UploadImage className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
             }
             <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatarClinic):avatarClinic}`} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
           </div>
           <div className="d-flex flex-column flex-grow-1 ms-5">
             <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('email of clinic')}:</label>
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('email of clinic')}:</label>
               {
                 editMode ? 
-                <input className="text-gray border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={emailClinic} onChange={e=>setEmailClinic(e.target.value)}/>
+                <input className="text-gray border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={emailClinic} onChange={e=>setEmailClinic(e.target.value)}/>
                 :
-                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{emailClinic?emailClinic:'no data'}</span>
+                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{emailClinic?emailClinic:'no data'}</span>
               }
             </div>
             <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('name clinic')}:</label>
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('name clinic')}:</label>
               {
                 editMode ? 
-                <input className="text-gray border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={nameClinic} onChange={e=>setNameClinic(e.target.value)}/>
+                <input className="text-gray border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={nameClinic} onChange={e=>setNameClinic(e.target.value)}/>
                 :
-                <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{nameClinic?nameClinic:'no data'}</span>
+                <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{nameClinic?nameClinic:'no data'}</span>
               }
             </div>
             <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
               {
                 editMode ? 
-                <input className="text-gray border-0 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE,width:WIDTH_CHILD}} type="number" value={phoneNumberClinic} onChange={e=>setPhoneNumberClinic(e.target.value)}/>
+                <input className="text-gray border-0 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE,width:WIDTH_CHILD}} type="number" value={phoneNumberClinic} onChange={e=>setPhoneNumberClinic(e.target.value)}/>
                 :
-                <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumberClinic?phoneNumberClinic:'no data'}</span>
+                <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumberClinic?phoneNumberClinic:'no data'}</span>
               }
             </div>
             <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('address of clinic')}:</label>
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('address of clinic')}:</label>
               {
                 editMode ? 
-                <input className="text-gray border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={addressClinic} onChange={e=>setAddressClinic(e.target.value)}/>
+                <input className="text-gray border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={addressClinic} onChange={e=>setAddressClinic(e.target.value)}/>
                 :
-                <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{addressClinic?addressClinic:'no data'}</span>
+                <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{addressClinic?addressClinic:'no data'}</span>
               }
             </div>
             <div className={`d-flex ${editMode?'border-bottom':''}`}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
               {
                 editMode ? 
-                <textarea className="text-gray border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:props.FONT_SIZE}} value={description} onChange={e=>setDescription(e.target.value)}/>
+                <textarea className="text-gray border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={description} onChange={e=>setDescription(e.target.value)}/>
                 :
-                <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{description?description:'no data'}</span>
+                <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{description?description:'no data'}</span>
               }
             </div>
           </div>
@@ -337,14 +331,14 @@ export default function Myclinic(props){
       }
     </div>
     <ConfirmComponent 
-      FONT_SIZE={props.FONT_SIZE}
+      FONT_SIZE={FONT_SIZE}
       open={openDeleteConfirm} 
       title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this clinic')}</span>} 
       content={
         <div>
-          <span className="me-1" style={{fontSize:props.FONT_SIZE}}>{t('To delete this this clinic, enter the id clinic')}</span>
-          <span style={{fontSize:props.FONT_SIZE}} className="text-danger fw-bold">{clinic.idClinicDefault}</span>
-          <span className="ms-1" style={{fontSize:props.FONT_SIZE}}>{t('in the box below and press agree')}</span>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this this clinic, enter the id clinic')}</span>
+          <span style={{fontSize:FONT_SIZE}} className="text-danger fw-bold">{clinic.idClinicDefault}</span>
+          <span className="ms-1" style={{fontSize:FONT_SIZE}}>{t('in the box below and press agree')}</span>
         </div>
       } 
       label={t('Id clinic')}

@@ -4,6 +4,7 @@ import ForgotPassword from "./auth/ForgotPassword.jsx";
 import Login from "./auth/login.jsx";
 import Register from "./auth/Register.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import PatientList from "./pages/patientList/PatientList.jsx";
 import Setting from "./pages/setting/Setting.jsx";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route path="/setting" element={<Setting />} />
+      <Route path="/patientList" element={<PatientList />} />
     </Routes>
   );
 }

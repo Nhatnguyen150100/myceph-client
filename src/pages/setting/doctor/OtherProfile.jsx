@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
-import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, splitAvatar, toISODateString, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
+import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, FONT_SIZE, splitAvatar, toISODateString, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../../../services/getAPI.jsx";
@@ -109,8 +109,8 @@ export default function OtherProfile(props){
             return <button className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-start" type="button" onClick={e=>onSelectOtherDoctor(doctor)}>
               <img alt="avatar" className="rounded" src={splitAvatar(doctor.avatar,'/assets/images/doctor.png')} style={{height:"50px",width:"40px",objectFit:"cover"}}/>
               <div className="d-flex ms-3 flex-column justify-content-center align-items-center flex-grow-1">
-                <span className="mc-color" style={{fontSize:props.FONT_SIZE}}>{doctor.email}</span>
-                <span className="text-capitalize" style={{fontSize:props.FONT_SIZE}}>{'('}{doctor.fullName?doctor.fullName:t('no data')}{')'}</span>
+                <span className="mc-color" style={{fontSize:FONT_SIZE}}>{doctor.email}</span>
+                <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{'('}{doctor.fullName?doctor.fullName:t('no data')}{')'}</span>
               </div>
             </button>
           })
@@ -140,36 +140,36 @@ export default function OtherProfile(props){
           </div>
           <div className="d-flex flex-column flex-grow-1 ms-5">
             <div className={`d-flex mb-3`}>
-              <span className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('email')}:</span>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{email}</span>
-              <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('full name')}:</label>    
-              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{fullName?fullName:'no data'}</span>
+              <span className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('email')}:</span>
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{email}</span>
+              <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('full name')}:</label>    
+              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{fullName?fullName:'no data'}</span>
             </div>
             <div className={`d-flex mb-3 `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('gender')}:</label>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{gender?gender:'no data'}</span>
-              <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('birth of day')}:</label>   
-              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(birthday?birthday:new Date())))}</span>
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('gender')}:</label>
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{gender?gender:'no data'}</span>
+              <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('birth of day')}:</label>   
+              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(birthday?birthday:new Date())))}</span>
             </div>
             <div className={`d-flex mb-3 `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumber?phoneNumber:'no data'}</span>
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumber?phoneNumber:'no data'}</span>
               <div className="d-flex flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
-                <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('speciality')}:</label>
-                <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{speciality?speciality:'no data'}</span>
+                <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('speciality')}:</label>
+                <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{speciality?speciality:'no data'}</span>
               </div>
             </div>
             <div className={`d-flex mb-3 `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('diploma')}:</label>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{diploma?diploma:'no data'}</span>
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('diploma')}:</label>
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{diploma?diploma:'no data'}</span>
             </div>
             <div className={`d-flex mb-3 `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('position')}:</label>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:props.FONT_SIZE}}>{position?position:'no data'}</span>    
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('position')}:</label>
+              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{position?position:'no data'}</span>    
             </div>
             <div className={`d-flex `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:props.FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
-              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:props.FONT_SIZE}}>{description?description:'no data'}</span>
+              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
+              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{description?description:'no data'}</span>
             </div>
           </div>
         </div>

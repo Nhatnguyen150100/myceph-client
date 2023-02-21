@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import ClinicSlice from './ClinicSlice.jsx';
 import DoctorSlice from './DoctorSlice.jsx';
 import GeneralSlice from './GeneralSlice.jsx';
+import PatientSlice from './PatientSlice.jsx';
 
 const persistConfig = {
 	key: 'root',
@@ -12,7 +13,7 @@ const persistConfig = {
 	backList: ['general']
 };
 
-const rootReducer = combineReducers({doctor: DoctorSlice, general: GeneralSlice, clinic: ClinicSlice});
+const rootReducer = combineReducers({doctor: DoctorSlice, general: GeneralSlice, clinic: ClinicSlice, patient: PatientSlice});
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

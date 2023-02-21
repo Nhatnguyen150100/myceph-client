@@ -3,17 +3,13 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { clearAllSclice } from "../../common/Utility.jsx";
+import { clearAllSclice, FONT_SIZE, FONT_SIZE_HEADER, FONT_SIZE_ICONS } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
-import { clearClinicSlice, setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
+import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
 import { setAppName, setLoadingModal, setSettingTab } from "../../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../../services/getAPI.jsx";
 import ClinicSetting from "./clinic/ClinicSetting.jsx";
 import DoctorSetting from "./doctor/DoctorSetting.jsx";
-
-const FONT_SIZE = '15px';
-const FONT_SIZE_ICONS = '45px';
-const FONT_SIZE_HEADER = '17px';
 
 export default function Setting(props){
   const {t} = useTranslation();
@@ -47,9 +43,9 @@ export default function Setting(props){
   let currentTab = null;
 
   switch(selectedTab){
-    case 0: currentTab = <DoctorSetting FONT_SIZE={FONT_SIZE}/>
+    case 0: currentTab = <DoctorSetting/>
       break;
-    case 1: currentTab = <ClinicSetting FONT_SIZE={FONT_SIZE}/>
+    case 1: currentTab = <ClinicSetting/>
       break;
     default: currentTab = <div>Error</div>
   }

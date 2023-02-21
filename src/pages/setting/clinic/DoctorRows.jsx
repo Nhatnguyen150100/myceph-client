@@ -1,9 +1,8 @@
-import { Switch } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
-import { convertISOToVNDateString, splitAvatar, toISODateString } from "../../../common/Utility.jsx";
+import { convertISOToVNDateString, FONT_SIZE, splitAvatar, toISODateString } from "../../../common/Utility.jsx";
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setSettingTab } from "../../../redux/GeneralSlice.jsx";
 
@@ -31,16 +30,16 @@ export default function DoctorRows(props){
     <td className="d-lg-table-cell d-none">
       <img alt="avatar" className="rounded" src={splitAvatar(props.doctor.avatar,'/assets/images/doctor.png')} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
     </td>
-    <td className={`${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:props.FONT_SIZE}}>
+    <td className={`${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>
       {props.doctor.fullName?props.doctor.fullName:t('no data')}
     </td>
-    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:props.FONT_SIZE}}>
+    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>
       {props.doctor.email?props.doctor.email:t('no data')}
     </td>
-    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:props.FONT_SIZE}}>
+    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>
       {props.doctor.birthday?convertISOToVNDateString(toISODateString(new Date(props.doctor.birthday))):t('no data')}
     </td>
-    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:props.FONT_SIZE}}>
+    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>
       {props.doctor.gender?props.doctor.gender:t('no data')}
     </td>
     <td className={`d-lg-table-cell ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`}>
@@ -59,7 +58,7 @@ export default function DoctorRows(props){
           placeholder={t('change to admin')}/>
       </div>
     </td>
-    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:props.FONT_SIZE}}>
+    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>
       {props.doctor.speciality?props.doctor.speciality:t('no data')}
     </td>
      <td className="d-lg-table-cell">

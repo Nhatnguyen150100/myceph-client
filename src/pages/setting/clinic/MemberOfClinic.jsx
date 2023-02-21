@@ -9,7 +9,7 @@ import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
-import { clearAllSclice, isValidEmail, splitAvatar, splitFirst, splitLast } from "../../../common/Utility.jsx";
+import { clearAllSclice, FONT_SIZE, isValidEmail, splitAvatar, splitFirst, splitLast } from "../../../common/Utility.jsx";
 import { setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
@@ -215,8 +215,8 @@ export default function MemberOfClinic(props){
                   return <button className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-between" type="button" onClick={e=>{setNewDoctor(doctor.email);setListEmailSearch([])}}>
                     <img alt="avatar" className="rounded" src={splitAvatar(doctor.avatar,'/assets/images/doctor.png')} style={{height:"50px",width:"40px",objectFit:"cover"}}/>
                     <div className="d-flex ms-3 flex-column justify-content-center align-items-center">
-                      <span className="mc-color" style={{fontSize:props.FONT_SIZE}}>{doctor.email}</span>
-                      <span className="text-capitalize" style={{fontSize:props.FONT_SIZE}}>{'('}{doctor.fullName?doctor.fullName:t('no data')}{')'}</span>
+                      <span className="mc-color" style={{fontSize:FONT_SIZE}}>{doctor.email}</span>
+                      <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{'('}{doctor.fullName?doctor.fullName:t('no data')}{')'}</span>
                     </div>
                     <button type="button" className="btn btn-outline-info border-0 p-0 m-0 text-white-hover" onClick={e=>toOtherDoctorProfile(doctor.email)}>
                       <span class="material-symbols-outlined mt-1 mx-1">
@@ -239,7 +239,7 @@ export default function MemberOfClinic(props){
       }
     </div>
     <div className="d-flex flex-row justify-content-start mb-2">
-      <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:props.FONT_SIZE}}>{t('you are')}: </span>
+      <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
       <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
     </div>
     <div className="h-100 w-100">
@@ -247,20 +247,18 @@ export default function MemberOfClinic(props){
         <table className="table table-bordered table-striped text-center rounded">
           <thead className='mc-background text-white text-uppercase'>
             <tr>
-              <th colSpan={2} style={{minWidth:"350px",fontSize:props.FONT_SIZE}}>
+              <th colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>
                 <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
                   <input type="text" className="border-0 flex-grow-1 w-100" placeholder={t("type doctor name to search")} style={{ outline: "none" }} value={nameSearch} onChange={onNameSearchChange}/>
                   <span className="material-symbols-outlined vc-teal fw-bolder">search</span>
                 </div>
               </th>
-              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{minWidth:"170px",fontSize:props.FONT_SIZE}}>{t("email")}</th>
-              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:props.FONT_SIZE}}>{t("date of birth")}</th>
-              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"60px",fontSize:props.FONT_SIZE}}>{t("gender")}</th>
-              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"50px",fontSize:props.FONT_SIZE}}>{t("admin")}</th>
-              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:props.FONT_SIZE}}>{t("speciality")}</th>
-              {
-                clinic.roleOfDoctor==='admin' && <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:props.FONT_SIZE}}>{t("action")}</th>
-              }
+              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{minWidth:"170px",fontSize:FONT_SIZE}}>{t("email")}</th>
+              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("date of birth")}</th>
+              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"60px",fontSize:FONT_SIZE}}>{t("gender")}</th>
+              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"50px",fontSize:FONT_SIZE}}>{t("admin")}</th>
+              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("speciality")}</th>
+              <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE}}>{t("action")}</th>             
             </tr>
           </thead>
           {
@@ -271,7 +269,7 @@ export default function MemberOfClinic(props){
             
             :
             <React.Fragment>
-              <tbody>{listDoctor.map((doctor, index) => <DoctorRows key={index} doctor={doctor} changeRoleOfDoctor={(idDoctor,roleOfDoctor)=>onChangeRoleOfDoctor(idDoctor,roleOfDoctor)} deleteDoctorFromClinic={onDeleteHandle} FONT_SIZE={props.FONT_SIZE}/>)}</tbody>
+              <tbody>{listDoctor.map((doctor, index) => <DoctorRows key={index} doctor={doctor} changeRoleOfDoctor={(idDoctor,roleOfDoctor)=>onChangeRoleOfDoctor(idDoctor,roleOfDoctor)} deleteDoctorFromClinic={onDeleteHandle}/>)}</tbody>
               <tfoot className="align-middle">
                 <tr>
                   <td colSpan={8} align='center'>
@@ -292,14 +290,14 @@ export default function MemberOfClinic(props){
         </table>
       </div>
       <ConfirmComponent 
-        FONT_SIZE={props.FONT_SIZE}
+        FONT_SIZE={FONT_SIZE}
         open={openDeleteConfirm} 
         title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm remove doctor from clinic')}</span>} 
         content={
           <div>
-            <span className="me-1" style={{fontSize:props.FONT_SIZE}}>{t('To remove this doctor from the clinic, enter the id')}</span>
-            <span style={{fontSize:props.FONT_SIZE}} className="text-danger fw-bold">{idDoctorUpdate}</span>
-            <span className="ms-1" style={{fontSize:props.FONT_SIZE}}>{t('in the box below and press agree')}</span>
+            <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To remove this doctor from the clinic, enter the id')}</span>
+            <span style={{fontSize:FONT_SIZE}} className="text-danger fw-bold">{idDoctorUpdate}</span>
+            <span className="ms-1" style={{fontSize:FONT_SIZE}}>{t('in the box below and press agree')}</span>
           </div>
         } 
         label={t('Id doctor')}
@@ -307,15 +305,15 @@ export default function MemberOfClinic(props){
         handleSubmit={value=>deleteDoctorFromClinic(value)}
       />
       <ConfirmComponent 
-        FONT_SIZE={props.FONT_SIZE}
+        FONT_SIZE={FONT_SIZE}
         open={openConfirm} 
         title={<span className="text-capitalize fw-bold mc-color" style={{fontSize:"20px"}}>{t('confirm change role of doctor')}</span>} 
         content={
           <div>
-            <span style={{fontSize:props.FONT_SIZE}}>{t('Do you want to switch role of doctor from')}</span>
-            <span className={`fw-bold text-uppercase ms-1 ${roleDoctorUpdate==='admin'?'text-warning':'text-success'}`} style={{fontSize:props.FONT_SIZE}}>{roleDoctorUpdate==='admin'?'member':'admin'}</span>
+            <span style={{fontSize:FONT_SIZE}}>{t('Do you want to switch role of doctor from')}</span>
+            <span className={`fw-bold text-uppercase ms-1 ${roleDoctorUpdate==='admin'?'text-warning':'text-success'}`} style={{fontSize:FONT_SIZE}}>{roleDoctorUpdate==='admin'?'member':'admin'}</span>
             <span className="mx-1">{t('to')}</span>
-            <span className={`fw-bold text-uppercase ${roleDoctorUpdate==='admin'?'text-success':'text-danger'}`} style={{fontSize:props.FONT_SIZE}}>{roleDoctorUpdate==='admin'?'admin':'member'}</span>
+            <span className={`fw-bold text-uppercase ${roleDoctorUpdate==='admin'?'text-success':'text-danger'}`} style={{fontSize:FONT_SIZE}}>{roleDoctorUpdate==='admin'?'admin':'member'}</span>
           </div>
         }
         handleClose={handleClose} 
