@@ -79,7 +79,7 @@ export default function MemberOfClinic(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getAllDoctorInClinic(name));
         }else{
-          toast.info(t(err.message));
+          toast.error(t(err.message));
         }
         reject(err.message);
       }).finally(() =>setLoadingSearch(false));

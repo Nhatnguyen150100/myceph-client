@@ -69,7 +69,7 @@ export default function OtherProfile(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getInformation());
         }else{
-          toast.info(t(err.message));
+          toast.error(t(err.message));
         }
         reject(err.message);
       }).finally(() => dispatch(setLoadingModal(false)))
@@ -103,7 +103,7 @@ export default function OtherProfile(props){
   return <div className="d-flex flex-column h-100">
     <div className="position-relative mt-4" style={{width:"300px"}}>
       <TextFieldInput className="p-1" legend={t('find other doctor')} placeholder={t('Email of other doctor')} value={otherDoctor} onChange={value=>onEmailSearchChange(value)}/>
-      <ul className={`position-absolute d-flex flex-grow-1 p-0 w-100 flex-column me-2 bg-white border-start border-end ${(listEmailSearch.length>=0 && otherDoctor)?'border-bottom':''}`} style={{zIndex:"1"}}>
+      <ul className={`position-absolute d-flex flex-grow-1 p-0 w-100 flex-column me-2 bg-white border-start border-end ${(listEmailSearch.length>=0 && otherDoctor && !otherEmailDoctor)?'border-bottom':''}`} style={{zIndex:"1"}}>
         {
           listEmailSearch?.map(doctor=>{
             return <button className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-start" type="button" onClick={e=>onSelectOtherDoctor(doctor)}>
@@ -116,7 +116,7 @@ export default function OtherProfile(props){
           })
         }
         {
-          listEmailSearch.length===0 && otherDoctor && <div className="d-flex justify-content-center flex-row align-items-center h-100 py-2" style={{zIndex:"1"}}>
+          listEmailSearch.length===0 && otherDoctor && !otherEmailDoctor && <div className="d-flex justify-content-center flex-row align-items-center h-100 py-2" style={{zIndex:"1"}}>
             <img className="text-capitalize me-2" src="/assets/images/notFound.png" height={"35px"} alt={t("can't found doctor profile")} />
             <span className="text-danger text-capitalize mt-2">{t("can't found doctor profile")}</span>
           </div>

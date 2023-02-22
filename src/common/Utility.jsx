@@ -4,6 +4,7 @@ import sha1 from 'sha1';
 import { logOutDoctor } from '../redux/DoctorSlice.jsx';
 import { clearClinicSlice } from '../redux/ClinicSlice.jsx';
 import { clearGeneralSlice } from '../redux/GeneralSlice.jsx';
+import { clearPatientSlice } from '../redux/PatientSlice.jsx';
  
 export const cookies = new Cookies();
 
@@ -29,13 +30,8 @@ export const clearAllSclice = (dispatch) => {
   dispatch(logOutDoctor());
   dispatch(clearGeneralSlice());
   dispatch(clearClinicSlice());
+  dispatch(clearPatientSlice());
 }
-
-// export const expireDateCookies = () => {
-//   const timestamp = new Date().getTime();
-//   const expire = timestamp + (1000*60*30);
-//   return new Date(expire);
-// }
 
 export function isValidEmail(email) {
   return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)

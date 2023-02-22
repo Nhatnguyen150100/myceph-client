@@ -45,7 +45,7 @@ export default function PatientList(props){
         dispatch(setDataClinic(result.data));
         resolve();
       }).catch((err) =>{
-        toast.info(t(err.message));
+        if(!err.refreshToken) toast.info(t(err.message));
         reject();
       }
       ).finally(() => {

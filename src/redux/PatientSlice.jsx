@@ -16,12 +16,17 @@ export const PatientSlice = createSlice({
     },
     setGetAllPatientClinic: (state,action) => {
       state.getAllPatientClinic = action.payload;
+    },
+    clearPatientSlice: (state,action) => {
+      state.currentPatient = null;
+      state.getAllPatientDoctor = false;
+      state.getAllPatientClinic = false
     }
   }
 })
 
 export const {
-  setCurrentPatient,setGetAllPatientDoctor,setGetAllPatientClinic
+  setCurrentPatient,setGetAllPatientDoctor,setGetAllPatientClinic,clearPatientSlice
 } = PatientSlice.actions;
 
 export default PatientSlice.reducer;

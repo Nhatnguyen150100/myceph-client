@@ -49,9 +49,9 @@ export default function MyPatient(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getAllPaitentForDoctor(name));
         }else{
-          reject(err);
-          toast.info(err.message);
+          toast.error(err.message);
         }
+        reject(err);
       }).finally(() =>{
         setLoadingSearch(false);
       });

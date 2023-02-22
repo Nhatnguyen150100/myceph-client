@@ -18,12 +18,11 @@ export default function Setting(props){
   const selectedTab = useSelector(state=>state.general.settingTab);
   const [tabName,setTabName] = useState('doctor');
   const doctor = useSelector(state=>state.doctor.data);
-  const nav = useNavigate();
 
   const getAllClinic = () => {
     dispatch(setLoadingModal(true));
     getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
-      result.data.map(clinic=> {
+      result.data.map(clinic => {
         if(clinic.roleOfDoctor==='admin'){
           dispatch(setIdClinicDefault(clinic.id));
           dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
@@ -31,7 +30,7 @@ export default function Setting(props){
       })
       dispatch(setDataClinic(result.data));
     }).catch((err) =>{
-      toast.error(t(err.message));
+      if(!err.refreshToken) toast.info(t(err.message));
     }
     ).finally(() => dispatch(setLoadingModal(false)));
   }

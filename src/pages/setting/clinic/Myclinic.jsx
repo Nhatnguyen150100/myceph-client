@@ -58,7 +58,7 @@ export default function Myclinic(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getInformation());
         }else{
-          toast.info(t(err.message));
+          toast.error(t(err.message));
         }
         reject(err.message);
       }).finally(() => dispatch(setLoadingModal(false)))
@@ -186,7 +186,7 @@ export default function Myclinic(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getAllClinicAndSetDefault());
         }else{
-          toast.info(t(err.message));
+          toast.error(t(err.message));
         }
       }
       ).finally(() => dispatch(setLoadingModal(false)));

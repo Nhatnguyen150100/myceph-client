@@ -62,9 +62,9 @@ export default function PatientOfClinic(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getAllPaitentForClinic(name));
         }else{
-          reject(err);
-          toast.info(err.message);
+          toast.error(err.message);
         }
+        reject(err);
       }).finally(() =>{
         setLoadingSearch(false);
       });

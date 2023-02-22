@@ -33,16 +33,15 @@ export function postToServerWithToken(url, bodyObject,dispatch) {
 			body: JSON.stringify(bodyObject)
 		})
 			.then((response) => {
-				if(response.status===403){
-					response.json().then(json => reject(json))
-				}
 				if (response.status === 419) {
 					alert('Your session is already expired because you are idle for too long. Page will automatic refesh.');
 					window.location.reload();
 				}
 				if (response.status === 200) {
-						response.json().then(json => resolve(json));
-				} else response.json().then(json => reject(json));
+					response.json().then(json => resolve(json));
+				}else{
+					response.json().then(json => reject(json));
+				} 
 			})
 			.catch((err) => reject(err))
 	  }
