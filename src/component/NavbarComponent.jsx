@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { setAppName, setLanguage } from "../redux/GeneralSlice.jsx";
+import { setAppName, setLanguage, setLoadingModal } from "../redux/GeneralSlice.jsx";
 import i18n from '../translation/i18n.jsx';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Link, useNavigate } from "react-router-dom";
 import { clearAllSclice, cookies, splitEmail } from "../common/Utility.jsx";
+import { postToServerWithToken } from "../services/getAPI.jsx";
+import { toast } from "react-toastify";
 
 const FONT_SIZE = '17px';
 
@@ -16,18 +18,24 @@ export default function NavbarComponent(props) {
   const dispatch  = useDispatch();
   const nav = useNavigate();
   const {t} = useTranslation();
-  const [accessToken,setAccessToken] = useState();
 
   useEffect(()=>{
     changeLanguage(language);
   },[language])
 
-  useEffect(()=>{
-    setAccessToken(cookies.get('accessToken'));
-  },[])
-
   const changeLanguage = value => {
     i18n.changeLanguage(value);
+  }
+
+  const logout = () => {
+    dispatch(setLoadingModal(true));
+    postToServerWithToken(`/v1/auth/logout`,{
+      refreshToken: cookies.get('refreshToken')
+    }).then(response => {
+      clearAllSclice(dispatch);nav("/login")
+    }).catch(error => {
+      toast.error(error.message);
+    }).finally(()=>dispatch(setLoadingModal(false)));
   }
 
   return (
@@ -86,7 +94,7 @@ export default function NavbarComponent(props) {
                 </ul>
               </div>
               {
-                accessToken?
+                doctor?
                 <div className="dropdown ms-3">
                   <button className="btn border-0 dropdown-toggle d-flex flex-row align-items-center px-2 text-gray" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{outline:"none"}}>
                     <div className="d-flex flex-row align-items-center" style={{background:"transparent"}}>
@@ -103,7 +111,7 @@ export default function NavbarComponent(props) {
                       </li>
                     </Link>
                     <li className="w-100 mc-color-hover">
-                      <button className="btn d-flex flex-row align-items-center w-100 border-0" onClick={e=>{clearAllSclice(dispatch);nav("/login")}}>
+                      <button className="btn d-flex flex-row align-items-center w-100 border-0" onClick={logout}>
                         <span className="text-capitalize" style={{fontSize:FONT_SIZE,background:"transparent"}}>{t('log out')}</span>
                       </button>
                     </li>

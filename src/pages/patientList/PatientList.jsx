@@ -8,13 +8,16 @@ import SelectFieldInput from "../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../common/TextFieldInput.jsx";
 import { FONT_SIZE, FONT_SIZE_HEAD, splitFirst, splitLast, toISODateString, WIDTH_CHILD } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
-import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
+import { setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
 import { setAppName, setLoadingModal, setpatientListTab } from "../../redux/GeneralSlice.jsx";
 import { setGetAllPatientClinic, setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
-import { getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
+import { postToServerWithToken } from "../../services/getAPI.jsx";
+import { refreshToken } from "../../services/refreshToken.jsx";
 import MyPatient from "./MyPatient.jsx";
 import PatientOfClinic from "./PatientOfClinic.jsx";
 import PatientShared from "./PatientShared.jsx";
+import SharePatientSettingForDoctor from "./SharePatientSettingForDoctor.jsx";
+import SharePatientSetting from "./SharePatientSettingForDoctor.jsx";
 
 
 export default function PatientList(props){
@@ -31,32 +34,6 @@ export default function PatientList(props){
   const [newNotePatient,setNewNotePatient] = useState('');
   
   let currentTab = 0;
-
-  const getAllClinicAndSetDefault = () => {
-    return new Promise((resolve,reject) =>{
-      dispatch(setLoadingModal(true));
-      getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
-        result.data.map(clinic=> {
-          if(clinic.roleOfDoctor==='admin'){
-            dispatch(setIdClinicDefault(clinic.id));
-            dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
-          }
-        })
-        dispatch(setDataClinic(result.data));
-        resolve();
-      }).catch((err) =>{
-        if(!err.refreshToken) toast.info(t(err.message));
-        reject();
-      }
-      ).finally(() => {
-        dispatch(setLoadingModal(false));
-      });
-    })
-  }
-
-  useEffect(()=>{
-    getAllClinicAndSetDefault();
-  },[])
 
   const addNewPatient = () => {
     if(!newPatientName) toast.error(t('Name of patient is required'))
@@ -93,8 +70,12 @@ export default function PatientList(props){
         toast.success(result.message)
         resolve();
         }).catch((err) =>{
-          toast.error(t(err.message));
-          reject();
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>addNewPatient());
+          }else{
+            toast.error(err.message);
+          }
+          reject(err);
       }).finally(()=>dispatch(setLoadingModal(false)));
     });
   }
@@ -105,6 +86,10 @@ export default function PatientList(props){
     case 1: currentTab = <PatientOfClinic />
       break;
     case 2: currentTab = <PatientShared />
+      break;
+    case 3: currentTab = <SharePatientSettingForDoctor />
+      break;
+    case 4: currentTab = <SharePatientSetting />
       break;
     default: currentTab = <div>Error</div>
   }
@@ -117,36 +102,43 @@ export default function PatientList(props){
     <NavbarComponent />
     <div className="container">
       <div className="mt-3 mb-1 row">
-        <div className="col-4" style={{height:"90px"}}>
-          {
-            clinic.idClinicDefault && selectedTab===1 && 
-            <React.Fragment>
-              <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
-                {
-                  clinic.data?.map(clinic=>{
-                    return <option selected={clinic.roleOfDoctor==='admin'} className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
-                      {clinic.nameClinic}
-                    </option>
-                  })
-                }
-              </SelectFieldInput>
-              <div className="d-flex flex-row justify-content-start mt-1 ms-1">
-                <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
-                <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
-              </div>
-            </React.Fragment>
-          }
+      {
+        clinic.idClinicDefault && selectedTab===1 && 
+        <div className="col-4" style={{height:"70px"}}>
+          <React.Fragment>
+            <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
+              {
+                clinic.data?.map(clinic=>{
+                  return <option selected={clinic.roleOfDoctor==='admin'} className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
+                    {clinic.nameClinic}
+                  </option>
+                })
+              }
+            </SelectFieldInput>
+            <div className="d-flex flex-row justify-content-start mt-1 ms-1">
+              <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
+              <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
+            </div>
+          </React.Fragment>
         </div>
-        <div className="d-flex align-items-center justify-content-lg-end justify-content-sm-center flex-grow-1 col">
-          <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===0?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(0))}>
-            <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('my patient')}</span>
-          </button>
-          <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===1?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(1))}>
-            <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('patient of clinic')}</span>
-          </button>
-          <button type="button" className={`btn px-3 py-0 text-white-hover ${selectedTab===2?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(2))}>
-            <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('patient shared')}</span>
-          </button>
+        }
+        <div className="d-flex align-items-center justify-content-lg-between justify-content-sm-center flex-grow-1 col w-100" style={{height:"70px"}}>
+          <div>
+            <button type="button" style={{borderColor:"goldenrod"}} className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 || selectedTab===4?'mc-yellow-background text-white':'mc-yellow-hover'}`} onClick={e=>dispatch(setpatientListTab(selectedTab===0?3:4))} disabled={selectedTab===3 || selectedTab===4}>
+              <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('Share patient setting')}</span>
+            </button>
+          </div>
+          <div>
+            <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 && 'mc-border-pale'} ${selectedTab===0 ?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(0))}>
+              <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('my patient')}</span>
+            </button>
+            <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===4 && 'mc-border-pale'} ${selectedTab===1 ?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(1))}>
+              <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('patient of clinic')}</span>
+            </button>
+            <button type="button" className={`btn px-3 py-0 text-white-hover ${selectedTab===2?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(2))}>
+              <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('patient shared')}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -159,7 +151,7 @@ export default function PatientList(props){
           <div style={{width:"400px"}}>
             <TextFieldInput 
               className="me-2"
-              classNameLegend="w-auto mb-0 ms-2 float-none w-auto px-2 text-capitalize fw-bold" 
+              classNameLegend="w-auto mb-0 ms-2 float-none px-2 text-capitalize fw-bold" 
               classNameInput="rounded py-2 px-3" 
               placeholder={t('Name of patient')}  
               value={newPatientName} 
@@ -169,7 +161,7 @@ export default function PatientList(props){
           </div>
           <TextFieldInput 
             className="me-2"
-            classNameLegend="w-auto mb-0 ms-2 float-none w-auto px-2 text-capitalize fw-bold" 
+            classNameLegend="w-auto mb-0 ms-2 float-none px-2 text-capitalize fw-bold" 
             classNameInput="rounded py-2 px-1" 
             type="date"
             value={newPatientBirthday} 
@@ -179,7 +171,7 @@ export default function PatientList(props){
           />
           <SelectFieldInput  
             className="p-0 text-capitalize me-2" 
-            classNameLegend="w-auto mb-0 ms-2 float-none w-auto px-2 text-capitalize fw-bold" 
+            classNameLegend="w-auto mb-0 ms-2 float-none px-2 text-capitalize fw-bold" 
             classNameInput="rounded p-2 text-capitalize" 
             style={{outline:"none",width:WIDTH_CHILD,width:"120px"}} 
             value={newGenderPatient} 
@@ -196,7 +188,7 @@ export default function PatientList(props){
           </SelectFieldInput>
           <TextFieldInput 
             className="me-2 flex-grow-1"
-            classNameLegend="w-auto mb-0 ms-2 float-none w-auto px-2 text-capitalize fw-bold" 
+            classNameLegend="w-auto mb-0 ms-2 float-none px-2 text-capitalize fw-bold" 
             classNameInput="rounded py-2 px-3" 
             placeholder={t('note')}  
             value={newNotePatient} 
@@ -204,7 +196,7 @@ export default function PatientList(props){
             legend={t('note')}
           />
           <div className="mt-1 pt-1" style={{height:"50px"}}>
-            <IconButtonComponent className="btn-outline-success h-100" onClick={addNewPatient} icon="add" FONT_SIZE_ICON={"30px"} title={t("cancel")}/>
+            <IconButtonComponent className="btn-outline-success h-100" onClick={addNewPatient} icon="add" FONT_SIZE_ICON={"30px"} title={t("add new patient")}/>
           </div>
         </fieldset>
       </div>

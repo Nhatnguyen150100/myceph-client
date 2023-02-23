@@ -17,23 +17,6 @@ export default function Setting(props){
   const dispatch = useDispatch();
   const selectedTab = useSelector(state=>state.general.settingTab);
   const [tabName,setTabName] = useState('doctor');
-  const doctor = useSelector(state=>state.doctor.data);
-
-  const getAllClinic = () => {
-    dispatch(setLoadingModal(true));
-    getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
-      result.data.map(clinic => {
-        if(clinic.roleOfDoctor==='admin'){
-          dispatch(setIdClinicDefault(clinic.id));
-          dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
-        }
-      })
-      dispatch(setDataClinic(result.data));
-    }).catch((err) =>{
-      if(!err.refreshToken) toast.info(t(err.message));
-    }
-    ).finally(() => dispatch(setLoadingModal(false)));
-  }
 
   let currentTab = null;
 
@@ -47,7 +30,6 @@ export default function Setting(props){
 
   useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t('setting')}`));
-    getAllClinic();
   },[])
 
   return <div className="d-flex flex-column justify-content-start align-items-center h-100">

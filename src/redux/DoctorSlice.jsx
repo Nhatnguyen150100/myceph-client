@@ -15,6 +15,7 @@ export const DoctorSlice = createSlice({
     logOutDoctor: (state) => {
       storage.removeItem('persist:root');
       cookies.remove('accessToken', {path: '/'});
+      cookies.remove('refreshToken', {path: '/'});
       state.data = null;
       state.otherEmailDoctor = null;
     },

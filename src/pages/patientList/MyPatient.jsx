@@ -16,6 +16,7 @@ const PAGE_SIZE = 5;
 let nameSearchTimeout = null;
 
 export default function MyPatient(props){
+  const loading = useSelector(state=>state.general.loading);
   const getAllPatientDoctor = useSelector(state=>state.patient.getAllPatientDoctor);
   const doctor = useSelector(state=>state.doctor.data);
   const {t} = useTranslation();
@@ -83,7 +84,8 @@ export default function MyPatient(props){
   }
 
   useEffect(()=>{
-    getAllPaitentForDoctor();
+    if(doctor) getAllPaitentForDoctor();
+    else nav('/login');
   },[page])
 
   useEffect(()=>{
@@ -146,7 +148,7 @@ export default function MyPatient(props){
       </div>
     }
     {
-      listPatient.length===0 && <div className="d-flex justify-content-center flex-column align-items-center mt-5">
+      listPatient.length===0 && !loading && !loadingSearch && <div className="d-flex justify-content-center flex-column align-items-center mt-5">
         <img className="text-capitalize" src="/assets/images/notFound.png" height={"150px"} alt={t("can't found your patient")} />
         <span className="text-danger text-capitalize mt-2">{t("can't found your patient")}</span>
       </div>

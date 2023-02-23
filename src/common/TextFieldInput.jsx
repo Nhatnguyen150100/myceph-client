@@ -1,5 +1,4 @@
 import React from "react"
-import { FONT_SIZE } from "./Utility.jsx"
 
 export default function TextFieldInput(props){
   return <fieldset className={`border rounded ${props.className ? props.className : '' }`} style={props.style}>

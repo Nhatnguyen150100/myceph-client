@@ -26,6 +26,18 @@
   color: #40bab5 !important;
 }
 
+.mc-border-pale{
+  border-color: #40bab5 !important;
+}
+
+.mc-yellow-background{
+  background-color: goldenrod !important;
+}
+
+.mc-yellow-hover:hover{
+  background-color: goldenrod !important;
+}
+
 .hoverGreenLight:hover{
   background-color: #40bab5 !important;
 }

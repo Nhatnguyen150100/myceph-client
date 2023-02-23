@@ -106,7 +106,7 @@ export default function OtherProfile(props){
       <ul className={`position-absolute d-flex flex-grow-1 p-0 w-100 flex-column me-2 bg-white border-start border-end ${(listEmailSearch.length>=0 && otherDoctor && !otherEmailDoctor)?'border-bottom':''}`} style={{zIndex:"1"}}>
         {
           listEmailSearch?.map(doctor=>{
-            return <button className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-start" type="button" onClick={e=>onSelectOtherDoctor(doctor)}>
+            return <button key={doctor.id} className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-start" type="button" onClick={e=>onSelectOtherDoctor(doctor)}>
               <img alt="avatar" className="rounded" src={splitAvatar(doctor.avatar,'/assets/images/doctor.png')} style={{height:"50px",width:"40px",objectFit:"cover"}}/>
               <div className="d-flex ms-3 flex-column justify-content-center align-items-center flex-grow-1">
                 <span className="mc-color" style={{fontSize:FONT_SIZE}}>{doctor.email}</span>

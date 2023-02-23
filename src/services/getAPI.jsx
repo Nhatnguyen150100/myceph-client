@@ -1,3 +1,4 @@
+import { redirect } from "react-router-dom";
 import { clearAllSclice, cookies } from "../common/Utility.jsx";
 
 export const baseURL = process.env.BASE_URL_DEVELOPMENT;
@@ -12,18 +13,16 @@ export function postToServer(url, bodyObject) {
 		})
 			.then((response) => {
 				if (response.status === 419) {
-					alert('Your session is already expired because you are idle for too long. Page will automatic refesh.');
 					window.location.reload();
-				}
-				if (response.status === 200) {
+				}else if (response.status === 200) {
 						response.json().then(json => resolve(json));
-				} else response.json().then(json => reject(json));
+				}else response.json().then(json => reject(json));
 			})
 			.catch((err) => reject(err)),
 	);
 }
 
-export function postToServerWithToken(url, bodyObject,dispatch) {
+export function postToServerWithToken(url, bodyObject) {
 	return new Promise(async (resolve, reject) => {
     const token = await cookies.get('accessToken');
     fetch(baseURL + url, {
@@ -34,7 +33,6 @@ export function postToServerWithToken(url, bodyObject,dispatch) {
 		})
 			.then((response) => {
 				if (response.status === 419) {
-					alert('Your session is already expired because you are idle for too long. Page will automatic refesh.');
 					window.location.reload();
 				}
 				if (response.status === 200) {
@@ -59,7 +57,6 @@ export function putToServerWithToken(url, bodyObject) {
 		})
 			.then((response) => {
 				if (response.status === 419) {
-					alert('Your session is already expired because you are idle for too long. Page will automatic refesh.');
 					window.location.reload();
 				}
 				if (response.status === 200) {
@@ -80,20 +77,16 @@ export function getToServerWithToken(url) {
 			credentials: 'same-origin'
 		})
 			.then((response) => {
-				if(response.status===403){
-					response.json().then(json => reject(json))
-				}
-				if (response.status === 419) {
-					alert('Your session is already expired because you are idle for too long. Page will automatic refesh.');
+				if(response.status === 404){
+					response.text().then(text => reject(text));
+				}else if(response.status === 419) {
 					window.location.reload();
-				}
-				if (response.status === 200) {
+				}else if (response.status === 200) {
 						response.json().then(json => resolve(json));
-				} else response.json().then(json => reject(json));
+				}else response.json().then(json => reject(json));
 			})
 			.catch((err) => reject(err))
-    }
-	);
+    });
 }
 
 
@@ -106,11 +99,7 @@ export function deleteToServerWithToken(url) {
 			credentials: 'same-origin'
 		})
 			.then((response) => {
-				if(response.status===403){
-					response.json().then(json => reject(json))
-				}
 				if (response.status === 419) {
-					alert('Your session is already expired because you are idle for too long. Page will automatic refesh.');
 					window.location.reload();
 				}
 				if (response.status === 200) {

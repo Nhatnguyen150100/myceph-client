@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
-import { clearAllSclice, FONT_SIZE } from "../../common/Utility.jsx";
+import { FONT_SIZE } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { setGetAllPatientClinic } from "../../redux/PatientSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken } from "../../services/getAPI.jsx";
@@ -16,8 +16,10 @@ const PAGE_SIZE = 5;
 let nameSearchTimeout = null;
 
 export default function PatientOfClinic(props){
+  const loading = useSelector(state=>state.general.loading);
   const getAllPatientClinic = useSelector(state=>state.patient.getAllPatientClinic);
   const clinic = useSelector(state=>state.clinic);
+  const doctor = useSelector(state=>state.doctor.data);
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const nav = useNavigate();
@@ -46,7 +48,9 @@ export default function PatientOfClinic(props){
   const onNameSearchChange = e => {
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
-    nameSearchTimeout = setTimeout(getAllPaitentForClinic,300,e.target.value);
+    if(clinic.roleOfDoctor==='admin'){
+      nameSearchTimeout = setTimeout(getAllPaitentForClinic,300,e.target.value);
+    }else nameSearchTimeout = setTimeout(getSharedPatientOfDoctorInClinic,300,e.target.value);
   }
 
   const getAllPaitentForClinic = (name) => {
@@ -61,6 +65,28 @@ export default function PatientOfClinic(props){
       }).catch((err) =>{
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getAllPaitentForClinic(name));
+        }else{
+          toast.error(err.message);
+        }
+        reject(err);
+      }).finally(() =>{
+        setLoadingSearch(false);
+      });
+    })
+  }
+
+  const getSharedPatientOfDoctorInClinic = (name) => {
+    return new Promise((resolve, reject) => {
+      setLoadingSearch(true);
+      getToServerWithToken(`/v1/patient/getSharedPatientOfDoctorInClinic/${doctor.id}?idClinic=${clinic.idClinicDefault}&page=${page}&pageSize=${PAGE_SIZE}&nameSearch=${name?name:''}`).then(result=>{
+        if(result.data.length===0 && page>1) setPage(page-1);
+        setListPatient(result.data);
+        setCount(result.count);
+        dispatch(setGetAllPatientClinic(false));
+        resolve();
+      }).catch((err) =>{
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getSharedPatientOfDoctorInClinic(name));
         }else{
           toast.error(err.message);
         }
@@ -92,7 +118,8 @@ export default function PatientOfClinic(props){
   }
 
   useEffect(()=>{
-    getAllPaitentForClinic();
+    if(clinic.idClinicDefault && clinic.roleOfDoctor==='admin') getAllPaitentForClinic();
+    if(clinic.idClinicDefault && clinic.roleOfDoctor==='member') getSharedPatientOfDoctorInClinic();
   },[page,clinic.idClinicDefault])
 
   useEffect(()=>{
@@ -146,7 +173,7 @@ export default function PatientOfClinic(props){
     </div>
   }
   {
-    listPatient.length===0 && <div className="d-flex justify-content-center flex-column align-items-center mt-5">
+    listPatient.length===0 && !loading && !loadingSearch && <div className="d-flex justify-content-center flex-column align-items-center mt-5">
       <img className="text-capitalize" src="/assets/images/notFound.png" height={"150px"} alt={t("can't found your patient")} />
       <span className="text-danger text-capitalize mt-2">{t("can't found your patient")}</span>
     </div>
