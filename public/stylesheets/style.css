@@ -96,3 +96,16 @@
   --bs-btn-disabled-bg: #043d5d !important;
   --bs-btn-disabled-border-color: #043d5d !important;
 }
+
+.standout {
+  animation: crescendo 0.5s alternate infinite;
+}
+
+@keyframes crescendo {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.3);
+  }
+}

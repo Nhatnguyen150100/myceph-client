@@ -9,8 +9,7 @@ import PatientSlice from './PatientSlice.jsx';
 const persistConfig = {
 	key: 'root',
 	version: 1,
-	storage,
-	backList: ['general']
+	storage
 };
 
 const rootReducer = combineReducers({doctor: DoctorSlice, general: GeneralSlice, clinic: ClinicSlice, patient: PatientSlice});

@@ -101,34 +101,14 @@ export default function PatientList(props){
   return <div className="d-flex flex-column justify-content-start align-items-center h-100 w-100">
     <NavbarComponent />
     <div className="container">
-      <div className="mt-3 mb-1 row">
-      {
-        clinic.idClinicDefault && selectedTab===1 && 
-        <div className="col-4" style={{height:"70px"}}>
-          <React.Fragment>
-            <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
-              {
-                clinic.data?.map(clinic=>{
-                  return <option selected={clinic.roleOfDoctor==='admin'} className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
-                    {clinic.nameClinic}
-                  </option>
-                })
-              }
-            </SelectFieldInput>
-            <div className="d-flex flex-row justify-content-start mt-1 ms-1">
-              <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
-              <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
-            </div>
-          </React.Fragment>
-        </div>
-        }
-        <div className="d-flex align-items-center justify-content-lg-between justify-content-sm-center flex-grow-1 col w-100" style={{height:"70px"}}>
-          <div>
+      <div className="mt-3 mb-1">
+        <div className="d-flex align-items-center justify-content-lg-between justify-content-sm-center flex-grow-1 w-100 flex-wrap" style={{height:"70px"}}>
+          <div className="flex-grow-1">
             <button type="button" style={{borderColor:"goldenrod"}} className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 || selectedTab===4?'mc-yellow-background text-white':'mc-yellow-hover'}`} onClick={e=>dispatch(setpatientListTab(selectedTab===0?3:4))} disabled={selectedTab===3 || selectedTab===4}>
               <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('Share patient setting')}</span>
             </button>
           </div>
-          <div>
+          <div className="d-flex flex-row flex-wrap">
             <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 && 'mc-border-pale'} ${selectedTab===0 ?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(0))}>
               <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('my patient')}</span>
             </button>
@@ -140,11 +120,31 @@ export default function PatientList(props){
             </button>
           </div>
         </div>
+        {
+          clinic.idClinicDefault && selectedTab===1 && 
+          <div style={{height:"70px",maxWidth:"350px"}}>
+            <React.Fragment>
+              <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
+                {
+                  clinic.data?.map(clinic=>{
+                    return <option selected={clinic.roleOfDoctor==='admin'} className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
+                      {clinic.nameClinic}
+                    </option>
+                  })
+                }
+              </SelectFieldInput>
+              <div className="d-flex flex-row justify-content-start mt-1 ms-1">
+                <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
+                <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
+              </div>
+            </React.Fragment>
+          </div>
+        }
       </div>
     </div>
     {
       (selectedTab === 0 || (selectedTab === 1 && clinic.roleOfDoctor==='admin' )) && <div className="container w-100 mt-1">
-        <fieldset className="border rounded p-2 d-flex flex-row align-items-center">
+        <fieldset className="border rounded p-2 d-flex flex-row align-items-center flex-wrap justify-content-sm-center justify-content-center">
           <legend style={{fontSize:FONT_SIZE_HEAD}} className="mx-auto mb-0 float-none w-auto px-2 text-uppercase mc-color fw-bold">
             {t('create new patient')}
           </legend>

@@ -53,7 +53,7 @@ export default function PatientRows(props){
     <td className={`d-lg-table-cell`}>
       <div className="d-flex flex-row align-items-center justify-content-center">
         <div className="btn-group dropstart">
-          <Link title={t("share patient")} className="btn btn-outline-info p-1 border-0 me-2 mb-2 rounded" disabled={selectedTab===1 && clinic.roleOfDoctor!=='admin'}>
+          <Link title={t("share patient")} className="btn btn-outline-info p-1 border-0 me-2 mb-2 rounded d-none d-sm-block" disabled={selectedTab===1 && clinic.roleOfDoctor!=='admin'}>
             <img src="/assets/images/Share.png" width="34" height="34" alt="Discussion"/>
           </Link>
         </div>
