@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FONT_SIZE } from "../../common/Utility.jsx";
+import { FONT_SIZE, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
 import { getToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import PatientRows from "./PatientRows.jsx";
@@ -80,7 +80,7 @@ export default function MySharedPatient(props){
       {
         (!loadingSearch || listSharedPatient.length>0) && 
         <React.Fragment>
-          <tbody>{listSharedPatient.map((patient, index) => <PatientRows key={patient.id} patient={patient} shareByDoctor={true} action={false}/>)}</tbody>
+          <tbody>{listSharedPatient.map((patient, index) => <PatientRows selectPatientMode={SELECT_PATIENT_MODE.SHARE_PATIENT} key={patient.id} patient={patient} shareByDoctor={true} action={false}/>)}</tbody>
           {
             listSharedPatient.length!==0 && <tfoot className="align-middle">
               <tr>

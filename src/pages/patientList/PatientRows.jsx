@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
-import TextFieldInput from "../../common/TextFieldInput.jsx";
 import { convertISOToVNDateString, FONT_SIZE, SOFT_WARE_LIST, toISODateString } from "../../common/Utility.jsx";
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
-import { setDoctorSettingTab, setSelectPatientMode, setSettingTab, setSoftWareSelectedTab } from "../../redux/GeneralSlice.jsx";
-import { setCurrentPatient } from "../../redux/PatientSlice.jsx";
+import { setDoctorSettingTab, setSettingTab, setSoftWareSelectedTab } from "../../redux/GeneralSlice.jsx";
+import { setCurrentPatient, setSelectPatientOnMode } from "../../redux/PatientSlice.jsx";
 
 const AVATAR_HEIGHT = "90px";
 const AVATAR_WIDTH = "90px";
@@ -27,7 +26,7 @@ export default function PatientRows(props){
   }
 
   const onToSoftWare = (tab) => {
-    dispatch(setSelectPatientMode(props.selectPatientMode));
+    dispatch(setSelectPatientOnMode(props.selectPatientMode));
     dispatch(setSoftWareSelectedTab(tab));
     dispatch(setCurrentPatient(props.patient));
   }

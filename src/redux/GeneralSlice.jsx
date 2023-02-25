@@ -5,7 +5,6 @@ export const GeneralSlice = createSlice({
   initialState:{
     appName: 'Myceph',
     softWareSelectedTab: null,
-    selectPatientMode: null,
     medicalRecordTab: 0,
     loading: false,
     language: 'vi',
@@ -42,12 +41,8 @@ export const GeneralSlice = createSlice({
     setMedicalRecordTab: (state,action) => {
       state.medicalRecordTab = action.payload;
     },
-    setSelectPatientMode: (state,action) => {
-      state.selectPatientMode = action.payload;
-    },
     clearGeneralSlice: (state) => {
       state.softWareSelectedTab = null;
-      state.selectPatientMode = null;
       state.settingTab = 0;
       state.medicalRecordTab = 0;
       state.doctorSettingTab = 0;
@@ -61,7 +56,7 @@ export const GeneralSlice = createSlice({
 export const {
   setLoadingModal,setLanguage,setAppName,setSettingTab,setDoctorSettingTab,
   setClinicSettingTab,clearGeneralSlice,setpatientListTab,
-  setSoftWareSelectedTab,setMedicalRecordTab,setSelectPatientMode
+  setSoftWareSelectedTab,setMedicalRecordTab
 } = GeneralSlice.actions;
 
 export default GeneralSlice.reducer;

@@ -5,13 +5,15 @@ export const PatientSlice = createSlice({
   initialState:{
     currentPatient: null,
     selectPatientOnMode: null,
-    roleOfDoctor: null,
     getAllPatientDoctor: false,
     getAllPatientClinic: false
   },
   reducers:{
     setCurrentPatient: (state,action) => {
       state.currentPatient = action.payload;
+    },
+    setSelectPatientOnMode: (state,action) => {
+      state.selectPatientOnMode = action.payload;
     },
     setGetAllPatientDoctor: (state,action) => {
       state.getAllPatientDoctor = action.payload;
@@ -20,6 +22,7 @@ export const PatientSlice = createSlice({
       state.getAllPatientClinic = action.payload;
     },
     clearPatientSlice: (state,action) => {
+      state.selectPatientOnMode = null;
       state.currentPatient = null;
       state.getAllPatientDoctor = false;
       state.getAllPatientClinic = false
@@ -28,7 +31,7 @@ export const PatientSlice = createSlice({
 })
 
 export const {
-  setCurrentPatient,setGetAllPatientDoctor,setGetAllPatientClinic,clearPatientSlice
+  setCurrentPatient,setGetAllPatientDoctor,setGetAllPatientClinic,clearPatientSlice,setSelectPatientOnMode
 } = PatientSlice.actions;
 
 export default PatientSlice.reducer;

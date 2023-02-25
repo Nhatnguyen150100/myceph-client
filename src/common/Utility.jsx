@@ -195,6 +195,18 @@ export const deleteImage = (publicIdAvatar) => {
   })
 }
 
+export function computeAge(birthday) {
+  let age,month;
+  if(birthday) {
+    let currentMonth = (new Date(Date.now())).getMonth();
+    let birthMonth =  (new Date(Date.parse(birthday))).getMonth();
+    age = (new Date(Date.now())).getFullYear()-(new Date(Date.parse(birthday))).getFullYear();
+    if(currentMonth<birthMonth) age = age-1;
+    if(age<=20) month = currentMonth<birthMonth?currentMonth+12-birthMonth:currentMonth-birthMonth;
+  }
+  return {age,month}
+}
+
 export const upLoadImage = (image) =>{
   return new Promise((resolve,reject)=>{
     const formData = new FormData()

@@ -12,7 +12,7 @@ export default function SelectClinicComponent(props) {
   return <div>
     {
       clinic.idClinicDefault && (props.condition) && 
-      <div style={{height:"70px",maxWidth:"350px"}}>
+      <div style={{height:"85px",maxWidth:"350px"}}>
         <React.Fragment>
           <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
             {
