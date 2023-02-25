@@ -22,8 +22,80 @@ export const AVATAR_HEIGHT = "300px";
 export const AVATAR_WIDTH = "200px";
 export const FONT_SIZE_HEAD = '19px';
 export const FONT_SIZE = '15px';
+export const FONT_TAB = '14px';
 export const FONT_SIZE_ICONS = '45px';
 export const FONT_SIZE_HEADER = '17px';
+
+export const SOFT_WARE_LIST = {
+  MEDICAL_RECORD: {
+    appName: 'Medical Record',
+    tab: 0
+  },
+  IMAGE_LIBRARY: {
+    appName: 'Image Library',
+    tab: 1
+  },
+  LATERALCEPH: {
+    appName: 'LateralCeph',
+    tab: 3
+  },
+  CALENDAR: {
+    appName: 'Calendar',
+    tab: 4
+  },
+  DISCUSSION: {
+    appName: 'Discussion',
+    tab: 5
+  }
+}
+
+export const SELECT_PATIENT_MODE = {
+  MY_PATIENT: "MY_PATIENT",
+  CLINIC_PATIENT: "CLINIC_PATIENT",
+  SHARE_PATIENT: "SHARE_PATIENT"
+}
+
+export const MEDICAL_RECORD_TAB = {
+  INFORMATION: 0,
+  RECORD: 1,
+  TREATMENT_HISTORY: 2
+}
+
+export const IMAGE_TYPE_LIST = {
+  X_RAY: {
+    name: 'radiograph',
+    icon: 'theaters',
+    imageList: {
+      LATERAL: {id:1,name:'lateral x-ray image'},
+      PA: {id:2,name:'posterior anterior x-ray image'},
+      PANORAMA: {id:3,name:'panorama x-ray image'},
+      OTHER:{id:4,name:'other x-ray image types'}
+    }
+  },
+  FACE: {
+    name:'extra-oral',
+    icon:'face',
+    imageList: {
+      SIDE: {id:5,name:'side face image'},
+      FRONTAL: {id:6,name:'frontal face image'},
+      OBLIQUE: {id:7,name:'oblique face image'},
+      SMILEY: {id:8,name:'smiley face image'},
+      OTHER: {id:9,name:'other extra-oral images'}
+    }
+  },
+  INTRA_ORAL: {
+    name:'intra-oral',
+    icon:'mood_bad',
+    imageList: {
+      RIGHT_BUCCAL:{id:10,name:'right buccal image'},
+      LEFT_BUCCAL: {id:11,name:'left buccal image'},
+      ANTERIOR:{id:12,name:'anterior image'},
+      MAXILLARY_OCCLUSAL:{id:13,name:'maxillary occlusal image'},
+      MANDIBULAR_OCCLUSAL:{id:14,name:'mandibular occlusal image'},
+      OTHER:{id:15,name:'other intra oral images'}
+    }
+  }
+}
 
 
 export const clearAllSclice = (dispatch) => {

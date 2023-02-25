@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { clearAllSclice, FONT_SIZE, FONT_SIZE_HEADER, FONT_SIZE_ICONS } from "../../common/Utility.jsx";
+import { FONT_SIZE_HEADER, FONT_SIZE_ICONS } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
-import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
-import { setAppName, setLoadingModal, setSettingTab } from "../../redux/GeneralSlice.jsx";
-import { getToServerWithToken } from "../../services/getAPI.jsx";
-import { refreshToken } from "../../services/refreshToken.jsx";
+import { setAppName, setSettingTab } from "../../redux/GeneralSlice.jsx";
 import ClinicSetting from "./clinic/ClinicSetting.jsx";
 import DoctorSetting from "./doctor/DoctorSetting.jsx";
 
@@ -65,7 +60,7 @@ export default function Setting(props){
           </button>
         }
       </div>
-      <div className="w-100 mc-background py-1 d-flex justify-content-center">
+      <div className="w-100 mc-background py-1 d-flex justify-content-center rounded">
         <span className="text-white text-center text-uppercase fw-bold " style={{fontSize:FONT_SIZE_HEADER}}>{tabName}</span>
       </div>
       {currentTab}

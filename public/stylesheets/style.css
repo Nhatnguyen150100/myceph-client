@@ -97,6 +97,10 @@
   --bs-btn-disabled-border-color: #043d5d !important;
 }
 
+.tranform-hover:hover{
+  transform: scale(1.03);
+}
+
 .standout {
   animation: crescendo 0.5s alternate infinite;
 }

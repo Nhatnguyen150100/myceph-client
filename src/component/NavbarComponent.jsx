@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { clearAllSclice, cookies, splitEmail } from "../common/Utility.jsx";
 import { postToServerWithToken } from "../services/getAPI.jsx";
 import { toast } from "react-toastify";
+import { refreshToken } from "../services/refreshToken.jsx";
 
 const FONT_SIZE = '17px';
 
@@ -32,9 +33,14 @@ export default function NavbarComponent(props) {
     postToServerWithToken(`/v1/auth/logout`,{
       refreshToken: cookies.get('refreshToken')
     }).then(response => {
-      clearAllSclice(dispatch);nav("/login")
-    }).catch(error => {
-      toast.error(error.message);
+      clearAllSclice(dispatch);
+      nav("/login");
+    }).catch((err) =>{
+      if(err.refreshToken){
+        refreshToken(nav,dispatch).then(()=>logout());
+      }else{
+        toast.error(err.message);
+      }
     }).finally(()=>dispatch(setLoadingModal(false)));
   }
 

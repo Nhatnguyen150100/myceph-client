@@ -4,6 +4,8 @@ export const PatientSlice = createSlice({
   name: 'patient',
   initialState:{
     currentPatient: null,
+    selectPatientOnMode: null,
+    roleOfDoctor: null,
     getAllPatientDoctor: false,
     getAllPatientClinic: false
   },

@@ -9,6 +9,7 @@ import SelectFieldInput from "../../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
 import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, deleteImage, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, isValidEmail, splitAvatar, splitFirst, splitLast, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
+import SelectClinicComponent from "../../../component/SelectClinicComponent.jsx";
 import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
@@ -200,17 +201,7 @@ export default function Myclinic(props){
   return <div className="d-flex flex-column h-100 py-3">
     <div className="d-flex flex-grow-1 flex-wrap justify-content-between mb-2">
       <div style={{width:"400px"}}>
-        {
-          clinic.idClinicDefault && <SelectFieldInput legend={t('select clinic')} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
-            {
-              clinic.data?.map(clinic=>{
-                return <option selected={clinic.roleOfDoctor==='admin'} className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
-                  {clinic.nameClinic}
-                </option>
-              })
-            }
-          </SelectFieldInput>
-        }
+        <SelectClinicComponent condition={true}/>
       </div>
       <div className="d-flex flex-row align-items-end">
         <div style={{width:"400px"}}>
@@ -238,15 +229,9 @@ export default function Myclinic(props){
             </div>
           }
         </div>
-        <div className="w-100 d-flex justify-content-between mb-2">
-          <div>
-            <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
-            <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
-          </div>
-          <div>
+        <div className="w-100 d-flex justify-content-end mb-2">
             <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('update at')}: </span>
             <span>{convertISOToVNDateString(toISODateString(new Date(clinic.data?.updatedAt?clinic.data?.updatedAt:new Date())))}</span>
-          </div>
         </div>
         <div className="d-flex flex-row flex-grow-1">
           <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>

@@ -10,6 +10,7 @@ import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import { clearAllSclice, FONT_SIZE, isValidEmail, splitAvatar, splitFirst, splitLast } from "../../../common/Utility.jsx";
+import SelectClinicComponent from "../../../component/SelectClinicComponent.jsx";
 import { setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
@@ -178,17 +179,7 @@ export default function MemberOfClinic(props){
   return <div className="d-flex flex-column align-items-start justify-content-start h-100 py-3">
     <div className="d-flex flex-row w-100 flex-wrap justify-content-between mb-2">
       <div style={{width:"400px"}}>
-        {
-          clinic.idClinicDefault && <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)));setNewDoctor('');setListEmailSearch([])}}>
-            {
-              clinic.data?.map(clinic=>{
-                return <option selected={clinic.roleOfDoctor==='admin'} className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
-                  {clinic.nameClinic}
-                </option>
-              })
-            }
-          </SelectFieldInput>
-        }
+        <SelectClinicComponent condition={true} />
       </div>
       {
         clinic.roleOfDoctor==='admin' && <div className="d-flex flex-row align-items-end">
@@ -223,11 +214,7 @@ export default function MemberOfClinic(props){
         </div>
       }
     </div>
-    <div className="d-flex flex-row justify-content-start mb-2">
-      <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
-      <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
-    </div>
-    <div className="h-100 w-100">
+    <div className="h-100 w-100 mt-3">
       <div className="w-100">
         <table className="table table-bordered table-striped text-center rounded">
           <thead className='mc-background text-white text-uppercase'>

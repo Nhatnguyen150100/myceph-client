@@ -22,7 +22,7 @@ export default function ClinicSetting(props){
   }
 
   return <div className="d-flex flex-column h-100">
-  <div className="w-100 d-flex justify-content-end mc-background-color-white py-2">
+  <div className="w-100 d-flex justify-content-end mc-background-color-white py-2 rounded">
     <div className="d-flex flex-row align-items-center justify-content-between">
       <button type="button" className={`btn me-3 px-3 py-0  text-white-hover ${selectedTab===0?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setClinicSettingTab(0))}>
         <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{t('my clinic profile')}</span>

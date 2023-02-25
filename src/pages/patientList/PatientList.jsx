@@ -8,17 +8,17 @@ import SelectFieldInput from "../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../common/TextFieldInput.jsx";
 import { FONT_SIZE, FONT_SIZE_HEAD, splitFirst, splitLast, toISODateString, WIDTH_CHILD } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
+import SelectClinicComponent from "../../component/SelectClinicComponent.jsx";
 import { setIdClinicDefault, setRoleOfDoctor } from "../../redux/ClinicSlice.jsx";
 import { setAppName, setLoadingModal, setpatientListTab } from "../../redux/GeneralSlice.jsx";
 import { setGetAllPatientClinic, setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
 import { postToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import MyPatient from "./MyPatient.jsx";
+import MySharedPatient from "./MySharedPatient.jsx";
 import PatientOfClinic from "./PatientOfClinic.jsx";
-import PatientShared from "./PatientShared.jsx";
+import SharePatientSettingForClinic from "./SharePatientSettingForClinic.jsx";
 import SharePatientSettingForDoctor from "./SharePatientSettingForDoctor.jsx";
-import SharePatientSetting from "./SharePatientSettingForDoctor.jsx";
-
 
 export default function PatientList(props){
   const doctor = useSelector(state=>state.doctor.data);
@@ -85,11 +85,11 @@ export default function PatientList(props){
       break;
     case 1: currentTab = <PatientOfClinic />
       break;
-    case 2: currentTab = <PatientShared />
+    case 2: currentTab = <MySharedPatient />
       break;
     case 3: currentTab = <SharePatientSettingForDoctor />
       break;
-    case 4: currentTab = <SharePatientSetting />
+    case 4: currentTab = <SharePatientSettingForClinic />
       break;
     default: currentTab = <div>Error</div>
   }
@@ -104,7 +104,7 @@ export default function PatientList(props){
       <div className="mt-3 mb-1">
         <div className="d-flex align-items-center justify-content-lg-between justify-content-sm-center flex-grow-1 w-100 flex-wrap" style={{height:"70px"}}>
           <div className="flex-grow-1">
-            <button type="button" style={{borderColor:"goldenrod"}} className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 || selectedTab===4?'mc-yellow-background text-white':'mc-yellow-hover'}`} onClick={e=>dispatch(setpatientListTab(selectedTab===0?3:4))} disabled={selectedTab===3 || selectedTab===4}>
+            <button type="button" style={{borderColor:"goldenrod"}} className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 || selectedTab===4?'mc-yellow-background text-white':'mc-yellow-hover'}`} onClick={e=>dispatch(setpatientListTab(selectedTab===0?3:4))} disabled={selectedTab===2 ||selectedTab===3 || selectedTab===4}>
               <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('Share patient setting')}</span>
             </button>
           </div>
@@ -120,26 +120,7 @@ export default function PatientList(props){
             </button>
           </div>
         </div>
-        {
-          clinic.idClinicDefault && selectedTab===1 && 
-          <div style={{height:"70px",maxWidth:"350px"}}>
-            <React.Fragment>
-              <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
-                {
-                  clinic.data?.map(clinic=>{
-                    return <option selected={clinic.roleOfDoctor==='admin'} className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
-                      {clinic.nameClinic}
-                    </option>
-                  })
-                }
-              </SelectFieldInput>
-              <div className="d-flex flex-row justify-content-start mt-1 ms-1">
-                <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
-                <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
-              </div>
-            </React.Fragment>
-          </div>
-        }
+        <SelectClinicComponent condition={selectedTab===1 || selectedTab===4} />
       </div>
     </div>
     {

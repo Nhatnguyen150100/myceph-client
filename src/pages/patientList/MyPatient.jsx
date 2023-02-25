@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
-import { FONT_SIZE } from "../../common/Utility.jsx";
+import { FONT_SIZE, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken } from "../../services/getAPI.jsx";
@@ -121,7 +121,7 @@ export default function MyPatient(props){
         {
           (!loadingSearch || listPatient.length>0) && 
           <React.Fragment>
-            <tbody>{listPatient.map((patient, index) => <PatientRows key={patient.id} patient={patient} onDeleteHandle={idPaient=>onDeleteHandle(idPaient)} />)}</tbody>
+            <tbody>{listPatient.map((patient, index) => <PatientRows key={patient.id} selectPatientMode={SELECT_PATIENT_MODE.MY_PATIENT} patient={patient} action={true} onDeleteHandle={idPaient=>onDeleteHandle(idPaient)} />)}</tbody>
             {
               listPatient.length!==0 && <tfoot className="align-middle">
                 <tr>
