@@ -23,6 +23,8 @@ export default function SelectPatientComponent(props) {
   const nav = useNavigate();
   const dispatch = useDispatch();
 
+  const [previousClinicId,setPreviousClinicId] = useState(clinic.idClinicDefault);
+
   const [listPatient,setListPatient] = useState([]);
   const [count,setCount] = useState();
 
@@ -41,10 +43,9 @@ export default function SelectPatientComponent(props) {
   }
 
   useEffect(()=>{
-    getAllPaitent().then(data => {
-      if(selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT){
-        dispatch(setCurrentPatient(data[0]));
-      }
+    if(clinic.idClinicDefault) getAllPaitent().then(data => {
+      setPreviousClinicId(clinic.idClinicDefault);
+      if(previousClinicId!==clinic.idClinicDefault) dispatch(setCurrentPatient(data[0]));
     });
   },[clinic.idClinicDefault])
 
@@ -106,7 +107,7 @@ export default function SelectPatientComponent(props) {
             })
           }
           <div className="d-flex flex-grow-1 w-100 border-top">
-            <span className="text-capitalize text-info w-100 text-center mt-2" style={{fontSize:FONT_TEXT}}>{t('only display 10 patients out of total ')+`${count}`+' '+t('patients')}</span>
+            <span className="text-capitalize text-info w-100 text-center mt-2" style={{fontSize:FONT_TEXT}}>{`${count>10?t('only display 10 patients out of total'):''}`+`${count}`+' '+t('patients')}</span>
           </div>
         </ul>
       </div>

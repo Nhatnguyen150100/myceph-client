@@ -8,7 +8,6 @@ export const refreshToken = (nav,dispatch) => {
       refreshToken: cookies.get('refreshToken')
     }).then(result => {
       cookies.set('accessToken', result.newAccessToken, { path: '/', sameSite: true, secure: true });
-      cookies.set('refreshToken', result.newRefreshToken, { path: '/', sameSite: true, secure: true });
       resolve();
     }).catch(error => {
       clearAllSclice(dispatch);

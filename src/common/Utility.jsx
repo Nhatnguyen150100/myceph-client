@@ -25,6 +25,7 @@ export const FONT_SIZE = '15px';
 export const FONT_TAB = '14px';
 export const FONT_SIZE_ICONS = '45px';
 export const FONT_SIZE_HEADER = '17px';
+export const SIZE_IMAGE_IN_RECORD = '150px'
 
 export const SOFT_WARE_LIST = {
   MEDICAL_RECORD: {

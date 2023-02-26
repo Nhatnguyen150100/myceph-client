@@ -169,7 +169,7 @@ export default function MyProfile(props){
           <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('gender')}:</label>
           {
             editMode ? 
-            <select className="text-gray border-0 p-0 text-capitalize" style={{outline:"none",width:WIDTH_CHILD}} value={gender} onChange={e=>setGender(e.target.value)}>
+            <select className="text-gray border-0 p-0 text-capitalize flex-grow-1" style={{outline:"none"}} value={gender} onChange={e=>setGender(e.target.value)}>
               <option selected disabled={true}>no data</option>
               <option className="text-gray border-0 text-capitalize" value={'male'} style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>
                 {t('male')}
@@ -181,7 +181,7 @@ export default function MyProfile(props){
             :
             <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{gender?gender:'no data'}</span>
           }
-          <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('birth of day')}:</label>
+          <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('date of birth')}:</label>
           {
             editMode ? 
             <input className="text-gray border-0 flex-grow-1" style={{outline:"none",fontSize:FONT_SIZE}} onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} type="date" value={toISODateString(new Date(birthday?birthday:new Date()))} onChange={e=>setBirthday(e.target.value)}/>

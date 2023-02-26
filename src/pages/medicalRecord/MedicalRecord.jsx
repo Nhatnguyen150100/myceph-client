@@ -14,6 +14,8 @@ export default function MedicalRecord(props){
   const selectedTab = useSelector(state=>state.general.medicalRecordTab);
   const selectPatientMode = useSelector(state=>state.general.selectPatientMode);
 
+  const currentPatient = useSelector(state=>state.patient.currentPatient);
+
   let currentTab = null;
 
   switch(selectedTab){
@@ -68,7 +70,13 @@ export default function MedicalRecord(props){
             {t('treatment history')}
         </button>
       </div>
-      {currentTab}
+      {
+        currentPatient ? currentTab 
+        :
+        <div className="h-100 w-100 d-flex justify-content-center align-items-center">
+          <h3 className="text-danger text-capitalize fw-bold">{t("can't found information of patient")}</h3>
+        </div>
+      }
     </div>
   </div>
 }
