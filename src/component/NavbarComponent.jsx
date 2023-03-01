@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setAppName, setLanguage, setLoadingModal } from "../redux/GeneralSlice.jsx";
@@ -13,6 +13,7 @@ import { refreshToken } from "../services/refreshToken.jsx";
 const FONT_SIZE = '17px';
 
 export default function NavbarComponent(props) {
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const doctor = useSelector(state=>state.doctor.data);
   const language = useSelector(state => state.general.language);
   const appName = useSelector(state => state.general.appName);
@@ -31,12 +32,13 @@ export default function NavbarComponent(props) {
   const logout = () => {
     dispatch(setLoadingModal(true));
     postToServerWithToken(`/v1/auth/logout`,{
+      idDoctor: doctor.id,
       refreshToken: cookies.get('refreshToken')
     }).then(response => {
       clearAllSclice(dispatch);
       nav("/login");
     }).catch((err) =>{
-      if(err.refreshToken){
+      if(err.refreshToken && !isRefresh){
         refreshToken(nav,dispatch).then(()=>logout());
       }else{
         toast.error(err.message);

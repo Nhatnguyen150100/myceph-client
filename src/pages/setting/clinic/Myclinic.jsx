@@ -9,7 +9,7 @@ import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
 import { AVATAR_HEIGHT, AVATAR_WIDTH, convertISOToVNDateString, deleteImage, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, isValidEmail, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
 import SelectClinicComponent from "../../../component/SelectClinicComponent.jsx";
-import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
+import { setArrayClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
@@ -74,21 +74,25 @@ export default function Myclinic(props){
         dispatch(setIdClinicDefault(result.idClinic));
         dispatch(setRoleOfDoctor('admin'));
         setNewClinic('');
-        getAllClinic().then(()=>resolve());
+        getAllClinicAndSetDefault(false).then(()=>resolve());
       }).catch((err) => {
-        toast.error(t(err.message));
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getInformation());
+        }else{
+          toast.error(t(err.message));
+        }
         reject(err.message);
       }).finally(() => dispatch(setLoadingModal(false)))
     });
   }
 
   const onCancel = () => {
-    setNameClinic(clinic.data.nameClinic);
-    setEmailClinic(clinic.data.emailClinic);
-    setPhoneNumberClinic(clinic.data.phoneNumberClinic);
-    setAddressClinic(clinic.data.addressClinic);
-    setDescription(clinic.data.description);
-    setDescription(clinic.data.description);
+    setNameClinic(clinic.arrayClinic.nameClinic);
+    setEmailClinic(clinic.arrayClinic.emailClinic);
+    setPhoneNumberClinic(clinic.arrayClinic.phoneNumberClinic);
+    setAddressClinic(clinic.arrayClinic.addressClinic);
+    setDescription(clinic.arrayClinic.description);
+    setDescription(clinic.arrayClinic.description);
     setImage('');
     setNewAvatarUrl('');
     setEditMode(false);
@@ -106,8 +110,15 @@ export default function Myclinic(props){
           toast.success(t(result.message));
           setOpenDeleteConfirm(false);
           setEditMode(false);
-          getAllClinicAndSetDefault().then(()=>resolve());
-        }).catch((err) => {toast.error(t(err.message));reject(err)}).finally(() => dispatch(setLoadingModal(false)));
+          getAllClinicAndSetDefault(true).then(()=>resolve());
+        }).catch((err) => {
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>deleteClinic(idClinicCheck));
+          }else{
+            toast.error(t(err.message));
+          }
+          reject(err.message);
+        }).finally(() => dispatch(setLoadingModal(false)));
       })
     }else{
       toast.error(t('id clinic not match'))
@@ -150,7 +161,7 @@ export default function Myclinic(props){
         }
       }else{
         if(avatarClinic!=='/assets/images/clinic.png'){
-          pushDataToServer(clinic.data.avatarClinic);
+          pushDataToServer(clinic.arrayClinic.avatarClinic);
         }else{
           pushDataToServer('');
         }
@@ -158,36 +169,27 @@ export default function Myclinic(props){
     }
   }
 
-  const getAllClinic = () => {
-    return new Promise((resolve, reject) =>{
-      dispatch(setLoadingModal(true));
-      getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
-        dispatch(setDataClinic(result.data));
-        resolve();
-      }).catch((err) =>{
-        reject(err);
-      }).finally(()=>dispatch(setLoadingModal(false)))
-    })
-  }
-
-  const getAllClinicAndSetDefault = () => {
+  const getAllClinicAndSetDefault = (setDefault) => {
     return new Promise((resolve,reject) =>{
       dispatch(setLoadingModal(true));
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
-        result.data.map(clinic=> {
-          if(clinic.roleOfDoctor==='admin'){
-            dispatch(setIdClinicDefault(clinic.id));
-            dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
-          }
-        })
-        dispatch(setDataClinic(result.data));
+        if(setDefault){
+          result.data.map(clinic=> {
+            if(clinic.roleOfDoctor==='admin'){
+              dispatch(setIdClinicDefault(clinic.id));
+              dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
+            }
+          })
+        }
+        dispatch(setArrayClinic(result.data));
         resolve();
       }).catch((err) =>{
         if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>getAllClinicAndSetDefault());
+          refreshToken(nav,dispatch).then(()=>getAllClinicAndSetDefault(setDefault));
         }else{
           toast.error(t(err.message));
         }
+        reject(err);
       }
       ).finally(() => dispatch(setLoadingModal(false)));
     })
@@ -230,7 +232,7 @@ export default function Myclinic(props){
         </div>
         <div className="w-100 d-flex justify-content-end mb-2">
             <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('update at')}: </span>
-            <span>{convertISOToVNDateString(toISODateString(new Date(clinic.data?.updatedAt?clinic.data?.updatedAt:new Date())))}</span>
+            <span>{convertISOToVNDateString(toISODateString(new Date(clinic.arrayClinic?.updatedAt?clinic.arrayClinic?.updatedAt:new Date())))}</span>
         </div>
         <div className="d-flex flex-row flex-grow-1">
           <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>

@@ -156,6 +156,20 @@ export function toISODateString(dateObject) {
   return result;
 }
 
+export const timeToken = () => {
+  const timestamp = new Date().getTime();
+  const expire = timestamp + (60 * 60 * 24 * 1000 * 1);
+  const expireToken = new Date(expire);
+  return expireToken;
+}
+
+export function toTimeString(dateObject){
+  let hour = dateObject.getHours();
+  let minutes  = dateObject.getMinutes();
+  let seconds = dateObject.getSeconds();
+  return `${hour}:${minutes}:${seconds}`;
+}
+
 function formatDate(date) {
   var d = new Date(date),
       month = '' + (d.getMonth() + 1),

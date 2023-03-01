@@ -16,6 +16,7 @@ const PAGE_SIZE = 5;
 let nameSearchTimeout = null;
 
 export default function PatientOfClinic(props){
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const loading = useSelector(state=>state.general.loading);
   const getAllPatientClinic = useSelector(state=>state.patient.getAllPatientClinic);
   const clinic = useSelector(state=>state.clinic);
@@ -63,7 +64,7 @@ export default function PatientOfClinic(props){
         dispatch(setGetAllPatientClinic(false));
         resolve();
       }).catch((err) =>{
-        if(err.refreshToken){
+        if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getAllPaitentForClinic(name));
         }else{
           toast.error(err.message);
@@ -85,7 +86,7 @@ export default function PatientOfClinic(props){
         dispatch(setGetAllPatientClinic(false));
         resolve();
       }).catch((err) =>{
-        if(err.refreshToken){
+        if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getSharedPatientOfDoctorInClinic(name));
         }else{
           toast.error(err.message);

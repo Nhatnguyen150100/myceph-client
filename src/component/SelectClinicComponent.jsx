@@ -16,7 +16,7 @@ export default function SelectClinicComponent(props) {
         <React.Fragment>
           <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
             {
-              clinic.data?.map(clinic=>{
+              clinic.arrayClinic?.map(clinic=>{
                 return <option selected={clinic.roleOfDoctor==='admin'} className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
                   {clinic.nameClinic}
                 </option>

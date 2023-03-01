@@ -7,7 +7,7 @@ import ButtonComponent from "../common/ButtonComponent.jsx";
 import NavbarComponent from "../component/NavbarComponent.jsx";
 import { postToServer } from "../services/getAPI.jsx";
 import { setDataDoctor } from "../redux/DoctorSlice.jsx";
-import { cookies, isValidEmail, SITE_KEY_RECAPTCHA } from "../common/Utility.jsx";
+import { cookies, isValidEmail, SITE_KEY_RECAPTCHA, timeToken } from "../common/Utility.jsx";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { setAppName } from "../redux/GeneralSlice.jsx";
 
@@ -35,7 +35,7 @@ function LoginPage(props){
       executeRecaptcha('login').then(token => 
         postToServer('/v1/auth/login', { email: email, password: password, tokenRecaptcha: token }).then((result) => {
           cookies.set('accessToken', result.data.accessToken, { path: '/', sameSite: true, secure: true });
-          cookies.set('refreshToken', result.data.refreshToken, { path: '/', sameSite: true, secure: true });
+          cookies.set('refreshToken', result.data.refreshToken, { path: '/', sameSite: true, maxAge: timeToken(), secure: true });
           delete result.data.accessToken;
           delete result.data.refreshToken;
           dispatch(setDataDoctor(result.data));
@@ -71,7 +71,7 @@ function LoginPage(props){
             }}
             onKeyDown={e=>{if(e.key === "Enter") loginSubmit(e)}}
             placeholder={t("Email")}
-            autocomplete="off"
+            autoComplete="off"
             style={{ height: '45px', outline: 'none' }}
           />
           <span className="material-symbols-outlined mc-color">person</span>
@@ -96,7 +96,7 @@ function LoginPage(props){
             }}
             onKeyDown={e=>{if(e.key === "Enter") loginSubmit(e)}}
             placeholder={t("password")}
-            autocomplete="off"
+            autoComplete="off"
             style={{ height: '45px', outline: 'none' }}
           />
           <span className="material-symbols-outlined mc-color">password</span>

@@ -1,5 +1,4 @@
-import { redirect } from "react-router-dom";
-import { clearAllSclice, cookies } from "../common/Utility.jsx";
+import { cookies } from "../common/Utility.jsx";
 
 export const baseURL = process.env.BASE_URL_DEVELOPMENT;
 

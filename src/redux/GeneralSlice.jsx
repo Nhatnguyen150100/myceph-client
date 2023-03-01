@@ -11,7 +11,8 @@ export const GeneralSlice = createSlice({
     settingTab: 0,
     doctorSettingTab: 0,
     clinicSettingTab: 0,
-    patientListTab: 0
+    patientListTab: 0,
+    isRefresh: false,
   },
   reducers:{
     setAppName: (state,action) => {
@@ -41,7 +42,11 @@ export const GeneralSlice = createSlice({
     setMedicalRecordTab: (state,action) => {
       state.medicalRecordTab = action.payload;
     },
+    setIsRefresh: (state,action) => {
+      state.isRefresh = action.payload;
+    },
     clearGeneralSlice: (state) => {
+      state.isRefresh = false;
       state.softWareSelectedTab = null;
       state.settingTab = 0;
       state.medicalRecordTab = 0;
@@ -56,7 +61,7 @@ export const GeneralSlice = createSlice({
 export const {
   setLoadingModal,setLanguage,setAppName,setSettingTab,setDoctorSettingTab,
   setClinicSettingTab,clearGeneralSlice,setpatientListTab,
-  setSoftWareSelectedTab,setMedicalRecordTab
+  setSoftWareSelectedTab,setMedicalRecordTab,setIsRefresh
 } = GeneralSlice.actions;
 
 export default GeneralSlice.reducer;

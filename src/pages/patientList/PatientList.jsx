@@ -21,6 +21,7 @@ import SharePatientSettingForClinic from "./SharePatientSettingForClinic.jsx";
 import SharePatientSettingForDoctor from "./SharePatientSettingForDoctor.jsx";
 
 export default function PatientList(props){
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic);
   const selectedTab = useSelector(state=>state.general.patientListTab);
@@ -70,7 +71,7 @@ export default function PatientList(props){
         toast.success(result.message)
         resolve();
         }).catch((err) =>{
-          if(err.refreshToken){
+          if(err.refreshToken && !isRefresh){
             refreshToken(nav,dispatch).then(()=>addNewPatient());
           }else{
             toast.error(err.message);

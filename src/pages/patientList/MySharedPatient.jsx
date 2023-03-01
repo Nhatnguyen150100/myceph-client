@@ -15,6 +15,7 @@ let nameSearchTimeout = null;
 
 export default function MySharedPatient(props){
   const {t} = useTranslation();
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const doctor = useSelector(state=>state.doctor.data);
   const [nameSearch,setNameSearch] = useState('');
   const [listSharedPatient,setListSharedPatient] = useState([]);
@@ -47,7 +48,7 @@ export default function MySharedPatient(props){
         setCount(result.count);
         resolve();
       }).catch((err) =>{
-        if(err.refreshToken){
+        if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getListSharePatientOfCurrentDoctor(name));
         }else{
           toast.error(err.message);

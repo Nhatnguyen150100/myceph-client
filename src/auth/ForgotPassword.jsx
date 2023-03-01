@@ -77,7 +77,7 @@ function ForgotPasswordPage(props){
             }}
             onKeyDown={e=>{if(e.key === "Enter") onSubmit(e)}}
             placeholder={t("Email")}
-            autocomplete="off"
+            autoComplete="off"
             style={{ height: '45px', outline: 'none' }}
           />
           <span className="material-symbols-outlined mc-color">person</span>
@@ -115,7 +115,7 @@ function ForgotPasswordPage(props){
           }}
           onKeyDown={e=>{if(e.key === "Enter") onReset(e)}}
           placeholder={t("password")}
-          autocomplete="off"
+          autoComplete="off"
           style={{ height: '45px', outline: 'none' }}
         />
         <span className="material-symbols-outlined mc-color">password</span>
@@ -140,7 +140,7 @@ function ForgotPasswordPage(props){
           }}
           onKeyDown={e=>{if(e.key === "Enter") onReset(e)}}
           placeholder={t("Re-enter Password")}
-          autocomplete="off"
+          autoComplete="off"
           style={{ height: '45px', outline: 'none' }}
         />
         <span className="material-symbols-outlined mc-color">password</span>

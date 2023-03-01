@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { computeAge, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE } from "../common/Utility.jsx";
-import { setCurrentPatient } from "../redux/PatientSlice.jsx";
+import { setArrayPatient, setCurrentPatient } from "../redux/PatientSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
 import SelectClinicComponent from "./SelectClinicComponent.jsx";
@@ -15,6 +15,8 @@ const FONT_TEXT = '14px';
 
 export default function SelectPatientComponent(props) {
   const {t} = useTranslation();
+  const arrayPatients = useSelector(state=>state.patient.arrayPatients);
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic);
   const currentPatient = useSelector(state=>state.patient.currentPatient);
@@ -24,9 +26,7 @@ export default function SelectPatientComponent(props) {
   const dispatch = useDispatch();
 
   const [previousClinicId,setPreviousClinicId] = useState(clinic.idClinicDefault);
-
-  const [listPatient,setListPatient] = useState([]);
-  const [count,setCount] = useState();
+  const [count,setCount] = useState(arrayPatients.length);
 
   let url = null;
 
@@ -43,10 +43,7 @@ export default function SelectPatientComponent(props) {
   }
 
   useEffect(()=>{
-    if(clinic.idClinicDefault) getAllPaitent().then(data => {
-      setPreviousClinicId(clinic.idClinicDefault);
-      if(previousClinicId!==clinic.idClinicDefault) dispatch(setCurrentPatient(data[0]));
-    });
+    if(clinic.idClinicDefault && selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT) getAllPaitent();
   },[clinic.idClinicDefault])
 
   const onNameSearchChange = e => {
@@ -58,14 +55,18 @@ export default function SelectPatientComponent(props) {
   const getAllPaitent = (name) => {
     return new Promise((resolve, reject) => {
       getToServerWithToken(`${url}page=${1}&pageSize=${10}&nameSearch=${name?name:''}`).then(result=>{
-        setListPatient(result.data);
+        dispatch(setArrayPatient(result.data));
         setCount(result.count);
         if(result.count===0){
           toast.info(t('this clinic has no patients'));
         }
-        resolve(result.data);
+        if(clinic.idClinicDefault && selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT){
+          setPreviousClinicId(clinic.idClinicDefault);
+          if(previousClinicId!==clinic.idClinicDefault) dispatch(setCurrentPatient(result.data[0]));
+        }
+        resolve();
       }).catch((err) =>{
-        if(err.refreshToken){
+        if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getAllPaitent(name));
         }else{
           toast.error(err.message);
@@ -81,7 +82,7 @@ export default function SelectPatientComponent(props) {
         {t('select patient')}
       </legend>
       <div className="dropdown w-100 p-0 m-0">
-        <button className="btn btn-hover-bg border-0 p-0 w-100 " type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
+        <button className="btn btn-hover-bg border-0 p-0 w-100" onClick={e=>{if(arrayPatients.length===0) getAllPaitent()}} type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
           {currentPatient?.fullName}
         </button>
         <ul className="dropdown-menu w-100">
@@ -92,7 +93,7 @@ export default function SelectPatientComponent(props) {
             </span>
           </div>
           {
-            listPatient?.map((patient,index) => {
+            arrayPatients?.map((patient,index) => {
               return <button onClick={e=>dispatch(setCurrentPatient(patient))} key={patient.id} style={{background:`${index%2!==0&&'#f7f7f7'}`}} type="button" className="btn btn-hover-bg py-1 m-0 d-flex flex-column flex-grow-1 justify-content-center align-items-center w-100">
                 <span>{patient.fullName}</span>
                 <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
@@ -107,7 +108,7 @@ export default function SelectPatientComponent(props) {
             })
           }
           <div className="d-flex flex-grow-1 w-100 border-top">
-            <span className="text-capitalize text-info w-100 text-center mt-2" style={{fontSize:FONT_TEXT}}>{`${count>10?t('only display 10 patients out of total'):''}`+`${count}`+' '+t('patients')}</span>
+            <span className="text-capitalize text-info w-100 text-center mt-2" style={{fontSize:FONT_TEXT}}>{`${count>10?t('only display 10 patients out of total'):''}`+' '+`${count}`+' '+t('patients')}</span>
           </div>
         </ul>
       </div>

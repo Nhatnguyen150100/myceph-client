@@ -4,6 +4,9 @@ export const PatientSlice = createSlice({
   name: 'patient',
   initialState:{
     currentPatient: null,
+    arrayPatients: [],
+    diagnosis: null,
+    selectedPlan: null,
     selectPatientOnMode: null,
     getAllPatientDoctor: false,
     getAllPatientClinic: false
@@ -21,7 +24,19 @@ export const PatientSlice = createSlice({
     setGetAllPatientClinic: (state,action) => {
       state.getAllPatientClinic = action.payload;
     },
+    setDiagnosis: (state,action) => {
+      state.diagnosis = action.payload;
+    },
+    setSelectedPlan: (state,action) => {
+      state.selectedPlan = action.payload
+    },
+    setArrayPatient: (state,action) => {
+      state.arrayPatients = action.payload;
+    },
     clearPatientSlice: (state,action) => {
+      state.arrayPatients = [];
+      state.diagnosis = null;
+      state.selectedPlan = null;
       state.selectPatientOnMode = null;
       state.currentPatient = null;
       state.getAllPatientDoctor = false;
@@ -31,7 +46,9 @@ export const PatientSlice = createSlice({
 })
 
 export const {
-  setCurrentPatient,setGetAllPatientDoctor,setGetAllPatientClinic,clearPatientSlice,setSelectPatientOnMode
+  setCurrentPatient,setGetAllPatientDoctor,setGetAllPatientClinic,
+  clearPatientSlice,setSelectPatientOnMode,setDiagnosis,
+  setSelectedPlan,setArrayPatient
 } = PatientSlice.actions;
 
 export default PatientSlice.reducer;

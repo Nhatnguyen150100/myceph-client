@@ -93,7 +93,7 @@ function RegisterPage(props) {
             }}
             onKeyDown={e=>{if(e.key === "Enter") onRegistration(e)}}
             placeholder={t("Email")}
-            autocomplete="off"
+            autoComplete="off"
             style={{ height: '45px', outline: 'none' }}
           />
           <span className="material-symbols-outlined mc-color">person</span>
@@ -118,7 +118,7 @@ function RegisterPage(props) {
             }}
             onKeyDown={e=>{if(e.key === "Enter") onRegistration(e)}}
             placeholder={t("password")}
-            autocomplete="off"
+            autoComplete="off"
             style={{ height: '45px', outline: 'none' }}
           />
           <span className="material-symbols-outlined mc-color">password</span>
@@ -143,7 +143,7 @@ function RegisterPage(props) {
             }}
             onKeyDown={e=>{if(e.key === "Enter") onRegistration(e)}}
             placeholder={t("Re-enter Password")}
-            autocomplete="off"
+            autoComplete="off"
             style={{ height: '45px', outline: 'none' }}
           />
           <span className="material-symbols-outlined mc-color">password</span>

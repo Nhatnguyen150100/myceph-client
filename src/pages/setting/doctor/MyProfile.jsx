@@ -15,7 +15,7 @@ import { refreshToken } from "../../../services/refreshToken.jsx";
 export default function MyProfile(props){
   const loading = useSelector(state=>state.general.loading);
   const doctor = useSelector(state=>state.doctor.data);
-  const clinic = useSelector(state=>state.clinic.data);
+  const clinic = useSelector(state=>state.clinic.arrayClinic);
   const [image,setImage] = useState('');
   const [newAvatarUrl,setNewAvatarUrl] = useState();
   const [editMode,setEditMode] = useState(false);
@@ -92,7 +92,14 @@ export default function MyProfile(props){
       description: description
     }).then(result => {
       getInformation().then(()=>setEditMode(false));
-    }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
+    }).catch((err) => {
+      if(err.refreshToken){
+        refreshToken(nav,dispatch).then(()=>pushDataToServer(avatar));
+      }else{
+        toast.error(err.message);
+      }
+    })
+    .finally(() => dispatch(setLoadingModal(false)));
   }
 
   const onUpdate = async () => {

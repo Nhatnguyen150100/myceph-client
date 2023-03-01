@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import NavbarComponent from "../component/NavbarComponent.jsx";
-import { setDataClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
+import { setArrayClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
 import { setAppName } from "../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
 
 export default function HomePage(props) {
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const doctor = useSelector(state=>state.doctor.data);
@@ -24,10 +25,10 @@ export default function HomePage(props) {
             dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
           }
         })
-        dispatch(setDataClinic(result.data));
+        dispatch(setArrayClinic(result.data));
         resolve();
       }).catch((err) =>{
-        if(err.refreshToken){
+        if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getAllClinicAndSetDefault());
         }else{
           toast.error(err.message);
