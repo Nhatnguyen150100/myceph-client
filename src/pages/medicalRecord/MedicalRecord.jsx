@@ -7,6 +7,7 @@ import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
 import SoftWareListComponent from "../../component/SoftWareListComponent.jsx";
 import { setAppName, setMedicalRecordTab } from "../../redux/GeneralSlice.jsx";
 import PatientInformation from "./PatientInformation.jsx";
+import PatientRecord from "./patientRecord/PatientRecord.jsx";
 import PatientTreatmentHistory from "./PatientTreatmentHistory.jsx";
 
 export default function MedicalRecord(props){
@@ -21,8 +22,8 @@ export default function MedicalRecord(props){
   switch(selectedTab){
     case MEDICAL_RECORD_TAB.INFORMATION: currentTab = <PatientInformation />
       break;
-    // case MEDICAL_RECORD_TAB.RECORD: currentTab = <Patient />
-    //   break;
+    case MEDICAL_RECORD_TAB.RECORD: currentTab = <PatientRecord />
+      break;
     case MEDICAL_RECORD_TAB.TREATMENT_HISTORY: currentTab = <PatientTreatmentHistory />
       break;
     default: currentTab = <div className="h-100 w-100 d-flex justify-content-center align-items-center">

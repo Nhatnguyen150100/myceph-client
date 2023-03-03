@@ -6,7 +6,6 @@ export const refreshToken = (nav,dispatch) => {
   dispatch(setIsRefresh(true));
   cookies.remove('accessToken', {path: '/'});
   return new Promise((resolve, reject) => {
-    // dispatch(setIsRefresh(true));
     postToServer('/v1/auth/refreshToken',{
       refreshToken: cookies.get('refreshToken')
     }).then(result => {

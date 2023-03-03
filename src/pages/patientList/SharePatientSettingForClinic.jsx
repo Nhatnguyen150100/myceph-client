@@ -42,6 +42,8 @@ export default function SharePatientSettingForClinic(props){
 
   useEffect(()=>{
     getAllDoctorInClinic();
+    setSelectedPatient();
+    setSelectedDoctor();
   },[pageDoctor,clinic.idClinicDefault])
 
   useEffect(()=>{
@@ -244,7 +246,7 @@ export default function SharePatientSettingForClinic(props){
             {
               listDoctor?.map((doctor,index) => {
                 return <div key={doctor.idDoctor} className={`d-flex flex-row align-items-center border rounded p-1 ${(index%2!==0) && 'mc-background-color-white'}`}>
-                  <button disabled={nameDoctorSearch} onClick={e=>onGetSharePatient(doctor)} className={`btn border-0 btn-hover-bg ${selectedDoctor && selectedDoctor.idDoctor===doctor.idDoctor && !nameDoctorSearch && 'mc-pale-background text-white'} py-1 px-2 d-flex flex-row flex-grow-1 align-items-center justify-content-start`} type="button" >
+                  <button disabled={nameDoctorSearch} onClick={e=>{e.preventDefault();onGetSharePatient(doctor)}} className={`btn border-0 btn-hover-bg ${selectedDoctor && selectedDoctor.idDoctor===doctor.idDoctor && !nameDoctorSearch && 'mc-pale-background text-white'} py-1 px-2 d-flex flex-row flex-grow-1 align-items-center justify-content-start`} type="button" >
                     <img alt="avatar" className="rounded" src={splitAvatar(doctor.avatar,'/assets/images/doctor.png')} style={{height:"50px",width:"40px",objectFit:"cover"}}/>
                     <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_NAME}}>
                       <span className="mc-color" style={{fontSize:FONT_SIZE}}>{doctor.email}</span>
@@ -309,7 +311,7 @@ export default function SharePatientSettingForClinic(props){
                             key={patient.id} 
                             className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-between" 
                             type="button" 
-                            onClick={e=>onSetSearchPatient(patient)}
+                            onClick={e=>{e.preventDefault();onSetSearchPatient(patient)}}
                           >
                     <div className="h-auto ps-3">
                       <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/frontFace.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
@@ -378,7 +380,7 @@ export default function SharePatientSettingForClinic(props){
               })
             }
             {
-              countPatient > 0 && <div className="d-flex flex-grow-1 justify-content-center mt-3">
+              countPatient > 0 && listSharePatient.length>0 && <div className="d-flex flex-grow-1 justify-content-center mt-3">
                 <Pagination 
                   count={Math.ceil(countPatient/PAGE_SIZE) || 0}
                   page={pagePatient}
