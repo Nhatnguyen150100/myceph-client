@@ -122,6 +122,7 @@ export default function History(props){
     </div>
     <div className="w-100 h-auto">
       <InputWithLabel 
+        classNameResult="flex-grow-1"
         editMode={editMode}
         onCancel={onCancel}
         label={t('Dental History')}
@@ -136,6 +137,7 @@ export default function History(props){
     </div>
     <div className="w-100 h-auto mt-1">
       <InputWithLabel 
+        classNameResult="flex-grow-1"
         editMode={editMode}
         onCancel={onCancel}
         label={t('Medical History')}
@@ -180,6 +182,7 @@ export default function History(props){
     </div>
     <div className="w-100 h-auto mt-1">
       <InputWithLabel 
+        classNameResult="flex-grow-1"
         editMode={editMode}
         onCancel={onCancel}
         label={t('Other Method To Evaluate Skeletal Maturity')}
@@ -193,7 +196,8 @@ export default function History(props){
       />
     </div>
     <div className="w-100 h-auto mt-1">
-      <InputWithLabel 
+      <InputWithLabel
+        classNameResult="flex-grow-1" 
         editMode={editMode}
         onCancel={onCancel}
         label={t('Dental History')}
@@ -207,7 +211,8 @@ export default function History(props){
       />
     </div>
     <div className="w-100 h-auto mt-1">
-      <InputWithLabel 
+      <InputWithLabel
+        classNameResult="flex-grow-1" 
         editMode={editMode}
         onCancel={onCancel}
         label={t('Habits')}
@@ -222,6 +227,7 @@ export default function History(props){
     </div>
     <div className="w-100 h-auto mt-1">
       <InputWithLabel 
+        classNameResult="flex-grow-1"
         editMode={editMode}
         onCancel={onCancel}
         label={t('Family History')}

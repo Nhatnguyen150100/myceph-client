@@ -120,6 +120,7 @@ export default function ExtraOral(props){
         teethDisplay: teethDisplay,
         gingivalDisplayLevel: gingivalDisplayLevel,
         incisalDisplayMaxillary: incisalDisplayMaxillary,
+        incisalDisplayMandibular: incisalDisplayMandibular,
         smileArc: smileArc,
         restPositionIncisalDisplay: restPositionIncisalDisplay
       }).then(result => {

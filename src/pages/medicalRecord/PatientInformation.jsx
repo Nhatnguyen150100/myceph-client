@@ -231,6 +231,7 @@ export default function PatientInformation(props){
                 </option>
               </SelectWithLabel>
               <InputWithLabel 
+                classNameResult="flex-grow-1"
                 editMode={editMode}
                 onCancel={onCancel}
                 label={t('date of birth')}
@@ -242,6 +243,7 @@ export default function PatientInformation(props){
                 result={birthday?convertISOToVNDateString(toISODateString(new Date(birthday))):t('no data')}
               />
               <InputWithLabel 
+                classNameResult="flex-grow-1"
                 editMode={editMode}
                 onCancel={onCancel}
                 label={t('consultation date')}
@@ -253,6 +255,7 @@ export default function PatientInformation(props){
                 result={convertISOToVNDateString(toISODateString(new Date(consulationDate?consulationDate:new Date())))}
               />
               <InputWithLabel 
+                classNameResult="flex-grow-1"
                 editMode={editMode}
                 onCancel={onCancel}
                 label={t('phone number')}
@@ -264,7 +267,8 @@ export default function PatientInformation(props){
                 style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
                 result={phoneNumber?phoneNumber:'no data'}
               />
-              <InputWithLabel 
+              <InputWithLabel
+                classNameResult="flex-grow-1" 
                 editMode={editMode}
                 onCancel={onCancel}
                 label={t('address')}

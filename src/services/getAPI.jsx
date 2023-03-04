@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { cookies } from "../common/Utility.jsx";
 
 export const baseURL = process.env.BASE_URL_DEVELOPMENT;
@@ -11,6 +12,7 @@ export function postToServer(url, bodyObject) {
 			body: JSON.stringify(bodyObject),
 		})
 			.then((response) => {
+				if(response.status===429) response.text().then(json=>toast.error(json));
 				if (response.status === 419) {
 					window.location.reload();
 				}else if (response.status === 200) {
@@ -31,6 +33,7 @@ export function postToServerWithToken(url, bodyObject) {
 			body: JSON.stringify(bodyObject)
 		})
 			.then((response) => {
+				if(response.status===429) response.text().then(json=>toast.error(json));
 				if (response.status === 419) {
 					window.location.reload();
 				}
@@ -55,6 +58,7 @@ export function putToServerWithToken(url, bodyObject) {
 			body: JSON.stringify(bodyObject)
 		})
 			.then((response) => {
+				if(response.status===429) response.text().then(json=>toast.error(json));
 				if (response.status === 419) {
 					window.location.reload();
 				}
@@ -76,6 +80,7 @@ export function getToServerWithToken(url) {
 			credentials: 'same-origin'
 		})
 			.then((response) => {
+				if(response.status===429) response.text().then(json=>toast.error(json));
 				if(response.status === 404){
 					response.text().then(text => reject(text));
 				}else if(response.status === 419) {
@@ -98,6 +103,7 @@ export function deleteToServerWithToken(url) {
 			credentials: 'same-origin'
 		})
 			.then((response) => {
+				if(response.status===429) response.text().then(json=>toast.error(json));
 				if (response.status === 419) {
 					window.location.reload();
 				}
