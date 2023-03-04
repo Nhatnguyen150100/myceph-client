@@ -31,8 +31,6 @@ export default function MyPatient(props){
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
   const [idPatientDelete,setIdPatientDelete] = useState();
 
-  console.log(count);
-
   const onNameSearchChange = e => {
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
