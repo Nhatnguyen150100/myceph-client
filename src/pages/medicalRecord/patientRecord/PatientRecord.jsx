@@ -10,7 +10,7 @@ import TreatmentPlan from "./TreatmentPlan.jsx";
 
 export default function PatientRecord(props){
   const {t} = useTranslation();
-  const [selectedTab,setSelectedTab] = useState(0);
+  const [selectedTab,setSelectedTab] = useState(1);
 
 
   let currentTab = null;

@@ -23,9 +23,9 @@ export default function SelectClinicComponent(props) {
               })
             }
           </SelectFieldInput>
-          <div className="d-flex flex-row justify-content-start mt-1 ms-1">
+          <div className="d-flex flex-row justify-content-start align-items-center mt-1 ms-1">
             <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('you are')}: </span>
-            <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`}>{clinic.roleOfDoctor}</span>
+            <span className={`text-uppercase fw-bold ${clinic.roleOfDoctor==='admin'?'text-success':'text-warning'}`} style={{fontSize:FONT_SIZE}}>{clinic.roleOfDoctor}</span>
           </div>
         </React.Fragment>
       </div>

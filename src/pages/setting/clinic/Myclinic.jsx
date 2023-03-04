@@ -214,7 +214,9 @@ export default function Myclinic(props){
     {
       clinic.idClinicDefault ? 
       <div className="d-flex flex-column h-100">
-        <div className="d-flex justify-content-end">
+        <div className="d-flex flex-row align-items-end justify-content-end w-100">
+          <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('update at')}: </span>
+          <span className="me-3">{convertISOToVNDateString(toISODateString(new Date(clinic.arrayClinic?.updatedAt?clinic.arrayClinic?.updatedAt:new Date())))}</span>
           {
             editMode ?
             <div>
@@ -230,11 +232,7 @@ export default function Myclinic(props){
             </div>
           }
         </div>
-        <div className="w-100 d-flex justify-content-end mb-2">
-            <span className="text-capitalize mc-color fw-bold me-2" style={{fontSize:FONT_SIZE}}>{t('update at')}: </span>
-            <span>{convertISOToVNDateString(toISODateString(new Date(clinic.arrayClinic?.updatedAt?clinic.arrayClinic?.updatedAt:new Date())))}</span>
-        </div>
-        <div className="d-flex flex-row flex-grow-1">
+        <div className="d-flex flex-row flex-grow-1 mt-3">
           <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
             {
               editMode && <UploadImage className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>

@@ -82,7 +82,7 @@ export default function SelectPatientComponent(props) {
         {t('select patient')}
       </legend>
       <div className="dropdown w-100 p-0 m-0">
-        <button className="btn btn-hover-bg border-0 p-0 w-100" onClick={e=>getAllPaitent()} type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
+        <button className="btn btn-hover-bg border-0 p-0 w-100 text-capitalize" onClick={e=>getAllPaitent()} type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
           {currentPatient?.fullName}
         </button>
         <ul className="dropdown-menu w-100">
@@ -94,7 +94,7 @@ export default function SelectPatientComponent(props) {
           </div>
           {
             arrayPatients?.map((patient,index) => {
-              return <button onClick={e=>dispatch(setCurrentPatient(patient))} key={patient.id} style={{background:`${index%2!==0&&'#f7f7f7'}`}} type="button" className="btn btn-hover-bg py-1 m-0 d-flex flex-column flex-grow-1 justify-content-center align-items-center w-100">
+              return <button onClick={e=>dispatch(setCurrentPatient(patient))} key={patient.id} style={{background:`${index%2!==0&&'#f7f7f7'}`}} type="button" className="btn btn-hover-bg text-capitalize py-1 m-0 d-flex flex-column flex-grow-1 justify-content-center align-items-center w-100">
                 <span>{patient.fullName}</span>
                 <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
                   <div className="w-auto d-flex flex-row align-items-center justify-content-start">

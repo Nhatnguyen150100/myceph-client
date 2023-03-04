@@ -104,6 +104,21 @@ export default function PatientInformation(props){
   },[patient.currentPatient.id])
 
   const updatePatientState = (data) => {
+    if(patient.currentPatient.fullName !== data.fullName){
+      const patientObject = {...patient.currentPatient};
+      delete patientObject.fullName;
+      dispatch(setCurrentPatient({...patientObject,fullName:data.fullName}));
+    }
+    if(patient.currentPatient.gender !== data.gender){
+      const patientObject = {...patient.currentPatient};
+      delete patientObject.gender;
+      dispatch(setCurrentPatient({...patientObject,gender:data.gender}));
+    }
+    if(new Date(patient.currentPatient.birthday).getTime() !== new Date(data.birthday).getTime()){
+      const patientObject = {...patient.currentPatient};
+      delete patientObject.birthday;
+      dispatch(setCurrentPatient({...patientObject,birthday:data.birthday}));
+    }
     setFullName(data.fullName);
     setGender(data.gender);
     setBirthday(data.birthday);
@@ -174,7 +189,7 @@ export default function PatientInformation(props){
                         </button>
                       </legend>
                       {
-                        updatedAt && <span className="text-capitalize text-center w-100 my-1 mc-color fst-italic" style={{fontSize:"13px"}}>{t('at')}{': '}{toISODateString(new Date(updatedAt))}{' - '}{toTimeString(new Date(updatedAt))}</span>
+                        updatedAt && <span className="text-capitalize text-center w-100 my-1 mc-color fst-italic" style={{fontSize:"13px"}}>{t('at')}{': '}{toISODateString(new Date(updatedAt))}{' | '}{toTimeString(new Date(updatedAt))}</span>
                       }
                     </fieldset>
                   </React.Fragment>
@@ -186,6 +201,7 @@ export default function PatientInformation(props){
             </div>
             <div className="col-sm-7" style={{marginTop:"10px"}}>
               <InputWithLabel 
+                classNameResult="text-capitalize"
                 editMode={editMode}
                 onCancel={onCancel}
                 label={t('full name')}

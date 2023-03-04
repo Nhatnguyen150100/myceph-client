@@ -4,7 +4,7 @@ import { FONT_SIZE } from "./Utility.jsx";
 
 export default function RadioWithLabel(props) {
   const {t} = useTranslation();
-  return <div className='d-flex mb-3 pb-1 border-bottom align-items-center flex-grow-1'>
+  return <div className='d-flex mb-3 pb-1 border-bottom align-items-center flex-grow-1 flex-wrap' style={{height:"35px"}}>
     <label className="text-capitalize mc-color fw-bold ms-2" style={props.style}>{props.label}:</label>
     {
       props.editMode ?
@@ -21,7 +21,7 @@ export default function RadioWithLabel(props) {
                 onChange={e=>props.onChange(e.target.value)}
                 checked={radio===props.value}
               />
-              <label className="form-check-label ms-1">
+              <label className="form-check-label ms-1" style={{fontSize:FONT_SIZE}}>
                 {t(radio)}
               </label>
             </div>

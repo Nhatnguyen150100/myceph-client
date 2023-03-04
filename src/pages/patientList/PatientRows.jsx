@@ -35,7 +35,7 @@ export default function PatientRows(props){
     <td className="d-lg-table-cell d-none" style={{width:"180px",cursor:"pointer"}}>
       <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/frontFace.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
     </td>
-    <td className={`text-gray`}>
+    <td className={`text-gray text-capitalize`}>
       {props.patient.fullName}
     </td>
     <td className={`d-lg-table-cell d-none text-gray`} style={{fontSize:FONT_SIZE}}>

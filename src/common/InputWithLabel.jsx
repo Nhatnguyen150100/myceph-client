@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FONT_SIZE } from "./Utility.jsx";
 
 export default function InputWithLabel(props){
-  return <div className='d-flex mb-3 pb-1 border-bottom align-items-center flex-grow-1'>
+  const {t} = useTranslation()
+  return <div className='d-flex mb-3 pb-1 border-bottom align-items-center flex-grow-1' style={{height:"35px"}}>
     <label className="text-capitalize mc-color fw-bold ms-2" style={props.style}>{props.label}:</label>
     {
       props.editMode ? 
@@ -17,10 +19,15 @@ export default function InputWithLabel(props){
       />
       :
       <span 
-        className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" 
+        className={`text-gray d-flex align-items-center mc-background-color-white px-2 py-1 rounded ${props.classNameResult && props.classNameResult}`}
         style={{fontSize:FONT_SIZE,...props.styleSpan}}
       >
         {props.result}
+      </span>
+    }
+    {
+      props.unit && <span className="ms-2" style={{fontSize:FONT_SIZE}}>
+        {t(props.unit)}
       </span>
     }
   </div>

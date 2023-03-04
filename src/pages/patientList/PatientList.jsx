@@ -134,7 +134,7 @@ export default function PatientList(props){
             <TextFieldInput 
               className="me-2"
               classNameLegend="w-auto mb-0 ms-2 float-none px-2 text-capitalize fw-bold" 
-              classNameInput="rounded py-2 px-3" 
+              classNameInput="rounded py-2 px-3 text-capitalize" 
               placeholder={t('Name of patient')}  
               value={newPatientName} 
               onChange={value=>setNewPatientName(value)} 
