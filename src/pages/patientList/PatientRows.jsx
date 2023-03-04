@@ -49,7 +49,7 @@ export default function PatientRows(props){
     </td>
     <td className={`d-lg-table-cell`}>
       <div className="d-flex flex-row align-items-center justify-content-center">
-        <Link to={`/medicalRecord`} onClick={e=>onToSoftWare(SOFT_WARE_LIST.MEDICAL_RECORD.tab)} title={t("MedicalRecord")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
+        <Link to={`/medicalRecord`} onClick={e=>onToSoftWare(SOFT_WARE_LIST.MEDICAL_RECORD)} title={t("MedicalRecord")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
           <img src="/assets/images/MedicalRecord.png" width="34" height="34" alt="MedicalRecord"/>
         </Link>
         <Link title={t("ImageLibrary")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">

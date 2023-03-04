@@ -19,6 +19,9 @@ export default function MedicalRecord(props){
 
   let currentTab = null;
 
+  console.log(MEDICAL_RECORD_TAB.INFORMATION);
+  console.log(selectedTab);
+
   switch(selectedTab){
     case MEDICAL_RECORD_TAB.INFORMATION: currentTab = <PatientInformation />
       break;
@@ -32,7 +35,7 @@ export default function MedicalRecord(props){
   }
 
   useEffect(()=>{
-    dispatch(setAppName(`Myceph - ${t(SOFT_WARE_LIST.MEDICAL_RECORD.appName)}`));
+    dispatch(setAppName(`Myceph - ${t(SOFT_WARE_LIST.MEDICAL_RECORD)}`));
   },[])
 
   return <div className="d-flex flex-column justify-content-start align-items-center h-100">
@@ -44,7 +47,7 @@ export default function MedicalRecord(props){
       </div>
       <div className="w-100 mc-background py-1 d-flex justify-content-end align-items-center rounded">
         <button
-          onClick={e=>dispatch(setMedicalRecordTab(0))} 
+          onClick={e=>dispatch(setMedicalRecordTab(MEDICAL_RECORD_TAB.INFORMATION))} 
           type="button" 
           className={`border-0 mc-color-hover text-uppercase fw-bold border-end pe-2 py-1 ${selectedTab===MEDICAL_RECORD_TAB.INFORMATION?'mc-pale-color':'text-white'}`} 
           style={{fontSize:FONT_TAB,background:"none"}}
@@ -53,7 +56,7 @@ export default function MedicalRecord(props){
             {t('information')}
         </button>
         <button 
-          onClick={e=>dispatch(setMedicalRecordTab(1))} 
+          onClick={e=>dispatch(setMedicalRecordTab(MEDICAL_RECORD_TAB.RECORD))} 
           type="button" 
           className={`border-0 mc-color-hover text-uppercase fw-bold border-end mx-2 py-1 pe-2 ${selectedTab===MEDICAL_RECORD_TAB.RECORD?'mc-pale-color':'text-white'}`} 
           style={{fontSize:FONT_TAB,background:"none"}}
@@ -62,7 +65,7 @@ export default function MedicalRecord(props){
             {t('record')}
         </button>
         <button 
-          onClick={e=>dispatch(setMedicalRecordTab(2))} 
+          onClick={e=>dispatch(setMedicalRecordTab(MEDICAL_RECORD_TAB.TREATMENT_HISTORY))} 
           type="button" 
           className={`border-0 mc-color-hover text-uppercase fw-bold p-1 me-2 ${selectedTab===MEDICAL_RECORD_TAB.TREATMENT_HISTORY?'mc-pale-color':'text-white'}`} 
           style={{fontSize:FONT_TAB,background:"none"}}

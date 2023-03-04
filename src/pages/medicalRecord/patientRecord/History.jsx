@@ -13,7 +13,7 @@ import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
 
-const WIDTH_TITLE = "350px";
+const WIDTH_TITLE = "150px";
 
 export default function History(props){
   const isRefresh = useSelector(state=>state.general.isRefresh);
@@ -155,7 +155,7 @@ export default function History(props){
         label={t('Cervical Vertebral Maturation Index (CVMI)')}
         value={cvmi} 
         onChange={value=>setCvmi(value)} 
-        style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
+        style={{fontSize:FONT_SIZE,width:"350px"}}
         result={cvmi?cvmi:'no data'}
       >
         <option className="text-gray border-0 rounded btn-hover-bg text-capitalize" value={'CS1'} style={{fontSize:FONT_SIZE}}>
@@ -188,7 +188,7 @@ export default function History(props){
         type="text"
         value={otherMethod}
         onChange={value=>setOtherMethod(value)} 
-        style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
+        style={{fontSize:FONT_SIZE,width:"350px"}}
         result={otherMethod?otherMethod:t('no data')}
       />
     </div>

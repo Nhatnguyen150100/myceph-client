@@ -10,7 +10,7 @@ export default function SoftWareListComponent(props){
 
   return <div className="d-flex justify-content-start align-items-center my-2">
     {
-      softWareSelectedTab === SOFT_WARE_LIST.MEDICAL_RECORD.tab ?  
+      softWareSelectedTab === SOFT_WARE_LIST.MEDICAL_RECORD ?  
       <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white p-1'>
         <img src="/assets/images/MedicalRecord_active.png" width="34" height="34" alt="MedicalRecord"/>
       </div>
@@ -20,7 +20,7 @@ export default function SoftWareListComponent(props){
       </Link>
     }
     {
-      softWareSelectedTab === SOFT_WARE_LIST.IMAGE_LIBRARY.tab ? 
+      softWareSelectedTab === SOFT_WARE_LIST.IMAGE_LIBRARY ? 
       <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white p-1'>
         <img src="/assets/images/imageLibrary_active.png" width="34" height="34" alt="MedicalRecord"/>
       </div>
@@ -30,7 +30,7 @@ export default function SoftWareListComponent(props){
       </Link>
     }
     {
-      softWareSelectedTab === SOFT_WARE_LIST.LATERALCEPH.tab ? 
+      softWareSelectedTab === SOFT_WARE_LIST.LATERALCEPH ? 
       <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white p-1'>
         <img src="/assets/images/LateralCeph_active.png" width="34" height="34" alt="MedicalRecord"/>
       </div>
@@ -40,7 +40,7 @@ export default function SoftWareListComponent(props){
       </Link>
     }
     {
-      softWareSelectedTab === SOFT_WARE_LIST.CALENDAR.tab ? 
+      softWareSelectedTab === SOFT_WARE_LIST.CALENDAR ? 
       <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white p-1'>
         <img src="/assets/images/CalendarNew_active.png" width="34" height="34" alt="MedicalRecord"/>
       </div>
@@ -50,7 +50,7 @@ export default function SoftWareListComponent(props){
       </Link>
     }
     {
-      softWareSelectedTab === SOFT_WARE_LIST.DISCUSSION.tab ? 
+      softWareSelectedTab === SOFT_WARE_LIST.DISCUSSION ? 
       <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white p-1'>
         <img src="/assets/images/Discussion_active.png" width="34" height="34" alt="MedicalRecord"/>
       </div>

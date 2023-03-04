@@ -5,7 +5,7 @@ export const GeneralSlice = createSlice({
   initialState:{
     appName: 'Myceph',
     softWareSelectedTab: null,
-    medicalRecordTab: 0,
+    medicalRecordTab: "INFORMATION",
     loading: false,
     language: 'vi',
     settingTab: 0,
@@ -49,7 +49,7 @@ export const GeneralSlice = createSlice({
       state.isRefresh = false;
       state.softWareSelectedTab = null;
       state.settingTab = 0;
-      state.medicalRecordTab = 0;
+      state.medicalRecordTab = "INFORMATION";
       state.doctorSettingTab = 0;
       state.clinicSettingTab = 0;
       state.patientListTab = 0;

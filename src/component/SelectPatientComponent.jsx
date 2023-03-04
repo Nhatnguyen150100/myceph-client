@@ -82,7 +82,7 @@ export default function SelectPatientComponent(props) {
         {t('select patient')}
       </legend>
       <div className="dropdown w-100 p-0 m-0">
-        <button className="btn btn-hover-bg border-0 p-0 w-100" onClick={e=>{if(arrayPatients.length===0) getAllPaitent()}} type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
+        <button className="btn btn-hover-bg border-0 p-0 w-100" onClick={e=>getAllPaitent()} type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
           {currentPatient?.fullName}
         </button>
         <ul className="dropdown-menu w-100">

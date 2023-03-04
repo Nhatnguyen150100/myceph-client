@@ -28,26 +28,11 @@ export const FONT_SIZE_HEADER = '17px';
 export const SIZE_IMAGE_IN_RECORD = '150px'
 
 export const SOFT_WARE_LIST = {
-  MEDICAL_RECORD: {
-    appName: 'Medical Record',
-    tab: 0
-  },
-  IMAGE_LIBRARY: {
-    appName: 'Image Library',
-    tab: 1
-  },
-  LATERALCEPH: {
-    appName: 'LateralCeph',
-    tab: 3
-  },
-  CALENDAR: {
-    appName: 'Calendar',
-    tab: 4
-  },
-  DISCUSSION: {
-    appName: 'Discussion',
-    tab: 5
-  }
+  MEDICAL_RECORD: 'Medical Record',
+  IMAGE_LIBRARY: 'Image Library',
+  LATERALCEPH: 'LateralCeph',
+  CALENDAR: 'Calendar',
+  DISCUSSION: 'Discussion'
 }
 
 export const SELECT_PATIENT_MODE = {
@@ -57,9 +42,9 @@ export const SELECT_PATIENT_MODE = {
 }
 
 export const MEDICAL_RECORD_TAB = {
-  INFORMATION: 0,
-  RECORD: 1,
-  TREATMENT_HISTORY: 2
+  INFORMATION: "INFORMATION",
+  RECORD: "RECORD",
+  TREATMENT_HISTORY: "TREATMENT_HISTORY"
 }
 
 export const IMAGE_TYPE_LIST = {

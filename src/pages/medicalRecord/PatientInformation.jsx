@@ -214,25 +214,6 @@ export default function PatientInformation(props){
                   {t('female')}
                 </option>
               </SelectWithLabel>
-              <div className='d-flex mb-3 pb-1 border-bottom flex-grow-1'>
-                <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}>{t('gender')}:</label>
-                {
-                  editMode ? 
-                  <select className="text-gray border-0 rounded btn-hover-bg px-1 py-1 text-capitalize flex-grow-1" style={{outline:"none"}} value={gender} onChange={e=>setGender(e.target.value)}>
-                    {
-                      !gender && <option selected disabled={true}>no data</option>
-                    }
-                            <option className="text-gray border-0 rounded btn-hover-bg text-capitalize" value={'male'} style={{fontSize:FONT_SIZE}}>
-                  {t('male')}
-                </option>
-                <option className="text-gray border-0 rounded btn-hover-bg text-capitalize" value={'female'} style={{fontSize:FONT_SIZE}}>
-                  {t('female')}
-                </option>
-                  </select>
-                  :
-                  <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{gender?gender:'no data'}</span>
-                }
-              </div>
               <InputWithLabel 
                 editMode={editMode}
                 onCancel={onCancel}
@@ -273,7 +254,7 @@ export default function PatientInformation(props){
                 label={t('address')}
                 placeholder={t('Enter address')}
                 onUpdate={onUpdateInformation} 
-                type="number"
+                type="text"
                 value={address}
                 onChange={value=>setAddress(value)} 
                 style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
