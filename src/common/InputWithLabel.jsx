@@ -4,7 +4,7 @@ import { FONT_SIZE } from "./Utility.jsx";
 
 export default function InputWithLabel(props){
   const {t} = useTranslation()
-  return <div className='d-flex mb-3 pb-1 border-bottom align-items-center flex-grow-1' style={{height:"35px"}}>
+  return <div className='d-flex mb-3 pb-1 border-bottom align-items-center flex-grow-1' style={{minHeight:"35px"}}>
     <label className="text-capitalize mc-color fw-bold ms-2" style={props.style}>{props.label}:</label>
     {
       props.editMode ? 

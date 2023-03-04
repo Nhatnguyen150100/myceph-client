@@ -193,7 +193,7 @@ export default function MemberOfClinic(props){
                       <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{'('}{doctor.fullName?doctor.fullName:t('no data')}{')'}</span>
                     </div>
                     <button type="button" className="btn btn-outline-info border-0 p-0 m-0 text-white-hover" onClick={e=>toOtherDoctorProfile(doctor.email)}>
-                      <span class="material-symbols-outlined mt-1 mx-1">
+                      <span className="material-symbols-outlined mt-1 mx-1">
                         info
                       </span>
                     </button>

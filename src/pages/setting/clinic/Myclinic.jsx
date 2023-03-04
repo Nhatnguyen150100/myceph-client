@@ -301,7 +301,7 @@ export default function Myclinic(props){
         <hr style={{ width: '140px' }} />
       </div>
       {
-        editMode && clinic.roleOfDoctor==='admin' && <button type="button" class="btn btn-outline-danger mt-2 d-flex flex-row align-items-center justify-content-center" onClick={onDeleteHandle}>
+        editMode && clinic.roleOfDoctor==='admin' && <button type="button" className="btn btn-outline-danger mt-2 d-flex flex-row align-items-center justify-content-center" onClick={onDeleteHandle}>
           <span className="material-symbols-outlined me-2">
             delete
           </span>

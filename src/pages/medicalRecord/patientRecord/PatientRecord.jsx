@@ -43,14 +43,14 @@ export default function PatientRecord(props){
         </button>
         <span className="vr"></span>
         <button type="button" className={`btn d-flex align-items-center mx-1 px-2 py-0  text-white-hover ${selectedTab===1?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>setSelectedTab(1)}>
-          <span class="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
+          <span className="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
             face
           </span>
           <span className="text-uppercase fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{t('extra-oral')}</span>
         </button>
         <span className="vr"></span>
         <button type="button" className={`btn d-flex align-items-center mx-1 px-2 py-0  text-white-hover ${selectedTab===2?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>setSelectedTab(2)}>
-          <span class="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
+          <span className="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
             sentiment_very_satisfied
           </span>
           <span className="text-uppercase fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{t('intra-oral')}</span>
@@ -64,14 +64,14 @@ export default function PatientRecord(props){
         </button>
         <span className="vr"></span>
         <button type="button" className={`btn d-flex align-items-center mx-1 px-2 py-0  text-white-hover ${selectedTab===4?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>setSelectedTab(4)}>
-          <span class="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
+          <span className="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
             diagnosis
           </span>
           <span className="text-uppercase fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{t('diagnosis')}</span>
         </button>
         <span className="vr"></span>
         <button type="button" className={`btn d-flex align-items-center ms-1 px-2 py-0  text-white-hover ${selectedTab===5?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>setSelectedTab(5)}>
-          <span class="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
+          <span className="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
             airline_seat_individual_suite
           </span>
           <span className="text-uppercase fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{t('issue and plan')}</span>

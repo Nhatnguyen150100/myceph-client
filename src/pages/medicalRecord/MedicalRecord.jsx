@@ -74,7 +74,7 @@ export default function MedicalRecord(props){
       {
         currentPatient ? currentTab 
         :
-        <div className="h-100 w-100 d-flex justify-content-center align-items-center">
+        <div className="h-100 w-100 d-flex justify-content-center align-items-center mt-5">
           <h3 className="text-danger text-capitalize fw-bold">{t("can't found information of patient")}</h3>
         </div>
       }

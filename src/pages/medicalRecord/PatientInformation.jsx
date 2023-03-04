@@ -201,7 +201,7 @@ export default function PatientInformation(props){
             </div>
             <div className="col-sm-7" style={{marginTop:"10px"}}>
               <InputWithLabel 
-                classNameResult="text-capitalize"
+                classNameResult="text-capitalize flex-grow-1"
                 editMode={editMode}
                 onCancel={onCancel}
                 label={t('full name')}
