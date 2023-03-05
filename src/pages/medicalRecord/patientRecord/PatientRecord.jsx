@@ -5,13 +5,13 @@ import Diagnsis from "./Diagnosis.jsx";
 import ExtraOral from "./ExtraOral.jsx";
 import History from "./History.jsx";
 import IntraOral from "./IntraOral.jsx";
+import Issue from "./Issue.jsx";
 import Radiography from "./Radiography.jsx";
 import TreatmentPlan from "./TreatmentPlan.jsx";
 
 export default function PatientRecord(props){
   const {t} = useTranslation();
-  const [selectedTab,setSelectedTab] = useState(2);
-
+  const [selectedTab,setSelectedTab] = useState(6);
 
   let currentTab = null;
   switch(selectedTab){
@@ -25,7 +25,9 @@ export default function PatientRecord(props){
       break;
     case 4: currentTab = <Diagnsis />
       break;
-    case 5: currentTab = <TreatmentPlan />
+    case 5: currentTab = <Issue />
+      break;
+    case 6: currentTab = <TreatmentPlan />
       break;
     default: currentTab = <div className="h-100 w-100 d-flex justify-content-center align-items-center">
       <strong className="text-danger fw-bold">{t('page not found')}</strong>    
@@ -70,11 +72,18 @@ export default function PatientRecord(props){
           <span className="text-uppercase fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{t('diagnosis')}</span>
         </button>
         <span className="vr"></span>
-        <button type="button" className={`btn d-flex align-items-center ms-1 px-2 py-0  text-white-hover ${selectedTab===5?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>setSelectedTab(5)}>
+        <button type="button" className={`btn d-flex align-items-center mx-1 px-2 py-0  text-white-hover ${selectedTab===5?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>setSelectedTab(5)}>
+          <span className="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
+            sick
+          </span>
+          <span className="text-uppercase fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{t('issue')}</span>
+        </button>
+        <span className="vr"></span>
+        <button type="button" className={`btn d-flex align-items-center ms-1 px-2 py-0  text-white-hover ${selectedTab===6?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>setSelectedTab(6)}>
           <span className="material-symbols-outlined mc-color me-1" style={{fontSize:"25px"}}>
             airline_seat_individual_suite
           </span>
-          <span className="text-uppercase fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{t('issue and plan')}</span>
+          <span className="text-uppercase fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{t('treatment plan')}</span>
         </button>
       </div>
     </div>

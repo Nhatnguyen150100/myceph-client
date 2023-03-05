@@ -189,7 +189,7 @@ export default function PatientInformation(props){
                         </button>
                       </legend>
                       {
-                        updatedAt && <span className="text-capitalize text-center w-100 my-1 mc-color fst-italic" style={{fontSize:"13px"}}>{t('at')}{': '}{toISODateString(new Date(updatedAt))}{' | '}{toTimeString(new Date(updatedAt))}</span>
+                        updatedAt && <span className="text-capitalize text-center w-100 my-1 mc-color fst-italic" style={{fontSize:"13px"}}>{t('at')}{': '}{convertISOToVNDateString(toISODateString(new Date(updatedAt)))}{' | '}{toTimeString(new Date(updatedAt))}</span>
                       }
                     </fieldset>
                   </React.Fragment>
