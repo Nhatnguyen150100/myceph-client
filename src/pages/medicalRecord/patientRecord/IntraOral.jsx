@@ -153,6 +153,7 @@ export default function IntraOral(props){
         updateState(result.data);
         setPreviousData(result.data);
         setEditMode(false);
+        toast.success(result.message);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){

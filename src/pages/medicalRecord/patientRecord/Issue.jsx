@@ -100,6 +100,7 @@ export default function Issue(props){
       }).then(result => {
         setListOfIssue(result.data);
         setEditIssueId();
+        toast.success(result.message);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -133,78 +134,113 @@ export default function Issue(props){
   }
 
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1">
+    {
+      roleCheck && 
+      <React.Fragment>
+        <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
+          <span className="text-uppercase">
+            {t('create an issue')}
+          </span>
+        </div>
+        <div className="container">
+          <fieldset className="border row rounded mt-3">
+            <legend className="d-flex align-items-center float-none px-0 ms-auto me-2 w-auto">
+              <div className="border rounded d-flex align-items-center py-1">
+                <span className="px-2 text-capitalize d-md-block d-none text-gray" style={{fontSize:FONT_SIZE}}>
+                  {t('priotized')}:
+                </span>
+                <fieldset className="border rounded px-1 border-0 " style={{fontSize:"small"}}>
+                  <input className="rounded mt-1 me-1" type="checkbox" style={{height:"15px"}} checked={priotized} value={priotized} id="checkBox" onChange={e=>setPriotized(priotized?false:true)}/>
+                </fieldset>
+              </div>
+              <IconButtonComponent className="btn-outline-info p-0" onClick={()=>createIssue()} icon="save" FONT_SIZE_ICON={"20px"} title={t("add new treatment issue")}/>
+            </legend>
+            <div className="row">
+              <div className="col-sm-4">
+                <fieldset className='border-0 rounded me-2 w-100'>
+                  <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-1 float-none px-2 text-uppercase fw-bold'>
+                    {t('issue')}
+                  </legend>
+                  <textarea 
+                    value={issue}
+                    placeholder={t('Enter Issue')}
+                    onKeyDown={e=>{if(e.key === "Enter") createIssue()}} 
+                    onChange={e=>setIssue(e.target.value)}
+                    className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
+                    style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
+                  />
+                </fieldset>
+              </div>
+              <div className="col-sm-4">
+                <fieldset className='border-0 rounded me-2 w-100'>
+                  <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-1 float-none px-2 text-uppercase fw-bold'>
+                    {t('treatment object')}
+                  </legend>
+                  <textarea 
+                    value={treatmentObject}
+                    placeholder={t('Enter Treatment Object')}
+                    onKeyDown={e=>{if(e.key === "Enter") createIssue()}} 
+                    onChange={e=>setTreatmentObject(e.target.value)}
+                    className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
+                    style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
+                  />
+                </fieldset>
+              </div>
+              <div className="col-sm-4">
+                <fieldset className='border-0 rounded me-2 w-100'>
+                  <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-1 float-none px-2 text-uppercase fw-bold'>
+                    {t('treatment method')}
+                  </legend>
+                  <textarea 
+                    value={treatmentMethod}
+                    placeholder={t('Enter Treatment Method')}
+                    onKeyDown={e=>{if(e.key === "Enter") createIssue()}} 
+                    onChange={e=>setTreatmentMethod(e.target.value)}
+                    className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
+                    style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
+                  />
+                </fieldset>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </React.Fragment>
+    }
+    <div className="mt-3 d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
+      <span className="text-uppercase">
+        {t('list of issue')}
+      </span>
+    </div>
+    <div className="container">
       {
-        roleCheck && 
-        <React.Fragment>
-          <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
-            <span className="text-uppercase">
-              {t('create an issue')}
-            </span>
-          </div>
-          <div className="d-flex flex-row justify-content-between align-items-center mt-3">
-            <div className="w-100">
-              <TextAreaFieldInput 
-                className="me-2"
-                classNameLegend="w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold" 
-                classNameInput="rounded py-2 px-3 mc-color" 
-                placeholder={t('Enter Issue')}  
-                value={issue} 
-                onChange={value=>setIssue(value)} 
-                legend={t('issue')}
-              />
-            </div>
-            <div className="w-100">
-              <TextAreaFieldInput 
-                className="me-2"
-                classNameLegend="w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold" 
-                classNameInput="rounded py-2 px-3 mc-color" 
-                placeholder={t('Enter Treatment Object')}  
-                value={treatmentObject} 
-                onChange={value=>setTreatmentObject(value)} 
-                legend={t('treatment object')}
-              />
-            </div>
-            <div className="w-100">
-              <TextAreaFieldInput 
-                className="me-2"
-                classNameLegend="w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold" 
-                classNameInput="rounded py-2 px-3" 
-                placeholder={t('Enter Treatment Method')}  
-                value={treatmentMethod} 
-                onChange={value=>setTreatmentMethod(value)} 
-                legend={t('treament method')}
-              />
-            </div>
-            <div className="d-flex flex-row align-items-center justify-content-center">
-              <div className="form-check d-flex flex-column me-2">
-                <label className="form-check-label fw-bold mc-color text-capitalize" for="checkBox">
-                  {t('priotized')}
-                </label>
-                <input className="rounded mt-2" type="checkbox" style={{height:"15px"}} checked={priotized} value={priotized} id="checkBox" onChange={e=>setPriotized(priotized?false:true)}/>
+        listOfIssue?.map((issue,index) => {
+          return <fieldset className="border row rounded mt-3" key={issue.id}>
+            <legend className="d-flex align-items-center float-none px-0 ms-auto me-2 w-auto">
+              <div className="border rounded d-flex align-items-center py-1">
+                <span className="px-2 text-capitalize d-md-block d-none text-gray" style={{fontSize:FONT_SIZE}}>
+                  {t('priotized')}:
+                </span>
+                <fieldset className="border rounded px-1 border-0 " style={{fontSize:"small"}}>
+                  <input 
+                    className="rounded mt-1 me-1" 
+                    type="checkbox" 
+                    checked={editIssueId===issue.id?priotizedItem:issue.priotized}
+                    style={{height:"15px"}} 
+                    onChange={e=>{if(editIssueId===issue.id) setPriotizedItem(priotizedItem?false:true)}}
+                    value={editIssueId===issue.id?priotizedItem:issue.priotized} 
+                    id="checkBox"
+                    disabled={editIssueId!==issue.id}
+                  />
+                </fieldset>
               </div>
-              <div className="ms-3 mt-1 pt-1" style={{height:"50px"}}>
-                <IconButtonComponent className="btn-outline-info h-100" icon="save" onClick={createIssue} FONT_SIZE_ICON={"30px"} title={t("add new issue")}/>
-              </div>
-            </div>
-          </div>
-        </React.Fragment>
-      }
-      <div className="mt-3 d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
-        <span className="text-uppercase">
-          {t('list of issue')}
-        </span>
-      </div>
-      <div className="d-flex flex-column">
-        {
-          listOfIssue?.map((issue,index) => {
-            return <div className="d-flex flex-column justify-content-start align-items-end w-100 my-3" key={issue.id}>
               {
-                roleCheck && <div className="d-flex justify-content-end w-100 align-items-end my-1">
+                roleCheck && <div className="d-flex justify-content-end align-items-end my-1">
                   {
                     editIssueId===issue.id ?
-                    <div>
-                      <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updateIssue(issue.id)} FONT_SIZE_ICON={"25px"} title={t("save")}/>
-                      <IconButtonComponent className="btn-outline-danger" onClick={()=>setEditIssueId('')} icon="close" FONT_SIZE_ICON={"25px"} title={t("cancel")}/>
+                    <div className="d-flex flex-row justify-content-end align-items-center">
+                      <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>deleteIssue(issue.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
+                      <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updateIssue(issue.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
+                      <IconButtonComponent className="btn-outline-danger" onClick={()=>setEditIssueId('')} icon="close" FONT_SIZE_ICON={"20px"} title={t("cancel")}/>
                     </div>
                     :
                     <IconButtonComponent 
@@ -217,18 +253,21 @@ export default function Issue(props){
                       setEditIssueId(issue.id)
                     }} 
                     icon="edit" 
-                    FONT_SIZE_ICON={"25px"} 
+                    FONT_SIZE_ICON={"20px"} 
                     title={t("edit")}
                   />
                   }
                 </div>
               }
-              <div className="d-flex flex-row justify-content-between align-items-center w-100 mt-1">
-                <fieldset className='border rounded me-2 w-100'>
+            </legend>
+            <div className="row">
+              <div className="col-sm-4">
+                <fieldset className='border-0 rounded me-2 w-100'>
                   <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
                     {t('issue')}{' '}{index+1}
                   </legend>
                   <textarea 
+                    onKeyDown={e=>{if(e.key === "Enter") updateIssue(issue.id) ; if(e.key === "Escape") setEditIssueId('')}} 
                     value={editIssueId===issue.id?issueItem:issue.issue}
                     onChange={e=>{if(editIssueId===issue.id) setIssueItem(e.target.value)}}
                     className='border-0 px-2 py-2 rounded px-3' 
@@ -236,11 +275,14 @@ export default function Issue(props){
                     disabled={editIssueId!==issue.id}
                   />
                 </fieldset>
-                <fieldset className='border rounded me-2 w-100'>
+              </div>
+              <div className="col-sm-4">
+                <fieldset className='border-0 rounded me-2 w-100'>
                   <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
                     {t('treament object')}{' '}{index+1}
                   </legend>
-                  <textarea 
+                  <textarea
+                    onKeyDown={e=>{if(e.key === "Enter") updateIssue(issue.id) ; if(e.key === "Escape") setEditIssueId('')}} 
                     value={editIssueId===issue.id?treatmentObjectItem:issue.treatmentObject}
                     onChange={e=>{if(editIssueId===issue.id) setTreatmentObjectItem(e.target.value)}}
                     className='border-0 px-2 py-2 rounded px-3' 
@@ -248,11 +290,14 @@ export default function Issue(props){
                     disabled={editIssueId!==issue.id}
                   />
                 </fieldset>
-                <fieldset className='border rounded me-2 w-100'>
+              </div>
+              <div className="col-sm-4">
+                <fieldset className='border-0 rounded me-2 w-100'>
                   <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
                     {t('treatment method')}{' '}{index+1}
                   </legend>
-                  <textarea 
+                  <textarea
+                    onKeyDown={e=>{if(e.key === "Enter") updateIssue(issue.id) ; if(e.key === "Escape") setEditIssueId('')}} 
                     value={editIssueId===issue.id?treatmentMethodItem:issue.treatmentMethod}
                     onChange={e=>{if(editIssueId===issue.id) setTreatmentMethodItem(e.target.value)}}
                     className='border-0 px-2 py-2 rounded px-3' 
@@ -260,26 +305,11 @@ export default function Issue(props){
                     disabled={editIssueId!==issue.id}
                   />
                 </fieldset>
-                <div className="form-check d-flex flex-column me-2">
-                  <label className="form-check-label fw-bold mc-color text-capitalize" for="checkBox">
-                    {t('priotized')}
-                  </label>
-                  <input 
-                    className="rounded mt-2" 
-                    type="checkbox" 
-                    checked={editIssueId===issue.id?priotizedItem:issue.priotized}
-                    style={{height:"15px"}} 
-                    onChange={e=>{if(editIssueId===issue.id) setPriotizedItem(priotizedItem?false:true)}}
-                    value={editIssueId===issue.id?priotizedItem:issue.priotized} 
-                    id="checkBox"
-                    disabled={editIssueId!==issue.id}
-                  />
-                </div>
-                <IconButtonComponent className="btn-outline-danger ms-3 " icon="delete" FONT_SIZE_ICON={"25px"} title={t("delete this issue")} onClick={e=>deleteIssue(issue.id)} disabled={editIssueId!==issue.id}/>
               </div>
             </div>
-          })
-        }
-      </div>
+          </fieldset>
+        })
+      }
+    </div>
   </div>
 }

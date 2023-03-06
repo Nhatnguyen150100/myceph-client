@@ -32,7 +32,6 @@ export default function TreatmentPlan(props){
 
   
   const [listOfPlan,setListOfPlan] = useState();
-  const [previousData,setPreviousData] = useState();
 
   const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
 
@@ -45,7 +44,6 @@ export default function TreatmentPlan(props){
     return new Promise((resolve, reject) =>{
       getToServerWithToken(`/v1/treatmentPlan/${patient.currentPatient.id}`).then(result => {
         setListOfPlan(result.data);
-        setPreviousData(result.data.slice());
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -69,7 +67,6 @@ export default function TreatmentPlan(props){
         setPlan('');
         setSelected(false);
         setListOfPlan(result.data);
-        // setPreviousData(result.data.slice());
         toast.success(t(result.message));
         resolve();
       }).catch(err =>{
@@ -93,7 +90,6 @@ export default function TreatmentPlan(props){
         selected: selectedItem
       }).then(result => {
         setListOfPlan(result.data);
-        // setPreviousData(result.data.slice());
         setEditPlanId();
         resolve();
       }).catch(err =>{
@@ -113,7 +109,6 @@ export default function TreatmentPlan(props){
       return new Promise((resolve, reject) =>{
         deleteToServerWithToken(`/v1/treatmentPlan/deletePlan/${patient.currentPatient.id}?idPlan=${idPlan}`).then(result => {
           setListOfPlan(result.data);
-          // setPreviousData(result.data.slice());
           toast.success(result.message);
           resolve();
         }).catch(err =>{
@@ -139,8 +134,6 @@ export default function TreatmentPlan(props){
     setListOfPlan(listPlanTempoary);
   }
 
-  console.log(previousData);
-
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1">
       {
         roleCheck && 
@@ -150,26 +143,31 @@ export default function TreatmentPlan(props){
               {t('create treatment plan')}
             </span>
           </div>
-          <div className="row w-100 mt-3">
-            <div className="col-sm-10">
-              <textarea 
-                className="mc-background-color-white text-gray mx-2 w-100 border-0 rounded p-2"
-                style={{resize:"vertical",fontSize:FONT_SIZE,outline:"none"}}
-                value={plan}
-                onChange={e=>setPlan(e.target.value)}
-              />
-            </div>
-            <div className="col-sm-2 d-flex flex-row align-items-center justify-content-center">
-              <div className="form-check d-flex flex-column me-2">
-                <label className="form-check-label fw-bold mc-color text-capitalize" for="checkBox">
-                  {t('selected')}
-                </label>
-                <input className="rounded mt-2" type="checkbox" style={{height:"15px"}} checked={selected} value={selected} id="checkBox" onChange={e=>setSelected(selected?false:true)}/>
+          <div className="container">
+            <fieldset className="border row rounded mt-3">
+              <legend className="d-flex align-items-center float-none px-0 ms-auto me-2 w-auto">
+                <div className="border rounded d-flex align-items-center py-1">
+                  <span className="px-2 text-capitalize d-md-block d-none text-gray" style={{fontSize:FONT_SIZE}}>
+                    {t('selected')}:
+                  </span>
+                  <fieldset className="border rounded px-1 border-0 " style={{fontSize:"small"}}>
+                    <input className="rounded mt-1 me-1" type="checkbox" style={{height:"15px"}} checked={selected} value={selected} id="checkBox" onChange={e=>setSelected(selected?false:true)}/>
+                  </fieldset>
+                </div>
+                <IconButtonComponent className="btn-outline-info p-0" onClick={()=>createPlan()} icon="save" FONT_SIZE_ICON={"20px"} title={t("add new treatment plan")}/>
+              </legend>
+              <div className="w-100">
+                <fieldset className='border-0 rounded me-2 w-100'>
+                  <textarea 
+                    placeholder={t('Enter new plan')}
+                    className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
+                    style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
+                    value={plan}
+                    onChange={e=>setPlan(e.target.value)}
+                  />
+                </fieldset>
               </div>
-              <div className="ms-3 mt-1 pt-1" style={{height:"50px"}}>
-                <IconButtonComponent className="btn-outline-info h-100" icon="save" onClick={createPlan} FONT_SIZE_ICON={"30px"} title={t("add new plan")}/>
-              </div>
-            </div>
+            </fieldset>
           </div>
         </React.Fragment>
       }
@@ -178,39 +176,63 @@ export default function TreatmentPlan(props){
           {t('list of plan')}
         </span>
       </div>
-      <div className="d-flex flex-column">
+      <div className="container">
         {
           listOfPlan?.map((plan,index) => {
-            return <div className="d-flex flex-column justify-content-start align-items-end w-100 my-3" key={plan.id}>
-              {
-                roleCheck && <div className="d-flex justify-content-end w-100 align-items-end my-1">
-                  {
-                    editPlanId===plan.id ?
-                    <div>
-                      <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updatePlan(plan.id)} FONT_SIZE_ICON={"25px"} title={t("save")}/>
-                      <IconButtonComponent className="btn-outline-danger" onClick={()=>{setEditPlanId('');setListOfPlan(previousData)}} icon="close" FONT_SIZE_ICON={"25px"} title={t("cancel")}/>
-                    </div>
-                    :
-                    <IconButtonComponent 
-                    className="btn-outline-warning" 
-                    onClick={e=>{
-                      setPlanItem(plan.plan);
-                      setSelectedItem(plan.selected);
-                      setEditPlanId(plan.id)
-                    }} 
-                    icon="edit" 
-                    FONT_SIZE_ICON={"25px"} 
-                    title={t("edit")}
-                  />
-                  }
+            return <fieldset className="border row rounded mt-3" key={plan.id}>
+              <legend className="d-flex align-items-center float-none px-0 ms-auto me-2 w-auto">
+                <div className="border rounded d-flex align-items-center py-1">
+                  <span className="px-2 text-capitalize d-md-block d-none text-gray" style={{fontSize:FONT_SIZE}}>
+                    {t('selected')}:
+                  </span>
+                  <fieldset className="border rounded px-1 border-0 " style={{fontSize:"small"}}>
+                    <input 
+                      className="rounded mt-1 me-1" 
+                      type="checkbox" 
+                      checked={editPlanId===plan.id?selectedItem:plan.selected}
+                      style={{height:"15px"}} 
+                      onChange={e=>{if(editPlanId===plan.id){
+                        setSelectedItem(true);
+                        setSelectedPlan(plan.id);
+                      }}}
+                      value={editPlanId===plan.id?selectedItem:plan.selected} 
+                      id="checkBox"
+                      disabled={editPlanId!==plan.id || selectedItem || plan.selected}
+                    />
+                  </fieldset>
                 </div>
-              }
-              <div className="d-flex flex-row justify-content-between align-items-center w-100 mt-1">
-                <fieldset className='border rounded me-2 w-100'>
+                {
+                  roleCheck && <div className="d-flex justify-content-end align-items-end my-1">
+                    {
+                           editPlanId===plan.id ?
+                      <div className="d-flex flex-row justify-content-end align-items-center">
+                        <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>deletePlan(plan.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
+                        <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updatePlan(plan.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
+                        <IconButtonComponent className="btn-outline-danger" onClick={()=>{setEditPlanId('');getListOfPlan()}} icon="close" FONT_SIZE_ICON={"20px"} title={t("cancel")}/>
+                      </div>
+                      :
+                      <IconButtonComponent 
+                      className="btn-outline-warning" 
+                      onClick={e=>{
+                        setPlanItem(plan.plan);
+                        setSelectedItem(plan.selected);
+                        setEditPlanId(plan.id)
+                      }} 
+                      icon="edit" 
+                      FONT_SIZE_ICON={"20px"} 
+                      title={t("edit")}
+                    />
+                    }
+                  </div>
+                }
+              </legend>
+              <div className="w-100">
+                <fieldset className='border-0 rounded me-2 w-100'>
                   <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
                     {t('treatmnt plan')}{' '}{index+1}
                   </legend>
                   <textarea 
+                    onKeyDown={e=>{if(e.key === "Enter") updatePlan(plan.id) ; if(e.key === "Escape"){setEditPlanId('');getListOfPlan()}}} 
                     value={editPlanId===plan.id?planItem:plan.plan}
                     onChange={e=>{if(editPlanId===plan.id) setPlanItem(e.target.value)}}
                     className='border-0 px-2 py-2 rounded px-3' 
@@ -218,27 +240,8 @@ export default function TreatmentPlan(props){
                     disabled={editPlanId!==plan.id}
                   />
                 </fieldset>
-                <div className="form-check d-flex flex-column me-2">
-                  <label className="form-check-label fw-bold mc-color text-capitalize" for="checkBox">
-                    {t('selected')}
-                  </label>
-                  <input 
-                    className="rounded mt-2" 
-                    type="checkbox" 
-                    checked={editPlanId===plan.id?selectedItem:plan.selected}
-                    style={{height:"15px"}} 
-                    onChange={e=>{if(editPlanId===plan.id){
-                      setSelectedItem(true);
-                      setSelectedPlan(plan.id);
-                    }}}
-                    value={editPlanId===plan.id?selectedItem:plan.selected} 
-                    id="checkBox"
-                    disabled={editPlanId!==plan.id || selectedItem || plan.selected}
-                  />
-                </div>
-                <IconButtonComponent className="btn-outline-danger ms-3 " icon="delete" FONT_SIZE_ICON={"25px"} title={t("delete this plan")} onClick={e=>deletePlan(plan.id)} disabled={editPlanId!==plan.id}/>
               </div>
-            </div>
+            </fieldset>
           })
         }
       </div>

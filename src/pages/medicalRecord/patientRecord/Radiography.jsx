@@ -90,6 +90,7 @@ export default function Radiography(props){
       }).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
+        toast.success(result.message);
         setEditMode(false);
         resolve();
       }).catch(err =>{

@@ -16,8 +16,8 @@ export default function LoadingModal(props) {
     else loadingModal.current.hide();
   }, [loading])
 
-  return <div className="modal" tabIndex="-1" ref={loadingModalRef}>
-    <div className="modal-dialog modal-dialog-centered modal-sm justify-content-center">
+  return <div className="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" ref={loadingModalRef}>
+    <div className="modal-dialog modal-dialog-centered modal-sm justify-content-center ">
       <div>
         <img src='/assets/gif/loadingGif.gif' alt='Loading...' />
       </div>

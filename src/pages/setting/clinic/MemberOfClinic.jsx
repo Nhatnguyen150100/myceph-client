@@ -175,7 +175,7 @@ export default function MemberOfClinic(props){
   }
 
   return <div className="d-flex flex-column align-items-start justify-content-start h-100 py-3">
-    <div className="d-flex flex-row w-100 flex-wrap justify-content-between mb-2">
+    <div className="d-flex flex-row w-100 flex-wrap justify-content-between align-items-center mb-2">
       <div style={{width:"400px"}}>
         <SelectClinicComponent condition={true} />
       </div>

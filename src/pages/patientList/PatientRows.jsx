@@ -7,6 +7,7 @@ import { convertISOToVNDateString, FONT_SIZE, SOFT_WARE_LIST, toISODateString } 
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setSettingTab, setSoftWareSelectedTab } from "../../redux/GeneralSlice.jsx";
 import { setCurrentPatient, setSelectPatientOnMode } from "../../redux/PatientSlice.jsx";
+import { getToServerWithToken } from "../../services/getAPI.jsx";
 
 const AVATAR_HEIGHT = "90px";
 const AVATAR_WIDTH = "90px";
@@ -17,6 +18,10 @@ export default function PatientRows(props){
   const selectedTab = useSelector(state=>state.general.patientListTab);
   const dispatch = useDispatch();
   const nav = useNavigate();
+
+  const getAllDoctorSharedPatient = (idPatient) => {
+    getToServerWithToken(`/v1/sharePatient`)
+  }
 
   const toOtherDoctorProfile = (email) => {
     nav('/setting');
@@ -70,9 +75,9 @@ export default function PatientRows(props){
       props.action && <td className={`d-lg-table-cell`}>
         <div className="d-flex flex-row align-items-center justify-content-center">
           <div className="btn-group dropstart">
-            <Link title={t("share patient")} className="btn btn-outline-info p-1 border-0 me-2 mb-2 rounded d-none d-sm-block" disabled={selectedTab===1 && clinic.roleOfDoctor!=='admin'}>
+            <button title={t("share patient")} className="btn btn-outline-info p-1 border-0 me-2 mb-2 rounded d-none d-sm-block" disabled={selectedTab===1 && clinic.roleOfDoctor!=='admin'}>
               <img src="/assets/images/Share.png" width="34" height="34" alt="Discussion"/>
-            </Link>
+            </button>
           </div>
           <IconButtonComponent className="btn-outline-danger border-0 p-0 mb-1" icon="delete" FONT_SIZE_ICON={"30px"} title={t("delete patient")} disabled={selectedTab===1 && clinic.roleOfDoctor!=='admin'} onClick={e=>props.onDeleteHandle(props.patient.id)}/>
         </div>

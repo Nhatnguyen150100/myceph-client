@@ -73,6 +73,7 @@ export default function History(props){
       }).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
+        toast.success(result.message);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){

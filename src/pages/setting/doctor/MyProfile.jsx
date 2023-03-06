@@ -138,10 +138,14 @@ export default function MyProfile(props){
 
 
   return <div className="d-flex flex-column h-100">
-    <div className="d-flex justify-content-end mt-2">
+    <div className="d-flex flex-row align-items-end justify-content-center my-2">
+      <div className="w-100 d-flex justify-content-end align-items-end me-3" style={{fontSize:FONT_SIZE}}>
+        <span className="text-capitalize mc-color fw-bold me-2">{t('update at')}: </span>
+        <span>{convertISOToVNDateString(toISODateString(new Date(doctor.updatedAt?doctor.updatedAt:new Date())))}</span>
+      </div>
       {
         editMode ?
-        <div>
+        <div className="d-flex flex-row align-items-center justify-content-center">
           <IconButtonComponent className="btn-outline-success me-2" onClick={onUpdate} icon="done" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("save")}/>
           <IconButtonComponent className="btn-outline-danger" onClick={onCancel} icon="close" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("cancel")}/>
         </div>
@@ -149,10 +153,6 @@ export default function MyProfile(props){
         <IconButtonComponent className="btn-outline-warning" onClick={e=>setEditMode(true)} icon="edit" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("edit")}/>
       }
     </div>
-    <span className="w-100 d-flex justify-content-end my-2" style={{fontSize:FONT_SIZE}}>
-      <span className="text-capitalize mc-color fw-bold me-2">{t('update at')}: </span>
-      {convertISOToVNDateString(toISODateString(new Date(doctor.updatedAt?doctor.updatedAt:new Date())))}
-    </span>
     <div className="d-flex flex-row flex-grow-1">
       <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
         {

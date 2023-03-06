@@ -126,6 +126,7 @@ export default function ExtraOral(props){
       }).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
+        toast.success(result.message);
         setEditMode(false);
         resolve();
       }).catch(err =>{
