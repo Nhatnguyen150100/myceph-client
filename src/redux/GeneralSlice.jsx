@@ -6,6 +6,7 @@ export const GeneralSlice = createSlice({
     appName: 'Myceph',
     softWareSelectedTab: null,
     medicalRecordTab: "INFORMATION",
+    libraryImagesTab: "RADIOGRAPHY",
     loading: false,
     language: 'vi',
     settingTab: 0,
@@ -42,6 +43,9 @@ export const GeneralSlice = createSlice({
     setMedicalRecordTab: (state,action) => {
       state.medicalRecordTab = action.payload;
     },
+    setLibraryImagesTab: (state,action) => {
+      state.libraryImagesTab = action.payload;
+    },
     setIsRefresh: (state,action) => {
       state.isRefresh = action.payload;
     },
@@ -61,7 +65,7 @@ export const GeneralSlice = createSlice({
 export const {
   setLoadingModal,setLanguage,setAppName,setSettingTab,setDoctorSettingTab,
   setClinicSettingTab,clearGeneralSlice,setpatientListTab,
-  setSoftWareSelectedTab,setMedicalRecordTab,setIsRefresh
+  setSoftWareSelectedTab,setMedicalRecordTab,setIsRefresh,setLibraryImagesTab
 } = GeneralSlice.actions;
 
 export default GeneralSlice.reducer;

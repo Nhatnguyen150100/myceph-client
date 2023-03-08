@@ -36,7 +36,7 @@ export default function MySharedPatient(props){
   const onNameSearchChange = e => {
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
-    nameSearchTimeout = setTimeout(getListSharePatientOfCurrentDoctor,300,e.target.value);
+    nameSearchTimeout = setTimeout(getListSharePatientOfCurrentDoctor,500,e.target.value);
   }
 
   const getListSharePatientOfCurrentDoctor = (name) => {

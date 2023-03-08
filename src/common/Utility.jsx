@@ -41,10 +41,16 @@ export const SELECT_PATIENT_MODE = {
   SHARE_PATIENT: "SHARE_PATIENT"
 }
 
-export const MEDICAL_RECORD_TAB = {
+export const MEDICAL_RECORD_TABS = {
   INFORMATION: "INFORMATION",
   RECORD: "RECORD",
   TREATMENT_HISTORY: "TREATMENT_HISTORY"
+}
+
+export const LIBRARY_IMAGES_TABS = {
+  RADIOGRAPHY: "RADIOGRAPHY",
+  EXTRA_ORAL: "EXTRA_ORAL",
+  INTRA_ORAL: "INTRA_ORAL"
 }
 
 export const IMAGE_TYPE_LIST = {
@@ -153,20 +159,6 @@ export function toTimeString(dateObject){
   let minutes  = dateObject.getMinutes();
   let seconds = dateObject.getSeconds();
   return `${hour}:${minutes}:${seconds}`;
-}
-
-function formatDate(date) {
-  var d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-
-  if (month.length < 2) 
-      month = '0' + month;
-  if (day.length < 2) 
-      day = '0' + day;
-
-  return [year, month, day].join('-');
 }
 
 export function convertISOToVNDateString(dateString) {

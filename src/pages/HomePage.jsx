@@ -10,9 +10,9 @@ import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
 
 export default function HomePage(props) {
-  const isRefresh = useSelector(state=>state.general.isRefresh);
   const dispatch = useDispatch();
   const {t} = useTranslation();
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const doctor = useSelector(state=>state.doctor.data);
   const nav = useNavigate();
 
@@ -39,12 +39,11 @@ export default function HomePage(props) {
   }
 
   useEffect(()=>{
-    if(doctor){
-      getAllClinicAndSetDefault();
-    }
     dispatch(setAppName(`Myceph - ${t('homepage')}`));
+    if(doctor){
+      getAllClinicAndSetDefault(doctor,dispatch,isRefresh,nav);
+    }
   },[])
-
   return <div className="d-flex flex-column justify-content-center align-items-center h-100 w-100">
     <NavbarComponent />
     <div className="h-100 w-100" style={{

@@ -34,7 +34,7 @@ export default function MyPatient(props){
   const onNameSearchChange = e => {
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
-    nameSearchTimeout = setTimeout(getAllPaitentForDoctor,300,e.target.value);
+    nameSearchTimeout = setTimeout(getAllPaitentForDoctor,500,e.target.value);
   }
 
   const getAllPaitentForDoctor = (name) => {

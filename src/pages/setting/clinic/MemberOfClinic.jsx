@@ -186,7 +186,7 @@ export default function MemberOfClinic(props){
             <ul className={`position-absolute d-flex flex-grow-1 p-0 w-100 flex-column me-2 bg-white border-start border-end ${listEmailSearch.length>0?'border-bottom':''}`} style={{zIndex:"1"}}>
               {
                 listEmailSearch?.map(doctor=>{
-                  return <button className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-between" type="button" onClick={e=>{setNewDoctor(doctor.email);setListEmailSearch([])}}>
+                  return <button className="btn btn-hover-bg border-bottom border-0 py-1 px-2 d-flex flex-row align-items-center justify-content-between" type="button" onClick={e=>{setNewDoctor(doctor.email);setListEmailSearch([]);e.preventDefault()}}>
                     <img alt="avatar" className="rounded" src={splitAvatar(doctor.avatar,'/assets/images/doctor.png')} style={{height:"50px",width:"40px",objectFit:"cover"}}/>
                     <div className="d-flex ms-3 flex-column justify-content-center align-items-center">
                       <span className="mc-color" style={{fontSize:FONT_SIZE}}>{doctor.email}</span>
@@ -201,7 +201,7 @@ export default function MemberOfClinic(props){
                 })
               }
               {
-                listEmailSearch.length===0 && newDoctor && <div className="d-flex justify-content-center flex-row align-items-center h-100 py-2" style={{zIndex:"1"}}>
+                listEmailSearch.length===0 && !isValidEmail(newDoctor) && newDoctor && <div className="d-flex justify-content-center flex-row align-items-center h-100 py-2" style={{zIndex:"1"}}>
                   <img className="text-capitalize me-2" src="/assets/images/notFound.png" height={"35px"} alt={t("can't found doctor profile")} />
                   <span className="text-danger text-capitalize mt-2">{t("can't found doctor profile")}</span>
                 </div>
@@ -236,7 +236,6 @@ export default function MemberOfClinic(props){
             <div className="d-flex flex-grow-1 justify-content-center w-100">
               <div className="spinner-grow"></div>
             </div>
-            
             :
             <React.Fragment>
               <tbody>{listDoctor.map((doctor, index) => <DoctorRows key={index} doctor={doctor} changeRoleOfDoctor={(idDoctor,roleOfDoctor)=>onChangeRoleOfDoctor(idDoctor,roleOfDoctor)} deleteDoctorFromClinic={onDeleteHandle}/>)}</tbody>

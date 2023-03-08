@@ -50,8 +50,8 @@ export default function PatientOfClinic(props){
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
     if(clinic.roleOfDoctor==='admin'){
-      nameSearchTimeout = setTimeout(getAllPaitentForClinic,300,e.target.value);
-    }else nameSearchTimeout = setTimeout(getSharedPatientOfDoctorInClinic,300,e.target.value);
+      nameSearchTimeout = setTimeout(getAllPaitentForClinic,500,e.target.value);
+    }else nameSearchTimeout = setTimeout(getSharedPatientOfDoctorInClinic,500,e.target.value);
   }
 
   const getAllPaitentForClinic = (name) => {

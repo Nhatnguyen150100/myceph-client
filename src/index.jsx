@@ -4,7 +4,7 @@ import App from './App.jsx';
 import reportWebVitals from './reportWebVitals.jsx';
 import i18n from './translation/i18n.jsx';
 import { I18nextProvider } from 'react-i18next';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import '../public/stylesheets/style.css';
 import '../public/stylesheets/font.css';
 import './index.css';
@@ -29,10 +29,10 @@ root.render(
   <I18nextProvider i18n={i18n}>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <Router>
+        <BrowserRouter>
           <App />
           <ToastContainerComponent />
-        </Router>
+        </BrowserRouter>
         <LoadingModal />
       </PersistGate>
     </Provider>
