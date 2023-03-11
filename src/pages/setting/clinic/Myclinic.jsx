@@ -235,7 +235,7 @@ export default function Myclinic(props){
         <div className="d-flex flex-row flex-grow-1 mt-3">
           <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
             {
-              editMode && <UploadImage className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
+              editMode && <UploadImage icon={"photo_camera"} className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
             }
             <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatarClinic):avatarClinic}`} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
           </div>

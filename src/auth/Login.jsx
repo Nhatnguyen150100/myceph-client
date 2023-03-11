@@ -34,6 +34,7 @@ function LoginPage(props){
 			setLoading(true);
       executeRecaptcha('login').then(token => 
         postToServer('/v1/auth/login', { email: email, password: password, tokenRecaptcha: token }).then((result) => {
+          console.log(result.data.accessToken);
           cookies.set('accessToken', result.data.accessToken, { path: '/', sameSite: true, secure: true });
           cookies.set('refreshToken', result.data.refreshToken, { path: '/', sameSite: true, maxAge: timeToken(), secure: true });
           delete result.data.accessToken;

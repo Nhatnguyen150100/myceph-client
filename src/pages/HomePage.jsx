@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { cookies } from "../common/Utility.jsx";
 import NavbarComponent from "../component/NavbarComponent.jsx";
 import { setArrayClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
 import { setAppName } from "../redux/GeneralSlice.jsx";
@@ -40,8 +41,8 @@ export default function HomePage(props) {
 
   useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t('homepage')}`));
-    if(doctor){
-      getAllClinicAndSetDefault(doctor,dispatch,isRefresh,nav);
+    if(doctor && cookies.get('accessToken')){
+      getAllClinicAndSetDefault();
     }
   },[])
   return <div className="d-flex flex-column justify-content-center align-items-center h-100 w-100">

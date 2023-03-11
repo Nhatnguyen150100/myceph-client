@@ -47,15 +47,9 @@ export const MEDICAL_RECORD_TABS = {
   TREATMENT_HISTORY: "TREATMENT_HISTORY"
 }
 
-export const LIBRARY_IMAGES_TABS = {
-  RADIOGRAPHY: "RADIOGRAPHY",
-  EXTRA_ORAL: "EXTRA_ORAL",
-  INTRA_ORAL: "INTRA_ORAL"
-}
-
 export const IMAGE_TYPE_LIST = {
   X_RAY: {
-    name: 'radiograph',
+    name: 'RADIOGRAPHY',
     icon: 'theaters',
     imageList: {
       LATERAL: {id:1,name:'lateral x-ray image'},
@@ -65,7 +59,7 @@ export const IMAGE_TYPE_LIST = {
     }
   },
   FACE: {
-    name:'extra-oral',
+    name:'EXTRA_ORAL',
     icon:'face',
     imageList: {
       SIDE: {id:5,name:'side face image'},
@@ -76,8 +70,8 @@ export const IMAGE_TYPE_LIST = {
     }
   },
   INTRA_ORAL: {
-    name:'intra-oral',
-    icon:'mood_bad',
+    name:'INTRA_ORAL',
+    icon:'sentiment_very_satisfied',
     imageList: {
       RIGHT_BUCCAL:{id:10,name:'right buccal image'},
       LEFT_BUCCAL: {id:11,name:'left buccal image'},
@@ -205,5 +199,27 @@ export const upLoadImage = (image) =>{
     formData.append("file", image)
     formData.append("upload_preset","myceph_avatar")
     axios.post(`${CLOUDINARY_BASE_URL}/image/upload`,formData).then(response=>resolve(response)).catch(err=>reject(err));
+  })
+}
+
+export const upLoadImageLibrary = (image) =>{
+  return new Promise((resolve,reject)=>{
+    const formData = new FormData()
+    formData.append("file", image)
+    formData.append("upload_preset","myceph_library")
+    axios.post(`${CLOUDINARY_BASE_URL}/image/upload`,formData).then(response=>resolve(response)).catch(err=>reject(err));
+  })
+}
+
+export const getImage = (url) => {
+  return new Promise(function(resolve, reject){
+    var img = new Image()
+    img.onload = function(){
+        resolve(url)
+    }
+    img.onerror = function(){
+        reject(url)
+    }
+    img.src = url
   })
 }

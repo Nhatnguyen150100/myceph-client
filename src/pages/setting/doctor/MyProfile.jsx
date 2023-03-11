@@ -1,3 +1,4 @@
+import { Skeleton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -5,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
-import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, deleteImage, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
+import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, deleteImage, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, getImage, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
 import { clearClinicSlice, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setDataDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
@@ -13,7 +14,7 @@ import { getToServerWithToken, putToServerWithToken } from "../../../services/ge
 import { refreshToken } from "../../../services/refreshToken.jsx";
 
 export default function MyProfile(props){
-  const loading = useSelector(state=>state.general.loading);
+  const [loadImage,setLoadImage] = useState(false);
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic.arrayClinic);
   const [image,setImage] = useState('');
@@ -136,6 +137,14 @@ export default function MyProfile(props){
     dispatch(setSettingTab(1));
   }
 
+  useEffect(()=>{
+    if(avatar){
+      getImage(avatar).then(()=>{
+        setLoadImage(true);
+      }).catch(()=>setLoadImage(false));
+    }
+  },[avatar])
+
 
   return <div className="d-flex flex-column h-100">
     <div className="d-flex flex-row align-items-end justify-content-center my-2">
@@ -156,9 +165,17 @@ export default function MyProfile(props){
     <div className="d-flex flex-row flex-grow-1">
       <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
         {
-          editMode && <UploadImage className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
+          editMode && <UploadImage icon={"photo_camera"}  className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
         }
-        <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatar):avatar}`} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
+        {
+          loadImage ? 
+          <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatar):avatar}`} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
+          :
+          <div className="d-flex justify-content-center flex-column align-items-center">
+            <Skeleton variant="circular" width={40} height={40} />
+            <Skeleton className="mt-2" variant="rounded" width={80} height={60} />
+          </div>
+        }
       </div>
       <div className="d-flex flex-column flex-grow-1 ms-5">
         <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>

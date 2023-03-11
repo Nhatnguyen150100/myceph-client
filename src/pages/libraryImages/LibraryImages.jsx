@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { FONT_TAB, LIBRARY_IMAGES_TABS, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../../common/Utility.jsx";
+import { FONT_TAB, IMAGE_TYPE_LIST, LIBRARY_IMAGES_TABS, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
 import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
 import SoftWareListComponent from "../../component/SoftWareListComponent.jsx";
@@ -21,12 +21,12 @@ export default function LibraryImages(props){
   let currentTab = null;
 
   switch(selectedTab){
-    case LIBRARY_IMAGES_TABS.RADIOGRAPHY: currentTab = <RadiographyImages />
-    break;
-    case LIBRARY_IMAGES_TABS.EXTRA_ORAL: currentTab = <ExtraOralImages />
-    break;
-    case LIBRARY_IMAGES_TABS.INTRA_ORAL: currentTab = <IntralOralImages />
-    break;
+    case IMAGE_TYPE_LIST.X_RAY.name: currentTab = <RadiographyImages />
+    	break;
+    case IMAGE_TYPE_LIST.FACE.name: currentTab = <ExtraOralImages />
+    	break;
+    case IMAGE_TYPE_LIST.INTRA_ORAL.name: currentTab = <IntralOralImages />
+    	break;
     default: currentTab = <div className="h-100 w-100 d-flex justify-content-center align-items-center">
     <strong className="text-danger fw-bold">{t('page not found')}</strong>    
     </div>
@@ -46,38 +46,38 @@ export default function LibraryImages(props){
 		</div>
 		<div className="w-100 mc-background py-1 d-flex justify-content-end align-items-start rounded">
 			<button
-				onClick={e=>dispatch(setLibraryImagesTab(LIBRARY_IMAGES_TABS.RADIOGRAPHY))} 
+				onClick={e=>dispatch(setLibraryImagesTab(IMAGE_TYPE_LIST.X_RAY.name))} 
 				type="button" 
-				className={`border-0 d-flex flex-row align-items-center justify-content-center mc-color-hover border-end pe-2 py-1 ${selectedTab===LIBRARY_IMAGES_TABS.RADIOGRAPHY?'mc-pale-color':'text-white'}`} 
+				className={`border-0 d-flex flex-row align-items-center justify-content-center mc-color-hover border-end pe-2 py-1 ${selectedTab===IMAGE_TYPE_LIST.X_RAY.name?'mc-pale-color':'text-white'}`} 
 				style={{fontSize:FONT_TAB,background:"none"}}
-				disabled={selectedTab===LIBRARY_IMAGES_TABS.RADIOGRAPHY}
+				disabled={selectedTab===IMAGE_TYPE_LIST.X_RAY.name}
 				>
           <span className="material-symbols-outlined me-1">
-            theaters
+            {IMAGE_TYPE_LIST.X_RAY.icon}
           </span>
           <span className="text-uppercase fw-bold d-none d-lg-block">{t('radiography')}</span>
 			</button>
 			<button 
-				onClick={e=>dispatch(setLibraryImagesTab(LIBRARY_IMAGES_TABS.EXTRA_ORAL))} 
+				onClick={e=>dispatch(setLibraryImagesTab(IMAGE_TYPE_LIST.FACE.name))} 
 				type="button" 
-				className={`border-0 d-flex flex-row align-items-center justify-content-center mc-color-hover border-end pe-2 py-1 ${selectedTab===LIBRARY_IMAGES_TABS.EXTRA_ORAL?'mc-pale-color':'text-white'}`} 
+				className={`border-0 d-flex flex-row align-items-center justify-content-center mc-color-hover border-end pe-2 py-1 ${selectedTab===IMAGE_TYPE_LIST.FACE.name?'mc-pale-color':'text-white'}`} 
 				style={{fontSize:FONT_TAB,background:"none"}}
-				disabled={selectedTab===LIBRARY_IMAGES_TABS.EXTRA_ORAL}
+				disabled={selectedTab===IMAGE_TYPE_LIST.FACE.name}
 				>
           <span className="material-symbols-outlined me-1">
-            face
+		  	{IMAGE_TYPE_LIST.FACE.icon}
           </span>
           <span className="text-uppercase fw-bold d-none d-lg-block">{t('extra-oral')}</span>
 			</button>
 			<button 
-				onClick={e=>dispatch(setLibraryImagesTab(LIBRARY_IMAGES_TABS.INTRA_ORAL))} 
+				onClick={e=>dispatch(setLibraryImagesTab(IMAGE_TYPE_LIST.INTRA_ORAL.name))} 
 				type="button" 
-				className={`border-0 d-flex flex-row align-items-center justify-content-center mc-color-hover pe-2 py-1 me-2 ${selectedTab===LIBRARY_IMAGES_TABS.INTRA_ORAL?'mc-pale-color':'text-white'}`} 
+				className={`border-0 d-flex flex-row align-items-center justify-content-center mc-color-hover pe-2 py-1 me-2 ${selectedTab===IMAGE_TYPE_LIST.INTRA_ORAL.name?'mc-pale-color':'text-white'}`} 
 				style={{fontSize:FONT_TAB,background:"none"}}
-				disabled={selectedTab===LIBRARY_IMAGES_TABS.INTRA_ORAL}
+				disabled={selectedTab===IMAGE_TYPE_LIST.INTRA_ORAL.name}
 				>
           <span className="material-symbols-outlined me-1">
-            sentiment_very_satisfied
+		  	{IMAGE_TYPE_LIST.INTRA_ORAL.icon}
           </span>
           <span className="text-uppercase fw-bold d-none d-lg-block">{t('intra-oral')}</span>
 			</button>

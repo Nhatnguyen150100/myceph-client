@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import {useDropzone} from 'react-dropzone'
 
 export default function UploadImage(props){
@@ -22,9 +22,14 @@ export default function UploadImage(props){
   return (
     <button type="btn" {...getRootProps({className:`dropzone border btn p-0 m-0 ${props.className}`})} style={props.style}>
       <input {...getInputProps()} />
-      <span className="material-symbols-outlined mt-1" style={{fontSize:"30px"}}>
-        photo_camera
+      {
+        props.icon && <span className="material-symbols-outlined mt-1" style={{fontSize:"30px"}}>
+        {props.icon}
       </span>
+      }
+      {
+        props.imageIcon && <img src={props.imageIcon} alt={props.alt} className={props.classNameImage} style={props.styleImage}/>
+      }
     </button>
   );
 }
