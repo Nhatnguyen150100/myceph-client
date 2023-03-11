@@ -204,7 +204,7 @@ export default function TreatmentPlan(props){
                 {
                   roleCheck && <div className="d-flex justify-content-end align-items-end my-1">
                     {
-                           editPlanId===plan.id ?
+                      editPlanId===plan.id ?
                       <div className="d-flex flex-row justify-content-end align-items-center">
                         <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>deletePlan(plan.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
                         <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updatePlan(plan.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
