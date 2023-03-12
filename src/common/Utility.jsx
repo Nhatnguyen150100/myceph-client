@@ -5,6 +5,7 @@ import { logOutDoctor } from '../redux/DoctorSlice.jsx';
 import { clearClinicSlice } from '../redux/ClinicSlice.jsx';
 import { clearGeneralSlice } from '../redux/GeneralSlice.jsx';
 import { clearPatientSlice } from '../redux/PatientSlice.jsx';
+import { clearImageSlice } from '../redux/LibraryImageSlice.jsx';
  
 export const cookies = new Cookies();
 
@@ -85,6 +86,7 @@ export const IMAGE_TYPE_LIST = {
 
 
 export const clearAllSclice = (dispatch) => {
+  dispatch(clearImageSlice());
   dispatch(logOutDoctor());
   dispatch(clearGeneralSlice());
   dispatch(clearClinicSlice());
@@ -100,9 +102,15 @@ export function splitEmail(email) {
   return nameEmail[0];
 }
 
+export function settingForImage(value,linkImage){
+  const urlSplit = linkImage.split('upload');
+  let newUrl =  urlSplit[0].concat('upload',`/a_${value}`,urlSplit[1]);
+  return newUrl;
+}
+
 export function splitAvatar(url,imageUrl) {
   if(url){
-    const avatarUrl = url.split('_');
+    const avatarUrl = url.split('|');
     return avatarUrl[0];
   }
   return imageUrl;
@@ -120,7 +128,7 @@ export function splitLast(string) {
 
 export function splitPublic_id(url) {
   if(url){
-    const avatarUrl = url.split('_');
+    const avatarUrl = url.split('|');
     return avatarUrl[1];
   }
   return '';

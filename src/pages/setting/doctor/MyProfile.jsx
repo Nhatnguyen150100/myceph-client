@@ -110,7 +110,7 @@ export default function MyProfile(props){
         deleteImage(publicIdAvatar).then(async (response) => {
           if(response.data.result==="ok"){
             const responseData = await upLoadImage(image);
-            const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
+            const newAvatar = responseData.data.secure_url + '|' + responseData.data.public_id;
             pushDataToServer(newAvatar);
           }else{
             toast.error(t('update avatar failed'));
@@ -119,7 +119,7 @@ export default function MyProfile(props){
         })
       }else{
         const responseData = await upLoadImage(image);
-        const newAvatar = responseData.data.secure_url + '_' + responseData.data.public_id;
+        const newAvatar = responseData.data.secure_url + '|' + responseData.data.public_id;
         pushDataToServer(newAvatar);
       }
     }else{

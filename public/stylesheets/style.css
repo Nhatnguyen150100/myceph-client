@@ -102,8 +102,8 @@
 }
 
 .tranform-hover:hover{
-  transition-duration: 0.7s;
-  transform: scale(1.04);
+  transition-duration: 0.5s;
+  transform: scale(1.03);
 }
 
 .standout {
