@@ -8,6 +8,7 @@ import ConfirmComponent from "../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import UploadImage from "../../common/UploadImage.jsx";
 import { deleteImage, FONT_SIZE, IMAGE_TYPE_LIST, SELECT_PATIENT_MODE, settingForImage, splitAvatar, splitPublic_id, toISODateString, upLoadImageLibrary } from "../../common/Utility.jsx";
+import ShowImageModal from "../../component/ShowImageModal.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { setCurrentImage } from "../../redux/LibraryImageSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
@@ -131,7 +132,7 @@ export default function RadiographyImages(props){
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>updateImage(idImage,consultationDate,typeImage));
+          refreshToken(nav,dispatch).then(()=>updateImage(idImage,consultationDate,typeImage,newUrl));
         }else{
           toast.error(t(err.message));
         }
@@ -150,7 +151,7 @@ export default function RadiographyImages(props){
           setOpenDeleteConfirm(false);
           setIdImageDelete('');
           setPublicIdDelete('');
-          toast.success(result.message);
+          toast.warning(result.message);
           resolve();
         }).catch(err => {
           toast.error(t(err.message));
@@ -163,7 +164,7 @@ export default function RadiographyImages(props){
               setOpenDeleteConfirm(false);
               setIdImageDelete('');
               setPublicIdDelete('');
-              toast.success(result.message);
+              toast.warning(result.message);
               resolve();
             }).catch(err =>{
               if(err.refreshToken && !isRefresh){
@@ -188,6 +189,7 @@ export default function RadiographyImages(props){
   const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
 
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1 mb-4">
+    <ShowImageModal/>
     {
       roleCheck && 
       <React.Fragment>
@@ -287,6 +289,7 @@ export default function RadiographyImages(props){
                       style={{maxHeight:"250px",cursor:"pointer"}}
                       alt={t(IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.name)} 
                       onClick={e=>dispatch(setCurrentImage(splitAvatar(image.linkImage)))}
+                      title={t('Click to see')}
                     />
                     {
                       hoverSettingId === image.id &&

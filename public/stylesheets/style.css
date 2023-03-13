@@ -59,6 +59,10 @@
   font-weight: bold;
 }
 
+.cursor-grabbing{
+  cursor: grabbing;
+}
+
 .mc-background-light{
   background: #F0F8FF;
 }
