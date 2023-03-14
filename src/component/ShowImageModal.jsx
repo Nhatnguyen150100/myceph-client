@@ -3,17 +3,22 @@ import * as bootstrap from 'bootstrap';
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentImage } from "../redux/LibraryImageSlice.jsx";
 import { useTranslation } from "react-i18next";
-import { Image, Layer, Stage } from "react-konva";
+import { Image, Layer, Rect, Stage } from "react-konva";
 import Konva from "konva";
 import { Slider } from "@mui/material";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../common/IconButtonComponent.jsx";
-import { FONT_SIZE } from "../common/Utility.jsx";
+import { FONT_SIZE, settingForImage } from "../common/Utility.jsx";
 
 const filterMap = {
   contrast: Konva.Filters.Contrast,
   brightness: Konva.Filters.Brighten
 }
+
+const stagePos = {x:0, y: 0}
+
+const WIDTH = 30;
+const HEIGHT = 30;
 
 export default function ShowImageModal(props) {
   const imageModalRef = useRef();
@@ -22,6 +27,7 @@ export default function ShowImageModal(props) {
   const imageRef = useRef();
 
   const [filtersMap, setFiltersMap] = useState(new Map());
+  const [openGrid,setOpenGrid] = useState(false);
 
   const [imageObject,setimageObject] = useState(null);
   const [isGrab,setIsGrab] = useState(false);
@@ -30,9 +36,32 @@ export default function ShowImageModal(props) {
     x: 0,
     y: 0,
   });
+
   const currentImage = useSelector(state=>state.libraryImage.currentImage);
   const dispatch = useDispatch();
   const {t} = useTranslation();
+
+  const startX = Math.floor((-stagePos.x - window.innerWidth) / WIDTH) * WIDTH;
+  const endX = Math.floor((-stagePos.x + window.innerWidth * 2) / WIDTH) * WIDTH;
+
+  const startY = Math.floor((-stagePos.y - window.innerHeight) / HEIGHT) * HEIGHT;
+  const endY = Math.floor((-stagePos.y + window.innerHeight * 2) / HEIGHT) * HEIGHT;
+
+  const gridComponents = [];
+  for (var x = startX; x < endX; x += WIDTH) {
+    for (var y = startY; y < endY; y += HEIGHT) {
+      gridComponents.push(
+        <Rect
+          x={x}
+          y={y}
+          width={WIDTH}
+          height={HEIGHT}
+          stroke="blue"
+          strokeWidth = {0.15}
+        />
+      );
+    }
+  }
 
   const addFilter = (key, value) => {
     setFiltersMap((prev) => new Map([...prev, [key, value]]));
@@ -170,7 +199,8 @@ export default function ShowImageModal(props) {
   return <div className="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" ref={imageModalRef} style={{height:window.innerHeight-50}}>
     <div className="modal-dialog modal-dialog-centered modal-xl justify-content-center ">
       <div className="modal-content">
-        <div className="modal-header py-2 px-3 d-flex justify-content-end">
+        <div className="modal-header py-2 px-3 d-flex justify-content-between">
+          <span className="text-uppercase fw-bold mc-color ms-2">{t('preview image')}</span>
           <div className="dropdown">
             <button className="btn btn-outline-secondary d-flex justify-content-start align-items-center px-2 py-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <span className="tranform-hover material-symbols-outlined mt-1 me-1" style={{fontSize:"25px"}}>
@@ -198,13 +228,21 @@ export default function ShowImageModal(props) {
                       {t('Move pointer to the focus position then scroll up or down')}
                     </td>
                   </tr>
+                  <tr>
+                    <td className="fw-bold text-danger">
+                      {t('Grid status')}
+                    </td>
+                    <td>
+                      {t('can not drag image while grid is open')}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </ul>
           </div>
         </div>
         <div className="modal-body position-ralative h-100 w-100 d-flex justify-content-center align-items-center py-0">
-          <div className="position-absolute rounded top-0 start-0 d-flex flex-row justify-content-center align-items-center ms-3" style={{zIndex:"3", backgroundColor:"#E8E8E8"}}>
+          <div className="position-absolute rounded top-0 start-0 d-flex flex-row justify-content-center align-items-center" style={{zIndex:"3", backgroundColor:"#E8E8E8"}}>
             <IconButtonComponent 
               className="btn-outline-info border-0 p-0 ms-1" 
               icon="zoom_in" 
@@ -228,12 +266,13 @@ export default function ShowImageModal(props) {
             />
             <div className="dropdown ms-1">
               <button className="btn btn-outline-info border-0 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span className="tranform-hover material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}}>
+                <span className="tranform-hover material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}} title={t('contrast')}>
                   contrast
                 </span>
               </button>
               <ul className="dropdown-menu">
                 <Slider
+                  className="py-1"
                   size="small"
                   defaultValue={0}
                   min={-100}
@@ -248,12 +287,13 @@ export default function ShowImageModal(props) {
             </div>
             <div className="dropdown mx-1">
               <button className="btn btn-outline-info border-0 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span className="tranform-hover material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}}>
+                <span className="tranform-hover material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}} title={t('brightness')}>
                   brightness_medium
                 </span>
               </button>
               <ul className="dropdown-menu">
                 <Slider
+                  className="py-1"
                   size="small"
                   defaultValue={0}
                   min={-1}
@@ -266,6 +306,21 @@ export default function ShowImageModal(props) {
                 />
               </ul>
             </div>
+            <IconButtonComponent 
+              className={`${openGrid?'btn-info':'btn-outline-info'} border-0 p-0 ms-1`} 
+              icon="grid_4x4" 
+              FONT_SIZE_ICON={"25px"} 
+              title={t("open grid")}
+              onClick={e=>setOpenGrid(openGrid?false:true)}
+            />
+            <a href={`${settingForImage('/fl_attachment',currentImage)}`}>
+              <IconButtonComponent 
+                className='btn-outline-info border-0 p-0 ms-1' 
+                icon="download" 
+                FONT_SIZE_ICON={"25px"} 
+                title={t("down image")}
+              />
+            </a>
           </div>
           <Stage 
             ref={stageRef} 
@@ -301,6 +356,7 @@ export default function ShowImageModal(props) {
                 onMouseUp={(e) =>setIsGrab(false)}
               />
               }
+              {openGrid && gridComponents}
             </Layer>
           </Stage>
         </div>

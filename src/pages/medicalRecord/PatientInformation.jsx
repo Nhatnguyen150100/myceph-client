@@ -196,7 +196,7 @@ export default function PatientInformation(props){
                 }
               </div>
               <div className="d-flex flex-grow-1 align-items-center justify-content-center">
-                <img alt="avatar" className={`rounded mt-5 p-3 hoverGreenLight ${!updateByDoctor && 'ms-5'}`} src={'/assets/images/11.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_IMAGE_IN_RECORD,objectFit:"cover"}}/>
+                <img alt="avatar" className={`rounded mt-5 p-3 hoverGreenLight ${!updateByDoctor && 'ms-5'}`} src={'/assets/images/5.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_IMAGE_IN_RECORD,objectFit:"cover"}}/>
               </div>
             </div>
             <div className="col-sm-7" style={{marginTop:"10px"}}>

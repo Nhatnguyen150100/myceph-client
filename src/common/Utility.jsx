@@ -103,9 +103,11 @@ export function splitEmail(email) {
 }
 
 export function settingForImage(value,linkImage){
-  const urlSplit = linkImage.split('upload');
-  let newUrl =  urlSplit[0].concat('upload',`/a_${value}`,urlSplit[1]);
-  return newUrl;
+  if(linkImage){
+    const urlSplit = linkImage.split('upload');
+    let newUrl =  urlSplit[0].concat('upload',`${value}`,urlSplit[1]);
+    return newUrl;
+  }else return '';
 }
 
 export function splitAvatar(url,imageUrl) {

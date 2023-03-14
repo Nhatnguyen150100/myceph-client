@@ -342,7 +342,7 @@ export default function ExtraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/11.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
+        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/5.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -369,7 +369,7 @@ export default function ExtraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center my-4">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/13.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
+        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/7.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -461,7 +461,7 @@ export default function ExtraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/14.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
+        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/8.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
       </div>
     </div>
   </div>

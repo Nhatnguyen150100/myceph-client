@@ -37,7 +37,7 @@ export default function RadiographyImages(props){
   const getListImage = () => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      getToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}`).then(result => {
+      getToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}?typeImages=radiography`).then(result => {
         setListImage(result.data);
         resolve();
       }).catch(err =>{
@@ -61,6 +61,7 @@ export default function RadiographyImages(props){
       if(linkImage){
         postToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}`,{
           idDoctor: doctor.data.id,
+          typeImages: [1, 2, 3, 4],
           linkImage: linkImage,
           typeImage: typeImage,
           consultationDate: consultationDate
@@ -75,6 +76,7 @@ export default function RadiographyImages(props){
           const linkImage = responseData.data.secure_url + '|' + responseData.data.public_id;
           postToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}`,{
             idDoctor: doctor.data.id,
+            typeImages: [1, 2, 3, 4],
             linkImage: linkImage,
             typeImage: typeImage,
             consultationDate: consultationDate
@@ -100,6 +102,7 @@ export default function RadiographyImages(props){
       dispatch(setLoadingModal(true));
       putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${patient.currentPatient.id}`,{
         idDoctor: doctor.data.id,
+        typeImages: [1, 2, 3, 4],
         newDate: newDate,
         oldDate: oldDate
       }).then(result => {
@@ -122,6 +125,7 @@ export default function RadiographyImages(props){
       dispatch(setLoadingModal(false));
       putToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}`,{
         idDoctor: doctor.data.id,
+        typeImages: [1, 2, 3, 4],
         idImage: idImage,
         consultationDate: consultationDate,
         typeImage: typeImage,
@@ -146,7 +150,7 @@ export default function RadiographyImages(props){
     dispatch(setLoadingModal(true));
     return new Promise((resolve,reject) => {
       if(isDelete){
-        deleteToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}?idImage=${idImageDelete}`).then(result => {
+        deleteToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=radiography`).then(result => {
           setListImage(result.data);
           setOpenDeleteConfirm(false);
           setIdImageDelete('');
@@ -159,7 +163,7 @@ export default function RadiographyImages(props){
       }else{
         deleteImage(publicIdDelete).then(async (response) => {
           if(response.data.result==="ok"){
-            deleteToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}?idImage=${idImageDelete}`).then(result => {
+            deleteToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=radiography`).then(result => {
               setListImage(result.data);
               setOpenDeleteConfirm(false);
               setIdImageDelete('');
@@ -310,7 +314,7 @@ export default function RadiographyImages(props){
                             FONT_SIZE_ICON={"20px"} 
                             title={t("rotate 90 degree counterclockwise")}
                             onClick={e=>{
-                              let newUrl = settingForImage(90,image.linkImage);
+                              let newUrl = settingForImage('/a_90',image.linkImage);
                               updateImage(image.id,image.consultationDate,image.typeImage,newUrl);
                             }}
                           />
@@ -319,7 +323,7 @@ export default function RadiographyImages(props){
                             FONT_SIZE_ICON={"20px"} 
                             title={t("rotate 90 degree clockwise")}
                             onClick={e=>{
-                              let newUrl = settingForImage(-90,image.linkImage);
+                              let newUrl = settingForImage('/a_-90',image.linkImage);
                               updateImage(image.id,image.consultationDate,image.typeImage,newUrl);
                             }}
                           />
@@ -329,7 +333,7 @@ export default function RadiographyImages(props){
                             FONT_SIZE_ICON={"20px"} 
                             title={t("horizontal flip")}
                             onClick={e=>{
-                              let newUrl = settingForImage('hflip',image.linkImage);
+                              let newUrl = settingForImage('/a_hflip',image.linkImage);
                               updateImage(image.id,image.consultationDate,image.typeImage,newUrl);
                             }}
                           />
@@ -339,7 +343,7 @@ export default function RadiographyImages(props){
                             FONT_SIZE_ICON={"20px"} 
                             title={t("vertical flip")}
                             onClick={e=>{
-                              let newUrl = settingForImage('vflip',image.linkImage);
+                              let newUrl = settingForImage('/a_vflip',image.linkImage);
                               updateImage(image.id,image.consultationDate,image.typeImage,newUrl);
                             }}
                           />

@@ -641,7 +641,7 @@ export default function IntraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/14.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"140px",width:"130px",objectFit:"cover"}}/>
+        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/8.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"140px",width:"130px",objectFit:"cover"}}/>
       </div>
     </div>
   </div>
