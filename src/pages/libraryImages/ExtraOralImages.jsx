@@ -33,6 +33,10 @@ export default function ExtraoralImages(props){
 
   const [consultationDate,setConsultationDate] = useState(toISODateString(new Date()));
   const [listImage,setListImage] = useState({});
+  
+  useEffect(()=>{
+    if(patient.currentPatient.id) getListImage();
+  },[patient.currentPatient.id])
 
   const getListImage = () => {
     return new Promise((resolve, reject) => {

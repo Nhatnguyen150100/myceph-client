@@ -302,8 +302,8 @@ export default function IntraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex flex-column align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/24.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
-        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/25.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
+        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/13.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
+        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/14.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -430,8 +430,8 @@ export default function IntraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex flex-column align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/22.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
-        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/21.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
+        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/11.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
+        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/10.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -511,7 +511,7 @@ export default function IntraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center my-4">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/23.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
+        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/12.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { redirect, useNavigate } from "react-router-dom";
 import { FONT_SIZE_HEADER, FONT_SIZE_ICONS } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
 import { setAppName, setSettingTab } from "../../redux/GeneralSlice.jsx";
@@ -10,7 +11,9 @@ import DoctorSetting from "./doctor/DoctorSetting.jsx";
 export default function Setting(props){
   const {t} = useTranslation();
   const dispatch = useDispatch();
+  const nav = useNavigate();
   const selectedTab = useSelector(state=>state.general.settingTab);
+  const doctor = useSelector(state=>state.doctor);
   const [tabName,setTabName] = useState('doctor');
 
   let currentTab = null;
@@ -22,6 +25,10 @@ export default function Setting(props){
       break;
     default: currentTab = <div>Error</div>
   }
+
+  useEffect(()=>{
+    if(!doctor.data?.id) nav('/login');
+  },[])
 
   useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t('setting')}`));

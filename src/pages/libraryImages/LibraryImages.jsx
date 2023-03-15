@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { redirect, useNavigate } from "react-router-dom";
 import { FONT_TAB, IMAGE_TYPE_LIST, LIBRARY_IMAGES_TABS, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
 import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
@@ -11,8 +12,10 @@ import IntralOralImages from "./IntraOralImages.jsx";
 import RadiographyImages from "./RadiographyImages.jsx";
 
 export default function LibraryImages(props){
+  const doctor = useSelector(state=>state.doctor);
   const dispatch = useDispatch();
   const {t} = useTranslation();
+  const nav = useNavigate();
   const selectedTab = useSelector(state=>state.general.libraryImagesTab);
   const selectPatientMode = useSelector(state=>state.general.selectPatientMode);
 
@@ -31,6 +34,10 @@ export default function LibraryImages(props){
     <strong className="text-danger fw-bold">{t('page not found')}</strong>    
     </div>
   }
+
+  useEffect(()=>{
+    if(!doctor.data?.id) nav('/login');
+  },[])
 
   useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t(SOFT_WARE_LIST.IMAGE_LIBRARY)}`));

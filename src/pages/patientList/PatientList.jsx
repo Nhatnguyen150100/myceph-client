@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../common/SelectFieldInput.jsx";
@@ -34,6 +34,10 @@ export default function PatientList(props){
   const [newNotePatient,setNewNotePatient] = useState('');
   
   let currentTab = 0;
+
+  useEffect(()=>{
+    if(!doctor?.id) nav('/login');
+  },[])
 
   const addNewPatient = () => {
     if(!newPatientName) toast.error(t('Name of patient is required'))

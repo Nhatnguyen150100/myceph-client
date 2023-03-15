@@ -34,6 +34,14 @@ export default function RadiographyImages(props){
   const [consultationDate,setConsultationDate] = useState(toISODateString(new Date()));
   const [listImage,setListImage] = useState({});
 
+  useEffect(()=>{
+    if(patient.currentPatient.id) getListImage();
+  },[patient.currentPatient.id])
+   
+  useEffect(()=>{
+    getListImage();
+  },[])
+
   const getListImage = () => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
@@ -50,10 +58,6 @@ export default function RadiographyImages(props){
       }).finally(()=>dispatch(setLoadingModal(false)));
     })
   }
-
-  useEffect(()=>{
-    getListImage();
-  },[])
 
   const uploadImageToCloudinary = (image,typeImage,linkImage) => {
     return new Promise((resolve, reject) =>{

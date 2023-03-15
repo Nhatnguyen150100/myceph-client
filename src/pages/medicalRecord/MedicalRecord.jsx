@@ -1,6 +1,7 @@
 import { t } from "i18next";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { redirect, useNavigate } from "react-router-dom";
 import { FONT_TAB, MEDICAL_RECORD_TABS, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
 import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
@@ -12,6 +13,8 @@ import PatientTreatmentHistory from "./PatientTreatmentHistory.jsx";
 
 export default function MedicalRecord(props){
   const dispatch = useDispatch();
+  const nav = useNavigate();
+  const doctor = useSelector(state=>state.doctor);
   const selectedTab = useSelector(state=>state.general.medicalRecordTab);
   const selectPatientMode = useSelector(state=>state.general.selectPatientMode);
 
@@ -30,6 +33,11 @@ export default function MedicalRecord(props){
       <strong className="text-danger fw-bold">{t('page not found')}</strong>    
     </div>
   }
+
+  useEffect(()=>{
+    if(!doctor.data?.id) nav('/login');
+  },[])
+
 
   useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t(SOFT_WARE_LIST.MEDICAL_RECORD)}`));
