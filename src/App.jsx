@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import ForgotPassword from "./auth/ForgotPassword.jsx";
 import Login from "./auth/login.jsx";
 import Register from "./auth/Register.jsx";
+import BigCalendar from "./pages/calendar/BigCalendar.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LibraryImages from "./pages/libraryImages/LibraryImages.jsx";
 import MedicalRecord from "./pages/medicalRecord/MedicalRecord.jsx";
@@ -23,6 +24,7 @@ function App() {
       <Route path="/patientListManagement" exact element={<PatientList />}/>
       <Route path="/medicalRecord" exact element={<MedicalRecord />} />
       <Route path="/libraryImagesManagement" exact element={<LibraryImages />} />
+      <Route path="/schedule" exact element={<BigCalendar />} />
     </Routes>
   );
 }

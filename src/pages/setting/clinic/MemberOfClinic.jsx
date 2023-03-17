@@ -219,7 +219,7 @@ export default function MemberOfClinic(props){
             <tr>
               <th colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>
                 <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
-                  <input type="text" className="border-0 flex-grow-1 w-100" placeholder={t("type doctor name to search")} style={{ outline: "none" }} value={nameSearch} onChange={onNameSearchChange}/>
+                  <input type="text" className="border-0 flex-grow-1 w-100" placeholder={t("Enter name of doctor to search")} style={{ outline: "none" }} value={nameSearch} onChange={onNameSearchChange}/>
                   <span className="material-symbols-outlined vc-teal fw-bolder">search</span>
                 </div>
               </th>
