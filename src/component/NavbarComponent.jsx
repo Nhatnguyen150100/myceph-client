@@ -5,7 +5,7 @@ import { setAppName, setLanguage, setLoadingModal } from "../redux/GeneralSlice.
 import i18n from '../translation/i18n.jsx';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Link, useNavigate } from "react-router-dom";
-import { clearAllSclice, cookies, splitEmail } from "../common/Utility.jsx";
+import { clearAllSlice, cookies, splitEmail } from "../common/Utility.jsx";
 import { postToServerWithToken } from "../services/getAPI.jsx";
 import { toast } from "react-toastify";
 import { refreshToken } from "../services/refreshToken.jsx";
@@ -35,7 +35,7 @@ export default function NavbarComponent(props) {
       idDoctor: doctor.id,
       refreshToken: cookies.get('refreshToken')
     }).then(response => {
-      clearAllSclice(dispatch);
+      clearAllSlice(dispatch);
       nav("/login");
     }).catch((err) =>{
       if(err.refreshToken && !isRefresh){

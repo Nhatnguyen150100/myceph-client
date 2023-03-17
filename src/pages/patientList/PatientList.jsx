@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../common/SelectFieldInput.jsx";

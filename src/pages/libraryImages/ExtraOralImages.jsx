@@ -16,14 +16,13 @@ import { refreshToken } from "../../services/refreshToken.jsx";
 
 const SIZE_UPLOAD_IMAGE = "80px";
 
-export default function ExtraoralImages(props){
+export default React.memo(function ExtraoralImages(props){
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const selectPatientOnMode = useSelector(state=>state.patient.selectPatientOnMode);
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const nav = useNavigate();
   const clinic = useSelector(state=>state.clinic);
-  const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
   const [hoverSettingId,setHoverSettingId] = useState();
   const [idImageDelete,setIdImageDelete] = useState();
@@ -35,13 +34,13 @@ export default function ExtraoralImages(props){
   const [listImage,setListImage] = useState({});
   
   useEffect(()=>{
-    if(patient.currentPatient.id) getListImage();
-  },[patient.currentPatient.id])
+    if(props.patient.currentPatient.id) getListImage();
+  },[props.patient.currentPatient.id])
 
   const getListImage = () => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      getToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}?typeImages=extraoral`).then(result => {
+      getToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?typeImages=extraoral`).then(result => {
         setListImage(result.data);
         resolve();
       }).catch(err =>{
@@ -55,15 +54,11 @@ export default function ExtraoralImages(props){
     })
   }
 
-  useEffect(()=>{
-    getListImage();
-  },[])
-
   const uploadImageToCloudinary = (image,typeImage,linkImage) => {
     return new Promise((resolve, reject) =>{
       dispatch(setLoadingModal(true));
       if(linkImage){
-        postToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}`,{
+        postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
           idDoctor: doctor.data.id,
           typeImages: [5,6,7,8,9],
           linkImage: linkImage,
@@ -78,7 +73,7 @@ export default function ExtraoralImages(props){
       }else{
         upLoadImageLibrary(image).then(responseData=>{
           const linkImage = responseData.data.secure_url + '|' + responseData.data.public_id;
-          postToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}`,{
+          postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
             idDoctor: doctor.data.id,
             typeImages: [5,6,7,8,9],
             linkImage: linkImage,
@@ -104,7 +99,7 @@ export default function ExtraoralImages(props){
   const updateArrayPatient = (newDate,oldDate) => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${patient.currentPatient.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [5,6,7,8,9],
         newDate: newDate,
@@ -127,7 +122,7 @@ export default function ExtraoralImages(props){
   const updateImage = (idImage,consultationDate,typeImage,newUrl) => {
     return new Promise((resolve,reject) => {
       dispatch(setLoadingModal(false));
-      putToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [5,6,7,8,9],
         idImage: idImage,
@@ -154,7 +149,7 @@ export default function ExtraoralImages(props){
     dispatch(setLoadingModal(true));
     return new Promise((resolve,reject) => {
       if(isDelete){
-        deleteToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=extraoral`).then(result => {
+        deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=extraoral`).then(result => {
           setListImage(result.data);
           setOpenDeleteConfirm(false);
           setIdImageDelete('');
@@ -167,7 +162,7 @@ export default function ExtraoralImages(props){
       }else{
         deleteImage(publicIdDelete).then(async (response) => {
           if(response.data.result==="ok"){
-            deleteToServerWithToken(`/v1/libraryImagePatient/${patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=extraoral`).then(result => {
+            deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=extraoral`).then(result => {
               setListImage(result.data);
               setOpenDeleteConfirm(false);
               setIdImageDelete('');
@@ -193,7 +188,7 @@ export default function ExtraoralImages(props){
     setIdImageDelete('');
   }
 
-  const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
+  const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || props.patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
 
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1 mb-4">
     <ShowImageModal/>
@@ -443,4 +438,4 @@ export default function ExtraoralImages(props){
       handleSubmit={e=>deleteImagePatient(false)}
     />
   </div>
-}
+})

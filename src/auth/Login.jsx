@@ -7,7 +7,7 @@ import ButtonComponent from "../common/ButtonComponent.jsx";
 import NavbarComponent from "../component/NavbarComponent.jsx";
 import { postToServer } from "../services/getAPI.jsx";
 import { setDataDoctor } from "../redux/DoctorSlice.jsx";
-import { cookies, isValidEmail, SITE_KEY_RECAPTCHA, timeToken } from "../common/Utility.jsx";
+import { cookies, isValidEmail, SITE_KEY_RECAPTCHA, timeRefreshToken } from "../common/Utility.jsx";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { setAppName } from "../redux/GeneralSlice.jsx";
 
@@ -34,9 +34,9 @@ function LoginPage(props){
 			setLoading(true);
       executeRecaptcha('login').then(token => 
         postToServer('/v1/auth/login', { email: email, password: password, tokenRecaptcha: token }).then((result) => {
-          console.log(result.data.accessToken);
-          cookies.set('accessToken', result.data.accessToken, { path: '/', sameSite: true, secure: true });
-          cookies.set('refreshToken', result.data.refreshToken, { path: '/', sameSite: true, maxAge: timeToken(), secure: true });
+          const timeRefresh = timeRefreshToken();
+          cookies.set('accessToken', result.data.accessToken, { path: '/', domain:process.env.DOMAIN , sameSite: "strict", secure: true });
+          cookies.set('refreshToken', result.data.refreshToken, { path: '/', domain:process.env.DOMAIN , sameSite: "strict", expires: timeRefresh, secure: true });
           delete result.data.accessToken;
           delete result.data.refreshToken;
           dispatch(setDataDoctor(result.data));
@@ -111,7 +111,7 @@ function LoginPage(props){
           </p>
         )}
         <div className="d-flex justify-content-end mb-4 text-capitalize mc-color-hover" style={{ width: '100%' }}>
-          <Link  style={{textDecoration:"none"}} to={"/forgotPassword"}>
+          <Link style={{textDecoration:"none"}} to={"/forgotPassword"}>
             <span className="text-capitalize mc-color-hover mc-color">
               {t('forgot Password?')}
             </span>

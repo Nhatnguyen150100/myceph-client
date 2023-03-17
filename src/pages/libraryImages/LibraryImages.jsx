@@ -13,6 +13,7 @@ import RadiographyImages from "./RadiographyImages.jsx";
 
 export default function LibraryImages(props){
   const doctor = useSelector(state=>state.doctor);
+  const patient = useSelector(state=>state.patient);
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const nav = useNavigate();
@@ -24,11 +25,11 @@ export default function LibraryImages(props){
   let currentTab = null;
 
   switch(selectedTab){
-    case IMAGE_TYPE_LIST.X_RAY.name: currentTab = <RadiographyImages />
+    case IMAGE_TYPE_LIST.X_RAY.name: currentTab = <RadiographyImages patient={patient}/>
     	break;
-    case IMAGE_TYPE_LIST.FACE.name: currentTab = <ExtraOralImages />
+    case IMAGE_TYPE_LIST.FACE.name: currentTab = <ExtraOralImages patient={patient}/>
     	break;
-    case IMAGE_TYPE_LIST.INTRA_ORAL.name: currentTab = <IntralOralImages />
+    case IMAGE_TYPE_LIST.INTRA_ORAL.name: currentTab = <IntralOralImages patient={patient}/>
     	break;
     default: currentTab = <div className="h-100 w-100 d-flex justify-content-center align-items-center">
     <strong className="text-danger fw-bold">{t('page not found')}</strong>    

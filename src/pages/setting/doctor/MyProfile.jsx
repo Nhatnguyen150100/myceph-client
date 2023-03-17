@@ -42,7 +42,7 @@ export default function MyProfile(props){
   const getInformation = () =>{
     return new Promise((resolve, reject) =>{
       dispatch(setLoadingModal(true));
-      getToServerWithToken(`/v1/doctor/getInformationDoctor/${doctor.email}`).then(result => {
+      getToServerWithToken(`/v1/doctor/getInformationDoctor/${doctor?.email}`).then(result => {
         dispatch(setDataDoctor(result.data));
         setFullName(result.data.fullName);
         setGender(result.data.gender);
@@ -150,7 +150,7 @@ export default function MyProfile(props){
     <div className="d-flex flex-row align-items-end justify-content-center my-2">
       <div className="w-100 d-flex justify-content-end align-items-end me-3" style={{fontSize:FONT_SIZE}}>
         <span className="text-capitalize mc-color fw-bold me-2">{t('update at')}: </span>
-        <span>{convertISOToVNDateString(toISODateString(new Date(doctor.updatedAt?doctor.updatedAt:new Date())))}</span>
+        <span>{convertISOToVNDateString(toISODateString(new Date(doctor?doctor.updatedAt:new Date())))}</span>
       </div>
       {
         editMode ?
@@ -180,7 +180,7 @@ export default function MyProfile(props){
       <div className="d-flex flex-column flex-grow-1 ms-5">
         <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
           <span className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('email')}:</span>
-          <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{doctor.email}</span>
+          <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{doctor?.email}</span>
           <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('full name')}:</label>
           {
             editMode ? 

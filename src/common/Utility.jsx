@@ -85,7 +85,7 @@ export const IMAGE_TYPE_LIST = {
 }
 
 
-export const clearAllSclice = (dispatch) => {
+export const clearAllSlice = (dispatch) => {
   dispatch(clearImageSlice());
   dispatch(logOutDoctor());
   dispatch(clearGeneralSlice());
@@ -151,7 +151,7 @@ export function toISODateString(dateObject) {
   return result;
 }
 
-export const timeToken = () => {
+export const timeRefreshToken = () => {
   const timestamp = new Date().getTime();
   const expire = timestamp + (60 * 60 * 24 * 1000 * 1);
   const expireToken = new Date(expire);
@@ -233,3 +233,4 @@ export const getImage = (url) => {
     img.src = url
   })
 }
+
