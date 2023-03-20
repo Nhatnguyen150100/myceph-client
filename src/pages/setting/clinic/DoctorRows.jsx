@@ -28,6 +28,9 @@ export default function DoctorRows(props){
 
   return <tr className={`align-middle hover-font-weight ${props.doctor.roleOfDoctor === 'admin' && 'mc-pale-background'}`} style={{cursor:"pointer"}}>
     <td className="d-lg-table-cell d-none">
+      {props.stt+1}
+    </td>
+    <td className="d-lg-table-cell d-none">
       <img alt="avatar" className="rounded" src={splitAvatar(props.doctor.avatar,'/assets/images/doctor.png')} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
     </td>
     <td className={`${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>

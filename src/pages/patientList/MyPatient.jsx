@@ -105,6 +105,7 @@ export default function MyPatient(props){
       <table className="table table-bordered table-striped text-center rounded my-4">
         <thead className='mc-background text-white text-uppercase'>
           <tr>
+            <th className='align-middle mc-heading-middle d-lg-table-cell d-none text-uppercase' style={{fontSize:FONT_SIZE}}>stt</th>
             <th colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>
               <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
                 <input type="text" className="border-0 flex-grow-1 w-100" placeholder={t("Enter patient name to search")} style={{ outline: "none" }} value={nameSearch} onChange={onNameSearchChange}/>
@@ -121,7 +122,7 @@ export default function MyPatient(props){
         {
           (!loadingSearch || listPatient.length>0) && 
           <React.Fragment>
-            <tbody>{listPatient.map((patient, index) => <PatientRows key={patient.id} selectPatientMode={SELECT_PATIENT_MODE.MY_PATIENT} patient={patient} action={true} onDeleteHandle={idPaient=>onDeleteHandle(idPaient)} />)}</tbody>
+            <tbody>{listPatient.map((patient, index) => <PatientRows key={patient.id} stt={index} selectPatientMode={SELECT_PATIENT_MODE.MY_PATIENT} patient={patient} action={true} onDeleteHandle={idPaient=>onDeleteHandle(idPaient)} />)}</tbody>
             {
               listPatient.length!==0 && <tfoot className="align-middle">
                 <tr>

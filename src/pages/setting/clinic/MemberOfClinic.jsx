@@ -217,10 +217,11 @@ export default function MemberOfClinic(props){
         <table className="table table-bordered table-striped text-center rounded">
           <thead className='mc-background text-white text-uppercase'>
             <tr>
+              <th className='align-middle mc-heading-middle d-lg-table-cell d-none text-uppercase'>stt</th>
               <th colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>
                 <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
                   <input type="text" className="border-0 flex-grow-1 w-100" placeholder={t("Enter name of doctor to search")} style={{ outline: "none" }} value={nameSearch} onChange={onNameSearchChange}/>
-                  <span className="material-symbols-outlined vc-teal fw-bolder">search</span>
+                  <span className="material-symbols-outlined fw-bolder">search</span>
                 </div>
               </th>
               <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{minWidth:"170px",fontSize:FONT_SIZE}}>{t("email")}</th>
@@ -238,7 +239,7 @@ export default function MemberOfClinic(props){
             </div>
             :
             <React.Fragment>
-              <tbody>{listDoctor.map((doctor, index) => <DoctorRows key={index} doctor={doctor} changeRoleOfDoctor={(idDoctor,roleOfDoctor)=>onChangeRoleOfDoctor(idDoctor,roleOfDoctor)} deleteDoctorFromClinic={onDeleteHandle}/>)}</tbody>
+              <tbody>{listDoctor.map((doctor, index) => <DoctorRows key={index} stt={index} doctor={doctor} changeRoleOfDoctor={(idDoctor,roleOfDoctor)=>onChangeRoleOfDoctor(idDoctor,roleOfDoctor)} deleteDoctorFromClinic={onDeleteHandle}/>)}</tbody>
               <tfoot className="align-middle">
                 <tr>
                   <td colSpan={8} align='center'>

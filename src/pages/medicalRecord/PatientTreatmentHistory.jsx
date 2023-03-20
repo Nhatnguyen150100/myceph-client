@@ -205,7 +205,7 @@ export default function PatientTreatmentHistory(props){
                   {
                     editPlanId===history.id ?
                     <div className="d-flex flex-row justify-content-end align-items-center">
-                      <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>deleteHistory(history.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
+                      <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>deleteHistory(history.id)} FONT_SIZE_ICON={"20px"} title={t("delete")}/>
                       <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updateHistory(history.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
                       <IconButtonComponent className="btn-outline-danger" onClick={()=>setEditPlanId('')} icon="close" FONT_SIZE_ICON={"20px"} title={t("cancel")}/>
                     </div>

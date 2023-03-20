@@ -9,7 +9,7 @@ export default function SelectClinicComponent(props) {
   const clinic = useSelector(state=>state.clinic);
   const {t} = useTranslation();
   const dispatch = useDispatch();
-  return <div>
+  return <>
     {
       clinic.idClinicDefault && (props.condition) && 
       <div style={{height:"85px",maxWidth:"350px"}}>
@@ -30,5 +30,5 @@ export default function SelectClinicComponent(props) {
         </React.Fragment>
       </div>
     }
-  </div>
+  </>
 }

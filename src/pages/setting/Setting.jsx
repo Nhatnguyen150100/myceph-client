@@ -14,7 +14,12 @@ export default function Setting(props){
   const nav = useNavigate();
   const selectedTab = useSelector(state=>state.general.settingTab);
   const doctor = useSelector(state=>state.doctor);
-  const [tabName,setTabName] = useState('doctor');
+  const [tabName,setTabName] = useState();
+
+  useEffect(()=>{
+    if(selectedTab===0) setTabName('doctor');
+    else setTabName('clinic')
+  },[selectedTab])
 
   let currentTab = null;
 

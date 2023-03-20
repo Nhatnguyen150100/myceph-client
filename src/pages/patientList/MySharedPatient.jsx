@@ -65,6 +65,7 @@ export default function MySharedPatient(props){
     <table className="table table-bordered table-striped text-center rounded my-4">
       <thead className='mc-background text-white text-uppercase'>
         <tr>
+          <th className='align-middle mc-heading-middle d-lg-table-cell d-none text-uppercase' style={{fontSize:FONT_SIZE}}>stt</th>
           <th colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>
             <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
               <input type="text" className="border-0 flex-grow-1 w-100" placeholder={t("Enter patient name to search")} style={{ outline: "none" }} value={nameSearch} onChange={onNameSearchChange}/>
@@ -81,7 +82,7 @@ export default function MySharedPatient(props){
       {
         (!loadingSearch || listSharedPatient.length>0) && 
         <React.Fragment>
-          <tbody>{listSharedPatient.map((patient, index) => <PatientRows selectPatientMode={SELECT_PATIENT_MODE.SHARE_PATIENT} key={patient.id} patient={patient} shareByDoctor={true} action={false}/>)}</tbody>
+          <tbody>{listSharedPatient.map((patient, index) => <PatientRows stt={index} selectPatientMode={SELECT_PATIENT_MODE.SHARE_PATIENT} key={patient.id} patient={patient} shareByDoctor={true} action={false}/>)}</tbody>
           {
             listSharedPatient.length!==0 && <tfoot className="align-middle">
               <tr>
