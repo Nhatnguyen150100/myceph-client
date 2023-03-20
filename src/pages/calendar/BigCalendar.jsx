@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -7,11 +7,31 @@ import SoftWareListComponent from "../../component/SoftWareListComponent.jsx";
 import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
 import { SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
 import { useTranslation } from "react-i18next";
+import RBCToolbar from "./RBCToolbar.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { setView } from "../../redux/CalendarSlice.jsx";
+
 
 const localizer = momentLocalizer(moment);
 
 export default function BigCalendar(props){
   const {t} = useTranslation();
+  const clickRef = useRef(null);
+  const view = useSelector(state => state.calendar.view);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(clickRef?.current)
+    }
+  }, [])
+
+  const onSelectSlot = useCallback(slotInfo => {
+    window.clearTimeout(clickRef?.current)
+    clickRef.current = window.setTimeout(() => {
+      window.alert(slotInfo);
+    }, 250)
+  }, [])
 
   const { defaultDate, formats, messages, views} = useMemo(() => ({
     defaultDate: new Date(),
@@ -41,6 +61,15 @@ export default function BigCalendar(props){
     views: [Views.MONTH,Views.WEEK, Views.DAY]
   }), [])
 
+  const slotGroupPropGetter = useCallback(
+    () => ({
+      style: {
+        minHeight: 60
+      },
+    }),
+    []
+  )
+
   return <div>
     <NavbarComponent />
     <div className="d-flex flex-column h-100 container my-1">
@@ -49,22 +78,28 @@ export default function BigCalendar(props){
         <SoftWareListComponent />
       </div>
     </div>
-    <Calendar 
-      min={new Date(1972, 0, 1, 8, 0, 0, 0)}
-      max={new Date(1972, 0, 1, 18, 30, 0, 0)}
-      popup={true}
-      step={15}
-      drilldownView={Views.DAY}
-      views={views}
-      defaultView={Views.DAY}
-      defaultDate={defaultDate}
-      formats={formats}
-      messages={messages}
-      localizer={localizer}
-      startAccessor="start"
-      endAccessor="end"
-      className="mx-2"
-      style={{height:"600px"}}
-    />
+      <Calendar
+        components={{
+          toolbar: RBCToolbar
+        }}
+        min={new Date(1972, 0, 1, 8, 0, 0, 0)}
+        max={new Date(1972, 0, 1, 18, 0, 0, 0)}
+        popup={true}
+        selectable={true}
+        onSelectSlot={onSelectSlot}
+        step={15}
+        slotGroupPropGetter={slotGroupPropGetter}
+        drilldownView={view}
+        views={views}
+        defaultView={view}
+        defaultDate={defaultDate}
+        formats={formats}
+        messages={messages}
+        localizer={localizer}
+        startAccessor="start"
+        endAccessor="end"
+        className="mx-2"
+        style={{height:"550px"}}
+      />
   </div>
 }

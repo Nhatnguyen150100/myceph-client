@@ -62,7 +62,9 @@ export default function NavbarComponent(props) {
                 <span className="me-3 ms-2 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('homepage')}</span>
               </Link>
               <span className="vr"></span>
-              <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
+              <Link to={"/schedule"} style={{textDecoration:"none"}}>
+                <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
+              </Link>
               <span className="vr"></span>
               <Link to={"/patientListManagement"} style={{textDecoration:"none"}}>
                 <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('patient list')}</span>
