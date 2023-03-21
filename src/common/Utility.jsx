@@ -6,6 +6,7 @@ import { clearClinicSlice } from '../redux/ClinicSlice.jsx';
 import { clearGeneralSlice } from '../redux/GeneralSlice.jsx';
 import { clearPatientSlice } from '../redux/PatientSlice.jsx';
 import { clearImageSlice } from '../redux/LibraryImageSlice.jsx';
+import { clearCalendarSlice } from '../redux/CalendarSlice.jsx';
  
 export const cookies = new Cookies();
 
@@ -36,10 +37,16 @@ export const SOFT_WARE_LIST = {
   DISCUSSION: 'Discussion'
 }
 
+export const VIEW_CALENDAR = {
+  BY_DATE : 'BY_DATE',
+  BY_PATIENT: 'BY_PATIENT'
+}
+
 export const SELECT_PATIENT_MODE = {
   MY_PATIENT: "MY_PATIENT",
   CLINIC_PATIENT: "CLINIC_PATIENT",
-  SHARE_PATIENT: "SHARE_PATIENT"
+  SHARE_PATIENT: "SHARE_PATIENT",
+  SCHEDULE : "SCHEDULE",
 }
 
 export const MEDICAL_RECORD_TABS = {
@@ -91,6 +98,7 @@ export const clearAllSlice = (dispatch) => {
   dispatch(clearGeneralSlice());
   dispatch(clearClinicSlice());
   dispatch(clearPatientSlice());
+  dispatch(clearCalendarSlice());
 }
 
 export function isValidEmail(email) {

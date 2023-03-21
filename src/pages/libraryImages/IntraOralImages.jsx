@@ -308,7 +308,7 @@ export default function IntraoralImages(props){
                 listImage[date]?.map((image,_) => {
                   return <div onMouseEnter={e=>{if(roleCheck) setHoverSettingId(image.id)}} onMouseLeave={e=>{if(roleCheck) setHoverSettingId()}} className=" position-relative mt-3" key={image.id}>
                     <img 
-                      className="me-4 tranform-hover w-auto" 
+                      className="me-4 transform-hover w-auto" 
                       src={splitAvatar(image.linkImage)} 
                       style={{maxHeight:"250px",cursor:"pointer"}}
                       alt={t(IMAGE_TYPE_LIST.INTRA_ORAL.name)} 

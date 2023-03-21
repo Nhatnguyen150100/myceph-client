@@ -8,7 +8,7 @@ import SelectFieldInput from "../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../common/TextFieldInput.jsx";
 import { FONT_SIZE, FONT_SIZE_HEAD, toISODateString, WIDTH_CHILD } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
-import SelectClinicComponent from "../../component/SelectClinicComponent.jsx";
+import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
 import { setAppName, setLoadingModal, setpatientListTab } from "../../redux/GeneralSlice.jsx";
 import { setGetAllPatientClinic, setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
 import { postToServerWithToken } from "../../services/getAPI.jsx";
@@ -124,7 +124,7 @@ export default function PatientList(props){
             </button>
           </div>
         </div>
-        <SelectClinicComponent condition={selectedTab===1 || selectedTab===4} />
+        <SelectPatientComponent condition={selectedTab===1 || selectedTab===4} showSelectedPatient={true}/>
       </div>
     </div>
     {

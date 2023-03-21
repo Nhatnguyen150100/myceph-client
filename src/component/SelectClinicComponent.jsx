@@ -17,7 +17,7 @@ export default function SelectClinicComponent(props) {
           <SelectFieldInput legend={t('select clinic')} defaultValue={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} value={clinic.idClinicDefault+'_'+clinic.roleOfDoctor} onChange={value=>{dispatch(setIdClinicDefault(splitFirst(value)));dispatch(setRoleOfDoctor(splitLast(value)))}}>
             {
               clinic.arrayClinic?.map(clinic=>{
-                return <option className="text-gray border-0 text-capitalize" value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
+                return <option className={`${clinic.roleOfDoctor === 'admin'?'text-success':'text-warning'} border-0`} value={clinic.id+'_'+clinic.roleOfDoctor} key={clinic.id}>
                   {clinic.nameClinic}
                 </option>
               })

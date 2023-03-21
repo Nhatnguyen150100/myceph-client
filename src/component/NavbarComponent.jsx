@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { setAppName, setLanguage, setLoadingModal } from "../redux/GeneralSlice.jsx";
+import { setAppName, setLanguage, setLoadingModal, setSoftWareSelectedTab } from "../redux/GeneralSlice.jsx";
 import i18n from '../translation/i18n.jsx';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Link, useNavigate } from "react-router-dom";
-import { clearAllSlice, cookies, splitEmail } from "../common/Utility.jsx";
+import { clearAllSlice, cookies, SOFT_WARE_LIST, splitEmail } from "../common/Utility.jsx";
 import { postToServerWithToken } from "../services/getAPI.jsx";
 import { toast } from "react-toastify";
 import { refreshToken } from "../services/refreshToken.jsx";
@@ -62,7 +62,7 @@ export default function NavbarComponent(props) {
                 <span className="me-3 ms-2 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('homepage')}</span>
               </Link>
               <span className="vr"></span>
-              <Link to={"/schedule"} style={{textDecoration:"none"}}>
+              <Link to={"/schedule"} style={{textDecoration:"none"}} onClick={()=>dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR))}>
                 <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
               </Link>
               <span className="vr"></span>

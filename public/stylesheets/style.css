@@ -85,6 +85,10 @@
   --bs-btn-color:#40bab5 !important;
 }
 
+.react-calendar{
+  font-family: 'Quicksand', sans-serif !important;
+}
+
 .text-white-hover:hover{
   color: white !important;
 }
@@ -105,7 +109,7 @@
   --bs-btn-disabled-border-color: #043d5d !important;
 }
 
-.tranform-hover:hover{
+.transform-hover:hover{
   transition-duration: 0.5s;
   transform: scale(1.03);
 }

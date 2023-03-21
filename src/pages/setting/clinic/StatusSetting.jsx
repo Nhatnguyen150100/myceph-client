@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import { FONT_SIZE } from "../../../common/Utility.jsx";
-import SelectClinicComponent from "../../../component/SelectClinicComponent.jsx";
+import SelectPatientComponent from "../../../component/SelectPatientComponent.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
@@ -124,7 +124,7 @@ export default function StatusSetting(props){
 
   return <div className="w-100 py-3">
     <div style={{width:"400px"}}>
-      <SelectClinicComponent condition={true} />
+      <SelectPatientComponent condition={true} showSelectedPatient={false}/>
     </div>
     <h4 className="text-capitalize mc-color mt-1 text-center fw-bold">{t('list status of clinic')}</h4>
     <table className="table table-bordered table-striped text-center rounded my-4">

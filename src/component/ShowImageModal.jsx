@@ -203,7 +203,7 @@ export default function ShowImageModal(props) {
           <span className="text-uppercase fw-bold mc-color ms-2">{t('preview image')}</span>
           <div className="dropdown">
             <button className="btn btn-outline-secondary d-flex justify-content-start align-items-center px-2 py-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <span className="tranform-hover material-symbols-outlined mt-1 me-1" style={{fontSize:"25px"}}>
+              <span className="transform-hover material-symbols-outlined mt-1 me-1" style={{fontSize:"25px"}}>
                 contact_support
               </span>
               <span className="text-uppercase" style={{fontSize:FONT_SIZE}}>{t('guide')}</span>
@@ -266,7 +266,7 @@ export default function ShowImageModal(props) {
             />
             <div className="dropdown ms-1">
               <button className="btn btn-outline-info border-0 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span className="tranform-hover material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}} title={t('contrast')}>
+                <span className="transform-hover material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}} title={t('contrast')}>
                   contrast
                 </span>
               </button>
@@ -287,7 +287,7 @@ export default function ShowImageModal(props) {
             </div>
             <div className="dropdown mx-1">
               <button className="btn btn-outline-info border-0 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span className="tranform-hover material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}} title={t('brightness')}>
+                <span className="transform-hover material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}} title={t('brightness')}>
                   brightness_medium
                 </span>
               </button>

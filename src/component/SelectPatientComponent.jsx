@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { computeAge, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE } from "../common/Utility.jsx";
+import { computeAge, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../common/Utility.jsx";
+import { setPropertiesClinic } from "../redux/CalendarSlice.jsx";
 import { setArrayPatient, setCurrentPatient } from "../redux/PatientSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
@@ -17,6 +18,7 @@ export default function SelectPatientComponent(props) {
   const {t} = useTranslation();
   const arrayPatients = useSelector(state=>state.patient.arrayPatients);
   const isRefresh = useSelector(state=>state.general.isRefresh);
+  const softWareSelectedTab = useSelector(state=>state.general.softWareSelectedTab);
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic);
   const currentPatient = useSelector(state=>state.patient.currentPatient);
@@ -39,35 +41,43 @@ export default function SelectPatientComponent(props) {
       break;
     case SELECT_PATIENT_MODE.SHARE_PATIENT: url = `/v1/sharePatient/getListSharePatientOfCurrentDoctor/${doctor.id}?`;
       break;
-    default: url = null
+    default: if(SOFT_WARE_LIST.CALENDAR===softWareSelectedTab){
+      url = `/v1/patient/getPatientListForClinic/${clinic.idClinicDefault}?`;
+    }
   }
 
   useEffect(()=>{
-    if(clinic.idClinicDefault && selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT) getAllPaitent();
-  },[clinic.idClinicDefault])
-
+    if(clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)) getAllPatient();
+  },[clinic.idClinicDefault])    
+  
   const onNameSearchChange = e => {
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
-    nameSearchTimeout = setTimeout(getAllPaitent,300,e.target.value);
+    nameSearchTimeout = setTimeout(getAllPatient,300,e.target.value);
   }
 
-  const getAllPaitent = (name) => {
+  const getAllPatient = (name) => {
     return new Promise((resolve, reject) => {
       getToServerWithToken(`${url}page=${1}&pageSize=${10}&nameSearch=${name?name:''}`).then(result=>{
         dispatch(setArrayPatient(result.data));
         setCount(result.count);
-        if(result.count===0){
-          toast.info(t('this clinic has no patients'));
+        if(result.count===0) toast.warning(t('This clinic has no patients'));
+        if(!currentPatient){
+          dispatch(setCurrentPatient(result.data[0]));
         }
-        if(clinic.idClinicDefault && selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT){
+        // chuyển bệnh nhân trong cùng 1 phòng khám thì không bị reset lại currentPatient
+        if(clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)){
           setPreviousClinicId(clinic.idClinicDefault);
           if(previousClinicId!==clinic.idClinicDefault) dispatch(setCurrentPatient(result.data[0]));
+        }
+        // nếu đang ở lịch thì lấy thêm các thuộc tính của phòng khám hiện tại
+        if(SOFT_WARE_LIST.CALENDAR===softWareSelectedTab){
+          getPropertiesClinic();
         }
         resolve();
       }).catch((err) =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>getAllPaitent(name));
+          refreshToken(nav,dispatch).then(()=>getAllPatient(name));
         }else{
           toast.error(err.message);
         }
@@ -76,51 +86,67 @@ export default function SelectPatientComponent(props) {
     })
   }
 
+  const getPropertiesClinic = () => {
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/schedule/getPropertiesClinic/${clinic.idClinicDefault}`).then(result => {
+        dispatch(setPropertiesClinic(result.data));
+        resolve();
+      }).catch(err =>{
+        if(!err.refreshToken){
+          toast.error(t(err.message));
+        }
+        reject();
+      })
+    })
+  }
+
   return <div className="d-flex flex-row justify-content-between align-items-center">
-    <fieldset className="border rounded px-2 d-flex flex-column align-items-center flex-wrap justify-content-sm-center justify-content-center pt-0 pb-1 me-3 mb-2" style={{minWidth:"400px"}}>
-      <legend style={{fontSize:FONT_SIZE}} className="mx-auto mb-0 float-none w-auto px-2 text-uppercase mc-color fw-bold">
-        {t('select patient')}
-      </legend>
-      <div className="dropdown w-100 p-0 m-0">
-        <button className="btn btn-hover-bg border-0 p-0 w-100 text-capitalize" onClick={e=>getAllPaitent()} type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
-          {currentPatient?.fullName}
-        </button>
-        <ul className="dropdown-menu w-100">
-          <div className="d-flex flex-row w-100 align-items-center mc-background-color-white rounded">
-            <input className="border-0 flex-grow-1 mc-background-color-white rounded p-2" placeholder={t("Enter patient name to search")} style={{fontSize:FONT_TEXT,outline:"none"}} value={nameSearch} onChange={onNameSearchChange}/>
-            <span className="material-symbols-outlined p-0 me-2">
-              search
-            </span>
-          </div>
-          {
-            arrayPatients?.map((patient,index) => {
-              return <button onClick={e=>dispatch(setCurrentPatient(patient))} key={patient.id} style={{background:`${index%2!==0&&'#f7f7f7'}`}} type="button" className="btn btn-hover-bg text-capitalize py-1 m-0 d-flex flex-column flex-grow-1 justify-content-center align-items-center w-100">
-                <span>{patient.fullName}</span>
-                <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
-                  <div className="w-auto d-flex flex-row align-items-center justify-content-start">
-                    <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{patient.gender}{' |'}</span>
-                    <img className="mx-1" src={`/assets/images/${patient.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${patient.gender==='male'?'male.png':'female.png'}`}/>
-                    <span className="fw-bold" style={{fontSize:FONT_TEXT}}>{')'}</span>
+    {
+      props.showSelectedPatient && <fieldset className="border rounded px-2 d-flex flex-column align-items-center flex-wrap justify-content-sm-center justify-content-center pt-0 pb-1 me-3 mb-2" style={{minWidth:"400px"}}>
+        <legend style={{fontSize:FONT_SIZE}} className="mx-auto mb-0 float-none w-auto px-2 text-uppercase mc-color fw-bold">
+          {t('select patient')}
+        </legend>
+        <div className="dropdown w-100 p-0 m-0">
+          <button className="btn btn-hover-bg border-0 p-0 w-100 text-capitalize" onClick={e=>getAllPatient()} type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
+            {currentPatient?.fullName}
+          </button>
+          <ul className="dropdown-menu w-100">
+            <div className="d-flex flex-row w-100 align-items-center mc-background-color-white rounded">
+              <input className="border-0 flex-grow-1 mc-background-color-white rounded p-2" placeholder={t("Enter patient name to search")} style={{fontSize:FONT_TEXT,outline:"none"}} value={nameSearch} onChange={onNameSearchChange}/>
+              <span className="material-symbols-outlined p-0 me-2">
+                person_search
+              </span>
+            </div>
+            {
+              arrayPatients?.map((patient,index) => {
+                return <button onClick={e=>dispatch(setCurrentPatient(patient))} key={patient.id} style={{background:`${index%2!==0&&'#f7f7f7'}`}} type="button" className="btn btn-hover-bg text-capitalize py-1 m-0 d-flex flex-column flex-grow-1 justify-content-center align-items-center w-100">
+                  <span>{patient.fullName}</span>
+                  <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
+                    <div className="w-auto d-flex flex-row align-items-center justify-content-start">
+                      <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{patient.gender}{' |'}</span>
+                      <img className="mx-1" src={`/assets/images/${patient.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${patient.gender==='male'?'male.png':'female.png'}`}/>
+                      <span className="fw-bold" style={{fontSize:FONT_TEXT}}>{')'}</span>
+                    </div>
+                    <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(patient.birthday).age}{t(' age')}{computeAge(patient.birthday).month>0 && (' - '+computeAge(patient.birthday).month+t(' month'))}{' )'}</span>
                   </div>
-                  <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(patient.birthday).age}{t(' age')}{computeAge(patient.birthday).month>0 && (' - '+computeAge(patient.birthday).month+t(' month'))}{' )'}</span>
-                </div>
-              </button>
-            })
-          }
-          <div className="d-flex flex-grow-1 w-100 border-top">
-            <span className="text-capitalize text-info w-100 text-center mt-2" style={{fontSize:FONT_TEXT}}>{`${count>10?t('only display 10 patients out of total'):''}`+' '+`${count}`+' '+t('patients')}</span>
-          </div>
-        </ul>
-      </div>
-      <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
-        <div className="w-auto d-flex flex-row align-items-center justify-content-start">
-          <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{currentPatient?.gender}{' |'}</span>
-          <img className="mx-1" src={`/assets/images/${currentPatient?.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${currentPatient?.gender==='male'?'male.png':'female.png'}`}/>
-          <span className="fw-bold" style={{fontSize:FONT_TEXT}}>{')'}</span>
+                </button>
+              })
+            }
+            <div className="d-flex flex-grow-1 w-100 border-top">
+              <span className="text-capitalize text-info w-100 text-center mt-2" style={{fontSize:FONT_TEXT}}>{`${count>10?t('only display 10 patients out of total'):''}`+' '+`${count}`+' '+t('patients')}</span>
+            </div>
+          </ul>
         </div>
-        <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(currentPatient?.birthday).age}{t(' age')}{computeAge(currentPatient?.birthday).month>0 && (' - '+computeAge(currentPatient?.birthday).month+t(' month'))}{' )'}</span>
-      </div>
-    </fieldset>
-    <SelectClinicComponent condition={selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT} />
+        <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
+          <div className="w-auto d-flex flex-row align-items-center justify-content-start">
+            <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{currentPatient?.gender}{' |'}</span>
+            <img className="mx-1" src={`/assets/images/${currentPatient?.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${currentPatient?.gender==='male'?'male.png':'female.png'}`}/>
+            <span className="fw-bold" style={{fontSize:FONT_TEXT}}>{')'}</span>
+          </div>
+          <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(currentPatient?.birthday).age}{t(' age')}{computeAge(currentPatient?.birthday).month>0 && (' - '+computeAge(currentPatient?.birthday).month+t(' month'))}{' )'}</span>
+        </div>
+      </fieldset>
+    }
+    <SelectClinicComponent condition={selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab} />
   </div>
 }

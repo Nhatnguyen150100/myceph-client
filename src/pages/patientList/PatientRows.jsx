@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
-import { convertISOToVNDateString, FONT_SIZE, SOFT_WARE_LIST, toISODateString } from "../../common/Utility.jsx";
+import { convertISOToVNDateString, FONT_SIZE, SELECT_PATIENT_MODE, SOFT_WARE_LIST, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
+import { setViewCalendar } from "../../redux/CalendarSlice.jsx";
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setSettingTab, setSoftWareSelectedTab } from "../../redux/GeneralSlice.jsx";
 import { setCurrentPatient, setSelectPatientOnMode } from "../../redux/PatientSlice.jsx";
@@ -83,7 +84,12 @@ export default function PatientRows(props){
         <Link title={t("LateralCeph")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
           <img src="/assets/images/LateralCeph.png" width="34" height="34" alt="LateralCeph"/>
         </Link>
-        <Link title={t("Calendar")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
+        <Link title={t("Calendar")} to={`${(props.selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && props.selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT)?'/schedule':'#'}`} className="btn btn-outline-info p-1 border-0 me-2 mb-2" onClick={e=>{
+          if(props.selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && props.selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT){
+            dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
+            onToSoftWare(SOFT_WARE_LIST.CALENDAR);
+          }else toast.warning(t('Schedule is available for this patient in clinic!'));
+        }}>
           <img src="/assets/images/CalendarNew.png" width="34" height="34" alt="Calendar"/>
         </Link>
         <Link title={t("Discussion")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
@@ -131,7 +137,7 @@ export default function PatientRows(props){
     }
     {
       props.shareByDoctor &&  <td className={`d-lg-table-cell`} style={{fontSize:FONT_SIZE,cursor:"pointer"}}>
-        <button onClick={e=>toOtherDoctorProfile(props.patient['Doctor.email'])} type="button" style={{background:"none"}} className="tranform-hover btn-hover-bg rounded border-0 d-flex flex-column align-items-center justify-content-center h-100 w-100">
+        <button onClick={e=>toOtherDoctorProfile(props.patient['Doctor.email'])} type="button" style={{background:"none"}} className="transform-hover btn-hover-bg rounded border-0 d-flex flex-column align-items-center justify-content-center h-100 w-100">
           <strong className="fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{props.patient['Doctor.email']}</strong>
           <span style={{fontSize:FONT_SIZE}}>{'( '}{props.patient['Doctor.fullName']}{' )'}</span>
         </button>

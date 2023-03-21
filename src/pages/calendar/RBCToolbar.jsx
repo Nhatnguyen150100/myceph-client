@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Views } from "react-big-calendar";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { FONT_SIZE } from "../../common/Utility.jsx";
 import { setView } from "../../redux/CalendarSlice.jsx";
 
 function RBCToolbar(props) {
@@ -99,7 +100,7 @@ function RBCToolbar(props) {
               <span className="material-symbols-outlined me-2 text-white">
                 keyboard_double_arrow_left
               </span>
-              <span className="fw-bold text-capitalize text-white">
+              <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
                 {t('Back')}
               </span>
             </button>
@@ -107,7 +108,7 @@ function RBCToolbar(props) {
               <span className="material-symbols-outlined me-2">
                 today
               </span>
-              <span className="fw-bold text-capitalize">
+              <span className="fw-bold text-capitalize" style={{fontSize:FONT_SIZE}}>
                 {t('Today')}
               </span>
             </button>
@@ -115,7 +116,7 @@ function RBCToolbar(props) {
               <span className="material-symbols-outlined me-2 text-white">
               keyboard_double_arrow_right
               </span>
-              <span className="fw-bold text-capitalize text-white">
+              <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
                 {t('Next')}
               </span>
             </button>
@@ -126,7 +127,7 @@ function RBCToolbar(props) {
               <span className="material-symbols-outlined me-2 text-white">
                 calendar_month
               </span>
-              <span className="fw-bold text-capitalize text-white">
+              <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
                 {t('View Month')}
               </span>
             </button>
@@ -134,7 +135,7 @@ function RBCToolbar(props) {
               <span className="material-symbols-outlined me-2 text-white">
                 date_range
               </span>
-              <span className="fw-bold text-capitalize text-white">
+              <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
                 {t('View Week')}
               </span>
             </button>
@@ -142,7 +143,7 @@ function RBCToolbar(props) {
               <span className="material-symbols-outlined me-2 text-white">
                 calendar_today
               </span>
-              <span className="fw-bold text-capitalize text-white">
+              <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
                 {t('View Day')}
               </span>
             </button>

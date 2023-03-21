@@ -22,6 +22,7 @@
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-big-calendar": "^1.6.8",
+    "react-calendar": "^4.0.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-google-recaptcha": "^2.1.0",

@@ -8,7 +8,7 @@ import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
 import { AVATAR_HEIGHT, AVATAR_WIDTH, convertISOToVNDateString, deleteImage, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, isValidEmail, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
-import SelectClinicComponent from "../../../component/SelectClinicComponent.jsx";
+import SelectPatientComponent from "../../../component/SelectPatientComponent.jsx";
 import { setArrayClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
@@ -202,7 +202,7 @@ export default function Myclinic(props){
   return <div className="d-flex flex-column h-100 py-3">
     <div className="d-flex flex-grow-1 flex-wrap justify-content-between mb-2">
       <div style={{width:"400px"}}>
-        <SelectClinicComponent condition={true}/>
+        <SelectPatientComponent showSelectedPatient={false} condition={true}/>
       </div>
       <div className="d-flex flex-row align-items-end">
         <div style={{width:"400px"}}>

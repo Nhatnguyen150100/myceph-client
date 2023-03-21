@@ -9,7 +9,7 @@ import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import { FONT_SIZE, isValidEmail, splitAvatar } from "../../../common/Utility.jsx";
-import SelectClinicComponent from "../../../component/SelectClinicComponent.jsx";
+import SelectPatientComponent from "../../../component/SelectPatientComponent.jsx";
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
@@ -177,7 +177,7 @@ export default function MemberOfClinic(props){
   return <div className="d-flex flex-column align-items-start justify-content-start h-100 py-3">
     <div className="d-flex flex-row w-100 flex-wrap justify-content-between align-items-center mb-2">
       <div style={{width:"400px"}}>
-        <SelectClinicComponent condition={true} />
+        <SelectPatientComponent condition={true} showSelectedPatient={false}/>
       </div>
       {
         clinic.roleOfDoctor==='admin' && <div className="d-flex flex-row align-items-end">
