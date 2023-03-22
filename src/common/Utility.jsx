@@ -112,7 +112,7 @@ export function isValidEmail(email) {
 }
 
 /**
- * todo: trả về giờ phút giây từ ngày
+ * todo: trả về giờ phút từ ngày
  * @param {*} date 
  * @returns hh:mm
  */
