@@ -53,7 +53,7 @@ export default function SelectPatientComponent(props) {
   const onNameSearchChange = e => {
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
-    nameSearchTimeout = setTimeout(getAllPatient,300,e.target.value);
+    nameSearchTimeout = setTimeout(getAllPatient(e.target.value),300);
   }
 
   const getAllPatient = (name) => {
@@ -77,7 +77,7 @@ export default function SelectPatientComponent(props) {
         resolve();
       }).catch((err) =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>getAllPatient(name));
+          refreshToken(nav,dispatch).then(()=>getAllPatient(name,getPropertiesClinic));
         }else{
           toast.error(err.message);
         }
@@ -98,7 +98,7 @@ export default function SelectPatientComponent(props) {
         reject();
       })
     })
-  }
+  }    
 
   return <div className="d-flex flex-row justify-content-between align-items-center">
     {
@@ -147,6 +147,6 @@ export default function SelectPatientComponent(props) {
         </div>
       </fieldset>
     }
-    <SelectClinicComponent condition={selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab} />
+    <SelectClinicComponent condition={props.condition} />
   </div>
 }

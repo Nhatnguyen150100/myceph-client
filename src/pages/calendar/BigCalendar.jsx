@@ -12,12 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import { useLayoutEffect } from "react";
 import SmallCalendar from "./SmallCalendar.jsx";
-import { setPropertiesClinic, setViewCalendar } from "../../redux/CalendarSlice.jsx";
-import { getToServerWithToken } from "../../services/getAPI.jsx";
-import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
-import { refreshToken } from "../../services/refreshToken.jsx";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { setViewCalendar } from "../../redux/CalendarSlice.jsx";
+import AppointmentModal from "./AppointmentModal.jsx";
 
 export const localizer = momentLocalizer(moment);
 
@@ -27,20 +23,24 @@ export default function BigCalendar(props){
   const view = useSelector(state => state.calendar.view);
   const [currentDay,setCurrentDay] = useState(new Date());
   const selectedTab = useSelector(state => state.calendar.viewCalendar);
+  const roomsOfClinic = useSelector(state => state.calendar.propertiesClinic?.roomOfClinic);
   const clinic = useSelector(state=>state.clinic);
-  const nav = useNavigate();
 
   const headerRef = useRef(null);
   const clickRef = useRef(null);
 
   const [heightCalendar, setHeightCalendar] = useState(0);
+  const [showAppointmentModal,setShowAppointmentModal] = useState(false);
+  const [isCreateAppointment,setIsCreateAppointment] = useState(true);
+  const [slotInfo,setSlotInfo] = useState();
   
   let currentTab = null;
 
   const onSelectSlot = useCallback(slotInfo => {
     window.clearTimeout(clickRef?.current)
     clickRef.current = window.setTimeout(() => {
-      console.log("🚀 ~ file: BigCalendar.jsx:59 ~ onSelectSlot ~ slotInfo:", slotInfo)
+      setShowAppointmentModal(true);
+      setSlotInfo(slotInfo);
     }, 200)
   }, [])
 
@@ -49,6 +49,7 @@ export default function BigCalendar(props){
   },[])
 
   useLayoutEffect(()=>{
+    // đặt chiều cao của Calendar
     setHeightCalendar(window.innerHeight - headerRef.current.clientHeight - 20);
   },[])
 
@@ -58,7 +59,7 @@ export default function BigCalendar(props){
     }
   }, [])
 
-  const { date, formats, messages, views} = useMemo(() => ({
+  const { date, formats, messages, views, resources} = useMemo(() => ({
     date: currentDay,
     messages: {
       week: t('Week'),
@@ -80,8 +81,10 @@ export default function BigCalendar(props){
         dayHeaderFormat: (date, culture, localizer) =>
           localizer.format(date, 'dddd DD/MM/YYYY', culture),
     },
-    views: [Views.MONTH,Views.WEEK, Views.DAY]
-  }), [currentDay])
+    views: [Views.MONTH,Views.WEEK, Views.DAY],
+    // đặt lại tên nameRoom => title theo doc của Calendar resources
+    resources: roomsOfClinic?.map(({id, nameRoom: title}) => ({id, title}))
+  }), [currentDay,roomsOfClinic])
 
   const slotGroupPropGetter = useCallback(
     () => ({
@@ -93,8 +96,9 @@ export default function BigCalendar(props){
   )
 
   switch(selectedTab){
-    case VIEW_CALENDAR.BY_DATE: currentTab = <div className="row mx-2 border-top pt-2">
+    case VIEW_CALENDAR.BY_DATE: currentTab = 
       <Calendar
+        resources={resources}
         components={{
           toolbar: RBCToolbar
         }}
@@ -118,24 +122,16 @@ export default function BigCalendar(props){
         className="col-md-9"
         style={{height:heightCalendar}}
       />
-      <div className="col-md-3">
-        <SmallCalendar currentDay={currentDay} setCurrentDay={value => setCurrentDay(value)}/>
-      </div>
-    </div>
     break;
-    case VIEW_CALENDAR.BY_PATIENT: currentTab = <div className="row mx-2 border-top pt-2">
-      <div className="col-md-9">
+    case VIEW_CALENDAR.BY_PATIENT: currentTab = <div className="col-md-9">
         patient
       </div>
-      <div className="col-md-3">
-        <SmallCalendar />
-      </div>
-    </div>
     break;
     default: currentTab = <div>null</div>
   }
 
   return <div className="h-100">
+    <AppointmentModal slotInfo={slotInfo} showAppointmentModal={showAppointmentModal} closeModal={()=>setShowAppointmentModal(false)} createAppointment={isCreateAppointment}/>
     <div ref={headerRef}>
       <NavbarComponent />
       <ul className="nav nav-tabs">
@@ -167,26 +163,36 @@ export default function BigCalendar(props){
         </li>
       </ul>
       <div className="container-fluid my-1">
-        <div className={`d-flex flex-row ${selectedTab===VIEW_CALENDAR.BY_PATIENT?'justify-content-between':'justify-content-start'}  align-items-center w-100`}>  
-          <IconButtonComponent
-            disabled={clinic.roleOfDoctor !== 'admin'} 
-            className={`btn-success h-100 pb-1 d-flex align-items-center ms-2 me-4`} 
-            icon="add" 
-            FONT_SIZE_ICON={"25px"} 
-            title={t("Create appointment")}
-            label={
-              <span className="text-capitalize text-white fw-bold me-2 mt-1" style={{fontSize:FONT_SIZE}}>
-                {t('create appointment')}
-              </span>
-            }
-          />
-          <SelectPatientComponent showSelectedPatient={selectedTab === VIEW_CALENDAR.BY_PATIENT?true:false}/>
+        <div className={`d-flex flex-row ${selectedTab===VIEW_CALENDAR.BY_PATIENT?'justify-content-between':'justify-content-start'} align-items-center w-100`}>  
+          <div className="d-flex flex-row align-items-center">
+            <IconButtonComponent
+              disabled={clinic.roleOfDoctor !== 'admin'} 
+              className={`btn-primary h-100 pb-1 d-flex align-items-center ms-2 me-4`} 
+              icon="add" 
+              FONT_SIZE_ICON={"25px"} 
+              title={t("Create appointment")}
+              onClick={()=>setShowAppointmentModal(true)}
+              label={
+                <span className="text-capitalize text-white fw-bold me-2 mt-1" style={{fontSize:FONT_SIZE}}>
+                  {t('create appointment')}
+                </span>
+              }
+            />
+            <SelectPatientComponent condition={true} showSelectedPatient={selectedTab === VIEW_CALENDAR.BY_PATIENT?true:false}/>
+          </div>
           {
-            selectedTab === VIEW_CALENDAR.BY_PATIENT && <SoftWareListComponent />
+            selectedTab === VIEW_CALENDAR.BY_PATIENT && <div className="me-5">
+              <SoftWareListComponent />
+            </div>
           }
         </div>
       </div>
     </div>
-    {currentTab}
+    <div className="row mx-2 border-top pt-2">
+      {currentTab}
+      <div className="col-md-3">
+        <SmallCalendar currentDay={currentDay} setCurrentDay={value => setCurrentDay(value)}/>
+      </div>
+    </div>
   </div>
 }

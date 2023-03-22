@@ -13,16 +13,16 @@ export default function DoctorRows(props){
   const clinic = useSelector(state=>state.clinic);
   const doctor = useSelector(state=>state.doctor.data);
   const {t} = useTranslation();
-  const disatch = useDispatch();
+  const dispatch = useDispatch();
 
   const toProfile = (email) => {
     if(doctor.email===email){
-      disatch(setSettingTab(0));
-      disatch(setDoctorSettingTab(0));
+      dispatch(setSettingTab(0));
+      dispatch(setDoctorSettingTab(0));
     }else{
-      disatch(setSettingTab(0));
-      disatch(setDoctorSettingTab(1));
-      disatch(setOtherEmailDoctor(email));
+      dispatch(setSettingTab(0));
+      dispatch(setDoctorSettingTab(1));
+      dispatch(setOtherEmailDoctor(email));
     }
   }
 

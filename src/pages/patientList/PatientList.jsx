@@ -124,7 +124,7 @@ export default function PatientList(props){
             </button>
           </div>
         </div>
-        <SelectPatientComponent condition={selectedTab===1 || selectedTab===4} showSelectedPatient={true}/>
+        <SelectPatientComponent condition={selectedTab===1 || selectedTab===4} showSelectedPatient={false}/>
       </div>
     </div>
     {

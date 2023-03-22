@@ -101,14 +101,54 @@ export const clearAllSlice = (dispatch) => {
   dispatch(clearCalendarSlice());
 }
 
+
+/**
+ * todo: kiểm tra Email có hợp lệ không
+ * @param {*} email 
+ * @returns boolean
+ */
 export function isValidEmail(email) {
   return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
 }
 
+/**
+ * todo: trả về giờ phút giây từ ngày
+ * @param {*} date 
+ * @returns hh:mm
+ */
+export function getHoursMinutesSeconds(date){
+  let hours = date.getHours();
+  if(hours<10) hours = '0'+hours.toString();
+  let minutes = date.getMinutes();
+  if(minutes<10) minutes = '0'+minutes.toString();
+  return hours +':'+ minutes
+}
+
+
+/**
+ * todo: Tìm 1 Object trong 1 array
+ * @param {*} array mảng truyền vào
+ * @param {*} idObject id của Object cần tìm
+ * @returns Object cần tìm trong array
+ */
+export const findObjectFromArray = (array, idObject) =>{
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index];
+    if(element.id === idObject) return element;
+  }
+}
+
+
+/**
+ * todo: Tìm đầu của email
+ * @param {*} email 
+ * @returns 
+ */
 export function splitEmail(email) {
   const nameEmail = email.split('@');
   return nameEmail[0];
 }
+
 
 export function settingForImage(value,linkImage){
   if(linkImage){

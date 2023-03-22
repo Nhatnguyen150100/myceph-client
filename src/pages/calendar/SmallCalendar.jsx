@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { FONT_SIZE } from '../../common/Utility.jsx';
 
 export default function SmallCalendar(props) {
   const {t} = useTranslation();
-  
+
   return (
     <div className='w-100'>
       <Calendar

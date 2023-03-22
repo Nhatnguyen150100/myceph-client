@@ -16,8 +16,7 @@ export default function MedicalRecord(props){
   const nav = useNavigate();
   const doctor = useSelector(state=>state.doctor);
   const selectedTab = useSelector(state=>state.general.medicalRecordTab);
-  const selectPatientMode = useSelector(state=>state.general.selectPatientMode);
-
+  const selectPatientOnMode = useSelector(state=>state.patient.selectPatientOnMode);
   const currentPatient = useSelector(state=>state.patient.currentPatient);
 
   let currentTab = null;
@@ -38,6 +37,7 @@ export default function MedicalRecord(props){
     if(!doctor.data?.id) nav('/login');
   },[])
 
+  console.log("🚀 ~ file: MedicalRecord.jsx:53 ~ MedicalRecord ~ selectPatientOnMode:", selectPatientOnMode)
 
   useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t(SOFT_WARE_LIST.MEDICAL_RECORD)}`));
@@ -46,8 +46,8 @@ export default function MedicalRecord(props){
   return <div className="d-flex flex-column justify-content-start align-items-center">
     <NavbarComponent />
     <div className="d-flex flex-column h-100 container my-1">
-      <div className="d-flex flex-row justify-content-between align-items-center w-100 mb-3" style={{minHeight:`${selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT?'100px':'0px'}`}}>
-        <SelectPatientComponent showSelectedPatient={true}/>
+      <div className="d-flex flex-row justify-content-between align-items-center w-100 mb-3" style={{minHeight:`${selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT?'100px':'0px'}`}}>
+        <SelectPatientComponent condition={selectPatientOnMode === SELECT_PATIENT_MODE.CLINIC_PATIENT} showSelectedPatient={true}/>
         <SoftWareListComponent />
       </div>
       <div className="w-100 mc-background py-1 d-flex justify-content-end align-items-start rounded">

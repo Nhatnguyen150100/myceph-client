@@ -77,7 +77,7 @@ function RBCToolbar(props) {
       props.date.setMonth(now.getMonth());
       props.date.setYear(now.getFullYear());
       props.date.setDate(now.getDate());
-      props.onNavigate("current");
+      props.onNavigate("current",now);
     };
 
     const month = () => {

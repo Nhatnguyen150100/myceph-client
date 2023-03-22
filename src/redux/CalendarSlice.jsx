@@ -16,10 +16,10 @@ export const CalendarSlice = createSlice({
       state.viewCalendar = action.payload;
     },
     setPropertiesClinic: (state,action) => {
-      state.properties = action.payload;
+      state.propertiesClinic = action.payload;
     },
     clearCalendarSlice: (state) => {
-      state.properties = null;
+      state.propertiesClinic = null;
       state.viewCalendar = 'BY_DATE';
       state.view = Views.DAY;
     }
