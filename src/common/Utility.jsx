@@ -25,7 +25,7 @@ export const AVATAR_WIDTH = "200px";
 export const FONT_SIZE_HEAD = '19px';
 export const FONT_SIZE = '14px';
 export const FONT_TAB = '14px';
-export const FONT_SIZE_ICONS = '45px';
+export const FONT_SIZE_ICONS = '35px';
 export const FONT_SIZE_HEADER = '17px';
 export const SIZE_IMAGE_IN_RECORD = '150px'
 

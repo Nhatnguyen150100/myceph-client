@@ -50,26 +50,29 @@ export default function RoomSetting(props){
   }
 
   const createRoom = () =>{
-    return new Promise((resolve, reject) =>{
-      dispatch(setLoadingModal(true));
-      postToServerWithToken(`/v1/roomOfClinic/${clinic.idClinicDefault}`,{
-        nameRoom: newRoom,
-        colorRoom: colorRoom
-      }).then(result => {
-        setArrayRoom(result.data);
-        setNewRoom('');
-        setColorRoom('#ffffff');
-        toast.success(t(result.message));
-        resolve();
-      }).catch((err) => {
-        if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>createRoom());
-        }else{
-          toast.error(t(err.message));
-        }
-        reject(err.message);
-      }).finally(() => dispatch(setLoadingModal(false)));
-    })
+    if(!newRoom) toast.error(t('Name of room is required'));
+    else{
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        postToServerWithToken(`/v1/roomOfClinic/${clinic.idClinicDefault}`,{
+          nameRoom: newRoom,
+          colorRoom: colorRoom
+        }).then(result => {
+          setArrayRoom(result.data);
+          setNewRoom('');
+          setColorRoom('#ffffff');
+          toast.success(t(result.message));
+          resolve();
+        }).catch((err) => {
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>createRoom());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject(err.message);
+        }).finally(() => dispatch(setLoadingModal(false)));
+      })
+    }
   }
 
   const updateRoom = () =>{
@@ -115,7 +118,7 @@ export default function RoomSetting(props){
           toast.error(t(err.message));
         }
         reject(err.message);
-      }).finally(() => dispatch(setLoadingModal(false)));
+      }).finally(() => {dispatch(setLoadingModal(false));setOpenDeleteConfirm(false);setEditRoomId('');setEditNameRoom('')});
     })
   }
 
@@ -123,7 +126,7 @@ export default function RoomSetting(props){
     setOpenDeleteConfirm(false);
   }
 
-  return <div className="w-100 py-3">
+  return <div className="w-100 h-100 py-3">
     <div style={{width:"400px"}}>
       <SelectPatientComponent condition={true} showSelectedPatient={false}/>
     </div>
@@ -207,6 +210,13 @@ export default function RoomSetting(props){
         }
       </tbody>
     </table>
+    <div className="mb-3 mt-5 d-flex align-items-center justify-content-center w-100 flex-column">
+      <div className="d-flex flex-row align-items-center justify-content-center">
+        <hr style={{ width: '140px' }} />
+        <span className="mx-3 text-primary fst-italic text-center">{t('Note: It is recommended to choose a dark color because when used in the calendar, the information will be displayed better')}</span>
+        <hr style={{ width: '140px' }} />
+      </div>
+    </div>
     <ConfirmComponent 
       FONT_SIZE={FONT_SIZE}
       open={openDeleteConfirm} 

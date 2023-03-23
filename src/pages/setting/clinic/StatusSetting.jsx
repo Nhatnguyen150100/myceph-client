@@ -49,26 +49,29 @@ export default function StatusSetting(props){
   }
 
   const createStatus = () =>{
-    return new Promise((resolve, reject) =>{
-      dispatch(setLoadingModal(true));
-      postToServerWithToken(`/v1/statusOfClinic/${clinic.idClinicDefault}`,{
-        nameStatus: newStatus,
-        colorStatus: colorStatus
-      }).then(result => {
-        setArrayStatus(result.data);
-        setNewStatus('');
-        setColorStatus('#ffffff');
-        toast.success(t(result.message));
-        resolve();
-      }).catch((err) => {
-        if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>createStatus());
-        }else{
-          toast.error(t(err.message));
-        }
-        reject(err.message);
-      }).finally(() => dispatch(setLoadingModal(false)));
-    })
+    if(!newStatus) toast.error(t('Name of status is required'));
+    else{
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        postToServerWithToken(`/v1/statusOfClinic/${clinic.idClinicDefault}`,{
+          nameStatus: newStatus,
+          colorStatus: colorStatus
+        }).then(result => {
+          setArrayStatus(result.data);
+          setNewStatus('');
+          setColorStatus('#ffffff');
+          toast.success(t(result.message));
+          resolve();
+        }).catch((err) => {
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>createStatus());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject(err.message);
+        }).finally(() => dispatch(setLoadingModal(false)));
+      })
+    }    
   }
 
   const updateStatus = () =>{
@@ -104,7 +107,6 @@ export default function StatusSetting(props){
         setEditColorStatus('');
         setEditNameStatus('');
         setEditStatusId('');
-        setOpenDeleteConfirm(false);
         toast.success(t(result.message));
         resolve();
       }).catch((err) => {
@@ -114,7 +116,7 @@ export default function StatusSetting(props){
           toast.error(t(err.message));
         }
         reject(err.message);
-      }).finally(() => dispatch(setLoadingModal(false)));
+      }).finally(() => {dispatch(setLoadingModal(false));setOpenDeleteConfirm(false);setEditStatusId('');setEditNameStatus('')});
     })
   }
 
@@ -206,6 +208,13 @@ export default function StatusSetting(props){
         }
       </tbody>
     </table>
+    <div className="mb-3 mt-5 d-flex align-items-center justify-content-center w-100 flex-column">
+      <div className="d-flex flex-row align-items-center justify-content-center">
+        <hr style={{ width: '140px' }} />
+        <span className="mx-3 text-primary fst-italic text-center">{t('Note: It is recommended to choose a dark color because when used in the calendar, the information will be displayed better')}</span>
+        <hr style={{ width: '140px' }} />
+      </div>
+    </div>
     <ConfirmComponent 
       FONT_SIZE={FONT_SIZE}
       open={openDeleteConfirm} 

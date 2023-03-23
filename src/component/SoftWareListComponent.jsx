@@ -2,9 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { FONT_SIZE_ICONS, SOFT_WARE_LIST } from "../common/Utility.jsx";
+import { SOFT_WARE_LIST } from "../common/Utility.jsx";
 import { setSoftWareSelectedTab } from "../redux/GeneralSlice.jsx";
-import { setSelectPatientOnMode } from "../redux/PatientSlice.jsx";
 
 export default function SoftWareListComponent(props){
   const softWareSelectedTab = useSelector(state=>state.general.softWareSelectedTab);
