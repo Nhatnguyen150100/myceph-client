@@ -91,7 +91,10 @@ export const IMAGE_TYPE_LIST = {
   }
 }
 
-
+/**
+ * todo: Xóa toàn bộ giá trị của slice
+ * @param {*} dispatch 
+ */
 export const clearAllSlice = (dispatch) => {
   dispatch(clearImageSlice());
   dispatch(logOutDoctor());
@@ -100,7 +103,6 @@ export const clearAllSlice = (dispatch) => {
   dispatch(clearPatientSlice());
   dispatch(clearCalendarSlice());
 }
-
 
 /**
  * todo: kiểm tra Email có hợp lệ không
@@ -147,6 +149,47 @@ export const findObjectFromArray = (array, idObject) =>{
 export function splitEmail(email) {
   const nameEmail = email.split('@');
   return nameEmail[0];
+}
+
+
+/**
+ * todo: trả về ngày tháng năm đầy đủ cùng với giờ và phút được thêm vào
+ * @param {*} day ngày không có giờ phút
+ * @param {*} hours hh:mm giờ và phút
+ * @returns 
+ */
+export function concatDayAndHours(day, hours) {
+  let splitHours = hours.split(':');
+  let fullDay = new Date(day);
+  fullDay.setHours(splitHours[0]);
+  fullDay.setMinutes(splitHours[1]);
+  return fullDay;
+}
+
+/**
+ * todo: chuyển dữ liệu trả về từ server thành events mà Calendar nhận
+ * @param {*} listAppointmentDate 
+ * @returns 
+ */
+export function convertAppointmentDateToEvents(listAppointmentDate) {
+  let events = [];
+  for (let index = 0; index < listAppointmentDate.length; index++) {
+    const element = listAppointmentDate[index];
+    events.push({
+      title: element.Patient.fullName,
+      start: concatDayAndHours(element.appointmentDate,element.startTime),
+      end: concatDayAndHours(element.appointmentDate,element.endTime),
+      resourceId: element.idRoom,
+      room: element.RoomOfClinic,
+      service: {...element.ServicesOfClinic, idService: element.idService},
+      status: {...element.StatusOfClinic, idStatus: element.idStatus},
+      doctor: {...element.Doctor, idDoctor: element.idDoctorSchedule},
+      note: element.note,
+      idPatient: element.idPatientSchedule,
+      idSchedule: element.id
+    })
+  }
+  return events;
 }
 
 

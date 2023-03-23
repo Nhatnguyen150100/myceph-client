@@ -20,10 +20,6 @@ function RBCToolbar(props) {
       props.onView("week");
       dispatch(setView(Views.WEEK))
     };
-    const goToMonthView = () => {
-      props.onView("month");
-      dispatch(setView(Views.MONTH))
-    };
 
     const goToBack = () => {
       let view = viewCalendar;
@@ -123,14 +119,6 @@ function RBCToolbar(props) {
           </span>
           <span className="text-uppercase fw-bold mc-color fs-3">{month()}</span>
           <span className="rbc-btn-group d-flex flex-row">
-            <button type="button" disabled={viewCalendar===Views.MONTH} className={`btn ${viewCalendar===Views.MONTH?'mc-pale-background border-0':'btn-primary'} py-1 px-2 rounded d-flex align-items-center`} onClick={goToMonthView}>
-              <span className="material-symbols-outlined me-2 text-white">
-                calendar_month
-              </span>
-              <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
-                {t('View Month')}
-              </span>
-            </button>
             <button type="button" disabled={viewCalendar===Views.WEEK} className={`btn ${viewCalendar===Views.WEEK?'mc-pale-background border-0':'btn-primary'} py-1 px-2 rounded d-flex align-items-center mx-2`} onClick={goToWeekView}>
               <span className="material-symbols-outlined me-2 text-white">
                 date_range

@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Views } from "react-big-calendar";
 
 export const CalendarSlice = createSlice({
   name: 'doctor',
   initialState:{
     viewCalendar: 'BY_DATE',
-    view: Views.DAY,
-    propertiesClinic: null
+    view: 'day',
+    propertiesClinic: null,
+    listAppointmentDate: []
   },
   reducers:{
     setView: (state,action) => {
@@ -18,16 +18,20 @@ export const CalendarSlice = createSlice({
     setPropertiesClinic: (state,action) => {
       state.propertiesClinic = action.payload;
     },
+    setListAppointmentDate: (state,action) => {
+      state.listAppointmentDate = action.payload;
+    },
     clearCalendarSlice: (state) => {
+      state.listAppointmentDate = [];
       state.propertiesClinic = null;
       state.viewCalendar = 'BY_DATE';
-      state.view = Views.DAY;
+      state.view = 'day';
     }
   }
 })
 
 export const {
-  setView,setViewCalendar,setPropertiesClinic,clearCalendarSlice
+  setView,setViewCalendar,setPropertiesClinic,clearCalendarSlice,setListAppointmentDate
 } = CalendarSlice.actions;
 
 export default CalendarSlice.reducer;

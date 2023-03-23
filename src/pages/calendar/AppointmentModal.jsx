@@ -1,14 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
 import { findObjectFromArray, FONT_SIZE, getHoursMinutesSeconds, toISODateString } from "../../common/Utility.jsx";
+import { toast } from "react-toastify";
+import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
+import { deleteToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
+import { refreshToken } from "../../services/refreshToken.jsx";
+import { useNavigate } from "react-router-dom";
+import { setListAppointmentDate } from "../../redux/CalendarSlice.jsx";
+import ConfirmComponent from "../../common/ConfirmComponent.jsx";
 
 
-const AppointmentModal = React.memo((props) => {
+const AppointmentModal = (props) => {
   const {t} = useTranslation();
+  const dispatch = useDispatch();
+  const nav = useNavigate();
   const appointmentModelRef = useRef();
-  const appointmentMode = useRef();
+  const appointmentModal = useRef();
+  const clinic = useSelector(state=>state.clinic);
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const roomOfClinic = useSelector(state => state.calendar.propertiesClinic?.roomOfClinic);
   const servicesOfClinic = useSelector(state => state.calendar.propertiesClinic?.serviceOfClinic);
   const statusOfClinic = useSelector(state => state.calendar.propertiesClinic?.statusOfClinic);
@@ -22,35 +33,146 @@ const AppointmentModal = React.memo((props) => {
   const [statusSelected,setStatusSelected] = useState();
   const [appointmentDate,setAppointmentDate] = useState(toISODateString(new Date()));
   const [timeStart,setTimeStart] = useState();
-  console.log("🚀 ~ file: AppointmentModal.jsx:26 ~ AppointmentModal ~ timeStart:", timeStart)
   const [timeEnd,setTimeEnd] = useState();
-  const [note,setNote] = useState();
+  const [note,setNote] = useState('');
+  const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
+
+  console.log("🚀 ~ file: AppointmentModal.jsx:40 ~ useEffect ~ props.slotInfo:",props.createAppointment)
 
   useEffect(()=>{
     if(props.slotInfo){
+      setRoomSelected(props.slotInfo.resourceId);
       setAppointmentDate(toISODateString(props.slotInfo.start));
       setTimeStart(getHoursMinutesSeconds(props.slotInfo.start));
       setTimeEnd(getHoursMinutesSeconds(props.slotInfo.end));
     }
-  },[props.slotInfo])
+    if(!props.createAppointment && props.slotInfo){
+      setDoctorSelected(props.slotInfo.doctor.idDoctor);
+      setPatientSelected(props.slotInfo.idPatient);
+      setServiceSelected(props.slotInfo.service.idService);
+      setStatusSelected(props.slotInfo.status.idStatus);
+      setNote(props.slotInfo.note);
+    }
+  },[props.slotInfo,props.createAppointment])
+
 
   useEffect(() => {
-    appointmentMode.current = new bootstrap.Modal(appointmentModelRef.current, {});
+    appointmentModal.current = new bootstrap.Modal(appointmentModelRef.current, {});
   }, [])
 
   useEffect(()=>{
-    if(props.showAppointmentModal) appointmentMode.current.show();
+    if(props.showAppointmentModal) appointmentModal.current.show();
     else{
-      appointmentMode.current.hide();
+      appointmentModal.current.hide();
       setDoctorSelected();
       setPatientSelected();
       setServiceSelected();
       setRoomSelected();
+      setAppointmentDate(toISODateString(new Date()));
       setStatusSelected();
-      setNote();
+      setNote('');
     } 
   },[props.showAppointmentModal])
 
+  const createAppointment = () => {
+    if(!patientSelected) toast.error(t('Patient not selected'));
+    else if(!doctorSelected) toast.error(t('Doctor not selected'));
+    else if(!statusSelected) toast.error(t('Status not selected')); 
+    else if(!roomSelected) toast.error(t('Room not selected'));
+    else if(!serviceSelected) toast.error(t('Service not selected'));
+    else if(!timeStart) toast.error(t('Time start is not available'));
+    else if(!timeEnd) toast.error(t('Time end is not available'));
+    else{
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        postToServerWithToken(`/v1/schedule/${clinic.idClinicDefault}`,{
+          idPatientSchedule: patientSelected,
+          idDoctorSchedule: doctorSelected,
+          idStatus: statusSelected,
+          idService: serviceSelected,
+          idRoom: roomSelected,
+          appointmentDate: appointmentDate,
+          startTime: timeStart,
+          endTime: timeEnd,
+          note: note
+        }).then(result => {
+          dispatch(setListAppointmentDate(result.data));
+          toast.success(t(result.message));
+          props.closeModal();
+          resolve();
+        }).catch(err =>{
+          if(err.refreshToken && !isRefresh){
+            refreshToken(nav,dispatch).then(()=>createAppointment());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject();
+        }).finally(()=>dispatch(setLoadingModal(false)));
+      })
+    }
+  }
+
+  const updateAppointment = () =>{
+    if(!patientSelected) toast.error(t('Patient not selected'));
+    else if(!doctorSelected) toast.error(t('Doctor not selected'));
+    else if(!statusSelected) toast.error(t('Status not selected')); 
+    else if(!roomSelected) toast.error(t('Room not selected'));
+    else if(!serviceSelected) toast.error(t('Service not selected'));
+    else if(!timeStart) toast.error(t('Time start is not available'));
+    else if(!timeEnd) toast.error(t('Time end is not available'));
+    else{
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        putToServerWithToken(`/v1/schedule/${clinic.idClinicDefault}?idAppointment=${props.slotInfo.idSchedule}`,{
+          idPatientSchedule: patientSelected,
+          idDoctorSchedule: doctorSelected,
+          idStatus: statusSelected,
+          idService: serviceSelected,
+          idRoom: roomSelected,
+          appointmentDate: appointmentDate,
+          startTime: timeStart,
+          endTime: timeEnd,
+          note: note
+        }).then(result => {
+          dispatch(setListAppointmentDate(result.data));
+          toast.success(t(result.message));
+          props.closeModal();
+          resolve();
+        }).catch(err =>{
+          if(err.refreshToken && !isRefresh){
+            refreshToken(nav,dispatch).then(()=>updateAppointment());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject();
+        }).finally(()=>dispatch(setLoadingModal(false)));
+      })
+    }
+  }
+
+  const deleteAppointment = () => {
+    return new Promise((resolve, reject) =>{
+      dispatch(setLoadingModal(true));
+      deleteToServerWithToken(`/v1/schedule/${clinic.idClinicDefault}?idAppointment=${props.slotInfo.idSchedule}`).then(result => {
+        dispatch(setListAppointmentDate(result.data));
+        toast.success(t(result.message));
+        setOpenDeleteConfirm(false);
+        props.closeModal();
+        resolve();
+      }).catch(err =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>deleteAppointment());
+        }else{
+          toast.error(t(err.message));
+        }
+        reject();
+      }).finally(()=>dispatch(setLoadingModal(false)));
+    })
+  }
+
+  const handleClose = () => {
+    setOpenDeleteConfirm(false);
+  }
 
   return <div className="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={'-1'} aria-labelledby="staticBackdropLabel" aria-hidden="true" ref={appointmentModelRef}>
     <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -87,7 +209,7 @@ const AppointmentModal = React.memo((props) => {
                 }
                 {
                 listDoctors?.map((value,_)=>{
-                  return <option key={value.id} value={value.id}>
+                  return <option key={value.idDoctor} value={value.idDoctor}>
                     {value.fullName} (Email: {value.email})
                   </option>
                 })
@@ -167,11 +289,11 @@ const AppointmentModal = React.memo((props) => {
             <div className="d-flex w-100 flex-grow-1 flex-row mb-4 align-items-center justify-content-between">
               <div className="d-flex flex-column align-items-start justify-content-center">
                 <span className="mc-heading text-capitalize">{t("Time start")}:</span>
-                <input className="mc-gray form-control" type={'time'} value={timeStart} onChange={e=>setTimeStart(e.target.value)} min={'08:00'} max={'18:00'}/>
+                <input className="mc-gray form-control" type={'time'} value={timeStart?timeStart:''} onChange={e=>setTimeStart(e.target.value)} min={'08:00'} max={'18:00'}/>
               </div>
               <div className="d-flex flex-column align-items-start justify-content-center">
                 <span className="mc-heading text-capitalize">{t("Time end")}:</span>
-                <input className="mc-gray form-control" type={'time'} value={timeEnd} onChange={e=>setTimeEnd(e.target.value)} min={'08:00'} max={'18:00'}/>
+                <input className="mc-gray form-control" type={'time'} value={timeEnd?timeEnd:''} onChange={e=>setTimeEnd(e.target.value)} min={'08:00'} max={'18:00'}/>
               </div>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-2">
@@ -180,23 +302,50 @@ const AppointmentModal = React.memo((props) => {
             </div>
           </div>
         </div>
-        <div className="modal-footer">
-          <button type="button" className="btn btn-secondary d-flex align-items-center py-2 px-3" data-bs-dismiss="modal" onClick={props.closeModal}>
-            <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
-              close
-            </span>
-            <span>{t('Close')}</span>
-          </button>
-          <button type="button" className="btn btn-primary d-flex align-items-center py-2 px-3">
-            <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
-              save
-            </span>
-            <span>{props.createAppointment?t('Save'):t('Update')}</span>
-          </button>
+        <div className={`modal-footer d-flex flex-row align-items-center ${props.createAppointment?'justify-content-end':'justify-content-between'}`}>
+          {
+            !props.createAppointment && <button type="button" className="btn btn-danger d-flex align-items-center py-2 px-3" onClick={()=>setOpenDeleteConfirm(true)}>
+              <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
+                delete
+              </span>
+              <span className="text-capitalize">delete</span>
+            </button>
+          }
+          <div className="d-flex flex-row">
+            <button type="button" className="btn btn-secondary d-flex align-items-center py-2 px-3 me-2" data-bs-dismiss="modal" onClick={props.closeModal}>
+              <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
+                close
+              </span>
+              <span>{t('Close')}</span>
+            </button>
+            <button type="button" className="btn btn-primary d-flex align-items-center py-2 px-3" 
+              onClick={()=>{ 
+                if(props.createAppointment) createAppointment()
+                else updateAppointment()
+              }}
+            >
+              <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
+                {props.createAppointment?'save':'update'}
+              </span>
+              <span>{props.createAppointment?t('Save'):t('Update')}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
+    <ConfirmComponent 
+      FONT_SIZE={FONT_SIZE}
+      open={openDeleteConfirm} 
+      title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this appointment')}</span>} 
+      content={
+        <div>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this this appointment, enter the agree button')}</span>
+        </div>
+      }
+      handleClose={e=>handleClose()} 
+      handleSubmit={e=>deleteAppointment()}
+    />
   </div>
-})
+}
 
-export default AppointmentModal;
+export default React.memo(AppointmentModal);

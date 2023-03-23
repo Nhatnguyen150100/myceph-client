@@ -5,7 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import NavbarComponent from "../../component/NavbarComponent.jsx";
 import SoftWareListComponent from "../../component/SoftWareListComponent.jsx";
 import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
-import { FONT_SIZE, VIEW_CALENDAR } from "../../common/Utility.jsx";
+import { convertAppointmentDateToEvents, FONT_SIZE, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { useTranslation } from "react-i18next";
 import RBCToolbar from "./RBCToolbar.jsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,7 @@ import { useLayoutEffect } from "react";
 import SmallCalendar from "./SmallCalendar.jsx";
 import { setViewCalendar } from "../../redux/CalendarSlice.jsx";
 import AppointmentModal from "./AppointmentModal.jsx";
+import CustomEvent from "./CustomEvent.jsx";
 
 export const localizer = momentLocalizer(moment);
 
@@ -23,6 +24,7 @@ export default function BigCalendar(props){
   const view = useSelector(state => state.calendar.view);
   const [currentDay,setCurrentDay] = useState(new Date());
   const selectedTab = useSelector(state => state.calendar.viewCalendar);
+  const listAppointmentDate = useSelector(state => state.calendar.listAppointmentDate);
   const roomsOfClinic = useSelector(state => state.calendar.propertiesClinic?.roomOfClinic);
   const clinic = useSelector(state=>state.clinic);
 
@@ -40,9 +42,30 @@ export default function BigCalendar(props){
     window.clearTimeout(clickRef?.current)
     clickRef.current = window.setTimeout(() => {
       setShowAppointmentModal(true);
+      setIsCreateAppointment(true);
       setSlotInfo(slotInfo);
     }, 200)
   }, [])
+
+  const eventPropGetter = useCallback(
+    event => ({
+      className: "transform-hover"
+      ,
+      style : {
+        backgroundColor: event.status.colorStatus,
+        borderColor: "white"
+      }
+    })
+  ,[])
+
+  const onClickEvent = useCallback(callEvent => {
+    window.clearTimeout(clickRef?.current)
+    clickRef.current = window.setTimeout(() => {
+      setShowAppointmentModal(true);
+      setIsCreateAppointment(false);
+      setSlotInfo(callEvent);
+    }, 200)
+  },[])
 
   const onNavigate = useCallback(newDate => {
     setCurrentDay(newDate);
@@ -59,7 +82,7 @@ export default function BigCalendar(props){
     }
   }, [])
 
-  const { date, formats, messages, views, resources} = useMemo(() => ({
+  const { date, formats, messages, views, resources, events} = useMemo(() => ({
     date: currentDay,
     messages: {
       week: t('Week'),
@@ -81,10 +104,11 @@ export default function BigCalendar(props){
         dayHeaderFormat: (date, culture, localizer) =>
           localizer.format(date, 'dddd DD/MM/YYYY', culture),
     },
-    views: [Views.MONTH,Views.WEEK, Views.DAY],
+    views: [Views.WEEK, Views.DAY],
     // đặt lại tên nameRoom => title theo doc của Calendar resources
-    resources: roomsOfClinic?.map(({id, nameRoom: title}) => ({id, title}))
-  }), [currentDay,roomsOfClinic])
+    resources: roomsOfClinic?.map(({id, nameRoom: title}) => ({id, title})),
+    events: listAppointmentDate.length>0 ? convertAppointmentDateToEvents(listAppointmentDate): []
+  }), [currentDay,roomsOfClinic,listAppointmentDate])
 
   const slotGroupPropGetter = useCallback(
     () => ({
@@ -100,14 +124,19 @@ export default function BigCalendar(props){
       <Calendar
         resources={resources}
         components={{
-          toolbar: RBCToolbar
+          toolbar: RBCToolbar,
+          event: CustomEvent 
         }}
-        min={new Date(1972, 0, 1, 8, 0, 0, 0)}
-        max={new Date(2050, 0, 1, 18, 0, 0, 0)}
+        events={events}
+        eventPropGetter={eventPropGetter}
+        min={new Date(2000, 0, 1, 8, 0, 0, 0)}
+        max={new Date(2100, 0, 1, 18, 0, 0, 0)}
         popup={true}
         selectable={clinic.roleOfDoctor === 'admin'?true:false}
         onSelectSlot={onSelectSlot}
         step={15}
+        onSelectEvent={onClickEvent}
+        timeslots={2}
         slotGroupPropGetter={slotGroupPropGetter}
         drilldownView={view}
         views={views}
@@ -131,7 +160,7 @@ export default function BigCalendar(props){
   }
 
   return <div className="h-100">
-    <AppointmentModal slotInfo={slotInfo} showAppointmentModal={showAppointmentModal} closeModal={()=>setShowAppointmentModal(false)} createAppointment={isCreateAppointment}/>
+    <AppointmentModal slotInfo={slotInfo} showAppointmentModal={showAppointmentModal} closeModal={()=>{setShowAppointmentModal(false);setIsCreateAppointment(true)}} createAppointment={isCreateAppointment}/>
     <div ref={headerRef}>
       <NavbarComponent />
       <ul className="nav nav-tabs">

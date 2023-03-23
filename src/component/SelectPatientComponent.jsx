@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { computeAge, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../common/Utility.jsx";
-import { setPropertiesClinic } from "../redux/CalendarSlice.jsx";
+import { setListAppointmentDate, setPropertiesClinic } from "../redux/CalendarSlice.jsx";
 import { setArrayPatient, setCurrentPatient } from "../redux/PatientSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
@@ -56,6 +56,11 @@ export default function SelectPatientComponent(props) {
     nameSearchTimeout = setTimeout(getAllPatient(e.target.value),300);
   }
 
+  /**
+   * todo: lấy danh sách bệnh nhân 
+   * @param {*} name Tên bệnh nhân cần tìm
+   * @returns 
+   */
   const getAllPatient = (name) => {
     return new Promise((resolve, reject) => {
       getToServerWithToken(`${url}page=${1}&pageSize=${10}&nameSearch=${name?name:''}`).then(result=>{
@@ -70,13 +75,15 @@ export default function SelectPatientComponent(props) {
           setPreviousClinicId(clinic.idClinicDefault);
           if(previousClinicId!==clinic.idClinicDefault) dispatch(setCurrentPatient(result.data[0]));
         }
-        // nếu đang ở lịch thì lấy thêm các thuộc tính của phòng khám hiện tại
+        // nếu đang ở lịch thì lấy thêm các thuộc tính của phòng khám hiện tại và danh sách lịch hẹn
         if(SOFT_WARE_LIST.CALENDAR===softWareSelectedTab){
           getPropertiesClinic();
+          getListAppointmentDate();
         }
         resolve();
       }).catch((err) =>{
         if(err.refreshToken && !isRefresh){
+          reject();
           refreshToken(nav,dispatch).then(()=>getAllPatient(name,getPropertiesClinic));
         }else{
           toast.error(err.message);
@@ -85,6 +92,20 @@ export default function SelectPatientComponent(props) {
       });
     })
   }
+
+  const getListAppointmentDate = () => {
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}`).then(result => {
+        dispatch(setListAppointmentDate(result.data));
+        resolve();
+      }).catch(err =>{
+        if(!err.refreshToken){
+          toast.error(t(err.message));
+        }
+        reject();
+      })
+    })
+  }  
 
   const getPropertiesClinic = () => {
     return new Promise((resolve, reject) => {
