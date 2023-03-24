@@ -153,6 +153,19 @@ export function splitEmail(email) {
 
 
 /**
+ * todo: chuyển từ 24h sang 12h
+ * @param {*} timeString 
+ * @returns 
+ */
+export const timeString12hr = (timeString) => {
+  return new Date('1970-01-01T' + timeString + 'Z')
+  .toLocaleTimeString('en-US',
+    {timeZone:'UTC',hour12:true,hour:'numeric',minute:'numeric'}
+  );
+}
+
+
+/**
  * todo: trả về ngày tháng năm đầy đủ cùng với giờ và phút được thêm vào
  * @param {*} day ngày không có giờ phút
  * @param {*} hours hh:mm giờ và phút
@@ -190,6 +203,29 @@ export function convertAppointmentDateToEvents(listAppointmentDate) {
     })
   }
   return events;
+}
+
+/**
+ * todo: chuyển dữ liệu trả về từ server thành event mà table nhận trong tab BY_PATIENT
+ * @param {*} listAppointmentDate 
+ * @returns 
+ */
+ export function convertAppointmentDateToEvent(appointmentDate) {
+  let event;
+  event = {
+    title: appointmentDate.Patient.fullName,
+    start: concatDayAndHours(appointmentDate.appointmentDate,appointmentDate.startTime),
+    end: concatDayAndHours(appointmentDate.appointmentDate,appointmentDate.endTime),
+    resourceId: appointmentDate.idRoom,
+    room: appointmentDate.RoomOfClinic,
+    service: {...appointmentDate.ServicesOfClinic, idService: appointmentDate.idService},
+    status: {...appointmentDate.StatusOfClinic, idStatus: appointmentDate.idStatus},
+    doctor: {...appointmentDate.Doctor, idDoctor: appointmentDate.idDoctorSchedule},
+    note: appointmentDate.note,
+    idPatient: appointmentDate.idPatientSchedule,
+    idSchedule: appointmentDate.id
+  }
+  return event;
 }
 
 

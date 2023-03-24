@@ -5,16 +5,21 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import NavbarComponent from "../../component/NavbarComponent.jsx";
 import SoftWareListComponent from "../../component/SoftWareListComponent.jsx";
 import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
-import { convertAppointmentDateToEvents, FONT_SIZE, VIEW_CALENDAR } from "../../common/Utility.jsx";
+import { convertAppointmentDateToEvent, convertAppointmentDateToEvents, convertISOToVNDateString, FONT_SIZE, timeString12hr, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { useTranslation } from "react-i18next";
 import RBCToolbar from "./RBCToolbar.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import { useLayoutEffect } from "react";
 import SmallCalendar from "./SmallCalendar.jsx";
-import { setViewCalendar } from "../../redux/CalendarSlice.jsx";
+import { setListAppointmentDate, setViewCalendar } from "../../redux/CalendarSlice.jsx";
 import AppointmentModal from "./AppointmentModal.jsx";
 import CustomEvent from "./CustomEvent.jsx";
+import { getToServerWithToken } from "../../services/getAPI.jsx";
+import { toast } from "react-toastify";
+import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
+import { refreshToken } from "../../services/refreshToken.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const localizer = momentLocalizer(moment);
 
@@ -22,11 +27,14 @@ export default function BigCalendar(props){
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const view = useSelector(state => state.calendar.view);
-  const [currentDay,setCurrentDay] = useState(new Date());
+  const currentPatient = useSelector(state=>state.patient.currentPatient);
   const selectedTab = useSelector(state => state.calendar.viewCalendar);
   const listAppointmentDate = useSelector(state => state.calendar.listAppointmentDate);
   const roomsOfClinic = useSelector(state => state.calendar.propertiesClinic?.roomOfClinic);
   const clinic = useSelector(state=>state.clinic);
+  const doctor = useSelector(state=>state.doctor.data);
+  const isRefresh = useSelector(state=>state.general.isRefresh);
+  const nav = useNavigate();
 
   const headerRef = useRef(null);
   const clickRef = useRef(null);
@@ -35,8 +43,27 @@ export default function BigCalendar(props){
   const [showAppointmentModal,setShowAppointmentModal] = useState(false);
   const [isCreateAppointment,setIsCreateAppointment] = useState(true);
   const [slotInfo,setSlotInfo] = useState();
-  
+  const [currentDay,setCurrentDay] = useState(new Date());
+
   let currentTab = null;
+
+  const getListAppointmentDateByMode = (idPatient) => {
+    dispatch(setLoadingModal(true));
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient?currentPatient.id:''}`).then(result => {
+        dispatch(setListAppointmentDate(result.data));
+        resolve();
+      }).catch((err) =>{
+        if(err.refreshToken && !isRefresh){
+          reject();
+          refreshToken(nav,dispatch).then(()=>getListAppointmentDateByMode(idPatient));
+        }else{
+          toast.error(err.message);
+        }
+        reject(err);
+      }).finally(()=>dispatch(setLoadingModal(false)));
+    })
+  } 
 
   const onSelectSlot = useCallback(slotInfo => {
     window.clearTimeout(clickRef?.current)
@@ -153,14 +180,60 @@ export default function BigCalendar(props){
       />
     break;
     case VIEW_CALENDAR.BY_PATIENT: currentTab = <div className="col-md-9">
-        patient
+        <table className="table table-bordered text-center rounded">
+          <thead className="text-uppercase text-gray fw-bold" style={{fontSize:FONT_SIZE}}>
+            <tr>
+              <th style={{width:"30px"}}>
+                STT
+              </th>
+              <th style={{width:"160px"}}>
+                {t('appointment date')}
+              </th>
+              <th style={{width:"180px"}}>
+                {t('time date')}
+              </th>
+              <th style={{width:"350px"}}>
+                {t('doctor')}
+              </th>
+              <th>
+                {t('service')}
+              </th>
+            </tr>
+          </thead>
+          <tbody className="body-table">
+            {
+              listAppointmentDate?.map((appoint,index)=>{
+                return <tr className="transform-hover-small" key={appoint.id} style={{backgroundColor:appoint.ServicesOfClinic.colorService,cursor:"pointer"}} onClick={()=>onClickEvent(convertAppointmentDateToEvent(appoint))}>
+                  <td className="text-white" style={{fontSize:FONT_SIZE}}>
+                    {index+1}
+                  </td>
+                  <td className="text-white" style={{fontSize:FONT_SIZE}}>
+                    {convertISOToVNDateString(toISODateString(new Date(appoint.appointmentDate)))}
+                  </td>
+                  <td className="text-white" style={{fontSize:FONT_SIZE}}>
+                    {timeString12hr(appoint.startTime) + ' - ' + timeString12hr(appoint.endTime)}
+                  </td>
+                  <td>
+                    <button type="button" className="text-white btn w-100 p-0 border-0 d-flex flex-row justify-content-center align-items-center" style={{fontSize:FONT_SIZE}}>
+                      <span>{appoint.Doctor.fullName}</span>
+                      <span className="ms-2">({appoint.Doctor.email})</span>
+                    </button>
+                  </td>
+                  <td className="text-white" style={{fontSize:FONT_SIZE}}>
+                    {appoint.ServicesOfClinic.nameService}
+                  </td>
+                </tr>
+              })
+            }
+          </tbody>
+        </table>
       </div>
     break;
     default: currentTab = <div>null</div>
   }
 
   return <div className="h-100">
-    <AppointmentModal slotInfo={slotInfo} showAppointmentModal={showAppointmentModal} closeModal={()=>{setShowAppointmentModal(false);setIsCreateAppointment(true)}} createAppointment={isCreateAppointment}/>
+    <AppointmentModal getListAppointmentDateByMode={()=>getListAppointmentDateByMode(true)} slotInfo={slotInfo} showAppointmentModal={showAppointmentModal} closeModal={()=>{setShowAppointmentModal(false);setIsCreateAppointment(true)}} createAppointment={isCreateAppointment}/>
     <div ref={headerRef}>
       <NavbarComponent />
       <ul className="nav nav-tabs">
@@ -169,7 +242,7 @@ export default function BigCalendar(props){
             type="button" 
             className={`px-2 py-1 btn-outline-secondary nav-link ${selectedTab===VIEW_CALENDAR.BY_DATE?'active':'btn-hover-bg'} ms-3 d-flex align-items-center`} 
             style={{fontSize:FONT_SIZE}}
-            onClick={()=>dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE))}
+            onClick={()=>{dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));getListAppointmentDateByMode(false)}}
           >
             <span className="material-symbols-outlined me-2 mc-color">
               event_note
@@ -178,11 +251,11 @@ export default function BigCalendar(props){
           </button>
         </li>
         <li className="nav-item">
-        <button 
+          <button 
             type="button" 
             className={`px-2 py-1 btn-outline-secondary nav-link ${selectedTab===VIEW_CALENDAR.BY_PATIENT?'active':'btn-hover-bg'} d-flex align-items-center`} 
             style={{fontSize:FONT_SIZE}}
-            onClick={()=>dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT))}
+            onClick={()=>{dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));getListAppointmentDateByMode(true)}}
           >
             <span className="material-symbols-outlined me-2 mc-color">
               person
@@ -217,9 +290,9 @@ export default function BigCalendar(props){
         </div>
       </div>
     </div>
-    <div className="row mx-2 border-top pt-2">
+    <div className={`row ${selectedTab === VIEW_CALENDAR.BY_DATE?'mx-2 pt-2':'me-2'} border-top`}>
       {currentTab}
-      <div className="col-md-3">
+      <div className={`col-md-3 ${selectedTab !== VIEW_CALENDAR.BY_DATE && 'pt-2'}`}>
         <SmallCalendar currentDay={currentDay} setCurrentDay={value => setCurrentDay(value)}/>
       </div>
     </div>

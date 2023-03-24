@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
-import { findObjectFromArray, FONT_SIZE, getHoursMinutesSeconds, toISODateString } from "../../common/Utility.jsx";
+import { findObjectFromArray, FONT_SIZE, getHoursMinutesSeconds, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { toast } from "react-toastify";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
@@ -25,6 +25,7 @@ const AppointmentModal = (props) => {
   const statusOfClinic = useSelector(state => state.calendar.propertiesClinic?.statusOfClinic);
   const listDoctors = useSelector(state => state.calendar.propertiesClinic?.doctor);
   const listPatients = useSelector(state => state.patient.arrayPatients);
+  const selectedTabCalendar = useSelector(state => state.calendar.viewCalendar);
 
   const [doctorSelected,setDoctorSelected] = useState();
   const [patientSelected,setPatientSelected] = useState();
@@ -36,8 +37,6 @@ const AppointmentModal = (props) => {
   const [timeEnd,setTimeEnd] = useState();
   const [note,setNote] = useState('');
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
-
-  console.log("🚀 ~ file: AppointmentModal.jsx:40 ~ useEffect ~ props.slotInfo:",props.createAppointment)
 
   useEffect(()=>{
     if(props.slotInfo){
@@ -82,6 +81,9 @@ const AppointmentModal = (props) => {
     else if(!serviceSelected) toast.error(t('Service not selected'));
     else if(!timeStart) toast.error(t('Time start is not available'));
     else if(!timeEnd) toast.error(t('Time end is not available'));
+    else if(timeStart<='08:00') toast.error(t('Time start must be greater 08:00 AM'));
+    else if(timeEnd>='18:00') toast.error(t('Time end cannot be greater 06:00 PM'));
+    else if(timeStart>=timeEnd) toast.error(t('Time end must be greater to timeStart'));
     else{
       return new Promise((resolve, reject) =>{
         dispatch(setLoadingModal(true));
@@ -120,6 +122,9 @@ const AppointmentModal = (props) => {
     else if(!serviceSelected) toast.error(t('Service not selected'));
     else if(!timeStart) toast.error(t('Time start is not available'));
     else if(!timeEnd) toast.error(t('Time end is not available'));
+    else if(timeStart<='08:00') toast.error(t('Time start must be greater 08:00 AM'));
+    else if(timeEnd>='18:00') toast.error(t('Time end cannot be greater 06:00 PM'));
+    else if(timeStart>=timeEnd) toast.error(t('Time end must be greater to timeStart'));
     else{
       return new Promise((resolve, reject) =>{
         dispatch(setLoadingModal(true));
@@ -134,7 +139,8 @@ const AppointmentModal = (props) => {
           endTime: timeEnd,
           note: note
         }).then(result => {
-          dispatch(setListAppointmentDate(result.data));
+          if(selectedTabCalendar === VIEW_CALENDAR.BY_PATIENT) props.getListAppointmentDateByMode();
+          else dispatch(setListAppointmentDate(result.data));
           toast.success(t(result.message));
           props.closeModal();
           resolve();
@@ -172,6 +178,7 @@ const AppointmentModal = (props) => {
 
   const handleClose = () => {
     setOpenDeleteConfirm(false);
+    appointmentModal.current.show();
   }
 
   return <div className="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={'-1'} aria-labelledby="staticBackdropLabel" aria-hidden="true" ref={appointmentModelRef}>
@@ -304,7 +311,7 @@ const AppointmentModal = (props) => {
         </div>
         <div className={`modal-footer d-flex flex-row align-items-center ${props.createAppointment?'justify-content-end':'justify-content-between'}`}>
           {
-            !props.createAppointment && <button type="button" className="btn btn-danger d-flex align-items-center py-2 px-3" onClick={()=>setOpenDeleteConfirm(true)}>
+            !props.createAppointment && <button type="button" className="btn btn-danger d-flex align-items-center py-2 px-3" data-bs-dismiss="modal" onClick={()=>setOpenDeleteConfirm(true)}>
               <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
                 delete
               </span>

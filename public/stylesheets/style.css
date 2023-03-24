@@ -115,6 +115,16 @@
   transform: scale(1.03);
 }
 
+.transform-hover-small:hover{
+  transition-duration: 0.5s;
+  transform: scaleX(1.02);
+}
+
+.body-table:hover > :not(:hover){
+  transition-duration: 0.5s;
+  opacity: .3;
+}
+
 .standout {
   animation: crescendo 0.5s alternate infinite;
 }

@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import { convertISOToVNDateString, FONT_SIZE, SELECT_PATIENT_MODE, SOFT_WARE_LIST, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
-import { setViewCalendar } from "../../redux/CalendarSlice.jsx";
+import { setListAppointmentDate, setViewCalendar } from "../../redux/CalendarSlice.jsx";
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setSettingTab, setSoftWareSelectedTab } from "../../redux/GeneralSlice.jsx";
 import { setCurrentPatient, setSelectPatientOnMode } from "../../redux/PatientSlice.jsx";
@@ -20,6 +20,7 @@ export default function PatientRows(props){
   const {t} = useTranslation();
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const clinic = useSelector(state=>state.clinic);
+  const doctor = useSelector(state=>state.doctor.data);
   const selectedTab = useSelector(state=>state.general.patientListTab);
   const [listOfDoctorSharedPatient,setListOfDoctorSharedPatient] = useState([]);
   const dispatch = useDispatch();
@@ -52,6 +53,20 @@ export default function PatientRows(props){
     dispatch(setSelectPatientOnMode(props.selectPatientMode));
     dispatch(setSoftWareSelectedTab(tab));
     dispatch(setCurrentPatient(props.patient));
+  }
+
+  const getListAppointmentDate = (idPatient='') => {
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient}`).then(result => {
+        dispatch(setListAppointmentDate(result.data));
+        resolve();
+      }).catch(err =>{
+        if(!err.refreshToken){
+          toast.error(t(err.message));
+        }
+        reject();
+      })
+    })
   }
 
   return <tr className={`align-middle hover-font-weight`}>
@@ -87,6 +102,7 @@ export default function PatientRows(props){
         <Link title={t("Calendar")} to={`${(props.selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && props.selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT)?'/schedule':'#'}`} className="btn btn-outline-info p-1 border-0 me-2 mb-2" onClick={e=>{
           if(props.selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && props.selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT){
             dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
+            getListAppointmentDate(props.patient.id)
             onToSoftWare(SOFT_WARE_LIST.CALENDAR);
           }else toast.warning(t('Schedule is available for this patient in clinic!'));
         }}>

@@ -2,13 +2,49 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { SOFT_WARE_LIST } from "../common/Utility.jsx";
+import { toast } from "react-toastify";
+import { SELECT_PATIENT_MODE, SOFT_WARE_LIST, VIEW_CALENDAR } from "../common/Utility.jsx";
+import { setListAppointmentDate, setPropertiesClinic, setViewCalendar } from "../redux/CalendarSlice.jsx";
 import { setSoftWareSelectedTab } from "../redux/GeneralSlice.jsx";
+import { getToServerWithToken } from "../services/getAPI.jsx";
 
 export default function SoftWareListComponent(props){
   const softWareSelectedTab = useSelector(state=>state.general.softWareSelectedTab);
   const {t} = useTranslation();
   const dispatch = useDispatch();
+  const clinic = useSelector(state=>state.clinic);
+  const doctor = useSelector(state=>state.doctor.data);
+  const currentPatient = useSelector(state=>state.patient.currentPatient);
+  const selectPatientMode = useSelector(state=>state.patient.selectPatientOnMode);
+  const propertiesClinic = useSelector(state=>state.patient.propertiesClinic);
+
+  const getPropertiesClinic = () => {
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/schedule/getPropertiesClinic/${clinic.idClinicDefault}`).then(result => {
+        dispatch(setPropertiesClinic(result.data));
+        resolve();
+      }).catch(err =>{
+        if(!err.refreshToken){
+          toast.error(t(err.message));
+        }
+        reject();
+      })
+    })
+  }  
+
+  const getListAppointmentDate = (idPatient='') => {
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient}`).then(result => {
+        dispatch(setListAppointmentDate(result.data));
+        resolve();
+      }).catch(err =>{
+        if(!err.refreshToken){
+          toast.error(t(err.message));
+        }
+        reject();
+      })
+    })
+  }
 
   return <div className="d-flex justify-content-start align-items-center my-2">
     {
@@ -47,7 +83,14 @@ export default function SoftWareListComponent(props){
         <img src="/assets/images/CalendarNew_active.png" width="34" height="34" alt="MedicalRecord"/>
       </div>
       :
-      <Link title={t("Calendar")} className="btn btn-outline-info p-1 me-3 border-0">
+      <Link title={t("Calendar")} to={`${(selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT)?'/schedule':'#'}`} className="btn btn-outline-info p-1 me-3 border-0" onClick={e=>{
+        if(selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT){          
+          if(!propertiesClinic) getPropertiesClinic().then(getListAppointmentDate(currentPatient.id))
+          else getListAppointmentDate(currentPatient.id);
+          dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR));
+          dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
+        }else toast.warning(t('Schedule is available for this patient in clinic!'));
+      }}>
         <img src="/assets/images/CalendarNew.png" width="34" height="34" alt="MedicalRecord"/>
       </Link>
     }

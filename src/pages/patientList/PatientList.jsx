@@ -41,6 +41,7 @@ export default function PatientList(props){
 
   const addNewPatient = () => {
     if(!newPatientName) toast.error(t('Name of patient is required'))
+    else if(new Date(newPatientBirthday)>=new Date()) toast.error(t('Date of birth cannot be greater than the current date'))
     else return new Promise((resolve, reject) => {
       let patientObject = null;
       if(selectedTab===0){

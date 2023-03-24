@@ -166,7 +166,7 @@ export default function MyPatient(props){
           <p className="fst-italic m-0 text-danger" style={{fontSize:FONT_SIZE}}>{t("ATTENTION: All patient data including records and image will be deleted")}</p>
         </div>
       } 
-      label={t('Id doctor')}
+      label={t('Id patient')}
       handleClose={handleClose} 
       handleSubmit={value=>deletePatient(value)}
     />
