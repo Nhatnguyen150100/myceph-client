@@ -70,7 +70,7 @@ export default function SelectPatientComponent(props) {
         dispatch(setArrayPatient(result.data));
         setCount(result.count);
         if(result.count===0){
-          toast.warning(t('This clinic has no patients'));
+          toast.warning(t('Cannot found patient'));
           dispatch(setListAppointmentDate([]));
         } 
         if(!currentPatient) dispatch(setCurrentPatient(result.data[0]));

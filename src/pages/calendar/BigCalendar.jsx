@@ -243,6 +243,7 @@ export default function BigCalendar(props){
             className={`px-2 py-1 btn-outline-secondary nav-link ${selectedTab===VIEW_CALENDAR.BY_DATE?'active':'btn-hover-bg'} ms-3 d-flex align-items-center`} 
             style={{fontSize:FONT_SIZE}}
             onClick={()=>{dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));getListAppointmentDateByMode(false)}}
+            disabled={selectedTab===VIEW_CALENDAR.BY_DATE}
           >
             <span className="material-symbols-outlined me-2 mc-color">
               event_note
@@ -256,6 +257,7 @@ export default function BigCalendar(props){
             className={`px-2 py-1 btn-outline-secondary nav-link ${selectedTab===VIEW_CALENDAR.BY_PATIENT?'active':'btn-hover-bg'} d-flex align-items-center`} 
             style={{fontSize:FONT_SIZE}}
             onClick={()=>{dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));getListAppointmentDateByMode(true)}}
+            disabled={selectedTab===VIEW_CALENDAR.BY_PATIENT}
           >
             <span className="material-symbols-outlined me-2 mc-color">
               person
