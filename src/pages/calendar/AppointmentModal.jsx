@@ -98,7 +98,8 @@ const AppointmentModal = (props) => {
           endTime: timeEnd,
           note: note
         }).then(result => {
-          dispatch(setListAppointmentDate(result.data));
+          if(selectedTabCalendar === VIEW_CALENDAR.BY_PATIENT) props.getListAppointmentDateByMode();
+          else dispatch(setListAppointmentDate(result.data));
           toast.success(t(result.message));
           props.closeModal();
           resolve();
@@ -160,7 +161,8 @@ const AppointmentModal = (props) => {
     return new Promise((resolve, reject) =>{
       dispatch(setLoadingModal(true));
       deleteToServerWithToken(`/v1/schedule/${clinic.idClinicDefault}?idAppointment=${props.slotInfo.idSchedule}`).then(result => {
-        dispatch(setListAppointmentDate(result.data));
+        if(selectedTabCalendar === VIEW_CALENDAR.BY_PATIENT) props.getListAppointmentDateByMode();
+        else dispatch(setListAppointmentDate(result.data));
         toast.success(t(result.message));
         setOpenDeleteConfirm(false);
         props.closeModal();

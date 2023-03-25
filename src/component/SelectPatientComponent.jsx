@@ -4,8 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { computeAge, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE, SOFT_WARE_LIST, VIEW_CALENDAR } from "../common/Utility.jsx";
-import { setListAppointmentDate, setPropertiesClinic } from "../redux/CalendarSlice.jsx";
+import { computeAge, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../common/Utility.jsx";
 import { setArrayPatient, setCurrentPatient } from "../redux/PatientSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
@@ -21,11 +20,8 @@ export default function SelectPatientComponent(props) {
   const softWareSelectedTab = useSelector(state=>state.general.softWareSelectedTab);
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic);
-  const selectedTabCalendar = useSelector(state => state.calendar.viewCalendar);
   const currentPatient = useSelector(state=>state.patient.currentPatient);
-  const propertiesClinic = useSelector(state => state.calendar.propertiesClinic);
   const selectPatientOnMode = useSelector(state=>state.patient.selectPatientOnMode);
-  const listAppointmentDate = useSelector(state => state.calendar.listAppointmentDate);
   const [nameSearch,setNameSearch] = useState('');
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -69,22 +65,12 @@ export default function SelectPatientComponent(props) {
       getToServerWithToken(`${url}page=${1}&pageSize=${10}&nameSearch=${name?name:''}`).then(result=>{
         dispatch(setArrayPatient(result.data));
         setCount(result.count);
-        if(result.count===0){
-          toast.warning(t('Cannot found patient'));
-          dispatch(setListAppointmentDate([]));
-        } 
+        if(result.count===0) toast.warning(t('Cannot found patient'));
         if(!currentPatient) dispatch(setCurrentPatient(result.data[0]));
         // chuyển bệnh nhân trong cùng 1 phòng khám thì không bị reset lại currentPatient
         if(clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)){
           setPreviousClinicId(clinic.idClinicDefault);
-          if(previousClinicId!==clinic.idClinicDefault){
-            dispatch(setCurrentPatient(result.data[0]));
-          }
-          if(previousClinicId!==clinic.idClinicDefault && VIEW_CALENDAR.BY_PATIENT && result.data[0]) getListAppointmentDate(result.data[0].id);
-        }
-        // nếu đang ở lịch thì lấy thêm các thuộc tính của phòng khám hiện tại và danh sách lịch hẹn
-        if(SOFT_WARE_LIST.CALENDAR===softWareSelectedTab && selectedTabCalendar === VIEW_CALENDAR.BY_DATE && !propertiesClinic){
-          getPropertiesClinic().then(getListAppointmentDate());
+          if(previousClinicId!==clinic.idClinicDefault) dispatch(setCurrentPatient(result.data[0]));
         }
         resolve();
       }).catch((err) =>{
@@ -97,35 +83,7 @@ export default function SelectPatientComponent(props) {
         reject(err);
       });
     })
-  }
-
-  const getListAppointmentDate = (idPatient='') => {
-    return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient?idPatient:(selectedTabCalendar===VIEW_CALENDAR.BY_PATIENT?currentPatient?.id:'')}`).then(result => {
-        dispatch(setListAppointmentDate(result.data));
-        resolve();
-      }).catch(err =>{
-        if(!err.refreshToken){
-          toast.error(t(err.message));
-        }
-        reject();
-      })
-    })
-  }  
-
-  const getPropertiesClinic = () => {
-    return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/schedule/getPropertiesClinic/${clinic.idClinicDefault}`).then(result => {
-        dispatch(setPropertiesClinic(result.data));
-        resolve();
-      }).catch(err =>{
-        if(!err.refreshToken){
-          toast.error(t(err.message));
-        }
-        reject();
-      })
-    })
-  }    
+  }   
 
   return <div className="d-flex flex-row justify-content-between align-items-center">
     {
@@ -146,7 +104,7 @@ export default function SelectPatientComponent(props) {
             </div>
             {
               arrayPatients?.map((patient,index) => {
-                return <button onClick={e=>{dispatch(setCurrentPatient(patient));getListAppointmentDate(patient.id)}} key={patient.id} style={{background:`${index%2!==0&&'#f7f7f7'}`}} type="button" className="btn btn-hover-bg text-capitalize py-1 m-0 d-flex flex-column flex-grow-1 justify-content-center align-items-center w-100">
+                return <button onClick={e=>dispatch(setCurrentPatient(patient))} key={patient.id} style={{background:`${index%2!==0&&'#f7f7f7'}`}} type="button" className="btn btn-hover-bg text-capitalize py-1 m-0 d-flex flex-column flex-grow-1 justify-content-center align-items-center w-100">
                   <span>{patient.fullName}</span>
                   <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
                     <div className="w-auto d-flex flex-row align-items-center justify-content-start">

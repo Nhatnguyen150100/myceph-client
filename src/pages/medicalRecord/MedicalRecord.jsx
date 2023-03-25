@@ -37,8 +37,6 @@ export default function MedicalRecord(props){
     if(!doctor.data?.id) nav('/login');
   },[])
 
-  console.log("🚀 ~ file: MedicalRecord.jsx:53 ~ MedicalRecord ~ selectPatientOnMode:", selectPatientOnMode)
-
   useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t(SOFT_WARE_LIST.MEDICAL_RECORD)}`));
   },[])

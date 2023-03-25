@@ -165,6 +165,8 @@ export const timeString12hr = (timeString) => {
 }
 
 
+
+
 /**
  * todo: trả về ngày tháng năm đầy đủ cùng với giờ và phút được thêm vào
  * @param {*} day ngày không có giờ phút
@@ -177,6 +179,50 @@ export function concatDayAndHours(day, hours) {
   fullDay.setHours(splitHours[0]);
   fullDay.setMinutes(splitHours[1]);
   return fullDay;
+}
+
+export function getServicesDataForChart(listAppointmentDate,id,mode,quarter){
+  // 4 data tương ứng với 4 tháng của 1 quý
+  let data1 = 0;
+  let data2 = 0;
+  let data3 = 0;
+  if(quarter === "quarter1"){
+    for (let index = 0; index < listAppointmentDate.length; index++) {
+      const element = listAppointmentDate[index];
+      if(element[mode] !== id) continue;
+      if((new Date(element.appointmentDate).getMonth()+1) === 1) data1++;
+      else if((new Date(element.appointmentDate).getMonth()+1) === 2){
+        console.log(element.appointmentDate);
+        data2++;
+      }
+      else if((new Date(element.appointmentDate).getMonth()+1) === 3) data3++;
+    }
+  }else if(quarter === "quarter2"){
+    for (let index = 0; index < listAppointmentDate.length; index++) {
+      const element = listAppointmentDate[index];
+      if(element[mode] !== id) continue;
+      if((new Date(element.appointmentDate).getMonth()+1) === 4) data1++;
+      else if((new Date(element.appointmentDate).getMonth()+1) === 5) data2++;
+      else if((new Date(element.appointmentDate).getMonth()+1) === 6) data3++;
+    }
+  }else if(quarter === "quarter3"){
+    for (let index = 0; index < listAppointmentDate.length; index++) {
+      const element = listAppointmentDate[index];
+      if(element[mode] !== id) continue;
+      if((new Date(element.appointmentDate).getMonth()+1) === 7) data1++;
+      else if((new Date(element.appointmentDate).getMonth()+1) === 8) data2++;
+      else if((new Date(element.appointmentDate).getMonth()+1) === 9) data3++;
+    }
+  }else{
+    for (let index = 0; index < listAppointmentDate.length; index++) {
+      const element = listAppointmentDate[index];
+      if(element[mode] !== [id]) continue;
+      if((new Date(element.appointmentDate).getMonth()+1) === 10) data1++;
+      else if((new Date(element.appointmentDate).getMonth()+1) === 11) data2++;
+      else if((new Date(element.appointmentDate).getMonth()+1) === 12) data3++;
+    }
+  }
+  return [data1,data2,data3];
 }
 
 /**

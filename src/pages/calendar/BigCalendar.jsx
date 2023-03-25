@@ -5,21 +5,22 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import NavbarComponent from "../../component/NavbarComponent.jsx";
 import SoftWareListComponent from "../../component/SoftWareListComponent.jsx";
 import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
-import { convertAppointmentDateToEvent, convertAppointmentDateToEvents, convertISOToVNDateString, FONT_SIZE, timeString12hr, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
+import { convertAppointmentDateToEvent, convertAppointmentDateToEvents, convertISOToVNDateString, FONT_SIZE, SOFT_WARE_LIST, timeString12hr, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { useTranslation } from "react-i18next";
 import RBCToolbar from "./RBCToolbar.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import { useLayoutEffect } from "react";
 import SmallCalendar from "./SmallCalendar.jsx";
-import { setListAppointmentDate, setViewCalendar } from "../../redux/CalendarSlice.jsx";
+import { setListAppointmentDate, setPropertiesClinic, setViewCalendar } from "../../redux/CalendarSlice.jsx";
 import AppointmentModal from "./AppointmentModal.jsx";
 import CustomEvent from "./CustomEvent.jsx";
 import { getToServerWithToken } from "../../services/getAPI.jsx";
 import { toast } from "react-toastify";
-import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
+import { setAppName, setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import { useNavigate } from "react-router-dom";
+import ChartSection from "./ChartSection.jsx";
 
 export const localizer = momentLocalizer(moment);
 
@@ -32,6 +33,7 @@ export default function BigCalendar(props){
   const listAppointmentDate = useSelector(state => state.calendar.listAppointmentDate);
   const roomsOfClinic = useSelector(state => state.calendar.propertiesClinic?.roomOfClinic);
   const clinic = useSelector(state=>state.clinic);
+  const propertiesClinic = useSelector(state => state.calendar.propertiesClinic);
   const doctor = useSelector(state=>state.doctor.data);
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const nav = useNavigate();
@@ -44,8 +46,78 @@ export default function BigCalendar(props){
   const [isCreateAppointment,setIsCreateAppointment] = useState(true);
   const [slotInfo,setSlotInfo] = useState();
   const [currentDay,setCurrentDay] = useState(new Date());
+  const [sortMode,setSortMode] = useState(null);
+  const [listAppointmentDateOnSort,setListAppointmentDateOnSort] = useState([]);
 
   let currentTab = null;
+
+  useEffect(()=>{
+    dispatch(setAppName(`Myceph - ${t(SOFT_WARE_LIST.CALENDAR)}`));
+  },[])
+  
+  useLayoutEffect(()=>{
+    // đặt chiều cao của Calendar
+    setHeightCalendar(window.innerHeight - headerRef.current.clientHeight - 20);
+  },[])
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(clickRef?.current)
+    }
+  }, [])
+
+  useEffect(()=>{
+    if(currentPatient?.id){
+      if(!propertiesClinic) getPropertiesClinic().then(getListAppointmentDate());
+      else getListAppointmentDate();
+    }else dispatch(setListAppointmentDate([]));
+  },[currentPatient])
+
+  const onSortAppointmentDate = (condition) => {
+    if(listAppointmentDateOnSort.length === 0){
+      const indexList = [...listAppointmentDate];
+      indexList.sort((a,b) =>{
+        if(condition==='ASC'?(new Date(a.appointmentDate) > new Date(b.appointmentDate)):(new Date(a.appointmentDate) < new Date(b.appointmentDate))) return -1;
+        else return 1
+      })
+      setListAppointmentDateOnSort(indexList);
+    }else{
+      const indexList = [...listAppointmentDateOnSort];
+      indexList.sort((a,b) =>{
+        if(condition==='ASC'?(new Date(a.appointmentDate) > new Date(b.appointmentDate)):(new Date(a.appointmentDate) < new Date(b.appointmentDate))) return -1;
+        else return 1
+      })
+      setListAppointmentDateOnSort(indexList);
+    }
+  }
+
+  const getListAppointmentDate = () => {
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${selectedTab===VIEW_CALENDAR.BY_PATIENT?currentPatient?.id:''}`).then(result => {
+        dispatch(setListAppointmentDate(result.data));
+        resolve();
+      }).catch(err =>{
+        if(!err.refreshToken){
+          toast.error(t(err.message));
+        }
+        reject();
+      })
+    })
+  }  
+
+  const getPropertiesClinic = () => {
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/schedule/getPropertiesClinic/${clinic.idClinicDefault}`).then(result => {
+        dispatch(setPropertiesClinic(result.data));
+        resolve();
+      }).catch(err =>{
+        if(!err.refreshToken){
+          toast.error(t(err.message));
+        }
+        reject();
+      })
+    })
+  }  
 
   const getListAppointmentDateByMode = (idPatient) => {
     dispatch(setLoadingModal(true));
@@ -79,7 +151,7 @@ export default function BigCalendar(props){
       className: "transform-hover"
       ,
       style : {
-        backgroundColor: event.status.colorStatus,
+        backgroundColor: event.service.colorService,
         borderColor: "white"
       }
     })
@@ -97,17 +169,6 @@ export default function BigCalendar(props){
   const onNavigate = useCallback(newDate => {
     setCurrentDay(newDate);
   },[])
-
-  useLayoutEffect(()=>{
-    // đặt chiều cao của Calendar
-    setHeightCalendar(window.innerHeight - headerRef.current.clientHeight - 20);
-  },[])
-
-  useEffect(() => {
-    return () => {
-      window.clearTimeout(clickRef?.current)
-    }
-  }, [])
 
   const { date, formats, messages, views, resources, events} = useMemo(() => ({
     date: currentDay,
@@ -179,15 +240,33 @@ export default function BigCalendar(props){
         style={{height:heightCalendar}}
       />
     break;
-    case VIEW_CALENDAR.BY_PATIENT: currentTab = <div className="col-md-9">
+    case VIEW_CALENDAR.BY_PATIENT: currentTab = <div className="col-md-9" style={{height:heightCalendar,overflow:"auto"}}>
         <table className="table table-bordered text-center rounded">
           <thead className="text-uppercase text-gray fw-bold" style={{fontSize:FONT_SIZE}}>
             <tr>
               <th style={{width:"30px"}}>
                 STT
               </th>
-              <th style={{width:"160px"}}>
-                {t('appointment date')}
+              <th style={{width:"200px"}}>
+                <button className="btn btn-hover-bg border-0 p-0 w-100 d-flex align-items-center justify-content-center" type="button" onClick={()=>{
+                  if(!sortMode){
+                    setSortMode('ASC');
+                    onSortAppointmentDate('ASC');
+                  }else if(sortMode==='ASC'){
+                    setSortMode('DESC');
+                    onSortAppointmentDate('DESC');
+                  }else{
+                    setSortMode(null);
+                    onSortAppointmentDate([]);
+                  }
+                }}>
+                  <span className="text-uppercase text-gray fw-bold" style={{fontSize:FONT_SIZE}}>{t('appointment date')}</span>
+                  {
+                    sortMode && <span className="material-symbols-outlined ms-2 mc-color fw-bold">
+                      {sortMode==='ASC'?'arrow_drop_down':'arrow_drop_up'}
+                    </span>
+                  }
+                </button>
               </th>
               <th style={{width:"180px"}}>
                 {t('time date')}
@@ -201,8 +280,8 @@ export default function BigCalendar(props){
             </tr>
           </thead>
           <tbody className="body-table">
-            {
-              listAppointmentDate?.map((appoint,index)=>{
+            {  
+              (sortMode ? listAppointmentDateOnSort : listAppointmentDate)?.map((appoint,index)=>{
                 return <tr className="transform-hover-small" key={appoint.id} style={{backgroundColor:appoint.ServicesOfClinic.colorService,cursor:"pointer"}} onClick={()=>onClickEvent(convertAppointmentDateToEvent(appoint))}>
                   <td className="text-white" style={{fontSize:FONT_SIZE}}>
                     {index+1}
@@ -294,8 +373,9 @@ export default function BigCalendar(props){
     </div>
     <div className={`row ${selectedTab === VIEW_CALENDAR.BY_DATE?'mx-2 pt-2':'me-2'} border-top`}>
       {currentTab}
-      <div className={`col-md-3 ${selectedTab !== VIEW_CALENDAR.BY_DATE && 'pt-2'}`}>
+      <div className={`col-md-3 d-flex flex-column align-items-center justify-content-between ${selectedTab !== VIEW_CALENDAR.BY_DATE && 'pt-2'}`}>
         <SmallCalendar currentDay={currentDay} setCurrentDay={value => setCurrentDay(value)}/>
+        <ChartSection currentDay={currentDay}/>
       </div>
     </div>
   </div>
