@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextAreaFieldInput from "../../../common/TextAreaFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
@@ -24,7 +25,7 @@ export default function TreatmentPlan(props){
 
   const [plan,setPlan] = useState();
   const [selected,setSelected] = useState(false);
-
+  const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
   const [editPlanId,setEditPlanId] = useState();
   const [planItem,setPlanItem] = useState();
@@ -81,46 +82,43 @@ export default function TreatmentPlan(props){
   }
 
 
-  const updatePlan = (idPlan) => {
+  const updatePlan = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      putToServerWithToken(`/v1/treatmentPlan/updatePlan/${patient.currentPatient.id}?idPlan=${idPlan}`,{
+      putToServerWithToken(`/v1/treatmentPlan/updatePlan/${patient.currentPatient.id}?idPlan=${editPlanId}`,{
         idDoctor: doctor.data.id,
         plan: planItem,
         selected: selectedItem
       }).then(result => {
         setListOfPlan(result.data);
-        setEditPlanId();
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>updatePlan(idPlan));
+          refreshToken(nav,dispatch).then(()=>updatePlan());
         }else{
           toast.error(err.message);
         }
         reject();
-      }).finally(()=>dispatch(setLoadingModal(false)));
+      }).finally(()=>{dispatch(setLoadingModal(false));setEditPlanId()});
     })
   }
 
-  const deletePlan = (idPlan) => {
-    if(window.confirm(t('Are you sure you want to delete this plan'))){
-      dispatch(setLoadingModal(true));
-      return new Promise((resolve, reject) =>{
-        deleteToServerWithToken(`/v1/treatmentPlan/deletePlan/${patient.currentPatient.id}?idPlan=${idPlan}`).then(result => {
-          setListOfPlan(result.data);
-          toast.success(result.message);
-          resolve();
-        }).catch(err =>{
-          if(err.refreshToken && !isRefresh){
-            refreshToken(nav,dispatch).then(()=>deletePlan(idPlan));
-          }else{
-            toast.error(err.message);
-          }
-          reject();
-        }).finally(()=>dispatch(setLoadingModal(false)));
-      })
-    }
+  const deletePlan = () => {
+    dispatch(setLoadingModal(true));
+    return new Promise((resolve, reject) =>{
+      deleteToServerWithToken(`/v1/treatmentPlan/deletePlan/${patient.currentPatient.id}?idPlan=${editPlanId}`).then(result => {
+        setListOfPlan(result.data);
+        toast.success(result.message);
+        resolve();
+      }).catch(err =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>deletePlan());
+        }else{
+          toast.error(err.message);
+        }
+        reject();
+      }).finally(()=>{dispatch(setLoadingModal(false));setEditPlanId('');setOpenDeleteConfirm(false)});
+    })
   }
 
   const setSelectedPlan = (idPlan) => {
@@ -206,8 +204,8 @@ export default function TreatmentPlan(props){
                     {
                       editPlanId===plan.id ?
                       <div className="d-flex flex-row justify-content-end align-items-center">
-                        <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>deletePlan(plan.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
-                        <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updatePlan(plan.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
+                        <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>setOpenDeleteConfirm(true)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
+                        <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updatePlan()} FONT_SIZE_ICON={"20px"} title={t("save")}/>
                         <IconButtonComponent className="btn-outline-danger" onClick={()=>{setEditPlanId('');getListOfPlan()}} icon="close" FONT_SIZE_ICON={"20px"} title={t("cancel")}/>
                       </div>
                       :
@@ -245,5 +243,17 @@ export default function TreatmentPlan(props){
           })
         }
       </div>
+      <ConfirmComponent 
+      FONT_SIZE={FONT_SIZE}
+      open={openDeleteConfirm} 
+      title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this treatment plan')}</span>} 
+      content={
+        <div>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this treatment plan, enter the agree button')}</span>
+        </div>
+      }
+      handleClose={e=>setOpenDeleteConfirm(false)} 
+      handleSubmit={e=>deletePlan()}
+    />
   </div>
 }

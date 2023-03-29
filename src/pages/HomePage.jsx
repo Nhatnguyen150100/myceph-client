@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { disConnectIndexDB, getData, onOpenIndexDB } from "../common/ConnectIndexDB.jsx";
 import { cookies } from "../common/Utility.jsx";
 import NavbarComponent from "../component/NavbarComponent.jsx";
 import { setArrayClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
+import { setEncryptKey } from "../redux/DoctorSlice.jsx";
 import { setAppName } from "../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
@@ -45,6 +47,17 @@ export default function HomePage(props) {
       getAllClinicAndSetDefault();
     }
   },[])
+
+  useEffect(()=>{
+    let indexDB = null;
+    onOpenIndexDB().then(db=>{
+      indexDB = db;
+      getData(db,doctor.id).then(data => 
+        dispatch(setEncryptKey({key: data.key, iv: data.iv}))
+      )
+    }).finally(()=>disConnectIndexDB(indexDB));
+  },[])
+
   return <div className="d-flex flex-column justify-content-center align-items-center h-100 w-100">
     <NavbarComponent />
     <div className="h-100 w-100" style={{

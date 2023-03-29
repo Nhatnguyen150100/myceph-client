@@ -67,11 +67,8 @@ export default function PatientList(props){
         setNewPatientBirthday(toISODateString(new Date()));
         setNewGenderPatient('male');
         setNewNotePatient('');
-        if(selectedTab===0){
-          dispatch(setGetAllPatientDoctor(true));
-        }else{
-          dispatch(setGetAllPatientClinic(true));
-        } 
+        if(selectedTab===0) dispatch(setGetAllPatientDoctor(true));
+        else dispatch(setGetAllPatientClinic(true)); 
         toast.success(result.message)
         resolve();
         }).catch((err) =>{

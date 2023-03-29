@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { FONT_SIZE } from "../../../common/Utility.jsx";
 import { setClinicSettingTab } from "../../../redux/GeneralSlice.jsx";
+import ClinicEncryptionManagement from "./ClinicEncryptionManagement.jsx";
 import MemberOfClinic from "./MemberOfClinic.jsx";
 import Myclinic from "./Myclinic.jsx";
 import RoomSetting from "./RoomSetting.jsx";
@@ -26,6 +27,8 @@ export default function ClinicSetting(props){
     case 3: currentTab = <ServicesSetting />;
       break;
     case 4: currentTab = <StatusSetting />;
+      break;
+    case 5: currentTab = <ClinicEncryptionManagement />;
       break;
     default : currentTab = <div>error</div>
   }
@@ -52,8 +55,13 @@ export default function ClinicSetting(props){
           </button>
         }
         {
-          clinic.idClinicDefault && <button type="button" className={`btn px-3 py-0 text-white-hover ${selectedTab===4?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setClinicSettingTab(4))}>
+          clinic.idClinicDefault && <button type="button" className={`btn me-1 px-3 py-0 text-white-hover ${selectedTab===4?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setClinicSettingTab(4))}>
             <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{t('status of clinic')}</span>
+          </button>
+        }
+        {
+          clinic.idClinicDefault && <button type="button" className={`btn px-3 py-0 text-white-hover ${selectedTab===5?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setClinicSettingTab(5))}>
+            <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{t('Encryption management')}</span>
           </button>
         }
       </div>

@@ -50,11 +50,11 @@ export default function PatientOfClinic(props){
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
     if(clinic.roleOfDoctor==='admin'){
-      nameSearchTimeout = setTimeout(getAllPaitentForClinic,500,e.target.value);
+      nameSearchTimeout = setTimeout(getAllPatientForClinic,500,e.target.value);
     }else nameSearchTimeout = setTimeout(getSharedPatientOfDoctorInClinic,500,e.target.value);
   }
 
-  const getAllPaitentForClinic = (name) => {
+  const getAllPatientForClinic = (name) => {
     return new Promise((resolve, reject) => {
       setLoadingSearch(true);
       getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.idClinicDefault}?page=${page}&pageSize=${PAGE_SIZE}&nameSearch=${name?name:''}`).then(result=>{
@@ -65,7 +65,7 @@ export default function PatientOfClinic(props){
         resolve();
       }).catch((err) =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>getAllPaitentForClinic(name));
+          refreshToken(nav,dispatch).then(()=>getAllPatientForClinic(name));
         }else{
           toast.error(err.message);
         }
@@ -104,7 +104,7 @@ export default function PatientOfClinic(props){
       return new Promise((resolve, reject) => {
         dispatch(setLoadingModal(true));
         deleteToServerWithToken(`/v1/patient/deletePatient/${idPatient}`).then(result=>{
-          getAllPaitentForClinic().then(()=>{
+          getAllPatientForClinic().then(()=>{
             toast.success(result.message);
             resolve();
           });
@@ -119,12 +119,12 @@ export default function PatientOfClinic(props){
   }
 
   useEffect(()=>{
-    if(clinic.idClinicDefault && clinic.roleOfDoctor==='admin') getAllPaitentForClinic();
+    if(clinic.idClinicDefault && clinic.roleOfDoctor==='admin') getAllPatientForClinic();
     if(clinic.idClinicDefault && clinic.roleOfDoctor==='member') getSharedPatientOfDoctorInClinic();
   },[page,clinic.idClinicDefault])
 
   useEffect(()=>{
-    if(getAllPatientClinic) getAllPaitentForClinic();
+    if(getAllPatientClinic) getAllPatientForClinic();
   },[getAllPatientClinic])
 
   return <div className="h-100 w-100 container">

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import NavbarComponent from "../component/NavbarComponent.jsx";
 
-export default function NotFoundPgae(props){
+export default function NotFoundPage(props){
   const {t} = useTranslation();
 
   return <div className="h-100 w-100 container-fluid">

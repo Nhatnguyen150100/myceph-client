@@ -32,10 +32,25 @@ export default function RadiographyImages(props){
 
   const [consultationDate,setConsultationDate] = useState(toISODateString(new Date()));
   const [listImage,setListImage] = useState({});
+  const [isLoadImage,setIsLoadImage] = useState(true);
 
   useEffect(()=>{
     if(props.patient.currentPatient.id) getListImage();
   },[props.patient.currentPatient.id])
+
+  useEffect(()=>{
+    if(isLoadImage) dispatch(setLoadingModal(true));
+  },[isLoadImage])
+
+  const onLoad = () => {
+    setIsLoadImage(false);
+    dispatch(setLoadingModal(false));
+  }
+
+  const onError = () => {
+    setIsLoadImage(false);
+    dispatch(setLoadingModal(false));
+  }
 
   const getListImage = () => {
     return new Promise((resolve, reject) => {
@@ -289,6 +304,8 @@ export default function RadiographyImages(props){
                     <img 
                       className="me-4 transform-hover w-auto" 
                       src={splitAvatar(image.linkImage)} 
+                      onLoad={onLoad}
+                      onError={onError}
                       style={{maxHeight:"250px",cursor:"pointer"}}
                       alt={t(IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.name)} 
                       onClick={e=>dispatch(setCurrentImage(splitAvatar(image.linkImage)))}

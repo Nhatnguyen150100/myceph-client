@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextAreaFieldInput from "../../../common/TextAreaFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
@@ -33,6 +34,7 @@ export default function Issue(props){
   const [treatmentObjectItem,setTreatmentObjectItem] = useState();
   const [treatmentMethodItem,setTreatmentMethodItem] = useState();
   const [priotizedItem,setPriotizedItem] = useState();
+  const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
   const [listOfIssue,setListOfIssue] = useState();
 
@@ -88,10 +90,10 @@ export default function Issue(props){
   }
 
 
-  const updateIssue = (idIssue) => {
+  const updateIssue = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      putToServerWithToken(`/v1/listOfIssue/updateIssue/${patient.currentPatient.id}?idIssue=${idIssue}`,{
+      putToServerWithToken(`/v1/listOfIssue/updateIssue/${patient.currentPatient.id}?idIssue=${editIssueId}`,{
         idDoctor: doctor.data.id,
         issue: issueItem,
         treatmentObject: treatmentObjectItem,
@@ -99,38 +101,35 @@ export default function Issue(props){
         priotized: priotizedItem
       }).then(result => {
         setListOfIssue(result.data);
-        setEditIssueId();
         toast.success(result.message);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>updateIssue(idIssue));
+          refreshToken(nav,dispatch).then(()=>updateIssue());
         }else{
           toast.error(err.message);
         }
         reject();
-      }).finally(()=>dispatch(setLoadingModal(false)));
+      }).finally(()=>{setEditIssueId('');dispatch(setLoadingModal(false))});
     })
   }
 
-  const deleteIssue = (idIssue) => {
-    if(window.confirm(t('Are you sure you want to delete this issue'))){
-      dispatch(setLoadingModal(true));
-      return new Promise((resolve, reject) =>{
-        deleteToServerWithToken(`/v1/listOfIssue/deleteIssue/${patient.currentPatient.id}?idIssue=${idIssue}`).then(result => {
-          setListOfIssue(result.data);
-          toast.success(result.message);
-          resolve();
-        }).catch(err =>{
-          if(err.refreshToken && !isRefresh){
-            refreshToken(nav,dispatch).then(()=>deleteIssue(idIssue));
-          }else{
-            toast.error(err.message);
-          }
-          reject();
-        }).finally(()=>dispatch(setLoadingModal(false)));
-      })
-    }
+  const deleteIssue = () => {
+    dispatch(setLoadingModal(true));
+    return new Promise((resolve, reject) =>{
+      deleteToServerWithToken(`/v1/listOfIssue/deleteIssue/${patient.currentPatient.id}?idIssue=${editIssueId}`).then(result => {
+        setListOfIssue(result.data);
+        toast.success(result.message);
+        resolve();
+      }).catch(err =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>deleteIssue());
+        }else{
+          toast.error(err.message);
+        }
+        reject();
+      }).finally(()=>{dispatch(setLoadingModal(false));setEditIssueId('');setOpenDeleteConfirm(false)});
+    })
   }
 
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1">
@@ -238,8 +237,8 @@ export default function Issue(props){
                   {
                     editIssueId===issue.id ?
                     <div className="d-flex flex-row justify-content-end align-items-center">
-                      <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>deleteIssue(issue.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
-                      <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updateIssue(issue.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
+                      <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>setOpenDeleteConfirm(true)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
+                      <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updateIssue()} FONT_SIZE_ICON={"20px"} title={t("save")}/>
                       <IconButtonComponent className="btn-outline-danger" onClick={()=>setEditIssueId('')} icon="close" FONT_SIZE_ICON={"20px"} title={t("cancel")}/>
                     </div>
                     :
@@ -311,5 +310,17 @@ export default function Issue(props){
         })
       }
     </div>
+    <ConfirmComponent 
+      FONT_SIZE={FONT_SIZE}
+      open={openDeleteConfirm} 
+      title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this issue')}</span>} 
+      content={
+        <div>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this issue, enter the agree button')}</span>
+        </div>
+      }
+      handleClose={e=>setOpenDeleteConfirm(false)} 
+      handleSubmit={e=>deleteIssue()}
+    />
   </div>
 }

@@ -20,7 +20,7 @@ export default function SmallCalendar(props) {
   }
 
   const tileContent = useCallback(({date,activeStartDate}) => {
-    return (checkDateIsEvent(date) || checkDateIsEvent(activeStartDate)) ? <img className='position-absolute top-0 end-0' src='/assets/icons/notification.png' alt='event' style={{height:"18px"}}/> : null 	
+    return (checkDateIsEvent(date) || checkDateIsEvent(activeStartDate)) ? <img className='position-absolute top-0 end-0' src='/assets/icons/notification.png' alt='event' style={{height:"14px"}}/> : null 	
   },[listAppointmentDate])
 
   const tileClassName = useCallback(({date,activeStartDate})=>{
@@ -37,7 +37,7 @@ export default function SmallCalendar(props) {
             {t(label)}
           </span>
         }}
-        activeStartDate={props.currentDay}
+        // activeStartDate={props.currentDay}
         className={'border-0 w-100'}
         onChange={date => props.setCurrentDay(date)}
         value={props.currentDay}

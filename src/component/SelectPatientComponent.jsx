@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { computeAge, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../common/Utility.jsx";
 import { setArrayPatient, setCurrentPatient } from "../redux/PatientSlice.jsx";
@@ -13,8 +13,10 @@ import SelectClinicComponent from "./SelectClinicComponent.jsx";
 let nameSearchTimeout = null;
 const FONT_TEXT = '14px';
 
-export default function SelectPatientComponent(props) {
+const SelectPatientComponent = (props) => {
   const {t} = useTranslation();
+  const location = useLocation();
+  console.log("🚀 ~ file: SelectPatientComponent.jsx:19 ~ SelectPatientComponent ~ location:", location)
   const arrayPatients = useSelector(state=>state.patient.arrayPatients);
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const softWareSelectedTab = useSelector(state=>state.general.softWareSelectedTab);
@@ -46,7 +48,7 @@ export default function SelectPatientComponent(props) {
   }
 
   useEffect(()=>{
-    if(clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)) getAllPatient();
+    if(clinic.idClinicDefault && previousClinicId!==clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)) getAllPatient();
   },[clinic.idClinicDefault])    
   
   const onNameSearchChange = e => {
@@ -60,12 +62,12 @@ export default function SelectPatientComponent(props) {
    * @param {*} name Tên bệnh nhân cần tìm
    * @returns 
    */
-  const getAllPatient = (name) => {
+  const getAllPatient = useCallback((name) => {
     return new Promise((resolve, reject) => {
       getToServerWithToken(`${url}page=${1}&pageSize=${10}&nameSearch=${name?name:''}`).then(result=>{
         dispatch(setArrayPatient(result.data));
         setCount(result.count);
-        if(result.count===0) toast.warning(t('Cannot found patient'));
+        if(result.count===0 && location.pathname !== '/setting') toast.warning(t('Cannot found patient'));
         if(!currentPatient) dispatch(setCurrentPatient(result.data[0]));
         // chuyển bệnh nhân trong cùng 1 phòng khám thì không bị reset lại currentPatient
         if(clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)){
@@ -83,7 +85,7 @@ export default function SelectPatientComponent(props) {
         reject(err);
       });
     })
-  }   
+  },[currentPatient?.id,clinic?.idClinicDefault])   
 
   return <div className="d-flex flex-row justify-content-between align-items-center">
     {
@@ -135,3 +137,5 @@ export default function SelectPatientComponent(props) {
     <SelectClinicComponent condition={props.condition} />
   </div>
 }
+
+export default React.memo(SelectPatientComponent);

@@ -3,15 +3,12 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   Title,
   Tooltip,
   Legend,
   BarElement,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { faker } from '@faker-js/faker';
 import SelectFieldInput from '../../common/SelectFieldInput.jsx';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -72,7 +69,7 @@ export default function ChartSection(props){
   
 
   const data = useMemo(()=>{
-    if(typeChart==='idService'){
+    if(typeChart==='idService' && propertiesClinic){
       return {
         labels : quarter?.value,
         datasets: propertiesClinic?.serviceOfClinic.map((service,_) => {
@@ -83,7 +80,7 @@ export default function ChartSection(props){
           }
         })
       }
-    }else{
+    }else if(propertiesClinic){
       return {
         labels : quarter?.value,
         datasets: propertiesClinic?.statusOfClinic.map((status,_) => {
@@ -93,6 +90,11 @@ export default function ChartSection(props){
             backgroundColor: status.colorStatus
           }
         })
+      }
+    }else{
+      return {
+        labels: [],
+        datasets: []
       }
     }
   },[quarter,propertiesClinic,listAppointmentDate,typeChart]) 

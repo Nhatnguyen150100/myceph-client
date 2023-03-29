@@ -6,11 +6,15 @@ export const DoctorSlice = createSlice({
   name: 'doctor',
   initialState:{
     data: null,
-    otherEmailDoctor: null
+    otherEmailDoctor: null,
+    encryptKey: null
   },
   reducers:{
     setDataDoctor: (state,action) => {
       state.data = action.payload;
+    },
+    setEncryptKey: (state,action) => {
+      state.encryptKey = action.payload;
     },
     logOutDoctor: (state) => {
       storage.removeItem('persist:root');
@@ -18,6 +22,7 @@ export const DoctorSlice = createSlice({
       cookies.remove('refreshToken', {path: '/'});
       state.data = null;
       state.otherEmailDoctor = null;
+      state.encryptKey = null;
     },
     setOtherEmailDoctor: (state,action) => {
       state.otherEmailDoctor = action.payload
@@ -26,7 +31,7 @@ export const DoctorSlice = createSlice({
 })
 
 export const {
-  setDataDoctor,logOutDoctor,setOtherEmailDoctor
+  setDataDoctor,logOutDoctor,setOtherEmailDoctor,setEncryptKey
 } = DoctorSlice.actions;
 
 export default DoctorSlice.reducer;

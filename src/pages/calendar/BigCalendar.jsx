@@ -33,7 +33,6 @@ export default function BigCalendar(props){
   const listAppointmentDate = useSelector(state => state.calendar.listAppointmentDate);
   const roomsOfClinic = useSelector(state => state.calendar.propertiesClinic?.roomOfClinic);
   const clinic = useSelector(state=>state.clinic);
-  const propertiesClinic = useSelector(state => state.calendar.propertiesClinic);
   const doctor = useSelector(state=>state.doctor.data);
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const nav = useNavigate();
@@ -67,47 +66,27 @@ export default function BigCalendar(props){
   }, [])
 
   useEffect(()=>{
-    if(currentPatient?.id){
-      if(!propertiesClinic) getPropertiesClinic().then(getListAppointmentDate());
-      else getListAppointmentDate();
-    }else dispatch(setListAppointmentDate([]));
-  },[currentPatient])
+    getPropertiesClinic().then(()=>{
+      if(selectedTab===VIEW_CALENDAR.BY_DATE) getListAppointmentDateByMode(false);
+      else getListAppointmentDateByMode(true);
+    });
+  },[currentPatient,clinic.idClinicDefault])
 
   const onSortAppointmentDate = (condition) => {
-    if(listAppointmentDateOnSort.length === 0){
-      const indexList = [...listAppointmentDate];
-      indexList.sort((a,b) =>{
-        if(condition==='ASC'?(new Date(a.appointmentDate) > new Date(b.appointmentDate)):(new Date(a.appointmentDate) < new Date(b.appointmentDate))) return -1;
-        else return 1
-      })
-      setListAppointmentDateOnSort(indexList);
-    }else{
-      const indexList = [...listAppointmentDateOnSort];
-      indexList.sort((a,b) =>{
-        if(condition==='ASC'?(new Date(a.appointmentDate) > new Date(b.appointmentDate)):(new Date(a.appointmentDate) < new Date(b.appointmentDate))) return -1;
-        else return 1
-      })
-      setListAppointmentDateOnSort(indexList);
-    }
-  }
-
-  const getListAppointmentDate = () => {
-    return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${selectedTab===VIEW_CALENDAR.BY_PATIENT?currentPatient?.id:''}`).then(result => {
-        dispatch(setListAppointmentDate(result.data));
-        resolve();
-      }).catch(err =>{
-        if(!err.refreshToken){
-          toast.error(t(err.message));
-        }
-        reject();
-      })
+    const indexList = [...listAppointmentDate];
+    indexList.sort((a,b) =>{
+      if(condition==='ASC'?(new Date(a.appointmentDate) > new Date(b.appointmentDate)):(new Date(a.appointmentDate) < new Date(b.appointmentDate))) return -1;
+      else return 1
     })
+    setListAppointmentDateOnSort(indexList);
   }  
 
   const getPropertiesClinic = () => {
     return new Promise((resolve, reject) => {
       getToServerWithToken(`/v1/schedule/getPropertiesClinic/${clinic.idClinicDefault}`).then(result => {
+        if(result.data?.roomOfClinic.length === 0) toast.warning(t('This clinic does not have any room'));
+        else if(result.data?.serviceOfClinic.length === 0) toast.warning(t('This clinic does not have any service'));
+        else if(result.data?.statusOfClinic.length === 0) toast.warning(t('This clinic does not have any status'));
         dispatch(setPropertiesClinic(result.data));
         resolve();
       }).catch(err =>{
@@ -120,9 +99,9 @@ export default function BigCalendar(props){
   }  
 
   const getListAppointmentDateByMode = (idPatient) => {
-    dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient?currentPatient.id:''}`).then(result => {
+      dispatch(setLoadingModal(true));
+      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient?currentPatient?.id:''}`).then(result => {
         dispatch(setListAppointmentDate(result.data));
         resolve();
       }).catch((err) =>{

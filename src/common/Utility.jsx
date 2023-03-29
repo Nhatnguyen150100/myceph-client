@@ -7,7 +7,14 @@ import { clearGeneralSlice } from '../redux/GeneralSlice.jsx';
 import { clearPatientSlice } from '../redux/PatientSlice.jsx';
 import { clearImageSlice } from '../redux/LibraryImageSlice.jsx';
 import { clearCalendarSlice } from '../redux/CalendarSlice.jsx';
- 
+import { toast } from 'react-toastify';
+const { Buffer } = require('buffer');
+
+// Đảm bảo rằng đối tượng Buffer được định nghĩa đúng cách trong môi trường trình duyệt
+if (typeof window !== 'undefined') {
+  window.Buffer = Buffer;
+}
+
 export const cookies = new Cookies();
 
 export const SITE_KEY_RECAPTCHA = '6LdjIm8kAAAAAFhR2XpewgD4_t-aSsES5cTjNr5L';
@@ -134,9 +141,11 @@ export function getHoursMinutesSeconds(date){
  * @returns Object cần tìm trong array
  */
 export const findObjectFromArray = (array, idObject) =>{
-  for (let index = 0; index < array.length; index++) {
-    const element = array[index];
-    if(element.id === idObject) return element;
+  if(array){
+    for (let index = 0; index < array.length; index++) {
+      const element = array[index];
+      if(element.id === idObject) return element;
+    }
   }
 }
 
@@ -164,9 +173,6 @@ export const timeString12hr = (timeString) => {
   );
 }
 
-
-
-
 /**
  * todo: trả về ngày tháng năm đầy đủ cùng với giờ và phút được thêm vào
  * @param {*} day ngày không có giờ phút
@@ -181,6 +187,15 @@ export function concatDayAndHours(day, hours) {
   return fullDay;
 }
 
+
+/**
+ * todo: lấy dữ diệu tương ứng theo từng quý ( 3 tháng 1 )
+ * @param {*} listAppointmentDate Danh sách lịch hẹn
+ * @param {*} id id của service hoặc status
+ * @param {*} mode service hoặc status
+ * @param {*} quarter quý trong 1 năm: quarter1, quarter2, quarter3, quarter4
+ * @returns [data1,data2,data3,data4]
+ */
 export function getServicesDataForChart(listAppointmentDate,id,mode,quarter){
   // 4 data tương ứng với 4 tháng của 1 quý
   let data1 = 0;
@@ -192,7 +207,6 @@ export function getServicesDataForChart(listAppointmentDate,id,mode,quarter){
       if(element[mode] !== id) continue;
       if((new Date(element.appointmentDate).getMonth()+1) === 1) data1++;
       else if((new Date(element.appointmentDate).getMonth()+1) === 2){
-        console.log(element.appointmentDate);
         data2++;
       }
       else if((new Date(element.appointmentDate).getMonth()+1) === 3) data3++;
@@ -272,6 +286,15 @@ export function convertAppointmentDateToEvents(listAppointmentDate) {
     idSchedule: appointmentDate.id
   }
   return event;
+}
+
+export async function readPEMFile(filePath) {
+  try {
+    const response = await axios.get(filePath);
+    return response.data;
+  } catch (error) {
+    toast.error(error);
+  }
 }
 
 

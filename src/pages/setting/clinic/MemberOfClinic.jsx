@@ -23,6 +23,7 @@ let emailSearchTimeout = null;
 export default function MemberOfClinic(props){
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic);
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const [listDoctor,setListDoctor] = useState([]);
   const [nameSearch,setNameSearch] = useState('');
   const [listEmailSearch,setListEmailSearch] = useState([]);
@@ -63,7 +64,13 @@ export default function MemberOfClinic(props){
     }else{
       getToServerWithToken(`/v1/doctor/getAllDoctorFromEmailSearch/${email}?currentEmailDoctor=${doctor.email}`).then(result=>{
         setListEmailSearch(result.data);
-      }).catch(err => console.log(err));
+      }).catch(err =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>getAllEmailSearch(email));
+        }else{
+          toast.error(err.message);
+        }
+      })
     }
   }
 
@@ -85,10 +92,10 @@ export default function MemberOfClinic(props){
     });
   }
 
-  const onChangeRoleOfDoctor = (idDoctor,roleOfdoctor) => {
+  const onChangeRoleOfDoctor = (idDoctor,roleDoctor) => {
     setOpenConfirm(true);
     setIdDoctorUpdate(idDoctor);
-    setRoleDoctorUpdate(roleOfdoctor);
+    setRoleDoctorUpdate(roleDoctor);
   }
 
   const onDeleteHandle = (idDoctor) =>{
@@ -108,11 +115,16 @@ export default function MemberOfClinic(props){
           setIdDoctorUpdate('');
           setRoleDoctorUpdate('');
         });
+        toast.success(t(response.message));
         resolve();
       }).catch((err) => {
-        toast.error(t(err.message));
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>updateRoleOfDoctor());
+        }else{
+          toast.error(t(err.message));
+        }
         reject(err.message);
-      }).finally(() => dispatch(setLoadingModal(false)))
+      }).finally(() =>dispatch(setLoadingModal(false)));
     });
   }
 
@@ -130,9 +142,13 @@ export default function MemberOfClinic(props){
           });
           resolve();
         }).catch((err) => {
-          toast.error(t(err.message));
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>updateRoleOfDoctor());
+          }else{
+            toast.error(t(err.message));
+          }
           reject(err.message);
-        }).finally(() => dispatch(setLoadingModal(false)))
+        }).finally(() =>dispatch(setLoadingModal(false)));
       });
     }
   }
@@ -152,9 +168,13 @@ export default function MemberOfClinic(props){
             resolve()
           });
         }).catch((err) => {
-          toast.error(t(err.message));
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>updateRoleOfDoctor());
+          }else{
+            toast.error(t(err.message));
+          }
           reject(err.message);
-        }).finally(() => dispatch(setLoadingModal(false)))
+        }).finally(() =>dispatch(setLoadingModal(false)));
       }
     });
   }
@@ -242,7 +262,7 @@ export default function MemberOfClinic(props){
               <tbody>{listDoctor.map((doctor, index) => <DoctorRows key={index} stt={index} doctor={doctor} changeRoleOfDoctor={(idDoctor,roleOfDoctor)=>onChangeRoleOfDoctor(idDoctor,roleOfDoctor)} deleteDoctorFromClinic={onDeleteHandle}/>)}</tbody>
               <tfoot className="align-middle">
                 <tr>
-                  <td colSpan={8} align='center'>
+                  <td colSpan={9} align='center'>
                     <div className="d-flex flex-grow-1 justify-content-center">
                     <Pagination 
                         count={Math.ceil(count/PAGE_SIZE) || 0}

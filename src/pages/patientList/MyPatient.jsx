@@ -34,10 +34,10 @@ export default function MyPatient(props){
   const onNameSearchChange = e => {
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
-    nameSearchTimeout = setTimeout(getAllPaitentForDoctor,500,e.target.value);
+    nameSearchTimeout = setTimeout(getAllPatientForDoctor,500,e.target.value);
   }
 
-  const getAllPaitentForDoctor = (name) => {
+  const getAllPatientForDoctor = (name) => {
     return new Promise((resolve, reject) => {
       setLoadingSearch(true);
       getToServerWithToken(`/v1/patient/getPatientListForDoctor/${doctor.id}?page=${page}&pageSize=${PAGE_SIZE}&nameSearch=${name?name:''}`).then(result=>{
@@ -48,7 +48,7 @@ export default function MyPatient(props){
         resolve();
       }).catch((err) =>{
         if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>getAllPaitentForDoctor(name));
+          refreshToken(nav,dispatch).then(()=>getAllPatientForDoctor(name));
         }else{
           toast.error(err.message);
         }
@@ -65,7 +65,7 @@ export default function MyPatient(props){
       return new Promise((resolve, reject) => {
         dispatch(setLoadingModal(true));
         deleteToServerWithToken(`/v1/patient/deletePatient/${idPatient}`).then(result=>{
-          getAllPaitentForDoctor().then(()=>{
+          getAllPatientForDoctor().then(()=>{
             toast.success(result.message);
             resolve();
           });
@@ -84,12 +84,12 @@ export default function MyPatient(props){
   }
 
   useEffect(()=>{
-    if(doctor) getAllPaitentForDoctor();
+    if(doctor) getAllPatientForDoctor();
     else nav('/login');
   },[page])
 
   useEffect(()=>{
-    if(getAllPatientDoctor) getAllPaitentForDoctor();
+    if(getAllPatientDoctor) getAllPatientForDoctor();
   },[getAllPatientDoctor])
 
   const handleClose = () => {

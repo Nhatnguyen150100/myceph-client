@@ -193,7 +193,13 @@ const AppointmentModal = (props) => {
           <div className="d-flex flex-column justify-content-center align-items-start">
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
               <span className="mc-heading text-capitalize">{t("Patient")}:</span>
-              <select className="form-select w-100 text-gray" style={{fontSize:FONT_SIZE}} value={patientSelected} onChange={e=>setPatientSelected(e.target.value)}>
+              <select 
+                className="form-select w-100 text-gray" 
+                style={{fontSize:FONT_SIZE}} 
+                value={patientSelected} 
+                onChange={e=>setPatientSelected(e.target.value)}
+                disabled={clinic.roleOfDoctor==='member'}
+              >
                 {
                   !patientSelected && <option selected disabled>
                     {t('Choose a patient')}
@@ -210,7 +216,13 @@ const AppointmentModal = (props) => {
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
               <span className="mc-heading text-capitalize">{t("Doctor")}:</span>
-              <select className="form-select w-100 text-gray" style={{fontSize:FONT_SIZE}} value={doctorSelected} onChange={e=>setDoctorSelected(e.target.value)}>
+              <select 
+                className="form-select w-100 text-gray" 
+                style={{fontSize:FONT_SIZE}} 
+                value={doctorSelected} 
+                onChange={e=>setDoctorSelected(e.target.value)}
+                disabled={clinic.roleOfDoctor==='member'}
+              >
                 {
                   !doctorSelected && <option selected disabled>
                     {t('Choose a doctor')}
@@ -231,7 +243,13 @@ const AppointmentModal = (props) => {
                 {
                   statusSelected && <input style={{ outline:"none" }} className="border-0 p-0 rounded me-3" type={'color'} value={(findObjectFromArray(statusOfClinic,statusSelected).colorStatus)} disabled />
                 }
-                <select className="form-select text-gray" style={{fontSize:FONT_SIZE}} value={statusSelected} onChange={e=>setStatusSelected(e.target.value)}>
+                <select 
+                  className="form-select text-gray" 
+                  style={{fontSize:FONT_SIZE}} 
+                  value={statusSelected} 
+                  onChange={e=>setStatusSelected(e.target.value)}
+                  disabled={clinic.roleOfDoctor==='member'}
+                >
                   {
                     !statusSelected && <option selected disabled>
                       {t('Choose a status of clinic')}
@@ -253,7 +271,13 @@ const AppointmentModal = (props) => {
                 {
                   roomSelected && <input style={{ outline:"none" }} className="border-0 p-0 rounded me-3" type={'color'} value={(findObjectFromArray(roomOfClinic,roomSelected).colorRoom)} disabled />
                 }
-                <select className="form-select text-gray" style={{fontSize:FONT_SIZE}} value={roomSelected} onChange={e=>setRoomSelected(e.target.value)}>
+                <select 
+                  className="form-select text-gray" 
+                  style={{fontSize:FONT_SIZE}} 
+                  value={roomSelected} 
+                  onChange={e=>setRoomSelected(e.target.value)}
+                  disabled={clinic.roleOfDoctor==='member'}
+                >
                   {
                     !roomSelected && <option selected disabled>
                       {t('Choose a room of clinic')}
@@ -275,7 +299,13 @@ const AppointmentModal = (props) => {
                 {
                   serviceSelected && <input style={{ outline:"none" }} className="border-0 p-0 rounded me-3" type={'color'} value={(findObjectFromArray(servicesOfClinic,serviceSelected).colorService)} disabled />
                 }
-                <select className="form-select text-gray" style={{fontSize:FONT_SIZE}} value={serviceSelected} onChange={e=>setServiceSelected(e.target.value)}>
+                <select 
+                  className="form-select text-gray" 
+                  style={{fontSize:FONT_SIZE}} 
+                  value={serviceSelected} 
+                  onChange={e=>setServiceSelected(e.target.value)}
+                  disabled={clinic.roleOfDoctor==='member'}
+                >
                   {
                     !serviceSelected && <option selected disabled>
                       {t('Choose a service of clinic')}
@@ -293,27 +323,27 @@ const AppointmentModal = (props) => {
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
               <span className="mc-heading text-capitalize">{t("appointment date")}:</span>
-              <input className="mc-gray form-control" type={'date'} value={appointmentDate} onChange={e=>setAppointmentDate(e.target.value)}/>
+              <input className="mc-gray form-control" type={'date'} value={appointmentDate} onChange={e=>setAppointmentDate(e.target.value)} disabled={clinic.roleOfDoctor==='member'}/>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-row mb-4 align-items-center justify-content-between">
               <div className="d-flex flex-column align-items-start justify-content-center">
                 <span className="mc-heading text-capitalize">{t("Time start")}:</span>
-                <input className="mc-gray form-control" type={'time'} value={timeStart?timeStart:''} onChange={e=>setTimeStart(e.target.value)} min={'08:00'} max={'18:00'}/>
+                <input className="mc-gray form-control" type={'time'} value={timeStart?timeStart:''} onChange={e=>setTimeStart(e.target.value)} min={'08:00'} max={'18:00'} disabled={clinic.roleOfDoctor==='member'}/>
               </div>
               <div className="d-flex flex-column align-items-start justify-content-center">
                 <span className="mc-heading text-capitalize">{t("Time end")}:</span>
-                <input className="mc-gray form-control" type={'time'} value={timeEnd?timeEnd:''} onChange={e=>setTimeEnd(e.target.value)} min={'08:00'} max={'18:00'}/>
+                <input className="mc-gray form-control" type={'time'} value={timeEnd?timeEnd:''} onChange={e=>setTimeEnd(e.target.value)} min={'08:00'} max={'18:00'} disabled={clinic.roleOfDoctor==='member'}/>
               </div>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-2">
               <span className="mc-heading text-capitalize">{t("Note for appointment")}:</span>
-              <textarea className="text-gray form-control" placeholder={t('Note something for schedule ...')} style={{fontSize:FONT_SIZE}} value={note} onChange={e=>setNote(e.target.value)} />
+              <textarea className="text-gray form-control" placeholder={t('Note something for schedule ...')} style={{fontSize:FONT_SIZE}} value={note} onChange={e=>setNote(e.target.value)} disabled={clinic.roleOfDoctor==='member'}/>
             </div>
           </div>
         </div>
         <div className={`modal-footer d-flex flex-row align-items-center ${props.createAppointment?'justify-content-end':'justify-content-between'}`}>
           {
-            !props.createAppointment && <button type="button" className="btn btn-danger d-flex align-items-center py-2 px-3" data-bs-dismiss="modal" onClick={()=>setOpenDeleteConfirm(true)}>
+            !props.createAppointment && clinic.roleOfDoctor!=='member' && <button type="button" className="btn btn-danger d-flex align-items-center py-2 px-3" data-bs-dismiss="modal" onClick={()=>setOpenDeleteConfirm(true)}>
               <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
                 delete
               </span>
@@ -327,17 +357,19 @@ const AppointmentModal = (props) => {
               </span>
               <span>{t('Close')}</span>
             </button>
-            <button type="button" className="btn btn-primary d-flex align-items-center py-2 px-3" 
-              onClick={()=>{ 
-                if(props.createAppointment) createAppointment()
-                else updateAppointment()
-              }}
-            >
-              <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
-                {props.createAppointment?'save':'update'}
-              </span>
-              <span>{props.createAppointment?t('Save'):t('Update')}</span>
-            </button>
+            {
+              clinic.roleOfDoctor!=='member' && <button type="button" className="btn btn-primary d-flex align-items-center py-2 px-3" 
+                onClick={()=>{ 
+                  if(props.createAppointment) createAppointment()
+                  else updateAppointment()
+                }}
+              >
+                <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
+                  {props.createAppointment?'save':'update'}
+                </span>
+                <span>{props.createAppointment?t('Save'):t('Update')}</span>
+              </button>
+            }
           </div>
         </div>
       </div>

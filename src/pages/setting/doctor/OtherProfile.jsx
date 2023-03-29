@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
-import { AVATAR_HEIGHT, AVATAR_WIDTH, clearAllSclice, convertISOToVNDateString, FONT_SIZE, splitAvatar, toISODateString, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
+import { AVATAR_HEIGHT, AVATAR_WIDTH, convertISOToVNDateString, FONT_SIZE, splitAvatar, toISODateString, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../../../services/getAPI.jsx";
@@ -82,7 +82,13 @@ export default function OtherProfile(props){
     }else{
       getToServerWithToken(`/v1/doctor/getAllDoctorFromEmailSearch/${email}?currentEmailDoctor=${doctor.email}`).then(result=>{
         setListEmailSearch(result.data);
-      }).catch(err => console.log(err));
+      }).catch(err =>{
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getAllEmailSearch(email));
+        }else{
+          toast.error(err.message);
+        }
+      })
     }
   }
 

@@ -104,6 +104,7 @@ export default function Myclinic(props){
 
   const deleteClinic = (idClinicCheck) => {
     if(idClinicCheck===clinic.idClinicDefault){
+      setOpenDeleteConfirm(false);
       return new Promise((resolve, reject) =>{
         dispatch(setLoadingModal(true));
         deleteToServerWithToken(`/v1/clinic/deleteClinic/${clinic.idClinicDefault}`).then((result) => {
@@ -135,7 +136,13 @@ export default function Myclinic(props){
       description: description,
     }).then(() => {
       getInformation().then(()=>setEditMode(false));
-    }).catch((err) => toast.error(t(err.message))).finally(() => dispatch(setLoadingModal(false)));
+    }).catch((err) => {
+      if(err.refreshToken){
+        refreshToken(nav,dispatch).then(()=>pushDataToServer(avatar));
+      }else{
+        toast.error(t(err.message));
+      }
+    }).finally(() => dispatch(setLoadingModal(false)));
   }
 
   const onUpdate = async () => {

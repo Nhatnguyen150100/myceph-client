@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ConfirmComponent from "../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import { FONT_SIZE, SELECT_PATIENT_MODE, toISODateString } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
@@ -25,10 +26,11 @@ export default function PatientTreatmentHistory(props){
   const [performedProcedures,setPerformedProcedures] = useState();
   const [currentStatus,setCurrentStatus] = useState();
 
-  const [editPlanId,setEditPlanId] = useState();
+  const [editHistoryId,setEditHistoryId] = useState();
   const [consultationDateItem,setConsultationDateItem] = useState(toISODateString(new Date()));
   const [performedProceduresItem,setPerformedProceduresItem] = useState();
   const [currentStatusItem,setCurrentStatusItem] = useState();
+  const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
   const [listOfHistory,setListOfHistory] = useState([]);
 
@@ -59,6 +61,7 @@ export default function PatientTreatmentHistory(props){
     return new Promise((resolve,reject) => {
       dispatch(setLoadingModal(true));
       postToServerWithToken(`/v1/treatmentHistory/createHistory/${patient.currentPatient.id}`,{
+        idDoctor: doctor.data.id,
         currentStatus: currentStatus,
         performedProcedures: performedProcedures,
         consultationDate: consultationDate
@@ -90,7 +93,7 @@ export default function PatientTreatmentHistory(props){
         consultationDate: consultationDateItem
       }).then(result => {
         setListOfHistory(result.data);
-        setEditPlanId('');
+        setEditHistoryId('');
         toast.success(result.message);
         resolve();
       }).catch(err =>{
@@ -104,21 +107,21 @@ export default function PatientTreatmentHistory(props){
     });
   }
 
-  const deleteHistory = (idHistory) => {
+  const deleteHistory = () => {
     return new Promise((resolve,reject) =>{
       dispatch(setLoadingModal(true));
-      deleteToServerWithToken(`/v1/treatmentHistory/deleteHistory/${patient.currentPatient.id}?idHistory=${idHistory}`).then(result => {
+      deleteToServerWithToken(`/v1/treatmentHistory/deleteHistory/${patient.currentPatient.id}?idHistory=${editHistoryId}&idDoctor=${doctor.data.id}`).then(result => {
         setListOfHistory(result.data);
         toast.success(result.message);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>deleteHistory(idHistory));
+          refreshToken(nav,dispatch).then(()=>deleteHistory());
         }else{
           toast.error(err.message);
         }
         reject();
-      }).finally(()=>dispatch(setLoadingModal(false)));
+      }).finally(()=>{dispatch(setLoadingModal(false));setEditHistoryId('');setOpenDeleteConfirm(false)});
     });
   }
 
@@ -194,20 +197,20 @@ export default function PatientTreatmentHistory(props){
                     className="border-0 p-0 form-input" 
                     style={{outline:"none"}} 
                     type={"date"} 
-                    value={editPlanId===history.id?toISODateString(new Date(consultationDateItem)):toISODateString(new Date(history.consultationDate))}
-                    onChange={e=>{if(editPlanId===history.id) setConsultationDateItem(e.target.value)}}
-                    disabled={editPlanId!==history.id}
+                    value={editHistoryId===history.id?toISODateString(new Date(consultationDateItem)):toISODateString(new Date(history.consultationDate))}
+                    onChange={e=>{if(editHistoryId===history.id) setConsultationDateItem(e.target.value)}}
+                    disabled={editHistoryId!==history.id}
                   />
                 </fieldset>
               </div>
               {
                 roleCheck && <div className="d-flex justify-content-end align-items-end my-1">
                   {
-                    editPlanId===history.id ?
+                    editHistoryId===history.id ?
                     <div className="d-flex flex-row justify-content-end align-items-center">
-                      <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>deleteHistory(history.id)} FONT_SIZE_ICON={"20px"} title={t("delete")}/>
+                      <IconButtonComponent className="btn-outline-danger me-2" icon="delete" onClick={()=>setOpenDeleteConfirm(true)} FONT_SIZE_ICON={"20px"} title={t("delete")}/>
                       <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={()=>updateHistory(history.id)} FONT_SIZE_ICON={"20px"} title={t("save")}/>
-                      <IconButtonComponent className="btn-outline-danger" onClick={()=>setEditPlanId('')} icon="close" FONT_SIZE_ICON={"20px"} title={t("cancel")}/>
+                      <IconButtonComponent className="btn-outline-danger" onClick={()=>setEditHistoryId('')} icon="close" FONT_SIZE_ICON={"20px"} title={t("cancel")}/>
                     </div>
                     :
                     <IconButtonComponent 
@@ -216,7 +219,7 @@ export default function PatientTreatmentHistory(props){
                       setConsultationDateItem(history.consultationDate);
                       setCurrentStatusItem(history.currentStatus);
                       setPerformedProceduresItem(history.performedProcedures);
-                      setEditPlanId(history.id);
+                      setEditHistoryId(history.id);
                     }} 
                     icon="edit" 
                     FONT_SIZE_ICON={"20px"} 
@@ -233,12 +236,12 @@ export default function PatientTreatmentHistory(props){
                     {t('current status')}
                   </legend>
                   <textarea 
-                    value={editPlanId===history.id?currentStatusItem:history.currentStatus}
-                    onChange={e=>{if(editPlanId===history.id) setCurrentStatusItem(e.target.value)}}
+                    value={editHistoryId===history.id?currentStatusItem:history.currentStatus}
+                    onChange={e=>{if(editHistoryId===history.id) setCurrentStatusItem(e.target.value)}}
                     className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
-                    onKeyDown={e=>{if(e.key === "Enter") updateHistory(history.id) ; if(e.key === "Escape") setEditPlanId('')}} 
+                    onKeyDown={e=>{if(e.key === "Enter") updateHistory(history.id) ; if(e.key === "Escape") setEditHistoryId('')}} 
                     style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
-                    disabled={editPlanId!==history.id}
+                    disabled={editHistoryId!==history.id}
                   />
                 </fieldset>
               </div>
@@ -248,12 +251,12 @@ export default function PatientTreatmentHistory(props){
                     {t('performed procedures')}
                   </legend>
                   <textarea
-                    value={editPlanId===history.id?performedProceduresItem:history.performedProcedures}
-                    onChange={e=>{if(editPlanId===history.id) setPerformedProceduresItem(e.target.value)}}
-                    onKeyDown={e=>{if(e.key === "Enter") updateHistory(history.id) ; if(e.key === "Escape") setEditPlanId('')}} 
+                    value={editHistoryId===history.id?performedProceduresItem:history.performedProcedures}
+                    onChange={e=>{if(editHistoryId===history.id) setPerformedProceduresItem(e.target.value)}}
+                    onKeyDown={e=>{if(e.key === "Enter") updateHistory(history.id) ; if(e.key === "Escape") setEditHistoryId('')}} 
                     className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
                     style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
-                    disabled={editPlanId!==history.id}
+                    disabled={editHistoryId!==history.id}
                   />
                 </fieldset>
               </div>
@@ -262,5 +265,17 @@ export default function PatientTreatmentHistory(props){
         })
       }
     </div>
+    <ConfirmComponent 
+      FONT_SIZE={FONT_SIZE}
+      open={openDeleteConfirm} 
+      title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this treatment history')}</span>} 
+      content={
+        <div>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this treatment history, enter the agree button')}</span>
+        </div>
+      }
+      handleClose={e=>setOpenDeleteConfirm(false)} 
+      handleSubmit={e=>deleteHistory()}
+    />
   </div>
 }
