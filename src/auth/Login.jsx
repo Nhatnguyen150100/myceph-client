@@ -27,6 +27,7 @@ function LoginPage(props){
   },[])
   
 	const loginSubmit = (e) => {
+    e.preventDefault();
 		if (!email) setEmailError(t('email is required'));
     else if (!isValidEmail(email)) setEmailError(t("email is incorrect format"));
 		else if (!password) setPasswordError(t('password is required'));
@@ -61,7 +62,7 @@ function LoginPage(props){
         <h1 className="my-4 text-center  text-capitalize mc-color fw-bold">
           {t('login')}
         </h1>
-        <div className={`mb-3 d-flex align-items-center justify-content-between input-group form-control border`}>
+        <form className={`mb-3 d-flex align-items-center justify-content-between input-group form-control border`}>
           <input
             type="email"
             className="border-0 flex-grow-1"
@@ -76,7 +77,7 @@ function LoginPage(props){
             style={{ height: '45px', outline: 'none' }}
           />
           <span className="material-symbols-outlined mc-color">person</span>
-        </div>
+        </form>
         {userEmailError && (
           <p className="d-flex align-items-center" style={{ color: 'red', width: '100%' }}>
             <span className="material-symbols-outlined me-1" style={{ color: 'red' }}>
@@ -85,7 +86,7 @@ function LoginPage(props){
             {userEmailError}
           </p>
         )}
-        <div
+        <form
           className={`mb-3 d-flex align-items-center justify-content-between input-group border form-control border`}>
           <input
             type="password"
@@ -101,7 +102,7 @@ function LoginPage(props){
             style={{ height: '45px', outline: 'none' }}
           />
           <span className="material-symbols-outlined mc-color">password</span>
-        </div>
+        </form>
         {passwordError && (
           <p className="d-flex align-items-center" style={{ color: 'red', width: '100%' }}>
             <span className="material-symbols-outlined me-1" style={{ color: 'red' }}>
@@ -118,7 +119,7 @@ function LoginPage(props){
           </Link>
         </div>
         <span className="my-2"></span>
-        {loading ? <div className="spinner-grow"></div> : <ButtonComponent label={t('login')} onClick={loginSubmit} />}
+        {loading ? <div className="spinner-grow"></div> : <ButtonComponent label={t('login')} onClick={e=>loginSubmit(e)} />}
         <div className="mt-3 d-flex align-items-center justify-content-center">
           <hr style={{ width: '140px' }} />
           <span className="mx-3 text-uppercase">or</span>

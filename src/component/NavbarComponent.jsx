@@ -123,7 +123,7 @@ export default function NavbarComponent(props) {
                       </li>
                     </Link>
                     <li className="w-100 mc-color-hover">
-                      <button className="btn d-flex flex-row align-items-center w-100 border-0" onClick={logout}>
+                      <button className="btn d-flex flex-row align-items-center w-100 border-0" onClick={()=>logout()}>
                         <span className="text-capitalize" style={{fontSize:FONT_SIZE,background:"transparent"}}>{t('log out')}</span>
                       </button>
                     </li>

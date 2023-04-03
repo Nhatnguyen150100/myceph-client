@@ -52,7 +52,7 @@ export default function MyEncryptionManagement(props){
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = e => {
       const data = JSON.parse(e.target.result);
-      addData(indexDB,data).then(message => {
+      addData(indexDB,data,DB_ENCRYPTION_DOCTOR).then(message => {
         dispatch(setEncryptKey({key: data.key, iv: data.iv}));
         toast.success(t(message));
       }).catch(error => toast.error(t(error)));
@@ -61,7 +61,7 @@ export default function MyEncryptionManagement(props){
 
   const downLoadFileJson = () => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-      JSON.stringify(encryptKey)
+      JSON.stringify({...encryptKey,...{id: doctor.id}})
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;

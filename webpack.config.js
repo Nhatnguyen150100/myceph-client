@@ -4,6 +4,8 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const Dotenv = require('dotenv-webpack');
 const webpack = require('webpack');
 
@@ -90,6 +92,17 @@ const config = {
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin(),
+      new CssMinimizerPlugin()
+    ],
+  },
+  performance: {
+    maxAssetSize: 1000000, // in bytes
+    maxEntrypointSize: 1000000, // in bytes
   },
 };
 

@@ -66,10 +66,7 @@ export default function BigCalendar(props){
   }, [])
 
   useEffect(()=>{
-    getPropertiesClinic().then(()=>{
-      if(selectedTab===VIEW_CALENDAR.BY_DATE) getListAppointmentDateByMode(false);
-      else getListAppointmentDateByMode(true);
-    });
+    getPropertiesClinic();
   },[currentPatient,clinic.idClinicDefault])
 
   const onSortAppointmentDate = (condition) => {
@@ -88,10 +85,11 @@ export default function BigCalendar(props){
         else if(result.data?.serviceOfClinic.length === 0) toast.warning(t('This clinic does not have any service'));
         else if(result.data?.statusOfClinic.length === 0) toast.warning(t('This clinic does not have any status'));
         dispatch(setPropertiesClinic(result.data));
+        if(selectedTab===VIEW_CALENDAR.BY_DATE) getListAppointmentDateByMode(false);
+        else getListAppointmentDateByMode(true);
         resolve();
       }).catch((err) =>{
         if(err.refreshToken && !isRefresh){
-          reject();
           refreshToken(nav,dispatch).then(()=>getPropertiesClinic());
         }else{
           toast.error(err.message);
@@ -109,7 +107,6 @@ export default function BigCalendar(props){
         resolve();
       }).catch((err) =>{
         if(err.refreshToken && !isRefresh){
-          reject();
           refreshToken(nav,dispatch).then(()=>getListAppointmentDateByMode(idPatient));
         }else{
           toast.error(err.message);

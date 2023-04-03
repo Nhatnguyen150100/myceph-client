@@ -27,7 +27,7 @@ export default function HomePage(props) {
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
         result.data.map(clinic => {
           if(clinic.roleOfDoctor==='admin'){
-            !currentPatient?.id && getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(result=>{dispatch(setArrayPatient(result.data));dispatch(setCurrentPatient(result.data[0]))})
+            !currentPatient?.id && getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{dispatch(setArrayPatient(response.data));dispatch(setCurrentPatient(response.data[0]))})
             dispatch(setIdClinicDefault(clinic.id));
             dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
           }
@@ -64,16 +64,6 @@ export default function HomePage(props) {
       )
     }).finally(()=>disConnectIndexDB(indexDB));
   },[])
-
-  // useEffect(()=>{
-  //   let indexDB = null;
-  //   onOpenIndexDB(DB_ENCRYPTION_CLINIC,2).then(db=>{
-  //     indexDB = db;
-  //     getData(db,clinic.idClinicDefault,DB_ENCRYPTION_CLINIC).then(data => 
-  //       dispatch(setEncryptKeyClinic({key: data.key, iv: data.iv}))
-  //     )
-  //   }).finally(()=>disConnectIndexDB(indexDB));
-  // },[])
 
   // useEffect(()=>{
   //   let indexDB = null;
