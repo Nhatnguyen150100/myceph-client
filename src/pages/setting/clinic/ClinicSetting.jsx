@@ -16,7 +16,7 @@ export default function ClinicSetting(props){
   const selectedTab = useSelector(state=>state.general.clinicSettingTab);
   const {t} = useTranslation();
   let currentTab = null;
-
+  
   switch(selectedTab){
     case 0: currentTab = <Myclinic />;
       break;

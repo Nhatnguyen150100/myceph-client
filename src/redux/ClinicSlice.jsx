@@ -5,7 +5,8 @@ export const ClinicSlice = createSlice({
   initialState:{
     idClinicDefault: null,
     roleOfDoctor: null,
-    arrayClinic: null
+    arrayClinic: null,
+    encryptKeyClinic: null
   },
   reducers:{
     setArrayClinic: (state,action) => {
@@ -17,6 +18,9 @@ export const ClinicSlice = createSlice({
     setRoleOfDoctor: (state,action) => {
       state.roleOfDoctor = action.payload;
     },
+    setEncryptKeyClinic: (state,action) => {
+      state.encryptKeyClinic = action.payload;
+    },
     clearClinicSlice: (state) => {
       state.arrayClinic = null;
       state.idClinicDefault = null;
@@ -26,7 +30,7 @@ export const ClinicSlice = createSlice({
 })
 
 export const {
-  setArrayClinic,setIdClinicDefault,setRoleOfDoctor,clearClinicSlice
+  setArrayClinic,setIdClinicDefault,setRoleOfDoctor,clearClinicSlice,setEncryptKeyClinic
 } = ClinicSlice.actions;
 
 export default ClinicSlice.reducer;

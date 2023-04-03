@@ -16,7 +16,6 @@ const FONT_TEXT = '14px';
 const SelectPatientComponent = (props) => {
   const {t} = useTranslation();
   const location = useLocation();
-  console.log("🚀 ~ file: SelectPatientComponent.jsx:19 ~ SelectPatientComponent ~ location:", location)
   const arrayPatients = useSelector(state=>state.patient.arrayPatients);
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const softWareSelectedTab = useSelector(state=>state.general.softWareSelectedTab);
@@ -62,7 +61,7 @@ const SelectPatientComponent = (props) => {
    * @param {*} name Tên bệnh nhân cần tìm
    * @returns 
    */
-  const getAllPatient = useCallback((name) => {
+  const getAllPatient = (name) => {
     return new Promise((resolve, reject) => {
       getToServerWithToken(`${url}page=${1}&pageSize=${10}&nameSearch=${name?name:''}`).then(result=>{
         dispatch(setArrayPatient(result.data));
@@ -85,7 +84,7 @@ const SelectPatientComponent = (props) => {
         reject(err);
       });
     })
-  },[currentPatient?.id,clinic?.idClinicDefault])   
+  }
 
   return <div className="d-flex flex-row justify-content-between align-items-center">
     {
@@ -94,7 +93,7 @@ const SelectPatientComponent = (props) => {
           {t('select patient')}
         </legend>
         <div className="dropdown w-100 p-0 m-0">
-          <button className="btn btn-hover-bg border-0 p-0 w-100 text-capitalize" onClick={e=>getAllPatient()} type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
+          <button className="btn btn-hover-bg border-0 p-0 w-100 text-capitalize" onClick={()=>getAllPatient()} type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{fontSize:FONT_SIZE_HEADER,background:"#f7f7f7"}}>
             {currentPatient?.fullName}
           </button>
           <ul className="dropdown-menu w-100">

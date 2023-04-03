@@ -89,11 +89,14 @@ export default function BigCalendar(props){
         else if(result.data?.statusOfClinic.length === 0) toast.warning(t('This clinic does not have any status'));
         dispatch(setPropertiesClinic(result.data));
         resolve();
-      }).catch(err =>{
-        if(!err.refreshToken){
-          toast.error(t(err.message));
+      }).catch((err) =>{
+        if(err.refreshToken && !isRefresh){
+          reject();
+          refreshToken(nav,dispatch).then(()=>getPropertiesClinic());
+        }else{
+          toast.error(err.message);
         }
-        reject();
+        reject(err);
       })
     })
   }  

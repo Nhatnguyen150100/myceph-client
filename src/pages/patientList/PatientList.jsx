@@ -9,7 +9,7 @@ import TextFieldInput from "../../common/TextFieldInput.jsx";
 import { FONT_SIZE, FONT_SIZE_HEAD, toISODateString, WIDTH_CHILD } from "../../common/Utility.jsx";
 import NavbarComponent from "../../component/NavbarComponent.jsx";
 import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
-import { setAppName, setLoadingModal, setpatientListTab } from "../../redux/GeneralSlice.jsx";
+import { setAppName, setLoadingModal, setPatientListTab } from "../../redux/GeneralSlice.jsx";
 import { setGetAllPatientClinic, setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
 import { postToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
@@ -106,18 +106,20 @@ export default function PatientList(props){
       <div className="mt-3 mb-1">
         <div className="d-flex align-items-center justify-content-lg-between justify-content-sm-center flex-grow-1 w-100 flex-wrap" style={{height:"70px"}}>
           <div className="flex-grow-1">
-            <button type="button" style={{borderColor:"goldenrod"}} className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 || selectedTab===4?'mc-yellow-background text-white':'mc-yellow-hover'}`} onClick={e=>dispatch(setpatientListTab(selectedTab===0?3:4))} disabled={selectedTab===2 ||selectedTab===3 || selectedTab===4}>
+            <button type="button" style={{borderColor:"goldenrod"}} className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 || selectedTab===4?'mc-yellow-background text-white':'mc-yellow-hover'}`} onClick={e=>dispatch(setPatientListTab(selectedTab===0?3:4))} disabled={selectedTab===2 ||selectedTab===3 || selectedTab===4}>
               <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('Share patient setting')}</span>
             </button>
           </div>
           <div className="d-flex flex-row flex-wrap">
-            <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 && 'mc-border-pale'} ${selectedTab===0 ?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(0))}>
+            <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 && 'mc-border-pale'} ${selectedTab===0 ?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setPatientListTab(0))}>
               <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('my patient')}</span>
             </button>
-            <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===4 && 'mc-border-pale'} ${selectedTab===1 ?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(1))}>
-              <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('patient of clinic')}</span>
-            </button>
-            <button type="button" className={`btn px-3 py-0 text-white-hover ${selectedTab===2?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setpatientListTab(2))}>
+            {
+              clinic.idClinicDefault && <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===4 && 'mc-border-pale'} ${selectedTab===1 ?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setPatientListTab(1))}>
+                <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('patient of clinic')}</span>
+              </button>
+            }
+            <button type="button" className={`btn px-3 py-0 text-white-hover ${selectedTab===2?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setPatientListTab(2))}>
               <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('patient shared')}</span>
             </button>
           </div>

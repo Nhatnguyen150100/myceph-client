@@ -148,22 +148,22 @@ export default function PatientInformation(props){
   }
 
   return <div className="h-100 w-100">
-      <div className="d-flex justify-content-end align-items-center mt-2">
-        {
-          editMode ?
-          <div>
-            <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={onUpdateInformation} FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("save")}/>
-            <IconButtonComponent className="btn-outline-danger" onClick={onCancel} icon="close" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("cancel")}/>
-          </div>
-          :
-          <div>
-            {
-              ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit') &&
-              <IconButtonComponent className="btn-outline-warning" onClick={e=>setEditMode(true)} icon="edit" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("edit")}/>
-            }
-          </div>
-        }
-      </div>
+    <div className="d-flex justify-content-end align-items-center mt-2">
+      {
+        editMode ?
+        <div>
+          <IconButtonComponent className="btn-outline-success me-2" icon="done" onClick={onUpdateInformation} FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("save")}/>
+          <IconButtonComponent className="btn-outline-danger" onClick={onCancel} icon="close" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("cancel")}/>
+        </div>
+        :
+        <div>
+          {
+            ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit') &&
+            <IconButtonComponent className="btn-outline-warning" onClick={e=>setEditMode(true)} icon="edit" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("edit")}/>
+          }
+        </div>
+      }
+    </div>
     <div className="row">
       <div className="col-sm-6">
         <div className="d-flex flex-column justify-content-start align-items-center w-100">

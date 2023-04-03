@@ -1,33 +1,43 @@
+import { toast } from "react-toastify";
+
 const DB_NAME = 'Myceph_Index_Database';
 const DB_VERSION = 1;
-const DB_STORE_NAME = 'encryptionKey';
+export const DB_ENCRYPTION_DOCTOR = 'encryptionKeyForDoctor';
+export const DB_ENCRYPTION_CLINIC = 'encryptionKeyForClinic';
+export const DB_ENCRYPTION_SHAREPATIENT = 'encryptionKeyForSharePatient';
 
-export const onOpenIndexDB = () =>{
+export const onOpenIndexDB = () => {
   return new Promise((resolve, reject) => {
+    const request = window.indexedDB.open(DB_NAME, DB_VERSION);
     let db;
-    const request = window.indexedDB.open(DB_NAME,DB_VERSION);
     request.onupgradeneeded = (event) => {
       db = event.target.result;
-      db.createObjectStore(DB_STORE_NAME, { keyPath: 'id', autoIncrement: true });
+      db.createObjectStore(DB_ENCRYPTION_DOCTOR, { keyPath: 'id' });
+      db.createObjectStore(DB_ENCRYPTION_CLINIC, { keyPath: 'id' });
+      db.createObjectStore(DB_ENCRYPTION_SHAREPATIENT, { keyPath: 'id' });
     };
     request.onerror = (event) => {
-      reject(event.target.errorCode);
+      reject(event.target.error);
     }
     request.onsuccess = (event) => {
       db = event.target.result;
       resolve(db);
     }
-  }) 
-}
+  });
+};
 
 export const disConnectIndexDB = (db) => {
-  db.close();
+  try {
+    db.close();
+  } catch (error) {
+    toast.error(error);
+  }
 }
 
-export const addData = (db,data) => {
+export const addData = (db,data,dbName) => {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction([DB_STORE_NAME],"readwrite");
-    const store = transaction.objectStore(DB_STORE_NAME);
+    const transaction = db.transaction([dbName],"readwrite");
+    const store = transaction.objectStore(dbName);
     let request = store.add(data);
     request.onsuccess = () => {
       resolve('Create encrypt key successfully');
@@ -38,13 +48,13 @@ export const addData = (db,data) => {
   })
 }
 
-export const getData = (db,id) => {
+export const getData = (db,id,dbName) => {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction([DB_STORE_NAME],"readwrite");
-    const store = transaction.objectStore(DB_STORE_NAME);
+    const transaction = db.transaction([dbName],"readwrite");
+    const store = transaction.objectStore(dbName);
     let request = store.get(id);
     request.onerror = (event) => {
-      reject(event.target.errorCode);
+      reject(event.target.error);
     }
     request.onsuccess = (event) => {
       const data = event.target.result;
@@ -53,13 +63,13 @@ export const getData = (db,id) => {
   })
 }
 
-export const deleteData = (db,id) => {
+export const deleteData = (db,id,dbName) => {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction([DB_STORE_NAME],"readwrite");
-    const store = transaction.objectStore(DB_STORE_NAME);
+    const transaction = db.transaction([dbName],"readwrite");
+    const store = transaction.objectStore(dbName);
     let request = store.delete(id);
     request.onerror = (event) => {
-      reject(event.target.errorCode);
+      reject(event.target.error);
     }
     request.onsuccess = (event) => {
       resolve('Delete encrypt key successfully');

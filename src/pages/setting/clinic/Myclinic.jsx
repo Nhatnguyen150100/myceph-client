@@ -7,7 +7,7 @@ import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
-import { AVATAR_HEIGHT, AVATAR_WIDTH, convertISOToVNDateString, deleteImage, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, isValidEmail, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
+import { AVATAR_HEIGHT, AVATAR_WIDTH, convertISOToVNDateString, deleteImage, findObjectFromArray, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, isValidEmail, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
 import SelectPatientComponent from "../../../component/SelectPatientComponent.jsx";
 import { setArrayClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
@@ -41,6 +41,8 @@ export default function Myclinic(props){
   useEffect(()=>{
     if(clinic.idClinicDefault) getInformation();
   },[clinic.idClinicDefault]);
+
+  console.info();
 
   const getInformation = () =>{
     return new Promise((resolve, reject) =>{
@@ -135,7 +137,27 @@ export default function Myclinic(props){
       addressClinic: addressClinic,
       description: description,
     }).then(() => {
-      getInformation().then(()=>setEditMode(false));
+      let promise1;
+      if(findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault)?.nameClinic !== nameClinic){
+        promise1 = new Promise((resolve, reject) => {
+          getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
+            dispatch(setArrayClinic(result.data));
+            resolve();
+          }).catch(error=>{
+            toast.error(t(error));
+            reject();
+          })
+        })
+      }
+      let promise2 = new Promise((resolve, reject) =>{
+        getInformation().then(()=>{
+          resolve();
+        }).catch((error) =>{
+          toast.error(t(error));
+          reject();
+        })
+      })
+      Promise.all([promise1,promise2]).then(()=>setEditMode(false)).catch(error =>toast.error(t(error)));
     }).catch((err) => {
       if(err.refreshToken){
         refreshToken(nav,dispatch).then(()=>pushDataToServer(avatar));

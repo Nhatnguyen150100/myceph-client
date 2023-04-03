@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
-import { addData, deleteData, disConnectIndexDB, getData, onOpenIndexDB } from "../../../common/ConnectIndexDB.jsx";
+import { addData, DB_ENCRYPTION_DOCTOR, deleteData, disConnectIndexDB, getData, onOpenIndexDB } from "../../../common/ConnectIndexDB.jsx";
 import { deCryptData, encryptData, generateIvForEncryption, generateKeyForEncryption } from "../../../common/Crypto.jsx";
 import { FONT_SIZE } from "../../../common/Utility.jsx";
 import { setEncryptKey } from "../../../redux/DoctorSlice.jsx";
@@ -19,11 +19,14 @@ export default function MyEncryptionManagement(props){
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
   useEffect(()=>{
-    onOpenIndexDB().then(db=>setIndexDB(db)).catch(error => toast.error(error));
+    onOpenIndexDB(DB_ENCRYPTION_DOCTOR).then(db=>setIndexDB(db)).catch(error => toast.error(error));
+    return () => {
+      disConnectIndexDB(indexDB);
+    }
   },[])
 
   const getEncryptionKeyInIndexDB = () => {
-    if(indexDB) getData(indexDB,doctor.id).then(data => 
+    if(indexDB) getData(indexDB,doctor.id,DB_ENCRYPTION_DOCTOR).then(data => 
       dispatch(setEncryptKey({key: data.key, iv: data.iv}))
     ).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to indexDB'));
@@ -37,11 +40,11 @@ export default function MyEncryptionManagement(props){
       key: key,
       iv: iv
     }
-    if(indexDB) addData(indexDB,encryptionKey).then(message => {
+    if(indexDB) addData(indexDB,encryptionKey,DB_ENCRYPTION_DOCTOR).then(message => {
       getEncryptionKeyInIndexDB();
       toast.success(t(message));
     }).catch(error => toast.error(t(error)));
-    else toast.error(t('Can not connect to the database'));
+    else toast.error(t('Can not connect to the indexDB'));
   }
 
   const upLoadFileJson = e => {
@@ -67,12 +70,12 @@ export default function MyEncryptionManagement(props){
   };
 
   const deleteEncryptionKey = () => {
-    if(indexDB) deleteData(indexDB,doctor.id).then(message => {
+    if(indexDB) deleteData(indexDB,doctor.id,DB_ENCRYPTION_DOCTOR).then(message => {
       setOpenDeleteConfirm(false);
       dispatch(setEncryptKey(null));
       toast.success(t(message));
     }).catch(error => toast.error(t(error)));
-    else toast.error(t('Can not connect to the database'));
+    else toast.error(t('Can not connect to the indexDB'));
   }
 
   return <div className="h-100 d-flex flex-column justify-content-start align-items-center">
@@ -83,7 +86,7 @@ export default function MyEncryptionManagement(props){
       {
         encryptKey ?
         <div className="d-flex flex-column">
-          <div className="d-flex w-100 flex-row justify-content-center align-items-center">
+          <div className="d-flex w-100 flex-row justify-content-center align-items-center my-3">
             <button 
               type="button" 
               className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
@@ -109,7 +112,7 @@ export default function MyEncryptionManagement(props){
               <span className="text-uppercase mx-2">{t('delete encryption key')}</span>
             </button>
           </div>
-          <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center">
+          <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center mb-3">
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key was generate by')} <span className="mc-color fw-bold fs-5">{doctor?.fullName}</span></span>
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key is stored in browser and cannot be recovered if browser is uninstalled.')}</span>
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('We strongly advise you to export encryption key to a secured location in your computer so it can be recovered once necessary.')}</span>
@@ -117,7 +120,7 @@ export default function MyEncryptionManagement(props){
         </div>
         :
         <div className="d-flex flex-column">
-          <div className="d-flex w-100 flex-row justify-content-center align-items-center">
+          <div className="d-flex w-100 flex-row justify-content-center align-items-center my-3">
             <button type="button" className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center" onClick={generateEncryptionKey}>
               <span className="material-symbols-outlined fw-bold" style={{fontSize:"30px"}}>
                 key
@@ -143,7 +146,7 @@ export default function MyEncryptionManagement(props){
               <input id="upload_json" className="d-none" type={'file'} accept=".json" onChange={upLoadFileJson}/>
             </button>
           </div>
-          <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center">
+          <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center mb-3">
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('To encrypt the patient you need to create a private encryption key.')}</span>
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('The encryption key will be saved in your device\'s browser.')}</span>
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('We strongly advise you to export encryption key to a secured location in your computer so it can be recovered once necessary.')}</span>

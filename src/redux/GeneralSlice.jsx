@@ -34,7 +34,7 @@ export const GeneralSlice = createSlice({
     setClinicSettingTab: (state,action) => {
       state.clinicSettingTab = action.payload;
     },
-    setpatientListTab: (state,action) => {
+    setPatientListTab: (state,action) => {
       state.patientListTab = action.payload;
     },
     setSoftWareSelectedTab: (state,action) => {
@@ -64,7 +64,7 @@ export const GeneralSlice = createSlice({
 
 export const {
   setLoadingModal,setLanguage,setAppName,setSettingTab,setDoctorSettingTab,
-  setClinicSettingTab,clearGeneralSlice,setpatientListTab,
+  setClinicSettingTab,clearGeneralSlice,setPatientListTab,
   setSoftWareSelectedTab,setMedicalRecordTab,setIsRefresh,setLibraryImagesTab
 } = GeneralSlice.actions;
 
