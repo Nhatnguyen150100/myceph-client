@@ -56,9 +56,9 @@ export default function ClinicEncryptionManagement(props){
   }
 
   const getEncryptionKeyInIndexDB = () => {
-    if(indexDB) getData(indexDB,clinic.idClinicDefault,DB_ENCRYPTION_CLINIC).then(data => 
-      dispatch(setEncryptKeyClinic({key: data.key, iv: data.iv}))
-    )
+    if(indexDB) getData(indexDB,clinic.idClinicDefault,DB_ENCRYPTION_CLINIC).then(data => {
+      data ? dispatch(setEncryptKeyClinic({key: data.key, iv: data.iv})) : dispatch(setEncryptKeyClinic(null)) 
+    })
   }
 
   const generateEncryptionKey = () => {
@@ -166,7 +166,7 @@ export default function ClinicEncryptionManagement(props){
         <div className="d-flex flex-column">
           <div className="d-flex w-100 flex-row justify-content-center align-items-center my-3">
             {
-              findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault).encryptedBy?.idDoctor === doctor.id ?
+              findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault).encryptedBy?.idDoctor === doctor.id && encryptKeyClinic?
               <button 
                 type="button" 
                 className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"

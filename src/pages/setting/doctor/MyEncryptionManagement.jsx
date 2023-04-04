@@ -2,18 +2,24 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import { addData, DB_ENCRYPTION_DOCTOR, deleteData, disConnectIndexDB, getData, onOpenIndexDB } from "../../../common/ConnectIndexDB.jsx";
 import { deCryptData, encryptData, generateIvForEncryption, generateKeyForEncryption } from "../../../common/Crypto.jsx";
 import { FONT_SIZE } from "../../../common/Utility.jsx";
-import { setEncryptKey } from "../../../redux/DoctorSlice.jsx";
+import { setDataDoctor, setEncryptKey } from "../../../redux/DoctorSlice.jsx";
+import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
+import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../../services/getAPI.jsx";
+import { refreshToken } from "../../../services/refreshToken.jsx";
 
 export default function MyEncryptionManagement(props){
   const {t} = useTranslation();
   const doctor = useSelector(state=>state.doctor.data);
   const encryptKey = useSelector(state=>state.doctor.encryptKey);
   const dispatch = useDispatch();
+  const isRefresh = useSelector(state=>state.general.isRefresh);
+  const nav = useNavigate();
 
   const [indexDB,setIndexDB] = useState(null);
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
@@ -23,6 +29,10 @@ export default function MyEncryptionManagement(props){
     return () => {
       disConnectIndexDB(indexDB);
     }
+  },[])
+
+  useEffect(()=>{
+    onGetInformationDoctor();
   },[])
 
   const getEncryptionKeyInIndexDB = () => {
@@ -40,11 +50,45 @@ export default function MyEncryptionManagement(props){
       key: key,
       iv: iv
     }
-    if(indexDB) addData(indexDB,encryptionKey,DB_ENCRYPTION_DOCTOR).then(message => {
+    deleteEncryptionKey();
+    if(indexDB) addData(indexDB,encryptionKey,DB_ENCRYPTION_DOCTOR).then(() => {
       getEncryptionKeyInIndexDB();
-      toast.success(t(message));
+      onSetEncryptionKeyForDoctor();
     }).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to the indexDB'));
+  }
+
+  const onGetInformationDoctor = () => {
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/doctor/${doctor.id}`).then(result => {
+        dispatch(setDataDoctor(result.data));
+        resolve();
+      }).catch(err =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>onGetInformationDoctor());
+        }else{
+          toast.error(err.message);
+        }
+        reject();
+      })
+    })
+  }
+
+  const onSetEncryptionKeyForDoctor = () => {
+    return new Promise((resolve, reject) => {
+      dispatch(setLoadingModal(true));
+      postToServerWithToken(`/v1/encryption/encryptionForDoctor/${doctor.id}`).then(result => {
+        dispatch(setDataDoctor(result.data));
+        resolve();
+      }).catch(err =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>onSetEncryptionKeyForDoctor());
+        }else{
+          toast.error(err.message);
+        }
+        reject();
+      }).finally(()=>dispatch(setLoadingModal(false)))
+    })
   }
 
   const upLoadFileJson = e => {
@@ -69,6 +113,26 @@ export default function MyEncryptionManagement(props){
     link.click();
   };
 
+
+  const onDeleteEncryptionKeyFromDoctor = () => {
+    return new Promise((resolve, reject) => {
+      setOpenDeleteConfirm(false);
+      dispatch(setLoadingModal(true));
+      deleteToServerWithToken(`/v1/encryption/encryptionForDoctor/${doctor.id}`).then(result => {
+        dispatch(setDataDoctor(result.data));
+        deleteEncryptionKey();
+        resolve();
+      }).catch(err =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>onDeleteEncryptionKeyFromDoctor());
+        }else{
+          toast.error(err.message);
+        }
+        reject();
+      }).finally(()=>dispatch(setLoadingModal(false)))
+    })
+  }
+
   const deleteEncryptionKey = () => {
     if(indexDB) deleteData(indexDB,doctor.id,DB_ENCRYPTION_DOCTOR).then(message => {
       setOpenDeleteConfirm(false);
@@ -84,20 +148,35 @@ export default function MyEncryptionManagement(props){
         {t('Doctor\'s encryption key management')}
       </legend>
       {
-        encryptKey ?
+        doctor.encryptionKey ?
         <div className="d-flex flex-column">
           <div className="d-flex w-100 flex-row justify-content-center align-items-center my-3">
-            <button 
-              type="button" 
-              className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
-              style={{cursor:"pointer"}}
-              onClick={downLoadFileJson}
-            >
-              <span className="material-symbols-outlined fw-bold " style={{fontSize:"30px"}}>
-                download
-              </span>
-              <span className="text-capitalize mx-2" style={{cursor:"pointer"}}>{t('download json encryption key')}</span>
-            </button>
+            {
+              encryptKey ? <button 
+                type="button" 
+                className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
+                style={{cursor:"pointer"}}
+                onClick={downLoadFileJson}
+              >
+                <span className="material-symbols-outlined fw-bold " style={{fontSize:"30px"}}>
+                  download
+                </span>
+                <span className="text-capitalize mx-2" style={{cursor:"pointer"}}>{t('download json encryption key')}</span>
+              </button>
+              :
+              <button 
+                type="button" 
+                className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
+                style={{cursor:"pointer"}}
+              >
+                <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
+                  upload
+                </span>
+                <label htmlFor="upload_json" className="text-capitalize" style={{cursor:"pointer"}}>{t('upload a encryption key')}</label>
+                <input id="upload_json" className="d-none" type={'file'} accept=".json" onChange={upLoadFileJson}/>
+              </button>
+            }
+            
             <div className="mx-3">
               <hr style={{ width: '100px' }} />
             </div>
@@ -165,7 +244,7 @@ export default function MyEncryptionManagement(props){
         </div>
       }
       handleClose={e=>setOpenDeleteConfirm(false)} 
-      handleSubmit={e=>deleteEncryptionKey()}
+      handleSubmit={e=>onDeleteEncryptionKeyFromDoctor()}
     />
   </div>
 }

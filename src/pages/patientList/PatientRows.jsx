@@ -10,7 +10,7 @@ import { setListAppointmentDate, setViewCalendar } from "../../redux/CalendarSli
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setSettingTab, setSoftWareSelectedTab } from "../../redux/GeneralSlice.jsx";
 import { setCurrentPatient, setSelectPatientOnMode } from "../../redux/PatientSlice.jsx";
-import { getToServerWithToken } from "../../services/getAPI.jsx";
+import { getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 
 const AVATAR_HEIGHT = "90px";
@@ -54,15 +54,18 @@ export default function PatientRows(props){
     dispatch(setSoftWareSelectedTab(tab));
     dispatch(setCurrentPatient(props.patient));
   }
+  
 
-  const getListAppointmentDate = (idPatient='') => {
+  const onGetAllInformationPatient = () => {
     return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient}`).then(result => {
-        dispatch(setListAppointmentDate(result.data));
+      getToServerWithToken(`/v1/encryption/getAllInformationPatient/${props.patient.id}`).then(result => {
         resolve();
+        console.log("🚀 ~ file: MyEncryptionManagement.jsx:82 ~ postToServerWithToken ~ result:", result.data);
       }).catch(err =>{
-        if(!err.refreshToken){
-          toast.error(t(err.message));
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>onGetAllInformationPatient());
+        }else{
+          toast.error(err.message);
         }
         reject();
       })
@@ -99,15 +102,29 @@ export default function PatientRows(props){
         <Link title={t("LateralCeph")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
           <img src="/assets/images/LateralCeph.png" width="34" height="34" alt="LateralCeph"/>
         </Link>
-        <Link title={t("Calendar")} to={`${(props.selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && props.selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT)?'/schedule':'#'}`} className="btn btn-outline-info p-1 border-0 me-2 mb-2" onClick={e=>{
-          if(props.selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && props.selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT){
+        {
+          props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT &&
+          <Link title={t("Calendar")} to={`/schedule`} className="btn btn-outline-info p-1 border-0 me-2 mb-2" onClick={e=>{
             dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
-            getListAppointmentDate(props.patient.id)
             onToSoftWare(SOFT_WARE_LIST.CALENDAR);
-          }else toast.warning(t('Schedule is available for this patient in clinic!'));
-        }}>
-          <img src="/assets/images/CalendarNew.png" width="34" height="34" alt="Calendar"/>
-        </Link>
+          }}>
+            <img src="/assets/images/CalendarNew.png" width="34" height="34" alt="Calendar"/>
+          </Link>
+        }
+        {
+          props.selectPatientMode === SELECT_PATIENT_MODE.SHARE_PATIENT ?
+          <button type="button" className="btn btn-outline-info border-0 p-0 mb-2 mx-1" title={t('Encryption patient')}>
+            <span className="material-symbols-outlined mt-1" style={{fontSize:"38px",color:"#adadad"}}>
+              key
+            </span>
+          </button>
+          :
+          <button type="button" className="btn btn-outline-info border-0 p-0 mb-2 mx-1" title={t('Encryption patient')} onClick={()=>onGetAllInformationPatient()}>
+            <span className="material-symbols-outlined mt-1" style={{fontSize:"38px",color:"#adadad"}}>
+              lock_open
+            </span>
+          </button>
+        }
         <Link title={t("Discussion")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
           <img src="/assets/images/Discussion.png" width="34" height="34" alt="Discussion"/>
         </Link>
