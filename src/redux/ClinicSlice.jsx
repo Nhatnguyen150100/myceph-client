@@ -22,6 +22,7 @@ export const ClinicSlice = createSlice({
       state.encryptKeyClinic = action.payload;
     },
     clearClinicSlice: (state) => {
+      state.encryptKeyClinic = null;
       state.arrayClinic = null;
       state.idClinicDefault = null;
       state.roleOfDoctor = null;

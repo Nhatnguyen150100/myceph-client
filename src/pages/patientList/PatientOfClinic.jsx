@@ -126,9 +126,13 @@ export default function PatientOfClinic(props){
             resolve();
           });
         }).catch((err) =>{
+          if(err.refreshToken && !isRefresh){
+            refreshToken(nav,dispatch).then(()=>deletePatient(idPatient));
+          }else{
+            toast.error(err.message);
+          }
           reject(err);
-        }
-        ).finally(() =>{
+        }).finally(() =>{
           dispatch(setLoadingModal(false));
         });
       })

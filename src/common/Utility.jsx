@@ -8,6 +8,7 @@ import { clearPatientSlice } from '../redux/PatientSlice.jsx';
 import { clearImageSlice } from '../redux/LibraryImageSlice.jsx';
 import { clearCalendarSlice } from '../redux/CalendarSlice.jsx';
 import { toast } from 'react-toastify';
+import { deCryptData } from './Crypto.jsx';
 const { Buffer } = require('buffer');
 
 // Đảm bảo rằng đối tượng Buffer được định nghĩa đúng cách trong môi trường trình duyệt
@@ -131,6 +132,22 @@ export function getHoursMinutesSeconds(date){
   let minutes = date.getMinutes();
   if(minutes<10) minutes = '0'+minutes.toString();
   return hours +':'+ minutes
+}
+
+
+/**
+ * todo: Giải mã trước data
+ * @param {*} data 
+ * @returns 
+ */
+export const onDecryptedDataPreview = (mode,data,encryptKeyDoctor,encryptKeyClinic) => {
+  if(mode===SELECT_PATIENT_MODE.MY_PATIENT && encryptKeyDoctor && data){
+    return deCryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
+  }else if(mode===SELECT_PATIENT_MODE.CLINIC_PATIENT && encryptKeyClinic && data){
+    return deCryptData(encryptKeyClinic.key,encryptKeyClinic.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
+  }else{
+    return '---'
+  }
 }
 
 

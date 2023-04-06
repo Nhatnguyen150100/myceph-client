@@ -70,9 +70,13 @@ export default function MyPatient(props){
             resolve();
           });
         }).catch((err) =>{
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>deletePatient(idPatient));
+          }else{
+            toast.error(err.message);
+          }
           reject(err);
-        }
-        ).finally(() =>{
+        }).finally(() =>{
           dispatch(setLoadingModal(false));
         });
       })

@@ -35,18 +35,18 @@ export default function ClinicEncryptionManagement(props){
   useEffect(()=>{
     if(clinic.idClinicDefault){
       getEncryptionKeyInIndexDB();
-      getAllClinicAndSetDefault();
+      getAllClinic();
     }
   },[clinic.idClinicDefault])
 
-  const getAllClinicAndSetDefault = () => {
+  const getAllClinic = () => {
     return new Promise((resolve,reject) =>{
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
         dispatch(setArrayClinic(result.data));
         resolve();
       }).catch((err) =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>getAllClinicAndSetDefault());
+          refreshToken(nav,dispatch).then(()=>getAllClinic());
         }else{
           toast.error(err.message);
         }
@@ -87,7 +87,8 @@ export default function ClinicEncryptionManagement(props){
       }).then(result => {
         let arrayClinicIndex = [...clinic.arrayClinic];
         let objectIndex = arrayClinicIndex.findIndex(element => element.id === result.data.id);
-        arrayClinicIndex.splice(objectIndex,1,result.data)
+        let updatedObject = Object.assign({}, arrayClinicIndex[objectIndex], {encryptedBy: result.data.encryptedBy});
+        arrayClinicIndex[objectIndex] = updatedObject;
         dispatch(setArrayClinic(arrayClinicIndex));
         resolve();
       }).catch(err =>{
@@ -103,12 +104,12 @@ export default function ClinicEncryptionManagement(props){
 
   const onDeleteEncryptionKeyFromClinic = () => {
     return new Promise((resolve, reject) => {
-      setOpenDeleteConfirm(false);
       dispatch(setLoadingModal(true));
       deleteToServerWithToken(`/v1/encryption/encryptionForClinic/${clinic.idClinicDefault}`).then(result => {
         let arrayClinicIndex = [...clinic.arrayClinic];
         let objectIndex = arrayClinicIndex.findIndex(element => element.id === result.data.id);
-        arrayClinicIndex.splice(objectIndex,1,result.data)
+        let updatedObject = Object.assign({}, arrayClinicIndex[objectIndex], {encryptedBy: result.data.encryptedBy});
+        arrayClinicIndex[objectIndex] = updatedObject;
         dispatch(setArrayClinic(arrayClinicIndex));
         deleteEncryptionKey();
         resolve();
@@ -128,10 +129,13 @@ export default function ClinicEncryptionManagement(props){
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = e => {
       const data = JSON.parse(e.target.result);
-      addData(indexDB,data,DB_ENCRYPTION_CLINIC).then(message => {
+      if(data.id === clinic.idClinicDefault) addData(indexDB,data,DB_ENCRYPTION_CLINIC).then(message => {
         dispatch(setEncryptKeyClinic({key: data.key, iv: data.iv}));
-        onSetEncryptionKeyForClinic().then(()=>toast.success(t(message)));
+        if(clinic.roleOfDoctor === 'admin'){
+          onSetEncryptionKeyForClinic().then(()=>toast.success(t(message)));
+        }else toast.success(t(message));
       }).catch(error => toast.error(t(error)));
+      else toast.warning(t('Oops! it seems that this encryption key does not belong to the current clinic. Please double-check your encryption key'));
     };
   }
 
@@ -148,6 +152,7 @@ export default function ClinicEncryptionManagement(props){
   const deleteEncryptionKey = () => {
     if(indexDB) deleteData(indexDB,clinic.idClinicDefault,DB_ENCRYPTION_CLINIC).then(message => {
       dispatch(setEncryptKeyClinic(null));
+      setOpenDeleteConfirm(false);
       toast.success(t(message));
     }).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to the database'));
@@ -166,18 +171,33 @@ export default function ClinicEncryptionManagement(props){
         <div className="d-flex flex-column">
           <div className="d-flex w-100 flex-row justify-content-center align-items-center my-3">
             {
-              findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault).encryptedBy?.idDoctor === doctor.id && encryptKeyClinic?
-              <button 
-                type="button" 
-                className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
-                style={{cursor:"pointer"}}
-                onClick={downLoadFileJson}
-              >
-                <span className="material-symbols-outlined fw-bold " style={{fontSize:"30px"}}>
-                  download
-                </span>
-                <span className="text-capitalize mx-2" style={{cursor:"pointer"}}>{t('download json encryption key')}</span>
-              </button>
+              encryptKeyClinic?
+              <React.Fragment>
+                <button 
+                  type="button" 
+                  className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
+                  style={{cursor:"pointer"}}
+                  onClick={downLoadFileJson}
+                >
+                  <span className="material-symbols-outlined fw-bold " style={{fontSize:"30px"}}>
+                    download
+                  </span>
+                  <span className="text-capitalize mx-2" style={{cursor:"pointer"}}>{t('download json encryption key')}</span>
+                </button>
+                <div className="mx-3">
+                    <hr style={{ width: '100px' }}/>
+                  </div>
+                <button 
+                  type="button" 
+                  className="btn btn-outline-danger py-1 px-2 d-flex align-items-center justify-content-center"
+                  onClick={()=>setOpenDeleteConfirm(true)}
+                >
+                  <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
+                    delete
+                  </span>
+                  <span className="text-uppercase mx-2">{clinic.roleOfDoctor === 'admin'?t('delete encryption key'):t('remove encryption key form device')}</span>
+                </button>
+              </React.Fragment>
               :
               <button 
                 type="button" 
@@ -188,25 +208,8 @@ export default function ClinicEncryptionManagement(props){
                   upload
                 </span>
                 <label htmlFor="upload_json" className="text-capitalize" style={{cursor:"pointer"}}>{t('upload a encryption key')}</label>
-                <input id="upload_json" className="d-none" type={'file'} accept=".json" onChange={upLoadFileJson}/>
+                <input id="upload_json" className="d-none" type={'file'} key={Math.random(0,100000)} accept=".json" onChange={e=>upLoadFileJson(e)}/>
               </button>
-            }
-            {
-              clinic.roleOfDoctor === 'admin' && <React.Fragment>
-                <div className="mx-3">
-                  <hr style={{ width: '100px' }} />
-                </div>
-                <button 
-                  type="button" 
-                  className="btn btn-outline-danger py-1 px-2 d-flex align-items-center justify-content-center"
-                  onClick={()=>setOpenDeleteConfirm(true)}
-                >
-                  <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
-                    delete
-                  </span>
-                  <span className="text-uppercase mx-2">{t('delete encryption key')}</span>
-                </button>
-              </React.Fragment>
             }
           </div>
           <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center mb-3">
@@ -244,7 +247,7 @@ export default function ClinicEncryptionManagement(props){
                 upload
               </span>
               <label htmlFor="upload_json" className="text-capitalize" style={{cursor:"pointer"}}>{t('upload a encryption key')}</label>
-              <input id="upload_json" className="d-none" type={'file'} accept=".json" onChange={upLoadFileJson}/>
+              <input id="upload_json" className="d-none" type={'file'} key={Math.random(0,100000)} accept=".json" onChange={e=>upLoadFileJson(e)}/>
             </button>
           </div>
           <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center  mb-3">
@@ -266,7 +269,10 @@ export default function ClinicEncryptionManagement(props){
         </div>
       }
       handleClose={e=>setOpenDeleteConfirm(false)} 
-      handleSubmit={e=>onDeleteEncryptionKeyFromClinic()}
+      handleSubmit={e=>{
+        if(clinic.roleOfDoctor === 'admin') onDeleteEncryptionKeyFromClinic();
+        else deleteEncryptionKey();
+      }}
     />
   </div>
 }

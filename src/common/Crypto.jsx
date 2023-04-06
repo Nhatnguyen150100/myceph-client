@@ -1,4 +1,5 @@
 import crypto from 'crypto-browserify';
+import { toast } from 'react-toastify';
 
 const ENCRYPTION_ALGORITHM = 'aes-256-gcm';
 const HASH_ALGORITHM = 'md5';
@@ -67,16 +68,20 @@ export const encryptData = (key, iv, data) => {
  * @param {*} iv vector iv
  * @param {*} tag tag kiểm tra toàn vẹn dữ liệu
  * @param {*} encryptedData dữ liệu bị mã hóa
- * @returns dữ liệu sau giải mã
+ * @returns dữ liệu sau giải mã, nếu giải mã thất bại sẽ trả về '---'
  */
 export const deCryptData = (key,iv,tag,encryptedData) => {
-  const decipher = generateDeCipherForEncryption(key,iv);
-  decipher.setAuthTag(Buffer.from(tag,'hex'));
-  const decrypted = Buffer.concat([
-    decipher.update(Buffer.from(encryptedData,'hex')),
-    decipher.final(),
-  ]);
-  return decrypted.toString('utf-8');
+  try {
+    const decipher = generateDeCipherForEncryption(key,iv);
+    decipher.setAuthTag(Buffer.from(tag,'hex'));
+    const decrypted = Buffer.concat([
+      decipher.update(Buffer.from(encryptedData,'hex')),
+      decipher.final(),
+    ]);
+    return decrypted.toString('utf-8');
+  }catch{
+    return '---'
+  }
 }
 
 export const encryptPatientData = (key,iv,data) => {
@@ -166,14 +171,6 @@ export const encryptPatientData = (key,iv,data) => {
     diagnose: patientData.diagnosisAndTreatments.diagnose ? JSON.stringify(encryptData(key,iv,patientData.diagnosisAndTreatments.diagnose)) : null,
     prognosisAndNotes: patientData.diagnosisAndTreatments.prognosisAndNotes ? JSON.stringify(encryptData(key,iv,patientData.diagnosisAndTreatments.prognosisAndNotes)) : null
   }
-  let libraryImagePatientEncrypted = [];
-  patientListData.libraryImagePatient.length > 0 && patientListData.libraryImagePatient.forEach(element => {
-    libraryImagePatientEncrypted.push({
-      id: element.id,
-      linkImage: element.linkImage ? JSON.stringify(encryptData(key,iv,element.linkImage)) : null,
-      typeImage: element.typeImage ? JSON.stringify(encryptData(key,iv,element.typeImage.toString())) : null
-    })
-  });
   let listOfIssueEncrypted = [];
   patientListData.listOfIssue.length > 0 && patientListData.listOfIssue.forEach(element => {
     listOfIssueEncrypted.push({
@@ -207,7 +204,6 @@ export const encryptPatientData = (key,iv,data) => {
     intralOralEncrypted,
     radiographyEncrypted,
     diagnosisAndTreatmentEncrypted,
-    libraryImagePatientEncrypted,
     listOfIssueEncrypted,
     treatmentHistoryEncrypted,
     treatmentPlanEncrypted
@@ -302,20 +298,12 @@ export const decryptPatientData = (key,iv,data) => {
     diagnose: patientData.diagnosisAndTreatments.diagnose ? deCryptData(key,iv,JSON.parse(patientData.diagnosisAndTreatments.diagnose).tag,JSON.parse(patientData.diagnosisAndTreatments.diagnose).encrypted) : null,
     prognosisAndNotes: patientData.diagnosisAndTreatments.prognosisAndNotes ? deCryptData(key,iv,JSON.parse(patientData.diagnosisAndTreatments.prognosisAndNotes).tag,JSON.parse(patientData.diagnosisAndTreatments.prognosisAndNotes).encrypted) : null
   }
-  let libraryImagePatientDecrypted = [];
-  patientListData.libraryImagePatient.length > 0 && patientListData.libraryImagePatient.forEach(element => {
-    libraryImagePatientDecrypted.push({
-      id: element.id,
-      linkImage: element.linkImage ? deCryptData(key,iv,JSON.parse(element.linkImage).tag,JSON.parse(element.linkImage).encrypted) : null,
-      typeImage: element.typeImage ? parseInt(deCryptData(key,iv,JSON.parse(element.typeImage).tag,JSON.parse(element.typeImage).encrypted)) : null
-    })
-  });
   let listOfIssueDecrypted = [];
   patientListData.listOfIssue.length > 0 && patientListData.listOfIssue.forEach(element => {
     listOfIssueDecrypted.push({
       id: element.id,
       issue: element.issue ? deCryptData(key,iv,JSON.parse(element.issue).tag,JSON.parse(element.issue).encrypted) : null,
-      priotized: element.priotized ? parseInt(deCryptData(key,iv,JSON.parse(element.priotized).tag,JSON.parse(element.priotized).encrypted)) : null,
+      // priotized: element.priotized ? parseInt(deCryptData(key,iv,JSON.parse(element.priotized).tag,JSON.parse(element.priotized).encrypted)) : null,
       treatmentMethod: element.treatmentMethod ? deCryptData(key,iv,JSON.parse(element.treatmentMethod).tag,JSON.parse(element.treatmentMethod).encrypted) : null,
       treatmentObject: element.treatmentObject ? deCryptData(key,iv,JSON.parse(element.treatmentObject).tag,JSON.parse(element.treatmentObject).encrypted) : null
     })
@@ -333,7 +321,7 @@ export const decryptPatientData = (key,iv,data) => {
     treatmentPlanDecrypted.push({
       id: element.id,
       plan: element.plan ? deCryptData(key,iv,JSON.parse(element.plan).tag,JSON.parse(element.plan).encrypted) : null,
-      selected: element.selected ? parseInt(deCryptData(key,iv,JSON.parse(element.selected).tag,JSON.parse(element.selected).encrypted)) : null
+      // selected: element.selected ? parseInt(deCryptData(key,iv,JSON.parse(element.selected).tag,JSON.parse(element.selected).encrypted)) : null
     })
   });
   return ({
@@ -343,7 +331,6 @@ export const decryptPatientData = (key,iv,data) => {
     intralOralDecrypted,
     radiographyDecrypted,
     diagnosisAndTreatmentDecrypted,
-    libraryImagePatientDecrypted,
     listOfIssueDecrypted,
     treatmentHistoryDecrypted,
     treatmentPlanDecrypted

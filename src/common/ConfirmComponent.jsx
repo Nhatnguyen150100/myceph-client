@@ -12,10 +12,10 @@ export default function ConfirmComponent(props){
   }
 
   return (
-    <Dialog open={props.open} onClose={props.handleClose}>
-      <DialogTitle>{props.title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
+    <Dialog open={props.open} onClose={props.handleClose} component="span">
+      <DialogTitle component="span">{props.title}</DialogTitle>
+      <DialogContent component="span">
+        <DialogContentText component="span">
           {props.content}
         </DialogContentText>
         {
@@ -31,9 +31,9 @@ export default function ConfirmComponent(props){
         />
         }
       </DialogContent>
-      <DialogActions>
+      <DialogActions component="span">
         <Button className="fw-bold" variant="outlined" color="error" style={{fontSize:props.FONT_SIZE}} onClick={onCancel}>{t('cancel')}</Button>
-        <Button className="fw-bold" variant="outlined" color="success" style={{fontSize:props.FONT_SIZE}} onClick={e=>props.handleSubmit(value)}>{t('agree')}</Button>
+        <Button className="fw-bold" variant="outlined" color="success" style={{fontSize:props.FONT_SIZE}} onClick={e=>{setValue('');props.handleSubmit(value)}}>{t('agree')}</Button>
       </DialogActions>
     </Dialog>
   )

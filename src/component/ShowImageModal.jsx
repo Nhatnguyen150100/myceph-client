@@ -25,6 +25,7 @@ export default function ShowImageModal(props) {
   const imageModal = useRef();
   const stageRef = useRef();
   const imageRef = useRef();
+  const contentModelRef = useRef();
 
   const [filtersMap, setFiltersMap] = useState(new Map());
   const [openGrid,setOpenGrid] = useState(false);
@@ -198,7 +199,7 @@ export default function ShowImageModal(props) {
 
   return <div className="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" ref={imageModalRef} style={{height:window.innerHeight-50}}>
     <div className="modal-dialog modal-dialog-centered modal-xl justify-content-center ">
-      <div className="modal-content">
+      <div className="modal-content" ref={contentModelRef}>
         <div className="modal-header py-2 px-3 d-flex justify-content-between">
           <span className="text-uppercase fw-bold mc-color ms-2">{t('preview image')}</span>
           <div className="dropdown">
@@ -326,7 +327,7 @@ export default function ShowImageModal(props) {
             ref={stageRef} 
             onWheel={handleWheel} 
             height={window.innerHeight-50-(110*2)} 
-            width={window.innerWidth-400} 
+            width={contentModelRef.current?.clientWidth-2} 
             className={`${isGrab && 'cursor-grabbing'} border-start border-end m-0`} 
             x={0} 
             y={0} 
@@ -340,7 +341,7 @@ export default function ShowImageModal(props) {
                 image={imageObject}
                 filters={filterFuncs}
                 {...filterVals}
-                offsetX={-((window.innerWidth-400)/2-imageObject.width/2)}
+                offsetX={-((contentModelRef.current?.clientWidth-2)/2-imageObject.width/2)}
                 x={stateImage.x}
                 y={stateImage.y}
                 draggable

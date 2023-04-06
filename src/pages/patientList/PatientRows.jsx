@@ -1,16 +1,15 @@
-import { fontSize } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { deCryptData, decryptPatientData, encryptPatientData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
-import { convertISOToVNDateString, FONT_SIZE, SELECT_PATIENT_MODE, SOFT_WARE_LIST, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
-import { setListAppointmentDate, setViewCalendar } from "../../redux/CalendarSlice.jsx";
+import { convertISOToVNDateString, FONT_SIZE, onDecryptedDataPreview, SELECT_PATIENT_MODE, SOFT_WARE_LIST, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
+import { setViewCalendar } from "../../redux/CalendarSlice.jsx";
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab, setSoftWareSelectedTab } from "../../redux/GeneralSlice.jsx";
-import { setCurrentPatient, setSelectPatientOnMode } from "../../redux/PatientSlice.jsx";
+import { setCurrentPatient, setGetAllPatientClinic, setGetAllPatientDoctor, setSelectPatientOnMode } from "../../redux/PatientSlice.jsx";
 import { getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 
@@ -21,10 +20,8 @@ export default function PatientRows(props){
   const {t} = useTranslation();
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const clinic = useSelector(state=>state.clinic);
-  const doctor = useSelector(state=>state.doctor.data);
   const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
-  const selectedTab = useSelector(state=>state.general.patientListTab);
   const [listOfDoctorSharedPatient,setListOfDoctorSharedPatient] = useState([]);
   const dispatch = useDispatch();
   const nav = useNavigate();
@@ -59,20 +56,39 @@ export default function PatientRows(props){
   }
   
   const onSetDataToPatient = (data,isEncrypted) => {
-    postToServerWithToken(`/v1/encryption/setDataToPatient/${props.patient.id}`,{
-      informationEncrypted: {...data.informationEncrypted, isEncrypted: isEncrypted},
-      intralOralEncrypted: data.intralOralEncrypted,
-      historyEncrypted: data.historyEncrypted,
-      extraOralEncrypted: data.extraOralEncrypted,
-      diagnosisAndTreatmentEncrypted: data.diagnosisAndTreatmentEncrypted,
-      libraryImagePatientEncrypted: data.libraryImagePatientEncrypted,
-      listOfIssueEncrypted: data.listOfIssueEncrypted,
-      radiographyEncrypted: data.radiographyEncrypted,
-      treatmentHistoryEncrypted: data.treatmentHistoryEncrypted,
-      treatmentPlanEncrypted: data.treatmentPlanEncrypted
-    }).then(result => {
-      toast.success(t(result.message));
-    }).catch(err => toast.error(err));
+    if(isEncrypted){
+      postToServerWithToken(`/v1/encryption/setDataToPatient/${props.patient.id}`,{
+        informationData: {...data.informationEncrypted, isEncrypted: isEncrypted},
+        intralOralData: data.intralOralEncrypted,
+        historyData: data.historyEncrypted,
+        extraOralData: data.extraOralEncrypted,
+        diagnosisAndTreatmentData: data.diagnosisAndTreatmentEncrypted,
+        listOfIssueData: data.listOfIssueEncrypted,
+        radiographyData: data.radiographyEncrypted,
+        treatmentHistoryData: data.treatmentHistoryEncrypted,
+        treatmentPlanData: data.treatmentPlanEncrypted
+      }).then(result => {
+        if(props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT) dispatch(setGetAllPatientDoctor(true));
+        else if(props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT) dispatch(setGetAllPatientClinic(true));
+        toast.success(t(result.message));
+      }).catch(err => toast.error(err));
+    }else{
+      postToServerWithToken(`/v1/encryption/setDataToPatient/${props.patient.id}`,{
+        informationData: {...data.informationDecrypted, isEncrypted: isEncrypted},
+        intralOralData: data.intralOralDecrypted,
+        historyData: data.historyDecrypted,
+        extraOralData: data.extraOralDecrypted,
+        diagnosisAndTreatmentData: data.diagnosisAndTreatmentDecrypted,
+        listOfIssueData: data.listOfIssueDecrypted,
+        radiographyData: data.radiographyDecrypted,
+        treatmentHistoryData: data.treatmentHistoryDecrypted,
+        treatmentPlanData: data.treatmentPlanDecrypted
+      }).then(result => {
+        if(props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT) dispatch(setGetAllPatientDoctor(true));
+        else if(props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT) dispatch(setGetAllPatientClinic(true));
+        toast.success(t(result.message));
+      }).catch(err => toast.error(err));
+    }
   }
 
   const onEncryptInformationPatient = () => {
@@ -137,16 +153,6 @@ export default function PatientRows(props){
     }
   }
 
-  const decryptedDataPreview = (data) => {
-    if(props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && encryptKeyDoctor){
-      return deCryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
-    }else if(props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && encryptKeyClinic){
-      return deCryptData(encryptKeyClinic.key,encryptKeyClinic.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
-    }else{
-      return 'X-X-X'
-    }
-  }
-
   return <tr className={`align-middle hover-font-weight`}>
     <td className={`d-lg-table-cell d-none text-gray`} style={{fontSize:FONT_SIZE}}>
       {props.stt+1}
@@ -154,46 +160,96 @@ export default function PatientRows(props){
     <td className="d-lg-table-cell d-none" style={{width:"180px",cursor:"pointer"}}>
       <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/frontFace.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
     </td>
-    <td className={`text-gray text-capitalize`}>
+    <td className={`text-gray text-capitalize ${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`}>
       <div className="d-flex align-items-center justify-content-center">
         <span>{props.patient.fullName}</span>
         {
-          props.selectPatientMode===SELECT_PATIENT_MODE.SHARE_PATIENT && props.patient.isEncrypted && <span className="material-symbols-outlined text-danger ms-1 mb-1" style={{fontSize:"25px"}}>
+          (props.selectPatientMode===SELECT_PATIENT_MODE.SHARE_PATIENT && props.patient.isEncrypted) ? <span className="material-symbols-outlined text-danger ms-1 mb-1" style={{fontSize:"25px"}}>
           lock
           </span>
+          :
+          ''
         }
       </div>
     </td>
-    <td className={`d-lg-table-cell d-none text-gray`} style={{fontSize:FONT_SIZE}}>
+    <td className={`d-lg-table-cell d-none text-gray ${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>
       {convertISOToVNDateString(toISODateString(new Date(props.patient.birthday)))}
     </td>
-    <td className={`d-lg-table-cell d-none text-gray text-capitalize`} style={{fontSize:FONT_SIZE}}>
-      {props.patient.isEncrypted?decryptedDataPreview(props.patient?.gender):props.patient.gender}
+    <td className={`d-lg-table-cell d-none text-gray text-capitalize ${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>
+      {props.patient.isEncrypted?onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic):props.patient.gender}
     </td>
-    <td className={`d-lg-table-cell d-none text-gray`} style={{fontSize:FONT_SIZE}}>
-      {props.patient.isEncrypted?decryptedDataPreview(props.patient?.note):props.patient.note}
+    <td className={`d-lg-table-cell d-none text-gray ${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>
+      {props.patient.isEncrypted?onDecryptedDataPreview(props.selectPatientMode,props.patient.note,encryptKeyDoctor,encryptKeyClinic):props.patient.note}
     </td>
     <td className={`d-lg-table-cell`}>
       <div className="d-flex flex-row align-items-center justify-content-center">
-        <Link to={`/medicalRecord`} onClick={e=>onToSoftWare(SOFT_WARE_LIST.MEDICAL_RECORD)} title={t("MedicalRecord")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
+        <Link 
+          to={`${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' ? '' : '/medicalRecord'}`} 
+          onClick={()=>{
+            if(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---'){
+              ((props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
+            }else{
+              onToSoftWare(SOFT_WARE_LIST.MEDICAL_RECORD);
+            }
+          }} 
+          title={t("MedicalRecord")} 
+          className="btn btn-outline-info p-1 border-0 me-2 mb-2"
+        >
           <img src="/assets/images/MedicalRecord.png" width="34" height="34" alt="MedicalRecord"/>
         </Link>
-        <Link to={`/libraryImagesManagement`} title={t("ImageLibrary")} onClick={e=>onToSoftWare(SOFT_WARE_LIST.IMAGE_LIBRARY)} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
+        <Link 
+          to={`${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' ? '' : '/libraryImagesManagement'}`} 
+          title={t("ImageLibrary")} 
+          onClick={()=>{
+            if(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---'){
+              ((props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
+            }else{
+              onToSoftWare(SOFT_WARE_LIST.IMAGE_LIBRARY);
+            }
+          }}
+          className="btn btn-outline-info p-1 border-0 me-2 mb-2"
+        >
           <img src="/assets/images/ImageLibrary.png" width="34" height="34" alt="ImageLibrary"/>
         </Link>
-        <Link title={t("LateralCeph")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
+        <Link 
+          title={t("LateralCeph")} 
+          className="btn btn-outline-info p-1 border-0 me-2 mb-2"
+          onClick={()=>{
+            if(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---'){
+              ((props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
+            }
+          }}
+        >
           <img src="/assets/images/LateralCeph.png" width="34" height="34" alt="LateralCeph"/>
         </Link>
         {
           props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT &&
-          <Link title={t("Calendar")} to={`/schedule`} className="btn btn-outline-info p-1 border-0 me-2 mb-2" onClick={e=>{
-            dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
-            onToSoftWare(SOFT_WARE_LIST.CALENDAR);
-          }}>
+          <Link 
+            to={`${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' ? '' : '/schedule'}`} 
+            title={t("Calendar")}
+            className="btn btn-outline-info p-1 border-0 me-2 mb-2" 
+            onClick={e=>{
+              if(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---'){
+                ((props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
+              }else{
+                dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
+                onToSoftWare(SOFT_WARE_LIST.CALENDAR);
+              }
+            }}
+          >
             <img src="/assets/images/CalendarNew.png" width="34" height="34" alt="Calendar"/>
           </Link>
         }
-        <Link title={t("Discussion")} className="btn btn-outline-info p-1 border-0 me-2 mb-2">
+        <Link 
+          to={`${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' ? '' : ''}`} 
+          title={t("Discussion")} 
+          className="btn btn-outline-info p-1 border-0 me-2 mb-2"
+          onClick={()=>{
+            if(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---'){
+              ((props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
+            }
+          }}
+        >
           <img src="/assets/images/Discussion.png" width="34" height="34" alt="Discussion"/>
         </Link>
       </div>
@@ -206,19 +262,27 @@ export default function PatientRows(props){
               title={t("share patient")} 
               onClick={e=>getAllDoctorSharedPatient(props.patient.id)} 
               className="btn btn-outline-info p-1 border-0 me-2 mb-2 rounded d-none d-sm-block" 
-              disabled={selectedTab===1 && clinic.roleOfDoctor!=='admin'}
+              disabled={props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor !=='admin'}
               data-bs-toggle="dropdown" 
               aria-expanded="false"
             >
               <img src="/assets/images/Share.png" width="34" height="34" alt="Discussion"/>
             </button>
-            <button type="button" className="btn btn-outline-info rounded border-0 p-0 mb-2 mx-1" title={t('Encryption patient')} onClick={()=>{
-              if(props.patient.isEncrypted) onDecryptInformationPatient();
-              else onEncryptInformationPatient();
-            }
-            }>
+            <button 
+              type="button" 
+              className="btn btn-outline-info rounded border-0 p-0 mb-2 mx-1" 
+              title={t('Encryption patient')} 
+              onClick={()=>{
+                if(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---'){
+                  ((props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
+                }else{
+                  props.patient.isEncrypted ? onDecryptInformationPatient() : onEncryptInformationPatient()
+                }
+              }}
+              disabled={props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor !=='admin'}
+            >
               <span className={`material-symbols-outlined mt-1 ${props.patient.isEncrypted?'text-danger':'text-success'}`} style={{fontSize:"36px"}}>
-                {props.patient.isEncrypted?'lock':'key'}
+                {props.patient.isEncrypted?'lock':'lock_open'}
               </span>
             </button>
             <ul className="dropdown-menu w-auto shadow ">
@@ -241,7 +305,7 @@ export default function PatientRows(props){
               }
             </ul>
           </div>
-          <IconButtonComponent className="btn-outline-danger border-0 p-0 mb-1" icon="delete" FONT_SIZE_ICON={"30px"} title={t("delete patient")} disabled={selectedTab===1 && clinic.roleOfDoctor!=='admin'} onClick={e=>props.onDeleteHandle(props.patient.id)}/>
+          <IconButtonComponent className="btn-outline-danger border-0 p-0 mb-1" icon="delete" FONT_SIZE_ICON={"30px"} title={t("delete patient")} disabled={props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor!=='admin'} onClick={e=>props.onDeleteHandle(props.patient.id)}/>
         </div>
       </td>
     }
