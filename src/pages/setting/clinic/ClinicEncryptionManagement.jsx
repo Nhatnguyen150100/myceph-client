@@ -141,7 +141,7 @@ export default function ClinicEncryptionManagement(props){
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
-    link.download = "encryptKey.json";
+    link.download = "cryptoKey.json";
     link.click();
   };
 

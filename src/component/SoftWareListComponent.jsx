@@ -83,16 +83,18 @@ export default function SoftWareListComponent(props){
         <img src="/assets/images/CalendarNew_active.png" width="34" height="34" alt="MedicalRecord"/>
       </div>
       :
-      <Link title={t("Calendar")} to={`${(selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT)?'/schedule':'#'}`} className="btn btn-outline-info p-1 me-3 border-0" onClick={e=>{
-        if(selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT){          
+      <React.Fragment>
+      {
+        (selectPatientMode!==SELECT_PATIENT_MODE.MY_PATIENT && selectPatientMode!==SELECT_PATIENT_MODE.SHARE_PATIENT) && <Link title={t("Calendar")} to={'/schedule'} className="btn btn-outline-info p-1 me-3 border-0" onClick={e=>{         
           if(!propertiesClinic) getPropertiesClinic().then(getListAppointmentDate(currentPatient.id))
           else getListAppointmentDate(currentPatient.id);
           dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR));
           dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
-        }else toast.warning(t('Schedule is available for this patient in clinic!'));
-      }}>
-        <img src="/assets/images/CalendarNew.png" width="34" height="34" alt="MedicalRecord"/>
-      </Link>
+        }}>
+          <img src="/assets/images/CalendarNew.png" width="34" height="34" alt="MedicalRecord"/>
+        </Link>
+      }
+      </React.Fragment>
     }
     {
       softWareSelectedTab === SOFT_WARE_LIST.DISCUSSION ? 

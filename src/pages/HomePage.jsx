@@ -7,7 +7,7 @@ import { DB_ENCRYPTION_CLINIC, DB_ENCRYPTION_DOCTOR, DB_ENCRYPTION_SHAREPATIENT,
 import { cookies } from "../common/Utility.jsx";
 import NavbarComponent from "../component/NavbarComponent.jsx";
 import { setArrayClinic, setEncryptKeyClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
-import { setEncryptKey } from "../redux/DoctorSlice.jsx";
+import { setEncryptKeyDoctor } from "../redux/DoctorSlice.jsx";
 import { setAppName } from "../redux/GeneralSlice.jsx";
 import { setArrayPatient, setCurrentPatient } from "../redux/PatientSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
@@ -54,10 +54,10 @@ export default function HomePage(props) {
 
   useEffect(()=>{
     let indexDB = null;
-    onOpenIndexDB(DB_ENCRYPTION_DOCTOR).then(db=>{
+    onOpenIndexDB().then(db=>{
       indexDB = db;
       getData(db,doctor.id,DB_ENCRYPTION_DOCTOR).then(data => 
-        dispatch(setEncryptKey({key: data.key, iv: data.iv}))
+        dispatch(setEncryptKeyDoctor({key: data.key, iv: data.iv}))
       )
       getData(db,clinic.idClinicDefault,DB_ENCRYPTION_CLINIC).then(data => 
         dispatch(setEncryptKeyClinic({key: data.key, iv: data.iv}))
@@ -70,7 +70,7 @@ export default function HomePage(props) {
   //   onOpenIndexDB(DB_ENCRYPTION_SHAREPATIENT).then(db=>{
   //     indexDB = db;
   //     getData(db,doctor.id,DB_ENCRYPTION_SHAREPATIENT).then(data => 
-  //       dispatch(setEncryptKey({key: data.key, iv: data.iv}))
+  //       dispatch(setEncryptKeyDoctor({key: data.key, iv: data.iv}))
   //     )
   //   }).finally(()=>disConnectIndexDB(indexDB));
   // },[])

@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
+import { DB_ENCRYPTION_CLINIC, disConnectIndexDB, getData, onOpenIndexDB } from "../../common/ConnectIndexDB.jsx";
 import { FONT_SIZE, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
+import { setEncryptKeyClinic } from "../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { setGetAllPatientClinic } from "../../redux/PatientSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken } from "../../services/getAPI.jsx";
@@ -32,6 +34,21 @@ export default function PatientOfClinic(props){
   const [page,setPage] = useState(1);
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
   const [idPatientDelete,setIdPatientDelete] = useState();
+
+  const [indexDB,setIndexDB] = useState(null);
+
+  useEffect(()=>{
+    onOpenIndexDB(DB_ENCRYPTION_CLINIC).then(db=>setIndexDB(db)).catch(error => toast.error(t(error)));
+    return () => {
+      disConnectIndexDB(indexDB);
+    }
+  },[])
+
+  const getEncryptionKeyInIndexDB = () => {
+    if(indexDB) getData(indexDB,clinic.idClinicDefault,DB_ENCRYPTION_CLINIC).then(data => {
+      data ? dispatch(setEncryptKeyClinic({key: data.key, iv: data.iv})) : dispatch(setEncryptKeyClinic(null)) 
+    })
+  }
 
   const onChangePage = (event,value) => {
     setPage(value);
@@ -121,6 +138,7 @@ export default function PatientOfClinic(props){
   useEffect(()=>{
     if(clinic.idClinicDefault && clinic.roleOfDoctor==='admin') getAllPatientForClinic();
     if(clinic.idClinicDefault && clinic.roleOfDoctor==='member') getSharedPatientOfDoctorInClinic();
+    getEncryptionKeyInIndexDB();
   },[page,clinic.idClinicDefault])
 
   useEffect(()=>{

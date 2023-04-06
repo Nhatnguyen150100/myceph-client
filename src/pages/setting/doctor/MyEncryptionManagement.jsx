@@ -8,7 +8,7 @@ import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import { addData, DB_ENCRYPTION_DOCTOR, deleteData, disConnectIndexDB, getData, onOpenIndexDB } from "../../../common/ConnectIndexDB.jsx";
 import { deCryptData, encryptData, generateIvForEncryption, generateKeyForEncryption } from "../../../common/Crypto.jsx";
 import { FONT_SIZE } from "../../../common/Utility.jsx";
-import { setDataDoctor, setEncryptKey } from "../../../redux/DoctorSlice.jsx";
+import { setDataDoctor, setEncryptKeyDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
@@ -16,7 +16,7 @@ import { refreshToken } from "../../../services/refreshToken.jsx";
 export default function MyEncryptionManagement(props){
   const {t} = useTranslation();
   const doctor = useSelector(state=>state.doctor.data);
-  const encryptKey = useSelector(state=>state.doctor.encryptKey);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
   const dispatch = useDispatch();
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const nav = useNavigate();
@@ -37,7 +37,7 @@ export default function MyEncryptionManagement(props){
 
   const getEncryptionKeyInIndexDB = () => {
     if(indexDB) getData(indexDB,doctor.id,DB_ENCRYPTION_DOCTOR).then(data => 
-      dispatch(setEncryptKey({key: data.key, iv: data.iv}))
+      dispatch(setEncryptKeyDoctor({key: data.key, iv: data.iv}))
     ).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to indexDB'));
   }
@@ -97,22 +97,21 @@ export default function MyEncryptionManagement(props){
     fileReader.onload = e => {
       const data = JSON.parse(e.target.result);
       addData(indexDB,data,DB_ENCRYPTION_DOCTOR).then(message => {
-        dispatch(setEncryptKey({key: data.key, iv: data.iv}));
-        toast.success(t(message));
+        dispatch(setEncryptKeyDoctor({key: data.key, iv: data.iv}));
+        onSetEncryptionKeyForDoctor().then(()=> toast.success(t(message)));
       }).catch(error => toast.error(t(error)));
     };
   }
 
   const downLoadFileJson = () => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-      JSON.stringify({...encryptKey,...{id: doctor.id}})
+      JSON.stringify({...encryptKeyDoctor,...{id: doctor.id}})
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
-    link.download = "encryptKey.json";
+    link.download = "cryptoKey.json";
     link.click();
   };
-
 
   const onDeleteEncryptionKeyFromDoctor = () => {
     return new Promise((resolve, reject) => {
@@ -136,7 +135,7 @@ export default function MyEncryptionManagement(props){
   const deleteEncryptionKey = () => {
     if(indexDB) deleteData(indexDB,doctor.id,DB_ENCRYPTION_DOCTOR).then(message => {
       setOpenDeleteConfirm(false);
-      dispatch(setEncryptKey(null));
+      dispatch(setEncryptKeyDoctor(null));
       toast.success(t(message));
     }).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to the indexDB'));
@@ -152,7 +151,7 @@ export default function MyEncryptionManagement(props){
         <div className="d-flex flex-column">
           <div className="d-flex w-100 flex-row justify-content-center align-items-center my-3">
             {
-              encryptKey ? <button 
+              encryptKeyDoctor ? <button 
                 type="button" 
                 className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
                 style={{cursor:"pointer"}}
@@ -176,7 +175,6 @@ export default function MyEncryptionManagement(props){
                 <input id="upload_json" className="d-none" type={'file'} accept=".json" onChange={upLoadFileJson}/>
               </button>
             }
-            
             <div className="mx-3">
               <hr style={{ width: '100px' }} />
             </div>
