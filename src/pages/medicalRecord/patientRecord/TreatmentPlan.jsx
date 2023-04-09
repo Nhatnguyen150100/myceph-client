@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
+import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextAreaFieldInput from "../../../common/TextAreaFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
@@ -22,6 +23,8 @@ export default function TreatmentPlan(props){
   const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
 
   const [plan,setPlan] = useState();
   const [selected,setSelected] = useState(false);
@@ -30,9 +33,14 @@ export default function TreatmentPlan(props){
   const [editPlanId,setEditPlanId] = useState();
   const [planItem,setPlanItem] = useState();
   const [selectedItem,setSelectedItem] = useState();
-
   
   const [listOfPlan,setListOfPlan] = useState();
+  
+  const isEncrypted = patient.currentPatient.isEncrypted;
+  const modeKey = useMemo(()=>{
+    if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
+    else return encryptKeyClinic;
+  },[selectPatientOnMode])
 
   const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
 
@@ -40,11 +48,22 @@ export default function TreatmentPlan(props){
     if(patient.currentPatient) getListOfPlan();
   },[patient.currentPatient])
 
+  const deCryptedListPlan = (listOfPlan) => {
+    let listOfPlanDecrypted = [];
+    listOfPlan.length > 0 && listOfPlan.forEach(element => {
+      listOfPlanDecrypted.push({
+        ...element,
+        plan: element.plan ? deCryptData(modeKey.key,modeKey.iv,JSON.parse(element.plan).tag,JSON.parse(element.plan).encrypted) : null 
+      })
+    });
+    return listOfPlanDecrypted;
+  }
+
   const getListOfPlan = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
       getToServerWithToken(`/v1/treatmentPlan/${patient.currentPatient.id}`).then(result => {
-        setListOfPlan(result.data);
+        setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -60,14 +79,22 @@ export default function TreatmentPlan(props){
   const createPlan = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      postToServerWithToken(`/v1/treatmentPlan/createPlan/${patient.currentPatient.id}`,{
+      let infoPlan = {};
+      if(isEncrypted){
+        infoPlan = {
+          idDoctor: doctor.data.id,
+          plan: plan ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,plan)) : null,
+          selected: selected
+        }
+      }else infoPlan = {
         idDoctor: doctor.data.id,
         plan: plan,
         selected: selected
-      }).then(result => {
+      }
+      postToServerWithToken(`/v1/treatmentPlan/createPlan/${patient.currentPatient.id}`,infoPlan).then(result => {
         setPlan('');
         setSelected(false);
-        setListOfPlan(result.data);
+        setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
         toast.success(t(result.message));
         resolve();
       }).catch(err =>{
@@ -85,12 +112,21 @@ export default function TreatmentPlan(props){
   const updatePlan = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      putToServerWithToken(`/v1/treatmentPlan/updatePlan/${patient.currentPatient.id}?idPlan=${editPlanId}`,{
+      let infoUpdate = {};
+      if(isEncrypted){
+        infoUpdate = {
+          idDoctor: doctor.data.id,
+          plan: planItem ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,planItem)) : null,
+          selected: selectedItem
+        }
+      }else infoUpdate = {
         idDoctor: doctor.data.id,
         plan: planItem,
         selected: selectedItem
-      }).then(result => {
-        setListOfPlan(result.data);
+      }
+      putToServerWithToken(`/v1/treatmentPlan/updatePlan/${patient.currentPatient.id}?idPlan=${editPlanId}`,infoUpdate).then(result => {
+        setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -107,7 +143,7 @@ export default function TreatmentPlan(props){
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
       deleteToServerWithToken(`/v1/treatmentPlan/deletePlan/${patient.currentPatient.id}?idPlan=${editPlanId}`).then(result => {
-        setListOfPlan(result.data);
+        setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
         toast.success(result.message);
         resolve();
       }).catch(err =>{
@@ -122,14 +158,14 @@ export default function TreatmentPlan(props){
   }
 
   const setSelectedPlan = (idPlan) => {
-    const listPlanTempoary = [...listOfPlan];
-    for (let index = 0; index < listPlanTempoary.length; index++) {
-      const element = listPlanTempoary[index];
+    const listPlanTemporary = [...listOfPlan];
+    for (let index = 0; index < listPlanTemporary.length; index++) {
+      const element = listPlanTemporary[index];
       if(element.id!==idPlan){
         element.selected = false;
       }else element.selected = true;
     }
-    setListOfPlan(listPlanTempoary);
+    setListOfPlan(isEncrypted?deCryptedListPlan(listPlanTemporary):listPlanTemporary);
   }
 
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1">

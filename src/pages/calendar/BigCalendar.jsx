@@ -21,6 +21,7 @@ import { setAppName, setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import { useNavigate } from "react-router-dom";
 import ChartSection from "./ChartSection.jsx";
+import { setCurrentPatient } from "../../redux/PatientSlice.jsx";
 
 export const localizer = momentLocalizer(moment);
 
@@ -28,7 +29,7 @@ export default function BigCalendar(props){
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const view = useSelector(state => state.calendar.view);
-  const currentPatient = useSelector(state=>state.patient.currentPatient);
+  const patient = useSelector(state=>state.patient);
   const selectedTab = useSelector(state => state.calendar.viewCalendar);
   const listAppointmentDate = useSelector(state => state.calendar.listAppointmentDate);
   const roomsOfClinic = useSelector(state => state.calendar.propertiesClinic?.roomOfClinic);
@@ -65,9 +66,18 @@ export default function BigCalendar(props){
     }
   }, [])
 
+  useEffect(() => {
+    /**
+     * todo: Nếu ở chế độ xem theo bệnh nhân mà không có bệnh nhân hoặc bệnh nhân không thuộc phòng khám thì đặt lại bệnh nhân đầu của phòng khám
+     */
+    if(selectedTab===VIEW_CALENDAR.BY_DATE && !patient.currentPatient.idPatientOfClinic && patient.arrayPatients.length > 0){
+      dispatch(setCurrentPatient(patient.arrayPatients[0]));
+    }
+  }, [selectedTab])
+
   useEffect(()=>{
     getPropertiesClinic();
-  },[currentPatient,clinic.idClinicDefault])
+  },[patient.currentPatient,clinic.idClinicDefault])
 
   const onSortAppointmentDate = (condition) => {
     const indexList = [...listAppointmentDate];
@@ -102,7 +112,7 @@ export default function BigCalendar(props){
   const getListAppointmentDateByMode = (idPatient) => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient?currentPatient?.id:''}`).then(result => {
+      getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient?patient.currentPatient?.id:''}`).then(result => {
         dispatch(setListAppointmentDate(result.data));
         resolve();
       }).catch((err) =>{

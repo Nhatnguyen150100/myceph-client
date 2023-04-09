@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
@@ -23,6 +24,8 @@ export default function IntraOral(props){
   const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
 
   const [editMode,setEditMode] = useState();
   const [oralHygiene,setOralHygiene] = useState();
@@ -57,6 +60,12 @@ export default function IntraOral(props){
 
   const [previousData,setPreviousData] = useState();
 
+  const isEncrypted = patient.currentPatient.isEncrypted;
+  const modeKey = useMemo(()=>{
+    if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
+    else return encryptKeyClinic;
+  },[selectPatientOnMode])
+
   useEffect(()=>{
     if(patient.currentPatient) getIntraOral();
   },patient.currentPatient.id)
@@ -67,34 +76,34 @@ export default function IntraOral(props){
   }
 
   const updateState = (data) => {
-    setOralHygiene(data.oralHygiene);
-    setDentition(data.dentition);
-    setCaries(data.caries);
-    setMissing(data.missing);
-    setWearingTeeth(data.wearingTeeth);
-    setDetalAldevelopment(data.detalAldevelopment);
-    setOtherProblems(data.otherProblems);
-    setArchForm(data.archForm);
-    setRightCanine(data.rightCanine);
-    setLeftCanine(data.leftCanine);
-    setLeftMolar(data.leftMolar);
-    setOverjet(data.overjet);
-    setOverbite(data.overbite);
-    setCurveOfSpee(data.curveOfSpee);
-    setCant(data.cant);
-    setPosteriorRight(data.posteriorRight);
-    setPosteriorLeft(data.posteriorLeft);
-    setUpperMidline(data.upperMidline);
-    setLowerMidline(data.lowerMidline);
-    setDeviate(data.deviate);
-    setCrCoDiscrepancy(data.crCoDiscrepancy);
-    setMaximumMouthOpening(data.maximumMouthOpening);
-    setGuidanceOnProtrusion(data.guidanceOnProtrusion);
-    setGuidanceOnRight(data.guidanceOnRight);
-    setGuidanceOnLeft(data.guidanceOnLeft);
-    setMusculature(data.musculature);
-    setSwallowingPattern(data.swallowingPattern);
-    setHistoryOfTMD(data.historyOfTMD);
+    setOralHygiene((isEncrypted && data.oralHygiene)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.oralHygiene).tag,JSON.parse(data.oralHygiene).encrypted):data.oralHygiene);
+    setDentition((isEncrypted && data.dentition)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.dentition).tag,JSON.parse(data.dentition).encrypted):data.dentition);
+    setCaries((isEncrypted && data.caries)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.caries).tag,JSON.parse(data.caries).encrypted):data.caries);
+    setMissing((isEncrypted && data.missing)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.missing).tag,JSON.parse(data.missing).encrypted):data.missing);
+    setWearingTeeth((isEncrypted && data.wearingTeeth)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.wearingTeeth).tag,JSON.parse(data.wearingTeeth).encrypted):data.wearingTeeth);
+    setDetalAldevelopment((isEncrypted && data.detalAldevelopment)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.detalAldevelopment).tag,JSON.parse(data.detalAldevelopment).encrypted):data.detalAldevelopment);
+    setOtherProblems((isEncrypted && data.otherProblems)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.otherProblems).tag,JSON.parse(data.otherProblems).encrypted):data.otherProblems);
+    setArchForm((isEncrypted && data.archForm)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.archForm).tag,JSON.parse(data.archForm).encrypted):data.archForm);
+    setRightCanine((isEncrypted && data.rightCanine)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.rightCanine).tag,JSON.parse(data.rightCanine).encrypted):data.rightCanine);
+    setLeftCanine((isEncrypted && data.leftCanine)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.leftCanine).tag,JSON.parse(data.leftCanine).encrypted):data.leftCanine);
+    setLeftMolar((isEncrypted && data.leftMolar)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.leftMolar).tag,JSON.parse(data.leftMolar).encrypted):data.leftMolar);
+    setOverjet((isEncrypted && data.overjet)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.overjet).tag,JSON.parse(data.overjet).encrypted):data.overjet);
+    setOverbite((isEncrypted && data.overbite)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.overbite).tag,JSON.parse(data.overbite).encrypted):data.overbite);
+    setCurveOfSpee((isEncrypted && data.curveOfSpee)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.curveOfSpee).tag,JSON.parse(data.curveOfSpee).encrypted):data.curveOfSpee);
+    setCant((isEncrypted && data.cant)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.cant).tag,JSON.parse(data.cant).encrypted):data.cant);
+    setPosteriorRight((isEncrypted && data.posteriorRight)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.posteriorRight).tag,JSON.parse(data.posteriorRight).encrypted):data.posteriorRight);
+    setPosteriorLeft((isEncrypted && data.posteriorLeft)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.posteriorLeft).tag,JSON.parse(data.posteriorLeft).encrypted):data.posteriorLeft);
+    setUpperMidline((isEncrypted && data.upperMidline)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.upperMidline).tag,JSON.parse(data.upperMidline).encrypted):data.upperMidline);
+    setLowerMidline((isEncrypted && data.lowerMidline)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.lowerMidline).tag,JSON.parse(data.lowerMidline).encrypted):data.lowerMidline);
+    setDeviate((isEncrypted && data.deviate)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.deviate).tag,JSON.parse(data.deviate).encrypted):data.deviate);
+    setCrCoDiscrepancy((isEncrypted && data.crCoDiscrepancy)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.crCoDiscrepancy).tag,JSON.parse(data.crCoDiscrepancy).encrypted):data.crCoDiscrepancy);
+    setMaximumMouthOpening((isEncrypted && data.maximumMouthOpening)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.maximumMouthOpening).tag,JSON.parse(data.maximumMouthOpening).encrypted):data.maximumMouthOpening);
+    setGuidanceOnProtrusion((isEncrypted && data.guidanceOnProtrusion)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.guidanceOnProtrusion).tag,JSON.parse(data.guidanceOnProtrusion).encrypted):data.guidanceOnProtrusion);
+    setGuidanceOnRight((isEncrypted && data.guidanceOnRight)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.guidanceOnRight).tag,JSON.parse(data.guidanceOnRight).encrypted):data.guidanceOnRight);
+    setGuidanceOnLeft((isEncrypted && data.guidanceOnLeft)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.guidanceOnLeft).tag,JSON.parse(data.guidanceOnLeft).encrypted):data.guidanceOnLeft);
+    setMusculature((isEncrypted && data.musculature)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.musculature).tag,JSON.parse(data.musculature).encrypted):data.musculature);
+    setSwallowingPattern((isEncrypted && data.swallowingPattern)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.swallowingPattern).tag,JSON.parse(data.swallowingPattern).encrypted):data.swallowingPattern);
+    setHistoryOfTMD((isEncrypted && data.historyOfTMD)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.historyOfTMD).tag,JSON.parse(data.historyOfTMD).encrypted):data.historyOfTMD);
   }
 
   const getIntraOral = () => {
@@ -118,7 +127,41 @@ export default function IntraOral(props){
   const onUpdateIntraOral = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      putToServerWithToken(`/v1/intraoral/updateIntraoral/${patient.currentPatient.id}`,{
+      let infoUpdate = {};
+      if(isEncrypted){
+        infoUpdate = {
+          idDoctor: doctor.data.id,
+          oralHygiene: oralHygiene ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,oralHygiene)) : null,
+          dentition: dentition ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,dentition)) : null,
+          caries: caries ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,caries)) : null,
+          missing: missing ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,missing)) : null,
+          wearingTeeth: wearingTeeth ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,wearingTeeth)) : null,
+          detalAldevelopment: detalAldevelopment ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,detalAldevelopment)) : null,
+          otherProblems: otherProblems ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,otherProblems)) : null,
+          archForm: archForm ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,archForm)) : null,
+          rightCanine: rightCanine ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,rightCanine)) : null,
+          rightMolar: rightMolar ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,rightMolar)) : null,
+          leftCanine: leftCanine ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,leftCanine)) : null,
+          leftMolar: leftMolar ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,leftMolar)) : null,
+          overjet: overjet ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,overjet)) : null,
+          overbite: overbite ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,overbite)) : null,
+          curveOfSpee: curveOfSpee ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,curveOfSpee)) : null,
+          cant: cant ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,cant)) : null,
+          posteriorRight: posteriorRight ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,posteriorRight)) : null,
+          posteriorLeft: posteriorLeft ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,posteriorLeft)) : null,
+          upperMidline: upperMidline ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,upperMidline)) : null,
+          lowerMidline: lowerMidline ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,lowerMidline)) : null,
+          deviate: deviate ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,deviate)) : null,
+          crCoDiscrepancy: crCoDiscrepancy ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,crCoDiscrepancy)) : null,
+          maximumMouthOpening: maximumMouthOpening ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,maximumMouthOpening)) : null,
+          guidanceOnProtrusion: guidanceOnProtrusion ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,guidanceOnProtrusion)) : null,
+          guidanceOnRight: guidanceOnRight ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,guidanceOnRight)) : null,
+          guidanceOnLeft: guidanceOnLeft ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,guidanceOnLeft)) : null,
+          musculature: musculature ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,musculature)) : null,
+          swallowingPattern: swallowingPattern ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,swallowingPattern)) : null,
+          historyOfTMD: historyOfTMD ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,historyOfTMD)) : null
+        }
+      }else infoUpdate = {
         idDoctor: doctor.data.id,
         oralHygiene: oralHygiene,
         dentition: dentition,
@@ -149,7 +192,8 @@ export default function IntraOral(props){
         musculature: musculature,
         swallowingPattern: swallowingPattern,
         historyOfTMD: historyOfTMD
-      }).then(result => {
+      }
+      putToServerWithToken(`/v1/intraoral/updateIntraoral/${patient.currentPatient.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         setEditMode(false);

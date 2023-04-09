@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
@@ -23,6 +24,8 @@ export default function ExtraOral(props){
   const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
 
   const [editMode,setEditMode] = useState();
   const [faceAsymetry,setFaceAsymetry] = useState();
@@ -48,6 +51,12 @@ export default function ExtraOral(props){
 
   const [previousData,setPreviousData] = useState();
 
+  const isEncrypted = patient.currentPatient.isEncrypted;
+  const modeKey = useMemo(()=>{
+    if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
+    else return encryptKeyClinic;
+  },[selectPatientOnMode])
+
   useEffect(()=>{
     if(patient.currentPatient) getExtraOral();
   },patient.currentPatient.id)
@@ -58,26 +67,26 @@ export default function ExtraOral(props){
   }
 
   const updateState = (data) => {
-    setFaceAsymetry(data.faceAsymetry);
-    setChin(data.chin);
-    setLipCompetence(data.lipCompetence);
-    setLipPostureApart(data.lipPostureApart);
-    setNormalNaresExposure(data.normalNaresExposure);
-    setAlarBaseWidth(data.alarBaseWidth);
-    setLipWidth(data.lipWidth);
-    setVerticalDimensions(data.verticalDimensions);
-    setOverallProfile(data.overallProfile);
-    setLowerThirdProfile(data.lowerThirdProfile);
-    setNasolabialAngle(data.nasolabialAngle);
-    setSoftTissuePogonion(data.softTissuePogonion);
-    setMandibularPlaneAngle(data.mandibularPlaneAngle);
-    setObliqueAnalysis(data.obliqueAnalysis);
-    setTeethDisplay(data.teethDisplay);
-    setGingivalDisplayLevel(data.gingivalDisplayLevel);
-    setIncisalDisplayMaxillary(data.incisalDisplayMaxillary);
-    setIncisalDisplayMandibular(data.incisalDisplayMandibular);
-    setSmileArc(data.smileArc);
-    setRestPositionIncisalDisplay(data.restPositionIncisalDisplay);
+    setFaceAsymetry((isEncrypted && data.faceAsymetry)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.faceAsymetry).tag,JSON.parse(data.faceAsymetry).encrypted):data.faceAsymetry);
+    setChin((isEncrypted && data.chin)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.chin).tag,JSON.parse(data.chin).encrypted):data.chin);
+    setLipCompetence((isEncrypted && data.lipCompetence)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.lipCompetence).tag,JSON.parse(data.lipCompetence).encrypted):data.lipCompetence);
+    setLipPostureApart((isEncrypted && data.lipPostureApart)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.lipPostureApart).tag,JSON.parse(data.lipPostureApart).encrypted):data.lipPostureApart);
+    setNormalNaresExposure((isEncrypted && data.normalNaresExposure)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.normalNaresExposure).tag,JSON.parse(data.normalNaresExposure).encrypted):data.normalNaresExposure);
+    setAlarBaseWidth((isEncrypted && data.alarBaseWidth)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.alarBaseWidth).tag,JSON.parse(data.alarBaseWidth).encrypted):data.alarBaseWidth);
+    setLipWidth((isEncrypted && data.lipWidth)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.lipWidth).tag,JSON.parse(data.lipWidth).encrypted):data.lipWidth);
+    setVerticalDimensions((isEncrypted && data.verticalDimensions)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.verticalDimensions).tag,JSON.parse(data.verticalDimensions).encrypted):data.verticalDimensions);
+    setOverallProfile((isEncrypted && data.overallProfile)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.overallProfile).tag,JSON.parse(data.overallProfile).encrypted):data.overallProfile);
+    setLowerThirdProfile((isEncrypted && data.lowerThirdProfile)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.lowerThirdProfile).tag,JSON.parse(data.lowerThirdProfile).encrypted):data.lowerThirdProfile);
+    setNasolabialAngle((isEncrypted && data.nasolabialAngle)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.nasolabialAngle).tag,JSON.parse(data.nasolabialAngle).encrypted):data.nasolabialAngle);
+    setSoftTissuePogonion((isEncrypted && data.softTissuePogonion)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.softTissuePogonion).tag,JSON.parse(data.softTissuePogonion).encrypted):data.softTissuePogonion);
+    setMandibularPlaneAngle((isEncrypted && data.mandibularPlaneAngle)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.mandibularPlaneAngle).tag,JSON.parse(data.mandibularPlaneAngle).encrypted):data.mandibularPlaneAngle);
+    setObliqueAnalysis((isEncrypted && data.obliqueAnalysis)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.obliqueAnalysis).tag,JSON.parse(data.obliqueAnalysis).encrypted):data.obliqueAnalysis);
+    setTeethDisplay((isEncrypted && data.teethDisplay)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.teethDisplay).tag,JSON.parse(data.teethDisplay).encrypted):data.teethDisplay);
+    setGingivalDisplayLevel((isEncrypted && data.gingivalDisplayLevel)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.gingivalDisplayLevel).tag,JSON.parse(data.gingivalDisplayLevel).encrypted):data.gingivalDisplayLevel);
+    setIncisalDisplayMaxillary((isEncrypted && data.incisalDisplayMaxillary)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.incisalDisplayMaxillary).tag,JSON.parse(data.incisalDisplayMaxillary).encrypted):data.incisalDisplayMaxillary);
+    setIncisalDisplayMandibular((isEncrypted && data.incisalDisplayMandibular)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.incisalDisplayMandibular).tag,JSON.parse(data.incisalDisplayMandibular).encrypted):data.incisalDisplayMandibular);
+    setSmileArc((isEncrypted && data.smileArc)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.smileArc).tag,JSON.parse(data.smileArc).encrypted):data.smileArc);
+    setRestPositionIncisalDisplay((isEncrypted && data.restPositionIncisalDisplay)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.restPositionIncisalDisplay).tag,JSON.parse(data.restPositionIncisalDisplay).encrypted):data.restPositionIncisalDisplay);
   }
 
   const getExtraOral = () => {
@@ -101,7 +110,32 @@ export default function ExtraOral(props){
   const onUpdateExtraOral = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      putToServerWithToken(`/v1/extraoral/updateExtraoral/${patient.currentPatient.id}`,{
+      let infoUpdate = {};
+      if(isEncrypted){
+        infoUpdate = {
+          idDoctor: doctor.data.id,
+          faceAsymetry: faceAsymetry ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,faceAsymetry)) : null,
+          chin: chin ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,chin)) : null,
+          lipCompetence: lipCompetence ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,lipCompetence)) : null,
+          lipPostureApart: lipPostureApart ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,lipPostureApart)) : null,
+          normalNaresExposure: normalNaresExposure ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,normalNaresExposure)) : null,
+          alarBaseWidth: alarBaseWidth ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,alarBaseWidth)) : null,
+          lipWidth: lipWidth ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,lipWidth)) : null,
+          verticalDimensions: verticalDimensions ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,verticalDimensions)) : null,
+          overallProfile: overallProfile ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,overallProfile)) : null,
+          lowerThirdProfile: lowerThirdProfile ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,lowerThirdProfile)) : null,
+          nasolabialAngle: nasolabialAngle ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,nasolabialAngle)) : null,
+          softTissuePogonion: softTissuePogonion ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,softTissuePogonion)) : null,
+          mandibularPlaneAngle: mandibularPlaneAngle ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,mandibularPlaneAngle)) : null,
+          obliqueAnalysis: obliqueAnalysis ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,obliqueAnalysis)) : null,
+          teethDisplay: teethDisplay ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,teethDisplay)) : null,
+          gingivalDisplayLevel: gingivalDisplayLevel ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,gingivalDisplayLevel)) : null,
+          incisalDisplayMaxillary: incisalDisplayMaxillary ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,incisalDisplayMaxillary)) : null,
+          incisalDisplayMandibular: incisalDisplayMandibular ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,incisalDisplayMandibular)) : null,
+          smileArc: smileArc ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,smileArc)) : null,
+          restPositionIncisalDisplay: restPositionIncisalDisplay ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,restPositionIncisalDisplay)) : null
+        }
+      }else infoUpdate = {
         idDoctor: doctor.data.id,
         faceAsymetry: faceAsymetry,
         chin: chin,
@@ -123,7 +157,8 @@ export default function ExtraOral(props){
         incisalDisplayMandibular: incisalDisplayMandibular,
         smileArc: smileArc,
         restPositionIncisalDisplay: restPositionIncisalDisplay
-      }).then(result => {
+      }
+      putToServerWithToken(`/v1/extraoral/updateExtraoral/${patient.currentPatient.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         toast.success(result.message);
@@ -173,7 +208,7 @@ export default function ExtraOral(props){
             onChange={value=>setFaceAsymetry(value)} 
             style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
             result={faceAsymetry?faceAsymetry:t('no data')}
-            arrayRadios={['Symmetric','Left deviation','Right deviation']}
+            arrayRadios={['Symmetric','Left Deviation','Right Deviation']}
           />
         </div>
         <div className="w-100 h-auto mt-1">
@@ -185,7 +220,7 @@ export default function ExtraOral(props){
             onChange={value=>setChin(value)} 
             style={{fontSize:FONT_SIZE,width:"60px"}}
             result={chin?chin:t('no data')}
-            arrayRadios={['Symmetric','Left deviation','Right deviation']}
+            arrayRadios={['Symmetric','Left Deviation','Right Deviation']}
           />
         </div>
         <div className="w-100 h-auto mt-1">
@@ -236,10 +271,10 @@ export default function ExtraOral(props){
           <RadioWithLabel 
             editMode={editMode}
             onCancel={onCancel}
-            label={t('Alar Base Width')}
+            label={t('Alar Base Width Relative To Intercanthal Width')}
             value={alarBaseWidth}
             onChange={value=>setAlarBaseWidth(value)} 
-            style={{fontSize:FONT_SIZE,width:"130px"}}
+            style={{fontSize:FONT_SIZE,width:"250px"}}
             result={alarBaseWidth?alarBaseWidth:t('no data')}
             arrayRadios={['Narrower','Equal','Wider']}
           />
@@ -407,12 +442,12 @@ export default function ExtraOral(props){
           <InputWithLabel 
             editMode={editMode}
             onCancel={onCancel}
-            label={t('Incisal Display')}
+            label={t('Incisal Display')+' '+t('maxillary incisor')}
             onUpdate={onUpdateExtraOral}
             placeholder={t('Enter Incisal Display')}
             classNameResult="w-auto"
             type="number"
-            unit={t('% maxillary incisor')}
+            unit={'%'+t('maxillary incisor')}
             value={incisalDisplayMaxillary}
             onChange={value=>setIncisalDisplayMaxillary(value)} 
             style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
@@ -423,12 +458,12 @@ export default function ExtraOral(props){
           <InputWithLabel 
             editMode={editMode}
             onCancel={onCancel}
-            label={t('Incisal Display')}
+            label={t('Incisal Display')+' '+t('mandibular incisor')}
             onUpdate={onUpdateExtraOral}
             placeholder={t('Enter Incisal Display')}
             classNameResult="w-auto"
             type="number"
-            unit={t('% mandibular incisor')}
+            unit={'%'+t('mandibular incisor')}
             value={incisalDisplayMandibular}
             onChange={value=>setIncisalDisplayMandibular(value)} 
             style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}

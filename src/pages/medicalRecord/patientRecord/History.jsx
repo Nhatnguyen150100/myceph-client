@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
@@ -13,10 +14,11 @@ import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
 
-const WIDTH_TITLE = "120px";
+const WIDTH_TITLE = "140px";
 
 export default function History(props){
   const isRefresh = useSelector(state=>state.general.isRefresh);
+  const language = useSelector(state=>state.general.language);
   const selectPatientOnMode = useSelector(state=>state.patient.selectPatientOnMode);
   const {t} = useTranslation();
   const dispatch = useDispatch();
@@ -24,8 +26,10 @@ export default function History(props){
   const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
   
-  const [detailHistory,setDetailHostory] = useState();
+  const [dentalHistory,setDetailHostory] = useState();
   const [medicalHistory,setMedicalHistory] = useState();
   const [cvmi,setCvmi] = useState();
   const [otherMethod,setOtherMethod] = useState();
@@ -35,6 +39,11 @@ export default function History(props){
   const [compliance,setCompliance] = useState();
   const [editMode,setEditMode] = useState(false);
   const [previousData,setPreviousData] = useState();
+  const isEncrypted = patient.currentPatient.isEncrypted;
+  const modeKey = useMemo(()=>{
+    if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
+    else return encryptKeyClinic;
+  },[selectPatientOnMode])
 
   const onCancel = () => {
     setEditMode(false);
@@ -46,22 +55,35 @@ export default function History(props){
   },patient.currentPatient.id)
 
   const updateState = (data) => {
-    setDetailHostory(data.dentalHistory);
-    setMedicalHistory(data.medicalHistory);
-    setCvmi(data.cvmi);
-    setOtherMethod(data.otherMethodToEvaluate);
-    setRespiration(data.respiration);
-    setHabits(data.habits);
-    setFamilyHistory(data.familyHistory);
-    setCompliance(data.compliance);
+    setDetailHostory((isEncrypted && data.dentalHistory)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.dentalHistory).tag,JSON.parse(data.dentalHistory).encrypted):data.dentalHistory);
+    setMedicalHistory((isEncrypted && data.medicalHistory)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.medicalHistory).tag,JSON.parse(data.medicalHistory).encrypted):data.medicalHistory);
+    setCvmi((isEncrypted && data.cvmi)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.cvmi).tag,JSON.parse(data.cvmi).encrypted):data.cvmi);
+    setOtherMethod((isEncrypted && data.otherMethodToEvaluate)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.otherMethodToEvaluate).tag,JSON.parse(data.otherMethodToEvaluate).encrypted):data.otherMethodToEvaluate);
+    setRespiration((isEncrypted && data.respiration)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.respiration).tag,JSON.parse(data.respiration).encrypted):data.respiration);
+    setHabits((isEncrypted && data.habits)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.habits).tag,JSON.parse(data.habits).encrypted):data.habits);
+    setFamilyHistory((isEncrypted && data.familyHistory)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.familyHistory).tag,JSON.parse(data.familyHistory).encrypted):data.familyHistory);
+    setCompliance((isEncrypted && data.compliance)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.compliance).tag,JSON.parse(data.compliance).encrypted):data.compliance);
   }
 
   const onUpdateHistory = () => {
     dispatch(setLoadingModal(true));
     setEditMode(false);
     return new Promise((resolve, reject) => {
-      putToServerWithToken(`/v1/history/updateHistory/${patient.currentPatient.id}`,{
-        dentalHistory: detailHistory,
+      let infoUpdate = {};
+      if(isEncrypted){
+        infoUpdate = {
+          dentalHistory: dentalHistory ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,dentalHistory)) : null,
+          medicalHistory: medicalHistory ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,medicalHistory)) : null,
+          cvmi: cvmi ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,cvmi)) : null,
+          otherMethodToEvaluate: otherMethod ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,otherMethod)) : null,
+          respiration: respiration ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,respiration)) : null,
+          habits: habits ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,habits)) : null,
+          familyHistory: familyHistory ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,familyHistory)) : null,
+          compliance: compliance ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,compliance)) : null,
+          idDoctor: doctor.data.id
+        }
+      }else infoUpdate = {
+        dentalHistory: dentalHistory,
         medicalHistory: medicalHistory,
         cvmi: cvmi,
         otherMethodToEvaluate: otherMethod,
@@ -70,7 +92,8 @@ export default function History(props){
         familyHistory: familyHistory,
         compliance: compliance,
         idDoctor: doctor.data.id
-      }).then(result => {
+      }
+      putToServerWithToken(`/v1/history/updateHistory/${patient.currentPatient.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         toast.success(result.message);
@@ -130,10 +153,10 @@ export default function History(props){
         onUpdate={onUpdateHistory}
         placeholder={t('Enter Dental History')}
         type="text"
-        value={detailHistory}
+        value={dentalHistory}
         onChange={value=>setDetailHostory(value)} 
         style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
-        result={detailHistory?detailHistory:t('no data')}
+        result={dentalHistory?dentalHistory:t('no data')}
       />
     </div>
     <div className="w-100 h-auto mt-1">
@@ -158,7 +181,7 @@ export default function History(props){
         label={t('Cervical Vertebral Maturation Index (CVMI)')}
         value={cvmi} 
         onChange={value=>setCvmi(value)} 
-        style={{fontSize:FONT_SIZE,width:"300px"}}
+        style={{fontSize:FONT_SIZE,width:"330px"}}
         result={cvmi?cvmi:'no data'}
       >
         <option className="text-gray border-0 rounded btn-hover-bg text-capitalize" value={'CS1'} style={{fontSize:FONT_SIZE}}>
@@ -192,7 +215,7 @@ export default function History(props){
         type="text"
         value={otherMethod}
         onChange={value=>setOtherMethod(value)} 
-        style={{fontSize:FONT_SIZE,width:"300px"}}
+        style={{fontSize:FONT_SIZE,width:`${language==='en'?'330px':'360px'}`}}
         result={otherMethod?otherMethod:t('no data')}
       />
     </div>
@@ -201,7 +224,7 @@ export default function History(props){
         classNameResult="flex-grow-1" 
         editMode={editMode}
         onCancel={onCancel}
-        label={t('Dental History')}
+        label={t('Respiration')}
         onUpdate={onUpdateHistory}
         placeholder={t('Enter Respiration')}
         type="text"

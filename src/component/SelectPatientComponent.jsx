@@ -131,7 +131,7 @@ const SelectPatientComponent = (props) => {
                   </div>
                   <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
                     <div className="w-auto d-flex flex-row align-items-center justify-content-start">
-                      <span className={`text-capitalize fw-bold ${patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`} style={{fontSize:FONT_TEXT}}>{'( '}{patient.isEncrypted?onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic):patient.gender}{' |'}</span>
+                      <span className={`text-capitalize fw-bold ${patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`} style={{fontSize:FONT_TEXT}}>{'( '}{t(patient.isEncrypted?onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic):patient.gender)}{' |'}</span>
                       {
                         patient.isEncrypted ? <>
                           { onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic) !== '---' ? <img className="mx-1" src={`/assets/images/${patient.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${patient.gender==='male'?'male.png':'female.png'}`}/> : <span style={{fontSize:FONT_TEXT}} className='text-danger fw-bold mx-1'>---</span>}
@@ -141,7 +141,7 @@ const SelectPatientComponent = (props) => {
                       }
                       <span className={`${patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'} fw-bold`} style={{fontSize:FONT_TEXT}}>{')'}</span>
                     </div>
-                    <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(patient.birthday).age}{t(' age')}{computeAge(patient.birthday).month>0 && (' - '+computeAge(patient.birthday).month+t(' month'))}{' )'}</span>
+                    <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(patient.birthday).age} {t('age')}{computeAge(patient.birthday).month>0 && (' - '+computeAge(patient.birthday).month+t(' month'))}{' )'}</span>
                   </div>
                 </button>
               })
@@ -153,11 +153,11 @@ const SelectPatientComponent = (props) => {
         </div>
         <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
           <div className="w-auto d-flex flex-row align-items-center justify-content-start">
-            <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{currentPatient.isEncrypted?onDecryptedDataPreview(selectPatientOnMode,currentPatient?.gender,encryptKeyDoctor,encryptKeyClinic):currentPatient?.gender}{' |'}</span>
+            <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{t((currentPatient.isEncrypted?onDecryptedDataPreview(selectPatientOnMode,currentPatient?.gender,encryptKeyDoctor,encryptKeyClinic):currentPatient?.gender).toString())}{' |'}</span>
             <img className="mx-1" src={`/assets/images/${currentPatient?.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${currentPatient?.gender==='male'?'male.png':'female.png'}`}/>
             <span className="fw-bold" style={{fontSize:FONT_TEXT}}>{')'}</span>
           </div>
-          <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(currentPatient?.birthday).age}{t(' age')}{computeAge(currentPatient?.birthday).month>0 && (' - '+computeAge(currentPatient?.birthday).month+t(' month'))}{' )'}</span>
+          <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(currentPatient?.birthday).age} {t('age')}{computeAge(currentPatient?.birthday).month>0 && (' - '+computeAge(currentPatient?.birthday).month+t(' month'))}{' )'}</span>
         </div>
       </fieldset>
     }

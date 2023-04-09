@@ -84,6 +84,14 @@ export const deCryptData = (key,iv,tag,encryptedData) => {
   }
 }
 
+
+/**
+ * todo: Mã hóa dữ liệu bệnh nhân bao gồm thông tin cá nhân, hồ sơ bệnh án
+ * @param {*} key 
+ * @param {*} iv 
+ * @param {*} data 
+ * @returns 
+ */
 export const encryptPatientData = (key,iv,data) => {
   const patientData = data.infoOfPatient;
   const patientListData = data.otherInformation;
@@ -164,7 +172,7 @@ export const encryptPatientData = (key,iv,data) => {
     alveolarBoneHeights: patientData.radiographies.alveolarBoneHeights ? JSON.stringify(encryptData(key,iv,patientData.radiographies.alveolarBoneHeights)) : null,
     crownRootRatio: patientData.radiographies.crownRootRatio ? JSON.stringify(encryptData(key,iv,patientData.radiographies.crownRootRatio)) : null,
     others: patientData.radiographies.others ? JSON.stringify(encryptData(key,iv,patientData.radiographies.others)) : null,
-    laterakCephalometricRadiography: patientData.radiographies.laterakCephalometricRadiography ? JSON.stringify(encryptData(key,iv,patientData.radiographies.laterakCephalometricRadiography)) : null,
+    lateralCephalometricRadiography: patientData.radiographies.lateralCephalometricRadiography ? JSON.stringify(encryptData(key,iv,patientData.radiographies.lateralCephalometricRadiography)) : null,
     otherRadiography: patientData.radiographies.otherRadiography ? JSON.stringify(encryptData(key,iv,patientData.radiographies.otherRadiography )) : null
   }
   let diagnosisAndTreatmentEncrypted = {
@@ -176,7 +184,6 @@ export const encryptPatientData = (key,iv,data) => {
     listOfIssueEncrypted.push({
       id: element.id,
       issue: element.issue ? JSON.stringify(encryptData(key,iv,element.issue)) : null,
-      // priotized: element.priotized ? JSON.stringify(encryptData(key,iv,element.priotized.toString())) : null,
       treatmentMethod: element.treatmentMethod ? JSON.stringify(encryptData(key,iv,element.treatmentMethod)) : null,
       treatmentObject: element.treatmentObject ? JSON.stringify(encryptData(key,iv,element.treatmentObject)) : null
     })
@@ -211,6 +218,13 @@ export const encryptPatientData = (key,iv,data) => {
 }
 
 
+/**
+ * todo: giải mã dữ liệu bệnh nhân ( thông tin cá nhân, hồ sơ bệnh án ) 
+ * @param {*} key 
+ * @param {*} iv 
+ * @param {*} data 
+ * @returns 
+ */
 export const decryptPatientData = (key,iv,data) => {
   const patientData = data.infoOfPatient;
   const patientListData = data.otherInformation;
@@ -291,7 +305,7 @@ export const decryptPatientData = (key,iv,data) => {
     alveolarBoneHeights: patientData.radiographies.alveolarBoneHeights ? deCryptData(key,iv,JSON.parse(patientData.radiographies.alveolarBoneHeights).tag,JSON.parse(patientData.radiographies.alveolarBoneHeights).encrypted) : null,
     crownRootRatio: patientData.radiographies.crownRootRatio ? deCryptData(key,iv,JSON.parse(patientData.radiographies.crownRootRatio).tag,JSON.parse(patientData.radiographies.crownRootRatio).encrypted) : null,
     others: patientData.radiographies.others ? deCryptData(key,iv,JSON.parse(patientData.radiographies.others).tag,JSON.parse(patientData.radiographies.others).encrypted) : null,
-    laterakCephalometricRadiography: patientData.radiographies.laterakCephalometricRadiography ? deCryptData(key,iv,JSON.parse(patientData.radiographies.laterakCephalometricRadiography).tag,JSON.parse(patientData.radiographies.laterakCephalometricRadiography).encrypted) : null,
+    lateralCephalometricRadiography: patientData.radiographies.lateralCephalometricRadiography ? deCryptData(key,iv,JSON.parse(patientData.radiographies.lateralCephalometricRadiography).tag,JSON.parse(patientData.radiographies.lateralCephalometricRadiography).encrypted) : null,
     otherRadiography: patientData.radiographies.otherRadiography ? deCryptData(key,iv,JSON.parse(patientData.radiographies.otherRadiography).tag,JSON.parse(patientData.radiographies.otherRadiography).encrypted) : null
   }
   let diagnosisAndTreatmentDecrypted = {
@@ -303,7 +317,6 @@ export const decryptPatientData = (key,iv,data) => {
     listOfIssueDecrypted.push({
       id: element.id,
       issue: element.issue ? deCryptData(key,iv,JSON.parse(element.issue).tag,JSON.parse(element.issue).encrypted) : null,
-      // priotized: element.priotized ? parseInt(deCryptData(key,iv,JSON.parse(element.priotized).tag,JSON.parse(element.priotized).encrypted)) : null,
       treatmentMethod: element.treatmentMethod ? deCryptData(key,iv,JSON.parse(element.treatmentMethod).tag,JSON.parse(element.treatmentMethod).encrypted) : null,
       treatmentObject: element.treatmentObject ? deCryptData(key,iv,JSON.parse(element.treatmentObject).tag,JSON.parse(element.treatmentObject).encrypted) : null
     })

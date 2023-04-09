@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
+import { deCryptData, encryptData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import { FONT_SIZE, SELECT_PATIENT_MODE, toISODateString } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
@@ -21,6 +22,8 @@ export default function PatientTreatmentHistory(props){
   const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
   
   const [consultationDate,setConsultationDate] = useState(toISODateString(new Date()));
   const [performedProcedures,setPerformedProcedures] = useState();
@@ -33,18 +36,36 @@ export default function PatientTreatmentHistory(props){
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
   const [listOfHistory,setListOfHistory] = useState([]);
+  
+  const isEncrypted = patient.currentPatient.isEncrypted;
+  const modeKey = useMemo(()=>{
+    if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
+    else return encryptKeyClinic;
+  },[selectPatientOnMode])
 
   const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
 
   useEffect(()=>{
     if(patient.currentPatient.id) getTreatmentHistory();
   },[patient.currentPatient])
+
+  const deCryptedListHistory = (listOfHistory) => {
+    let listOfHistoryDecrypted = [];
+    listOfHistory.length > 0 && listOfHistory.forEach(element => {
+      listOfHistoryDecrypted.push({
+        ...element,
+        currentStatus: element.currentStatus ? deCryptData(modeKey.key,modeKey.iv,JSON.parse(element.currentStatus).tag,JSON.parse(element.currentStatus).encrypted) : null,
+        performedProcedures: element.performedProcedures ? deCryptData(modeKey.key,modeKey.iv,JSON.parse(element.performedProcedures).tag,JSON.parse(element.performedProcedures).encrypted) : null  
+      })
+    });
+    return listOfHistoryDecrypted;
+  }
   
   const getTreatmentHistory = () => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
       getToServerWithToken(`/v1/treatmentHistory/${patient.currentPatient.id}`).then(result => {
-        setListOfHistory(result.data);
+        setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -59,14 +80,23 @@ export default function PatientTreatmentHistory(props){
 
   const createHistory = () => {
     return new Promise((resolve,reject) => {
-      dispatch(setLoadingModal(true));
-      postToServerWithToken(`/v1/treatmentHistory/createHistory/${patient.currentPatient.id}`,{
+      let infoHistory = {};
+      if(isEncrypted){
+        infoHistory = {
+          idDoctor: doctor.data.id,
+          currentStatus: currentStatus ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,currentStatus)) : null,
+          performedProcedures: performedProcedures ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,performedProcedures)) : null,
+          consultationDate: consultationDate
+        }
+      }else infoHistory = {
         idDoctor: doctor.data.id,
         currentStatus: currentStatus,
         performedProcedures: performedProcedures,
         consultationDate: consultationDate
-      }).then(result => {
-        setListOfHistory(result.data);
+      }
+      dispatch(setLoadingModal(true));
+      postToServerWithToken(`/v1/treatmentHistory/createHistory/${patient.currentPatient.id}`,infoHistory).then(result => {
+        setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
         setCurrentStatus('');
         setPerformedProcedures('');
         setConsultationDate(toISODateString(new Date()));
@@ -85,14 +115,23 @@ export default function PatientTreatmentHistory(props){
 
   const updateHistory = (idHistory) => {
     return new Promise((resolve, reject) => {
-      dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/treatmentHistory/updateHistory/${patient.currentPatient.id}?idHistory=${idHistory}`,{
+      let infoUpdate = {};
+      if(isEncrypted){
+        infoUpdate = {
+          idDoctor: doctor.data.id,
+          currentStatus: currentStatusItem ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,currentStatusItem)) : null,
+          performedProcedures: performedProceduresItem ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,performedProceduresItem)) : null,
+          consultationDate: consultationDateItem
+        }
+      }else infoUpdate = {
         idDoctor: doctor.data.id,
         currentStatus: currentStatusItem,
         performedProcedures: performedProceduresItem,
         consultationDate: consultationDateItem
-      }).then(result => {
-        setListOfHistory(result.data);
+      }
+      dispatch(setLoadingModal(true));
+      putToServerWithToken(`/v1/treatmentHistory/updateHistory/${patient.currentPatient.id}?idHistory=${idHistory}`,infoUpdate).then(result => {
+        setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
         setEditHistoryId('');
         toast.success(result.message);
         resolve();
@@ -111,7 +150,7 @@ export default function PatientTreatmentHistory(props){
     return new Promise((resolve,reject) =>{
       dispatch(setLoadingModal(true));
       deleteToServerWithToken(`/v1/treatmentHistory/deleteHistory/${patient.currentPatient.id}?idHistory=${editHistoryId}&idDoctor=${doctor.data.id}`).then(result => {
-        setListOfHistory(result.data);
+        setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
         toast.success(result.message);
         resolve();
       }).catch(err =>{

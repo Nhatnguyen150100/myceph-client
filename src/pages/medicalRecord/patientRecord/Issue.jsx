@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
+import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextAreaFieldInput from "../../../common/TextAreaFieldInput.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
@@ -22,6 +23,8 @@ export default function Issue(props){
   const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
 
   const [issue,setIssue] = useState();
   const [treatmentObject,setTreatmentObject] = useState();
@@ -38,17 +41,36 @@ export default function Issue(props){
 
   const [listOfIssue,setListOfIssue] = useState();
 
+  const isEncrypted = patient.currentPatient.isEncrypted;
+  const modeKey = useMemo(()=>{
+    if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
+    else return encryptKeyClinic;
+  },[selectPatientOnMode])
+
   const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
 
   useEffect(()=>{
     if(patient.currentPatient) getListOfIssues();
   },[patient.currentPatient])
+  
+  const deCryptedListIssue = (listOfIssues) => {
+    let listOfIssueDecrypted = [];
+    listOfIssues.length > 0 && listOfIssues.forEach(element => {
+      listOfIssueDecrypted.push({
+        ...element,
+        issue: element.issue ? deCryptData(modeKey.key,modeKey.iv,JSON.parse(element.issue).tag,JSON.parse(element.issue).encrypted) : null,
+        treatmentMethod: element.treatmentMethod ? deCryptData(modeKey.key,modeKey.iv,JSON.parse(element.treatmentMethod).tag,JSON.parse(element.treatmentMethod).encrypted) : null,
+        treatmentObject: element.treatmentObject ? deCryptData(modeKey.key,modeKey.iv,JSON.parse(element.treatmentObject).tag,JSON.parse(element.treatmentObject).encrypted) : null  
+      })
+    });
+    return listOfIssueDecrypted;
+  }
 
   const getListOfIssues = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
       getToServerWithToken(`/v1/listOfIssue/${patient.currentPatient.id}`).then(result => {
-        setListOfIssue(result.data);
+        setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -64,18 +86,28 @@ export default function Issue(props){
   const createIssue = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      postToServerWithToken(`/v1/listOfIssue/createIssue/${patient.currentPatient.id}`,{
+      let infoIssue = {};
+      if(isEncrypted){
+        infoIssue = {
+          idDoctor: doctor.data.id,
+          issue: issue ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,issue)) : null,
+          treatmentObject: treatmentObject ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,treatmentObject)) : null,
+          treatmentMethod: treatmentMethod ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,treatmentMethod)) : null,
+          priotized: priotized
+        }
+      }else infoIssue = {
         idDoctor: doctor.data.id,
         issue: issue,
         treatmentObject: treatmentObject,
         treatmentMethod: treatmentMethod,
         priotized: priotized
-      }).then(result => {
+      }
+      postToServerWithToken(`/v1/listOfIssue/createIssue/${patient.currentPatient.id}`,infoIssue).then(result => {
         setIssue('');
         setTreatmentMethod('');
         setTreatmentObject('');
         setPriotized(false);
-        setListOfIssue(result.data);
+        setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
         toast.success(t(result.message));
         resolve();
       }).catch(err =>{
@@ -93,14 +125,24 @@ export default function Issue(props){
   const updateIssue = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      putToServerWithToken(`/v1/listOfIssue/updateIssue/${patient.currentPatient.id}?idIssue=${editIssueId}`,{
+      let infoUpdate = {};
+      if(isEncrypted){
+        infoUpdate = {
+          idDoctor: doctor.data.id,
+          issue: issueItem ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,issueItem)) : null,
+          treatmentObject: treatmentObjectItem ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,treatmentObjectItem)) : null,
+          treatmentMethod: treatmentMethodItem ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,treatmentMethodItem)) : null,
+          priotized: priotizedItem
+        }
+      }else infoUpdate = {
         idDoctor: doctor.data.id,
         issue: issueItem,
         treatmentObject: treatmentObjectItem,
         treatmentMethod: treatmentMethodItem,
         priotized: priotizedItem
-      }).then(result => {
-        setListOfIssue(result.data);
+      }
+      putToServerWithToken(`/v1/listOfIssue/updateIssue/${patient.currentPatient.id}?idIssue=${editIssueId}`,infoUpdate).then(result => {
+        setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
         toast.success(result.message);
         resolve();
       }).catch(err =>{
@@ -118,7 +160,7 @@ export default function Issue(props){
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
       deleteToServerWithToken(`/v1/listOfIssue/deleteIssue/${patient.currentPatient.id}?idIssue=${editIssueId}`).then(result => {
-        setListOfIssue(result.data);
+        setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
         toast.success(result.message);
         resolve();
       }).catch(err =>{

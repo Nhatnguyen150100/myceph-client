@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
@@ -23,6 +24,8 @@ export default function Radiography(props){
   const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
 
   const [editMode,setEditMode] = useState();
   const [sinuses,setSinuses] = useState();
@@ -31,10 +34,16 @@ export default function Radiography(props){
   const [alveolarBoneHeights,setAlveolarBoneHeights] = useState();
   const [crownRootRatio,setCrownRootRatio] = useState();
   const [others,setOthers] = useState();
-  const [laterakCephalometricRadiography,setLaterakCephalometricRadiography] = useState();
+  const [lateralCephalometricRadiography,setLateralCephalometricRadiography] = useState();
   const [otherRadiography,setOtherRadiography] = useState();
 
   const [previousData,setPreviousData] = useState();
+
+  const isEncrypted = patient.currentPatient.isEncrypted;
+  const modeKey = useMemo(()=>{
+    if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
+    else return encryptKeyClinic;
+  },[selectPatientOnMode])
 
   useEffect(()=>{
     if(patient.currentPatient) getRadiography();
@@ -46,14 +55,14 @@ export default function Radiography(props){
   }
 
   const updateState = (data) => {
-    setSinuses(data.sinuses);
-    setCondyles(data.condyles);
-    setApparentPathology(data.apparentPathology);
-    setOthers(data.others);
-    setAlveolarBoneHeights(data.alveolarBoneHeights);
-    setCrownRootRatio(data.crownRootRatio);
-    setLaterakCephalometricRadiography(data.laterakCephalometricRadiography);
-    setOtherRadiography(data.otherRadiography);
+    setSinuses((isEncrypted && data.sinuses)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.sinuses).tag,JSON.parse(data.sinuses).encrypted):data.sinuses);
+    setCondyles((isEncrypted && data.condyles)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.condyles).tag,JSON.parse(data.condyles).encrypted):data.condyles);
+    setApparentPathology((isEncrypted && data.apparentPathology)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.apparentPathology).tag,JSON.parse(data.condyles).apparentPathology):data.apparentPathology);
+    setOthers((isEncrypted && data.others)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.others).tag,JSON.parse(data.others).encrypted):data.others);
+    setAlveolarBoneHeights((isEncrypted && data.alveolarBoneHeights)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.alveolarBoneHeights).tag,JSON.parse(data.alveolarBoneHeights).encrypted):data.alveolarBoneHeights);
+    setCrownRootRatio((isEncrypted && data.crownRootRatio)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.crownRootRatio).tag,JSON.parse(data.crownRootRatio).encrypted):data.crownRootRatio);
+    setLateralCephalometricRadiography((isEncrypted && data.condyles)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.condyles).tag,JSON.parse(data.condyles).encrypted):data.lateralCephalometricRadiography);
+    setOtherRadiography((isEncrypted && data.otherRadiography)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.otherRadiography).tag,JSON.parse(data.otherRadiography).encrypted):data.otherRadiography);
   }
 
   const getRadiography = () => {
@@ -77,7 +86,20 @@ export default function Radiography(props){
   const onUpdateRadiography = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      putToServerWithToken(`/v1/radiography/updateRadiography/${patient.currentPatient.id}`,{
+      let infoUpdate = {};
+      if(isEncrypted){
+        infoUpdate = {
+          idDoctor: doctor.data.id,
+          sinuses: sinuses ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,sinuses)) : null,
+          condyles: condyles ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,condyles)) : null,
+          apparentPathology: apparentPathology ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,apparentPathology)) : null,
+          others: others ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,others)) : null,
+          alveolarBoneHeights: alveolarBoneHeights ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,alveolarBoneHeights)) : null,
+          crownRootRatio: crownRootRatio ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,crownRootRatio)) : null,
+          lateralCephalometricRadiography: lateralCephalometricRadiography ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,lateralCephalometricRadiography)) : null,
+          otherRadiography: otherRadiography ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,otherRadiography)) : null
+        }
+      }else infoUpdate = {
         idDoctor: doctor.data.id,
         sinuses: sinuses,
         condyles: condyles,
@@ -85,9 +107,10 @@ export default function Radiography(props){
         others: others,
         alveolarBoneHeights: alveolarBoneHeights,
         crownRootRatio: crownRootRatio,
-        laterakCephalometricRadiography: laterakCephalometricRadiography,
+        lateralCephalometricRadiography: lateralCephalometricRadiography,
         otherRadiography: otherRadiography
-      }).then(result => {
+      }
+      putToServerWithToken(`/v1/radiography/updateRadiography/${patient.currentPatient.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         toast.success(result.message);
@@ -239,10 +262,10 @@ export default function Radiography(props){
             placeholder={t('Enter Lateral Cephalometric Radiography')}
             classNameResult="flex-grow-1"
             type="text"
-            value={laterakCephalometricRadiography}
-            onChange={value=>setLaterakCephalometricRadiography(value)} 
+            value={lateralCephalometricRadiography}
+            onChange={value=>setLateralCephalometricRadiography(value)} 
             style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
-            result={laterakCephalometricRadiography?laterakCephalometricRadiography:t('no data')}
+            result={lateralCephalometricRadiography?lateralCephalometricRadiography:t('no data')}
           />
         </div>
       </div>

@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE } from "../../../common/Utility.jsx";
@@ -20,12 +21,21 @@ export default function Diagnosis(props){
   const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
 
   const [editMode,setEditMode] = useState();
   const [diagnose,setDiagnose] = useState();
   const [prognosisAndNotes,setPrognosisAndNotes] = useState();
 
   const [previousData,setPreviousData] = useState();
+
+  const isEncrypted = patient.currentPatient.isEncrypted;
+  const modeKey = useMemo(()=>{
+    if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
+    else return encryptKeyClinic;
+  },[selectPatientOnMode])
+
 
   useEffect(()=>{
     if(patient.currentPatient) getDiagnosis();
@@ -37,8 +47,8 @@ export default function Diagnosis(props){
   }
 
   const updateState = (data) => {
-    setDiagnose(data.diagnose);
-    setPrognosisAndNotes(data.prognosisAndNotes);
+    setDiagnose((isEncrypted && data.diagnose)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.diagnose).tag,JSON.parse(data.diagnose).encrypted):data.diagnose);
+    setPrognosisAndNotes((isEncrypted && data.prognosisAndNotes)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.prognosisAndNotes).tag,JSON.parse(data.prognosisAndNotes).encrypted):data.prognosisAndNotes);
   }
 
   const getDiagnosis = () => {
@@ -62,11 +72,19 @@ export default function Diagnosis(props){
   const onUpdateRadiography = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      putToServerWithToken(`/v1/diagnosis/updateDiagnosisAndTreatment/${patient.currentPatient.id}`,{
+      let infoUpdate = {};
+      if(isEncrypted){
+        infoUpdate = {
+          idDoctor: doctor.data.id,
+          diagnose: diagnose ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,diagnose)) : null,
+          prognosisAndNotes: prognosisAndNotes ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,prognosisAndNotes)) : null
+        }
+      }else infoUpdate = {
         idDoctor: doctor.data.id,
         diagnose: diagnose,
         prognosisAndNotes: prognosisAndNotes
-      }).then(result => {
+      }
+      putToServerWithToken(`/v1/diagnosis/updateDiagnosisAndTreatment/${patient.currentPatient.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         setEditMode(false);

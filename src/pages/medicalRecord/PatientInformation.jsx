@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { deCryptData, encryptData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../common/InputWithLabel.jsx";
 import SelectWithLabel from "../../common/SelectWithLabel.jsx";
-import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE, SIZE_IMAGE_IN_RECORD, toISODateString, toTimeString } from "../../common/Utility.jsx";
+import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_ICON, onDecryptedDataPreview, SELECT_PATIENT_MODE, SIZE_IMAGE_IN_RECORD, toISODateString, toTimeString } from "../../common/Utility.jsx";
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../redux/GeneralSlice.jsx";
 import { setCurrentPatient } from "../../redux/PatientSlice.jsx";
@@ -22,6 +23,8 @@ export default function PatientInformation(props){
   const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const selectPatientOnMode = useSelector(state=>state.patient.selectPatientOnMode);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
   const [editMode,setEditMode] = useState(false);
 
   const nav = useNavigate();
@@ -42,6 +45,11 @@ export default function PatientInformation(props){
   const [emailUpdateDoctor,setEmailUpdateDoctor] = useState();
   const [nameUpdateDoctor,setNameUpdateDoctor] = useState();
   const [updatedAt,setUpdatedAt] = useState();
+  const isEncrypted = patient.currentPatient.isEncrypted;
+  const modeKey = useMemo(()=>{
+    if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
+    else return encryptKeyClinic;
+  },[selectPatientOnMode])
 
   const [previousData,setPreviousData] = useState();
 
@@ -54,7 +62,22 @@ export default function PatientInformation(props){
     setEditMode(false);
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) => {
-      putToServerWithToken(`/v1/patient/updateInformationPatient/${patient.currentPatient.id}?`,{
+      let infoUpdate = {};
+      if(isEncrypted){
+        infoUpdate = {
+          fullName: fullName,
+          gender: gender ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,gender)) : null,
+          birthday: birthday,
+          consulationDate: consulationDate,
+          phoneNumber: phoneNumber ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,phoneNumber)) : phoneNumber,
+          address: address ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,address)) : address,
+          chiefcomplaint: chiefcomplaint ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,chiefcomplaint)) : chiefcomplaint,
+          note: note ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,note)) : note,
+          updateByDoctor: doctor.id,
+          diagnose: diagnose ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,diagnose)) : diagnose,
+          selectedPlan: selectedPlan ? JSON.stringify(encryptData(modeKey.key,modeKey.iv,selectedPlan)) : selectedPlan,
+        }
+      }else infoUpdate = {
         fullName: fullName,
         gender: gender,
         birthday: birthday,
@@ -66,7 +89,8 @@ export default function PatientInformation(props){
         updateByDoctor: doctor.id,
         diagnose: diagnose,
         selectedPlan: selectedPlan,
-      }).then(result => {
+      }
+      putToServerWithToken(`/v1/patient/updateInformationPatient/${patient.currentPatient.id}?`,infoUpdate).then(result => {
         setPreviousData(result.data);
         updatePatientState(result.data);
         resolve();
@@ -120,16 +144,16 @@ export default function PatientInformation(props){
       dispatch(setCurrentPatient({...patientObject,birthday:data.birthday}));
     }
     setFullName(data.fullName);
-    setGender(data.gender);
+    setGender((isEncrypted && data.gender)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.gender).tag,JSON.parse(data.gender).encrypted):data.gender);
     setBirthday(data.birthday);
     setConsulationDate(data.consulationDate?data.consulationDate:new Date());
-    setPhoneNumber(data.phoneNumber);
-    setAddress(data.address);
-    setNote(data.note);
-    setChiefcomplaint(data.chiefcomplaint);
+    setPhoneNumber((isEncrypted && data.phoneNumber)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.phoneNumber).tag,JSON.parse(data.phoneNumber).encrypted):data.phoneNumber);
+    setAddress((isEncrypted && data.address)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.address).tag,JSON.parse(data.address).encrypted):data.address);
+    setNote((isEncrypted && data.note)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.note).tag,JSON.parse(data.note).encrypted):data.note);
+    setChiefcomplaint((isEncrypted && data.chiefcomplaint)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.chiefcomplaint).tag,JSON.parse(data.chiefcomplaint).encrypted):data.chiefcomplaint);
     setUpdateByDoctor(data.updateByDoctor);
-    setDiagnose(data.diagnose);
-    setSelectedPlan(data.plan);
+    setDiagnose((isEncrypted && data.diagnose)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.diagnose).tag,JSON.parse(data.diagnose).encrypted):data.diagnose);
+    setSelectedPlan((isEncrypted && data.plan)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.plan).tag,JSON.parse(data.plan).encrypted):data.plan);
     setEmailUpdateDoctor(data.email);
     setNameUpdateDoctor(data.fullNameDoctor);
     setUpdatedAt(data.updatedAt);
@@ -179,7 +203,7 @@ export default function PatientInformation(props){
                         {t('update by')}: 
                         <button onClick={toOtherDoctorProfile} className="d-flex mx-1 flex-column border-0 btn-hover-bg px-2 rounded align-items-center justify-content-center" style={{textDecoration:"none",background:"none",color:"#40bab5"}}>
                           {
-                            doctor.id === updateByDoctor ? <span className="fw-bold text-capitalize">{t('you')}</span>
+                            doctor.id === updateByDoctor ? <span className="fw-bold text-capitalize">{t('me')}</span>
                             :
                             <React.Fragment>
                               <span className="fw-bold" style={{fontSize:FONT_SIZE}}>{emailUpdateDoctor}</span>
@@ -211,17 +235,17 @@ export default function PatientInformation(props){
                 value={fullName} 
                 onChange={value=>setFullName(value)} 
                 style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
-                result={fullName?fullName:'no data'}
+                result={fullName?fullName:t('no data')}
               />
               <SelectWithLabel
                 editMode={editMode}
                 onCancel={onCancel}
                 label={t('gender')}
                 onUpdate={onUpdateInformation}
-                value={gender} 
+                value={gender}
                 onChange={value=>setGender(value)} 
                 style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
-                result={gender?gender:'no data'}
+                result={gender?gender:t('no data')}
               >
                 <option className="text-gray border-0 rounded btn-hover-bg text-capitalize" value={'male'} style={{fontSize:FONT_SIZE}}>
                   {t('male')}
@@ -265,7 +289,7 @@ export default function PatientInformation(props){
                 value={phoneNumber}
                 onChange={value=>setPhoneNumber(value)} 
                 style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
-                result={phoneNumber?phoneNumber:'no data'}
+                result={phoneNumber?phoneNumber:t('no data')}
               />
               <InputWithLabel
                 classNameResult="flex-grow-1" 
@@ -278,7 +302,7 @@ export default function PatientInformation(props){
                 value={address}
                 onChange={value=>setAddress(value)} 
                 style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
-                result={address?address:'no data'}
+                result={address?address:t('no data')}
               />
             </div>
           </div>
@@ -288,9 +312,16 @@ export default function PatientInformation(props){
             </legend>
             {
               editMode ? 
-              <textarea className={`border-0 btn-hover-bg px-2 py-1 rounded w-100`} onKeyDown={e=>{if(e.key === "Enter") onUpdateInformation(e) ; if(e.key === "Escape") onCancel()}} style={{outline:'none',fontSize:FONT_SIZE,resize:"vertical"}} value={note} onChange={e=>setNote(e.target.value)} placeholder={t('Enter patient note')}/>
+              <textarea 
+                className={`border-0 btn-hover-bg px-2 py-1 rounded w-100`} 
+                onKeyDown={e=>{if(e.key === "Enter") onUpdateInformation(e) ; if(e.key === "Escape") onCancel()}} 
+                style={{outline:'none',fontSize:FONT_SIZE,resize:"vertical"}} 
+                value={note} 
+                onChange={e=>setNote(e.target.value)} 
+                placeholder={t('Enter patient note')}
+              />
               :
-              <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{note?note:'no data'}</span>
+              <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{note?note:t('no data')}</span>
             }
           </fieldset>
         </div>
@@ -304,9 +335,16 @@ export default function PatientInformation(props){
               </legend>
               {
                 editMode ? 
-                <textarea className={`border-0 btn-hover-bg px-2 py-1 rounded w-100`} onKeyDown={e=>{if(e.key === "Enter") onUpdateInformation(e) ; if(e.key === "Escape") onCancel()}} style={{outline:'none',fontSize:FONT_SIZE,resize:"vertical"}} value={chiefcomplaint} onChange={e=>setChiefcomplaint(e.target.value)} placeholder={t('Enter patient note')}/>
+                <textarea 
+                  className={`border-0 btn-hover-bg px-2 py-1 rounded w-100`} 
+                  onKeyDown={e=>{if(e.key === "Enter") onUpdateInformation(e) ; if(e.key === "Escape") onCancel()}} 
+                  style={{outline:'none',fontSize:FONT_SIZE,resize:"vertical"}} 
+                  value={chiefcomplaint} 
+                  onChange={e=>setChiefcomplaint(e.target.value)} 
+                  placeholder={t('Enter patient chief complaint')}
+                />
                 :
-                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{chiefcomplaint?chiefcomplaint:'no data'}</span>
+                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{chiefcomplaint?chiefcomplaint:t('no data')}</span>
               }
             </fieldset>
             <fieldset className='w-100 border rounded mt-3 p-2 d-flex'>
@@ -315,21 +353,33 @@ export default function PatientInformation(props){
               </legend>
               {
                 editMode ? 
-                <textarea className={`border-0 btn-hover-bg px-2 py-1 rounded w-100 `} onKeyDown={e=>{if(e.key === "Enter") onUpdateInformation(e) ; if(e.key === "Escape") onCancel()}} style={{outline:'none',fontSize:FONT_SIZE,resize:"vertical"}} value={diagnose} onChange={e=>setDiagnose(e.target.value)} placeholder={t('Enter patient note')}/>
+                <textarea 
+                  className={`border-0 btn-hover-bg px-2 py-1 rounded w-100 `} 
+                  onKeyDown={e=>{if(e.key === "Enter") onUpdateInformation(e) ; if(e.key === "Escape") onCancel()}} 
+                  style={{outline:'none',fontSize:FONT_SIZE,resize:"vertical"}} 
+                  value={diagnose} onChange={e=>setDiagnose(e.target.value)} 
+                  placeholder={t('Enter patient diagnose')}
+                />
                 :
-                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{diagnose?diagnose:'no data'}</span>
+                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{diagnose?diagnose:t('no data')}</span>
               }
             </fieldset>
           </div>
           <fieldset className='w-100 border rounded p-2 d-flex'>
             <legend style={{ fontSize: '1rem'}} className="w-auto mb-0 ms-2 float-none px-2 text-capitalize mc-color fw-bold">
-              {t('selected treatment selectedPlan')}
+              {t('selected treatment plan')}
             </legend>
             {
               editMode ? 
-              <textarea className={`border-0 btn-hover-bg px-2 py-1 rounded w-100`} onKeyDown={e=>{if(e.key === "Enter") onUpdateInformation(e) ; if(e.key === "Escape") onCancel()}} style={{outline:'none',fontSize:FONT_SIZE,resize:"vertical"}} value={selectedPlan} onChange={e=>setSelectedPlan(e.target.value)} placeholder={t('Enter patient note')}/>
+              <textarea 
+                className={`border-0 btn-hover-bg px-2 py-1 rounded w-100`} 
+                onKeyDown={e=>{if(e.key === "Enter") onUpdateInformation(e) ; if(e.key === "Escape") onCancel()}} 
+                style={{outline:'none',fontSize:FONT_SIZE,resize:"vertical"}} 
+                value={selectedPlan} onChange={e=>setSelectedPlan(e.target.value)} 
+                placeholder={t('Enter patient selected plan')}
+              />
               :
-              <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{selectedPlan?selectedPlan:'no data'}</span>
+              <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{selectedPlan?selectedPlan:t('no data')}</span>
             }
           </fieldset>
         </div>
