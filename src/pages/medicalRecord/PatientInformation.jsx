@@ -8,7 +8,7 @@ import { deCryptData, encryptData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../common/InputWithLabel.jsx";
 import SelectWithLabel from "../../common/SelectWithLabel.jsx";
-import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_ICON, onDecryptedDataPreview, SELECT_PATIENT_MODE, SIZE_IMAGE_IN_RECORD, toISODateString, toTimeString } from "../../common/Utility.jsx";
+import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_ICON, onDecryptedDataPreview, SELECT_PATIENT_MODE, SIZE_IMAGE_IN_RECORD, splitAvatar, toISODateString, toTimeString } from "../../common/Utility.jsx";
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../redux/GeneralSlice.jsx";
 import { setCurrentPatient } from "../../redux/PatientSlice.jsx";
@@ -45,6 +45,7 @@ export default function PatientInformation(props){
   const [emailUpdateDoctor,setEmailUpdateDoctor] = useState();
   const [nameUpdateDoctor,setNameUpdateDoctor] = useState();
   const [updatedAt,setUpdatedAt] = useState();
+  const [sideFaceImage,setSideFaceImage] = useState();
   const isEncrypted = patient.currentPatient.isEncrypted;
   const modeKey = useMemo(()=>{
     if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
@@ -122,6 +123,7 @@ export default function PatientInformation(props){
       }).finally(()=>dispatch(setLoadingModal(false)));
     })
   }
+  
 
   useEffect(()=>{
     if(patient.currentPatient.id) getPatient();
@@ -157,6 +159,7 @@ export default function PatientInformation(props){
     setEmailUpdateDoctor(data.email);
     setNameUpdateDoctor(data.fullNameDoctor);
     setUpdatedAt(data.updatedAt);
+    setSideFaceImage(data.sideFaceImage?.linkImage);
   }
 
   const toOtherDoctorProfile = () => {
@@ -220,7 +223,12 @@ export default function PatientInformation(props){
                 }
               </div>
               <div className="d-flex flex-grow-1 align-items-center justify-content-center">
-                <img alt="avatar" className={`rounded mt-5 p-3 hoverGreenLight ${!updateByDoctor && 'ms-5'}`} src={'/assets/images/5.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_IMAGE_IN_RECORD,objectFit:"cover"}}/>
+                <img 
+                  alt="avatar" 
+                  className={`rounded mt-5 ${sideFaceImage?'p-0':'p-3'} hoverGreenLight ${!updateByDoctor && 'ms-5'}`} 
+                  src={`${sideFaceImage?splitAvatar(sideFaceImage):'/assets/images/5.png'}`} 
+                  style={{borderStyle:`${sideFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:SIZE_IMAGE_IN_RECORD,objectFit:"cover"}}
+                />
               </div>
             </div>
             <div className="col-sm-7" style={{marginTop:"10px"}}>

@@ -52,7 +52,7 @@ export default function History(props){
 
   useEffect(()=>{
     if(patient.currentPatient) getHistory();
-  },patient.currentPatient.id)
+  },[patient.currentPatient.id])
 
   const updateState = (data) => {
     setDetailHostory((isEncrypted && data.dentalHistory)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.dentalHistory).tag,JSON.parse(data.dentalHistory).encrypted):data.dentalHistory);

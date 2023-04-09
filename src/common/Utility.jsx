@@ -35,7 +35,7 @@ export const FONT_SIZE = '14px';
 export const FONT_TAB = '14px';
 export const FONT_SIZE_ICONS = '35px';
 export const FONT_SIZE_HEADER = '17px';
-export const SIZE_IMAGE_IN_RECORD = '150px'
+export const SIZE_IMAGE_IN_RECORD = '170px'
 
 export const SOFT_WARE_LIST = {
   MEDICAL_RECORD: 'Medical Record',

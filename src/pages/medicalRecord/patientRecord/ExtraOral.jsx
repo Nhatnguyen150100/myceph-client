@@ -8,7 +8,7 @@ import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
-import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE } from "../../../common/Utility.jsx";
+import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE, splitAvatar } from "../../../common/Utility.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
@@ -48,6 +48,10 @@ export default function ExtraOral(props){
   const [incisalDisplayMandibular,setIncisalDisplayMandibular] = useState();
   const [smileArc,setSmileArc] = useState();
   const [restPositionIncisalDisplay,setRestPositionIncisalDisplay] = useState();
+  const [sideFaceImage,setSideFaceImage] = useState();
+  const [frontalFaceImage,setFrontalFaceImage] = useState();
+  const [obliqueFaceImage,setObliqueFaceImage] = useState();
+  const [smileyFaceImage,setSmileyFaceImage] = useState();
 
   const [previousData,setPreviousData] = useState();
 
@@ -59,7 +63,7 @@ export default function ExtraOral(props){
 
   useEffect(()=>{
     if(patient.currentPatient) getExtraOral();
-  },patient.currentPatient.id)
+  },[patient.currentPatient.id])
 
   const onCancel = () => {
     setEditMode(false);
@@ -87,6 +91,10 @@ export default function ExtraOral(props){
     setIncisalDisplayMandibular((isEncrypted && data.incisalDisplayMandibular)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.incisalDisplayMandibular).tag,JSON.parse(data.incisalDisplayMandibular).encrypted):data.incisalDisplayMandibular);
     setSmileArc((isEncrypted && data.smileArc)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.smileArc).tag,JSON.parse(data.smileArc).encrypted):data.smileArc);
     setRestPositionIncisalDisplay((isEncrypted && data.restPositionIncisalDisplay)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.restPositionIncisalDisplay).tag,JSON.parse(data.restPositionIncisalDisplay).encrypted):data.restPositionIncisalDisplay);
+    setSideFaceImage(data.listImage.sideFace);
+    setFrontalFaceImage(data.listImage.frontalFace);
+    setObliqueFaceImage(data.listImage.obliqueFace);
+    setSmileyFaceImage(data.listImage.smileyFace);
   }
 
   const getExtraOral = () => {
@@ -305,12 +313,17 @@ export default function ExtraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/frontFace.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${frontalFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${frontalFaceImage?splitAvatar(frontalFaceImage):'/assets/images/frontFace.png'}`} 
+          style={{borderStyle:`${frontalFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
       <span className="text-uppercase">
-        {t('profile meunu')}
+        {t('profile menu')}
       </span>
     </div>
     <div className="row w-100">
@@ -377,7 +390,12 @@ export default function ExtraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/5.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${sideFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${sideFaceImage?splitAvatar(sideFaceImage):'/assets/images/5.png'}`} 
+          style={{borderStyle:`${sideFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -404,7 +422,12 @@ export default function ExtraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center my-4">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/7.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${obliqueFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${obliqueFaceImage?splitAvatar(obliqueFaceImage):'/assets/images/7.png'}`} 
+          style={{borderStyle:`${obliqueFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -496,7 +519,12 @@ export default function ExtraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/8.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${smileyFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${smileyFaceImage?splitAvatar(smileyFaceImage):'/assets/images/8.png'}`} 
+          style={{borderStyle:`${smileyFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
       </div>
     </div>
   </div>

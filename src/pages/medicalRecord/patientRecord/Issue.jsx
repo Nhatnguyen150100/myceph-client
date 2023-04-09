@@ -320,7 +320,7 @@ export default function Issue(props){
               <div className="col-sm-4">
                 <fieldset className='border-0 rounded me-2 w-100'>
                   <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
-                    {t('treament object')}{' '}{index+1}
+                    {t('treatment object')}{' '}{index+1}
                   </legend>
                   <textarea
                     onKeyDown={e=>{if(e.key === "Enter") updateIssue(issue.id) ; if(e.key === "Escape") setEditIssueId('')}} 

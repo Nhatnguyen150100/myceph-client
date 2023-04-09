@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { deCryptData, decryptPatientData, encryptPatientData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
-import { convertISOToVNDateString, FONT_SIZE, onDecryptedDataPreview, SELECT_PATIENT_MODE, SOFT_WARE_LIST, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
+import { convertISOToVNDateString, FONT_SIZE, onDecryptedDataPreview, SELECT_PATIENT_MODE, SOFT_WARE_LIST, splitAvatar, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { setViewCalendar } from "../../redux/CalendarSlice.jsx";
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab, setSoftWareSelectedTab } from "../../redux/GeneralSlice.jsx";
@@ -158,7 +158,12 @@ export default function PatientRows(props){
       {props.stt+1}
     </td>
     <td className="d-lg-table-cell d-none" style={{width:"180px",cursor:"pointer"}}>
-      <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/frontFace.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
+      <img 
+        alt="avatar" 
+        className="rounded my-1 p-0 hoverGreenLight" 
+        src={`${props.patient['LibraryImagePatients.linkImage']?splitAvatar(props.patient['LibraryImagePatients.linkImage']):'/assets/images/frontFace.png'}`} 
+        style={{borderStyle:`${props.patient['LibraryImagePatients.linkImage']?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"contain"}}
+      />
     </td>
     <td className={`text-gray text-capitalize ${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`}>
       <div className="d-flex align-items-center justify-content-center">

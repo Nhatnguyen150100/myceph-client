@@ -47,7 +47,7 @@ export default function Radiography(props){
 
   useEffect(()=>{
     if(patient.currentPatient) getRadiography();
-  },patient.currentPatient.id)
+  },[patient.currentPatient.id])
 
   const onCancel = () => {
     setEditMode(false);
@@ -57,11 +57,11 @@ export default function Radiography(props){
   const updateState = (data) => {
     setSinuses((isEncrypted && data.sinuses)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.sinuses).tag,JSON.parse(data.sinuses).encrypted):data.sinuses);
     setCondyles((isEncrypted && data.condyles)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.condyles).tag,JSON.parse(data.condyles).encrypted):data.condyles);
-    setApparentPathology((isEncrypted && data.apparentPathology)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.apparentPathology).tag,JSON.parse(data.condyles).apparentPathology):data.apparentPathology);
+    setApparentPathology((isEncrypted && data.apparentPathology)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.apparentPathology).tag,JSON.parse(data.apparentPathology).encrypted):data.apparentPathology);
     setOthers((isEncrypted && data.others)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.others).tag,JSON.parse(data.others).encrypted):data.others);
     setAlveolarBoneHeights((isEncrypted && data.alveolarBoneHeights)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.alveolarBoneHeights).tag,JSON.parse(data.alveolarBoneHeights).encrypted):data.alveolarBoneHeights);
     setCrownRootRatio((isEncrypted && data.crownRootRatio)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.crownRootRatio).tag,JSON.parse(data.crownRootRatio).encrypted):data.crownRootRatio);
-    setLateralCephalometricRadiography((isEncrypted && data.condyles)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.condyles).tag,JSON.parse(data.condyles).encrypted):data.lateralCephalometricRadiography);
+    setLateralCephalometricRadiography((isEncrypted && data.lateralCephalometricRadiography)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.lateralCephalometricRadiography).tag,JSON.parse(data.lateralCephalometricRadiography).encrypted):data.lateralCephalometricRadiography);
     setOtherRadiography((isEncrypted && data.otherRadiography)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.otherRadiography).tag,JSON.parse(data.otherRadiography).encrypted):data.otherRadiography);
   }
 
@@ -162,7 +162,7 @@ export default function Radiography(props){
             type="text"
             value={sinuses}
             onChange={value=>setSinuses(value)} 
-            style={{fontSize:FONT_SIZE,width:"80px"}}
+            style={{fontSize:FONT_SIZE,width:"130px"}}
             result={sinuses?sinuses:t('no data')}
           />
         </div>
@@ -177,7 +177,7 @@ export default function Radiography(props){
             type="text"
             value={condyles}
             onChange={value=>setCondyles(value)} 
-            style={{fontSize:FONT_SIZE,width:"80px"}}
+            style={{fontSize:FONT_SIZE,width:"130px"}}
             result={condyles?condyles:t('no data')}
           />
         </div>
@@ -223,7 +223,7 @@ export default function Radiography(props){
             type="text"
             value={crownRootRatio}
             onChange={value=>setCrownRootRatio(value)} 
-            style={{fontSize:FONT_SIZE,width:WIDTH_TITLE}}
+            style={{fontSize:FONT_SIZE,width:"150px"}}
             result={crownRootRatio?crownRootRatio:t('no data')}
           />
         </div>

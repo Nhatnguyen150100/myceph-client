@@ -39,7 +39,7 @@ export default function Diagnosis(props){
 
   useEffect(()=>{
     if(patient.currentPatient) getDiagnosis();
-  },patient.currentPatient.id)
+  },[patient.currentPatient.id])
 
   const onCancel = () => {
     setEditMode(false);

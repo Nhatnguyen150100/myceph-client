@@ -263,7 +263,7 @@ export default function TreatmentPlan(props){
               <div className="w-100">
                 <fieldset className='border-0 rounded me-2 w-100'>
                   <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
-                    {t('treatmnt plan')}{' '}{index+1}
+                    {t('treatment plan')}{' '}{index+1}
                   </legend>
                   <textarea 
                     onKeyDown={e=>{if(e.key === "Enter") updatePlan(plan.id) ; if(e.key === "Escape"){setEditPlanId('');getListOfPlan()}}} 

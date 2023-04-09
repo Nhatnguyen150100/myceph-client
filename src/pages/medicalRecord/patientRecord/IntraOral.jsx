@@ -8,7 +8,7 @@ import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
-import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE } from "../../../common/Utility.jsx";
+import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE, splitAvatar } from "../../../common/Utility.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
@@ -57,6 +57,12 @@ export default function IntraOral(props){
   const [musculature,setMusculature] = useState();
   const [swallowingPattern,setSwallowingPattern] = useState();
   const [historyOfTMD,setHistoryOfTMD] = useState();
+  const [anteriorImage,setAnteriorImage] = useState();
+  const [leftBuccalImage,setLeftBuccalImage] = useState();
+  const [mandibularImage,setMandibularImage] = useState();
+  const [maxillaryImage,setMaxillaryImage] = useState();
+  const [rightBuccalImage,setRightBuccalImage] = useState();
+  const [smileyFaceImage,setSmileyFaceImage] = useState();
 
   const [previousData,setPreviousData] = useState();
 
@@ -68,7 +74,7 @@ export default function IntraOral(props){
 
   useEffect(()=>{
     if(patient.currentPatient) getIntraOral();
-  },patient.currentPatient.id)
+  },[patient.currentPatient.id])
 
   const onCancel = () => {
     setEditMode(false);
@@ -104,6 +110,12 @@ export default function IntraOral(props){
     setMusculature((isEncrypted && data.musculature)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.musculature).tag,JSON.parse(data.musculature).encrypted):data.musculature);
     setSwallowingPattern((isEncrypted && data.swallowingPattern)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.swallowingPattern).tag,JSON.parse(data.swallowingPattern).encrypted):data.swallowingPattern);
     setHistoryOfTMD((isEncrypted && data.historyOfTMD)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.historyOfTMD).tag,JSON.parse(data.historyOfTMD).encrypted):data.historyOfTMD);
+    setAnteriorImage(data.listImage.anteriorImage);
+    setLeftBuccalImage(data.listImage.leftBuccalImage);
+    setMandibularImage(data.listImage.mandibularImage);
+    setMaxillaryImage(data.listImage.maxillaryImage);
+    setRightBuccalImage(data.listImage.rightBuccalImage);
+    setSmileyFaceImage(data.listImage.smileyFace);
   }
 
   const getIntraOral = () => {
@@ -346,8 +358,18 @@ export default function IntraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex flex-column align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/13.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
-        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/14.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${maxillaryImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${maxillaryImage?splitAvatar(maxillaryImage):'/assets/images/13.png'}`} 
+          style={{borderStyle:`${maxillaryImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${mandibularImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${mandibularImage?splitAvatar(mandibularImage):'/assets/images/14.png'}`} 
+          style={{borderStyle:`${mandibularImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -474,8 +496,18 @@ export default function IntraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex flex-column align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/11.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
-        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/10.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${leftBuccalImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${leftBuccalImage?splitAvatar(leftBuccalImage):'/assets/images/11.png'}`} 
+          style={{borderStyle:`${leftBuccalImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${rightBuccalImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${rightBuccalImage?splitAvatar(rightBuccalImage):'/assets/images/10.png'}`} 
+          style={{borderStyle:`${rightBuccalImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -555,7 +587,12 @@ export default function IntraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center my-4">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/12.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",width:"130px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${anteriorImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${anteriorImage?splitAvatar(anteriorImage):'/assets/images/12.png'}`} 
+          style={{borderStyle:`${anteriorImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -685,7 +722,12 @@ export default function IntraOral(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/8.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"140px",width:"130px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${smileyFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${smileyFaceImage?splitAvatar(smileyFaceImage):'/assets/images/8.png'}`} 
+          style={{borderStyle:`${smileyFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+        />
       </div>
     </div>
   </div>
