@@ -117,12 +117,12 @@
 
 .transform-hover-small:hover{
   transition-duration: 0.5s;
-  transform: scaleX(1.02);
+  transform: scaleX(1.01);
 }
 
 .body-table:hover > :not(:hover){
-  transition-duration: 0.5s;
-  opacity: 0.6;
+  transition-duration: 0.3s;
+  transform: scaleX(0.99);
 }
 
 .standout {

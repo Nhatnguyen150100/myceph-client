@@ -3,7 +3,7 @@ import ButtonComponent from "../common/ButtonComponent.jsx";
 import { postToServer } from '../services/getAPI.jsx';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
-import NavbarComponent from '../component/NavbarComponent.jsx';
+import NavbarComponent from '../components/NavbarComponent.jsx';
 import { useTranslation } from 'react-i18next';
 import { isValidEmail, SITE_KEY_RECAPTCHA } from '../common/Utility.jsx';
 import { useDispatch } from 'react-redux';

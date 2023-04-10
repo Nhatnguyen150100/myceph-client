@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ButtonComponent from "../common/ButtonComponent.jsx";
-import NavbarComponent from "../component/NavbarComponent.jsx";
+import NavbarComponent from "../components/NavbarComponent.jsx";
 import { postToServer } from "../services/getAPI.jsx";
 import { setDataDoctor } from "../redux/DoctorSlice.jsx";
 import { cookies, isValidEmail, SITE_KEY_RECAPTCHA, timeRefreshToken } from "../common/Utility.jsx";

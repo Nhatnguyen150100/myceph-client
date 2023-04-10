@@ -8,7 +8,7 @@ import ConfirmComponent from "../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import UploadImage from "../../common/UploadImage.jsx";
 import { deleteImage, FONT_SIZE, IMAGE_TYPE_LIST, SELECT_PATIENT_MODE, settingForImage, splitAvatar, splitPublic_id, toISODateString, upLoadImageLibrary } from "../../common/Utility.jsx";
-import ShowImageModal from "../../component/ShowImageModal.jsx";
+import ShowImageModal from "../../components/ShowImageModal.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { setCurrentImage } from "../../redux/LibraryImageSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";

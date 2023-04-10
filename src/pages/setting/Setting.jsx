@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { redirect, useNavigate } from "react-router-dom";
 import { FONT_SIZE_HEAD, FONT_SIZE_HEADER, FONT_SIZE_ICONS } from "../../common/Utility.jsx";
-import NavbarComponent from "../../component/NavbarComponent.jsx";
+import NavbarComponent from "../../components/NavbarComponent.jsx";
 import { setAppName, setSettingTab } from "../../redux/GeneralSlice.jsx";
 import ClinicSetting from "./clinic/ClinicSetting.jsx";
 import DoctorSetting from "./doctor/DoctorSetting.jsx";

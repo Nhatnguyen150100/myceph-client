@@ -7,7 +7,7 @@ import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import { addData, DB_ENCRYPTION_CLINIC, deleteData, disConnectIndexDB, getData, onOpenIndexDB } from "../../../common/ConnectIndexDB.jsx";
 import { generateIvForEncryption, generateKeyForEncryption } from "../../../common/Crypto.jsx";
 import { findObjectFromArray, FONT_SIZE } from "../../../common/Utility.jsx";
-import SelectPatientComponent from "../../../component/SelectPatientComponent.jsx";
+import SelectPatientComponent from "../../../components/SelectPatientComponent.jsx";
 import { setArrayClinic, setEncryptKeyClinic } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../../services/getAPI.jsx";

@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import NavbarComponent from "../component/NavbarComponent.jsx";
+import NavbarComponent from "../components/NavbarComponent.jsx";
 
 export default function NotFoundPage(props){
   const {t} = useTranslation();

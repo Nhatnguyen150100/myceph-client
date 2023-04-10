@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import { FONT_SIZE } from "../../../common/Utility.jsx";
-import SelectPatientComponent from "../../../component/SelectPatientComponent.jsx";
+import SelectPatientComponent from "../../../components/SelectPatientComponent.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";

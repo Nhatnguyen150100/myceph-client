@@ -21,8 +21,8 @@ import { Provider } from 'react-redux';
 
 import { store, persistor } from './redux/ReduxStore.jsx';
 import { PersistGate } from 'redux-persist/integration/react';
-import LoadingModal from './component/LoadingModal.jsx';
-import ToastContainerComponent from './component/ToastContainerComponent.jsx';
+import LoadingModal from './components/LoadingModal.jsx';
+import ToastContainerComponent from './components/ToastContainerComponent.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

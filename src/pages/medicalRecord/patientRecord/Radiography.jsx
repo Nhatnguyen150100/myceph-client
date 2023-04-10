@@ -8,7 +8,7 @@ import { deCryptData, encryptData } from "../../../common/Crypto.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
-import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE } from "../../../common/Utility.jsx";
+import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE, splitAvatar } from "../../../common/Utility.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
@@ -36,6 +36,8 @@ export default function Radiography(props){
   const [others,setOthers] = useState();
   const [lateralCephalometricRadiography,setLateralCephalometricRadiography] = useState();
   const [otherRadiography,setOtherRadiography] = useState();
+  const [lateralImage,setLateralImage] = useState();
+  const [panoramaImage,setPanoramaImage] = useState();
 
   const [previousData,setPreviousData] = useState();
 
@@ -63,6 +65,8 @@ export default function Radiography(props){
     setCrownRootRatio((isEncrypted && data.crownRootRatio)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.crownRootRatio).tag,JSON.parse(data.crownRootRatio).encrypted):data.crownRootRatio);
     setLateralCephalometricRadiography((isEncrypted && data.lateralCephalometricRadiography)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.lateralCephalometricRadiography).tag,JSON.parse(data.lateralCephalometricRadiography).encrypted):data.lateralCephalometricRadiography);
     setOtherRadiography((isEncrypted && data.otherRadiography)?deCryptData(modeKey.key,modeKey.iv,JSON.parse(data.otherRadiography).tag,JSON.parse(data.otherRadiography).encrypted):data.otherRadiography);
+    setLateralImage(data.listImage.lateralImage);
+    setPanoramaImage(data.listImage.panoramaImage);
   }
 
   const getRadiography = () => {
@@ -244,7 +248,12 @@ export default function Radiography(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-3 p-2 hoverGreenLight" src={'/assets/images/4.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${panoramaImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${panoramaImage?splitAvatar(panoramaImage):'/assets/images/3.png'}`} 
+          style={{borderStyle:`${panoramaImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"130px",objectFit:"contain"}}
+        />
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
@@ -270,7 +279,12 @@ export default function Radiography(props){
         </div>
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
-        <img alt="avatar" className="rounded my-5 p-2 hoverGreenLight" src={'/assets/images/1.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:"120px",objectFit:"cover"}}/>
+        <img 
+          alt="avatar" 
+          className={`rounded my-1 ${lateralImage?'p-0':'p-2'} hoverGreenLight`} 
+          src={`${lateralImage?splitAvatar(lateralImage):'/assets/images/1.png'}`} 
+          style={{borderStyle:`${lateralImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"130px",objectFit:"contain"}}
+        />
       </div>
     </div>
     <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>

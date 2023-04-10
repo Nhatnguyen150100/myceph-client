@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { DB_ENCRYPTION_CLINIC, DB_ENCRYPTION_DOCTOR, DB_ENCRYPTION_SHAREPATIENT, disConnectIndexDB, getData, onOpenIndexDB } from "../common/ConnectIndexDB.jsx";
 import { cookies } from "../common/Utility.jsx";
-import NavbarComponent from "../component/NavbarComponent.jsx";
+import NavbarComponent from "../components/NavbarComponent.jsx";
 import { setArrayClinic, setEncryptKeyClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
 import { setEncryptKeyDoctor } from "../redux/DoctorSlice.jsx";
 import { setAppName } from "../redux/GeneralSlice.jsx";

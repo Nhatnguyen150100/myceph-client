@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ButtonComponent from "../common/ButtonComponent.jsx";
 import { isValidEmail, SITE_KEY_RECAPTCHA } from "../common/Utility.jsx";
-import NavbarComponent from "../component/NavbarComponent.jsx";
+import NavbarComponent from "../components/NavbarComponent.jsx";
 import { setAppName } from "../redux/GeneralSlice.jsx";
 import { postToServer } from "../services/getAPI.jsx";
 

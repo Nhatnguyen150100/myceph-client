@@ -161,8 +161,8 @@ export default function PatientRows(props){
       <img 
         alt="avatar" 
         className="rounded my-1 p-0 hoverGreenLight" 
-        src={`${props.patient['LibraryImagePatients.linkImage']?splitAvatar(props.patient['LibraryImagePatients.linkImage']):'/assets/images/frontFace.png'}`} 
-        style={{borderStyle:`${props.patient['LibraryImagePatients.linkImage']?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"contain"}}
+        src={`${(props.patient.isEncrypted ? (props.patient['LibraryImagePatients.linkImage'] && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)!=='---'):props.patient['LibraryImagePatients.linkImage'])?splitAvatar(props.patient['LibraryImagePatients.linkImage']):'/assets/images/frontFace.png'}`} 
+        style={{borderStyle:`${(props.patient.isEncrypted ? (props.patient['LibraryImagePatients.linkImage'] && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)!=='---'):props.patient['LibraryImagePatients.linkImage'])?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"contain"}}
       />
     </td>
     <td className={`text-gray text-capitalize ${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`}>
@@ -178,7 +178,7 @@ export default function PatientRows(props){
       </div>
     </td>
     <td className={`d-lg-table-cell d-none text-gray ${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>
-      {convertISOToVNDateString(toISODateString(new Date(props.patient.birthday)))}
+      {(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---')?'---':convertISOToVNDateString(toISODateString(new Date(props.patient.birthday)))}
     </td>
     <td className={`d-lg-table-cell d-none text-gray text-capitalize ${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>
       {props.patient.isEncrypted?onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic):props.patient.gender}

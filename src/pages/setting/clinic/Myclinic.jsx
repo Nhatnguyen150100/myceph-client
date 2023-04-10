@@ -8,7 +8,7 @@ import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
 import { AVATAR_HEIGHT, AVATAR_WIDTH, convertISOToVNDateString, deleteImage, findObjectFromArray, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, isValidEmail, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
-import SelectPatientComponent from "../../../component/SelectPatientComponent.jsx";
+import SelectPatientComponent from "../../../components/SelectPatientComponent.jsx";
 import { setArrayClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";

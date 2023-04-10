@@ -9,7 +9,7 @@ import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import { FONT_SIZE, isValidEmail, splitAvatar } from "../../../common/Utility.jsx";
-import SelectPatientComponent from "../../../component/SelectPatientComponent.jsx";
+import SelectPatientComponent from "../../../components/SelectPatientComponent.jsx";
 import { setOtherEmailDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";

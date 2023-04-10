@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import NavbarComponent from "../../component/NavbarComponent.jsx";
-import SoftWareListComponent from "../../component/SoftWareListComponent.jsx";
-import SelectPatientComponent from "../../component/SelectPatientComponent.jsx";
+import NavbarComponent from "../../components/NavbarComponent.jsx";
+import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
+import SelectPatientComponent from "../../components/SelectPatientComponent.jsx";
 import { convertAppointmentDateToEvent, convertAppointmentDateToEvents, convertISOToVNDateString, FONT_SIZE, SOFT_WARE_LIST, timeString12hr, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { useTranslation } from "react-i18next";
 import RBCToolbar from "./RBCToolbar.jsx";
