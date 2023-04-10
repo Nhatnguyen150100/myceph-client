@@ -109,7 +109,7 @@ export default function PatientList(props){
             {
               !(selectedTab===2 ||selectedTab===3 || selectedTab===4) && 
               <button type="button" style={{borderColor:"goldenrod"}} className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 || selectedTab===4?'mc-yellow-background text-white':'mc-yellow-hover'}`} onClick={e=>dispatch(setPatientListTab(selectedTab===0?3:4))}>
-                <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('Share patient setting')}</span>
+                <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('share patient setting')}</span>
               </button>
             }
           </div>
@@ -123,7 +123,7 @@ export default function PatientList(props){
               </button>
             }
             <button type="button" className={`btn px-3 py-0 text-white-hover ${selectedTab===2?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setPatientListTab(2))}>
-              <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('patient shared')}</span>
+              <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('shared patient')}</span>
             </button>
           </div>
         </div>
@@ -141,7 +141,7 @@ export default function PatientList(props){
               className="me-2"
               classNameLegend="w-auto mb-0 ms-2 float-none px-2 text-capitalize fw-bold" 
               classNameInput="rounded py-2 px-3 text-capitalize" 
-              placeholder={t('Name of patient')}  
+              placeholder={t('Enter')+' '+t('patient name')}  
               value={newPatientName} 
               onChange={value=>setNewPatientName(value)} 
               legend={t('patient name')}
@@ -155,7 +155,7 @@ export default function PatientList(props){
             value={newPatientBirthday} 
             fontSize="small"
             onChange={value=>setNewPatientBirthday(value)} 
-            legend={t('birth day')}
+            legend={t('date of birth')}
           />
           <SelectFieldInput  
             className="p-0 text-capitalize me-2" 

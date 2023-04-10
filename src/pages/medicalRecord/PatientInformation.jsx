@@ -202,11 +202,11 @@ export default function PatientInformation(props){
                   <React.Fragment>
                     <span className="fw-bold mc-color text-capitalize "></span>
                     <fieldset className='border rounded d-flex flex-column' style={{width:"300px"}}>
-                      <legend style={{ fontSize: '1rem'}} className="w-auto mb-0 ms-2 float-none px-2 text-capitalize mc-color fw-bold flex-row d-flex align-items-center">
-                        {t('update by')}: 
+                      <legend style={{ fontSize: '1rem'}} className="w-auto mb-0 ms-2 float-none px-2 mc-color fw-bold flex-row d-flex align-items-center">
+                        {t('Update by')}: 
                         <button onClick={toOtherDoctorProfile} className="d-flex mx-1 flex-column border-0 btn-hover-bg px-2 rounded align-items-center justify-content-center" style={{textDecoration:"none",background:"none",color:"#40bab5"}}>
                           {
-                            doctor.id === updateByDoctor ? <span className="fw-bold text-capitalize">{t('me')}</span>
+                            doctor.id === updateByDoctor ? <span className="fw-bold text-capitalize">{t('you')}</span>
                             :
                             <React.Fragment>
                               <span className="fw-bold" style={{fontSize:FONT_SIZE}}>{emailUpdateDoctor}</span>

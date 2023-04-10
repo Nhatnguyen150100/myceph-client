@@ -102,7 +102,7 @@ export default function SoftWareListComponent(props){
         <img src="/assets/images/Discussion_active.png" width="34" height="34" alt="MedicalRecord"/>
       </div>
       :
-      <Link title={t("Discussion")} className="btn btn-outline-info p-1 me-3 border-0">
+      <Link onClick={e=>dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.DISCUSSION))} to={`/discussion`} title={t("Discussion")} className="btn btn-outline-info p-1 me-3 border-0">
         <img src="/assets/images/Discussion.png" width="34" height="34" alt="MedicalRecord"/>
       </Link>
     }

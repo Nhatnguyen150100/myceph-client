@@ -196,7 +196,7 @@ export default function PatientRows(props){
             }else{
               onToSoftWare(SOFT_WARE_LIST.MEDICAL_RECORD);
             }
-          }} 
+            }} 
           title={t("MedicalRecord")} 
           className="btn btn-outline-info p-1 border-0 me-2 mb-2"
         >
@@ -246,12 +246,14 @@ export default function PatientRows(props){
           </Link>
         }
         <Link 
-          to={`${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' ? '' : ''}`} 
+          to={`${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' ? '' : '/discussion'}`} 
           title={t("Discussion")} 
           className="btn btn-outline-info p-1 border-0 me-2 mb-2"
           onClick={()=>{
             if(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---'){
               ((props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
+            }else{
+              onToSoftWare(SOFT_WARE_LIST.DISCUSSION);
             }
           }}
         >
@@ -264,7 +266,7 @@ export default function PatientRows(props){
         <div className="d-flex flex-row align-items-center justify-content-center">
           <div className="btn-group dropstart">
             <button 
-              title={t("share patient")} 
+              title={t("Doctors share patient")} 
               onClick={e=>getAllDoctorSharedPatient(props.patient.id)} 
               className="btn btn-outline-info p-1 border-0 me-2 mb-2 rounded d-none d-sm-block" 
               disabled={props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor !=='admin'}
