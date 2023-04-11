@@ -90,6 +90,10 @@
   font-family: 'Quicksand', sans-serif !important;
 }
 
+.mc-font{
+  font-family: 'Quicksand', sans-serif !important;
+}
+
 .text-white-hover:hover{
   color: white !important;
 }

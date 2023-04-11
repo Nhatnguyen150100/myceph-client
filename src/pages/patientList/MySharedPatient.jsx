@@ -1,14 +1,17 @@
 import { Pagination } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FONT_SIZE, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
+import { addData, DB_ENCRYPTION_SHAREPATIENT, disConnectIndexDB, getAllData, onOpenIndexDB } from "../../common/ConnectIndexDB.jsx";
+import { findObjectFromArray, FONT_SIZE, removeVietnameseDiacritics, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
 import { getToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import PatientRows from "./PatientRows.jsx";
+import * as bootstrap from 'bootstrap';
+import { setArrayEncryptKeySharePatient } from "../../redux/PatientSlice.jsx";
 
 const PAGE_SIZE = 6;
 let nameSearchTimeout = null;
@@ -17,17 +20,45 @@ export default function MySharedPatient(props){
   const {t} = useTranslation();
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const doctor = useSelector(state=>state.doctor.data);
+  const arrayEncryptKeySharePatient = useSelector(state=>state.patient.arrayEncryptKeySharePatient);
+
   const [nameSearch,setNameSearch] = useState('');
   const [listSharedPatient,setListSharedPatient] = useState([]);
   const [loadingSearch,setLoadingSearch] = useState(false);
   const [page,setPage] = useState(1);
   const [count,setCount]= useState();
+  const [selectedPatient,setSelectedPatient] = useState();
+  const [encryptKeySelectedPatient,setEncryptKeySelectedPatient] = useState();
+  const [indexDB,setIndexDB] = useState(null);
+
   const dispatch = useDispatch();
   const nav = useNavigate();
+
+  const keyManagementModal = useRef();
+  const keyManagementRef = useRef();
 
   useEffect(()=>{
     if(doctor) getListSharePatientOfCurrentDoctor('');
   },[page]);
+
+  useEffect(() => {
+    keyManagementModal.current = new bootstrap.Modal(keyManagementRef.current, {});
+  }, [])
+
+  useEffect(()=>{
+    onOpenIndexDB(DB_ENCRYPTION_SHAREPATIENT).then(db=>setIndexDB(db)).catch(error => toast.error(error));
+    return () => {
+      disConnectIndexDB(indexDB);
+    }
+  },[])
+
+  useEffect(()=>{
+    if(indexDB){
+      getAllData(indexDB,DB_ENCRYPTION_SHAREPATIENT).then(data => 
+        dispatch(setArrayEncryptKeySharePatient(data))
+      ).catch(error => toast.error(t(error)));
+    }
+  },[indexDB])
   
   const onChangePage = (event,value) => {
     setPage(value);
@@ -60,6 +91,30 @@ export default function MySharedPatient(props){
     })
   }
 
+  const upLoadFileJson = e => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      const data = JSON.parse(e.target.result);
+      addData(indexDB,data,DB_ENCRYPTION_SHAREPATIENT).then(message => {
+        setEncryptKeySelectedPatient({key: data.key, iv: data.iv});
+        getAllData(indexDB,DB_ENCRYPTION_SHAREPATIENT).then(data => 
+          dispatch(setArrayEncryptKeySharePatient(data))
+        ).catch(error => toast.error(t(error)));
+        toast.success(t(message))
+      }).catch(error => toast.error(t(error)));
+    };
+  }
+
+  const downLoadFileJson = () => {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify({...encryptKeySelectedPatient,...{id: doctor.id}})
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = `crypto_Key_For_Share_Patient_${removeVietnameseDiacritics(selectedPatient.fullName)}.json`;
+    link.click();
+  };
 
   return <div className="h-100 w-100 container">
     <table className="table table-bordered table-striped text-center rounded my-4">
@@ -82,13 +137,24 @@ export default function MySharedPatient(props){
       {
         (!loadingSearch || listSharedPatient.length>0) && 
         <React.Fragment>
-          <tbody>{listSharedPatient.map((patient, index) => <PatientRows stt={index} selectPatientMode={SELECT_PATIENT_MODE.SHARE_PATIENT} key={patient.id} patient={patient} shareByDoctor={true} action={false}/>)}</tbody>
+          <tbody>{listSharedPatient.map((patient, index) => 
+            <PatientRows 
+              stt={index} 
+              encryptKeyObject={findObjectFromArray(arrayEncryptKeySharePatient,patient?.idPatientOfDoctor)} 
+              onSetEncryptKeySelectedPatient={key=>setEncryptKeySelectedPatient(key)} 
+              onShowModal={patient=>{setSelectedPatient(patient);keyManagementModal.current.show()}} 
+              selectPatientMode={SELECT_PATIENT_MODE.SHARE_PATIENT} key={patient.id} 
+              patient={patient} 
+              shareByDoctor={true} 
+              action={false}
+            />)}
+          </tbody>
           {
             listSharedPatient.length!==0 && <tfoot className="align-middle">
               <tr>
                 <td colSpan={8} align='center'>
                   <div className="d-flex flex-grow-1 justify-content-center">
-                  <Pagination 
+                    <Pagination 
                       count={Math.ceil(count/PAGE_SIZE) || 0}
                       page={page}
                       onChange={onChangePage}
@@ -103,5 +169,71 @@ export default function MySharedPatient(props){
         </React.Fragment>
       }
     </table>
+    <div className="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-hidden="true" ref={keyManagementRef}>
+      <div className="modal-dialog modal-dialog-centered modal-lg justify-content-center ">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title mc-color fw-bold text-capitalize">{t('Manage patient encryption key')}: {selectedPatient?.fullName}</h5>
+          </div>
+          <div className="modal-body">
+            <div className="d-flex flex-column h-100">
+              <div className="d-flex flex-row align-items-center justify-content-center">
+                {
+                  encryptKeySelectedPatient ? 
+                  <React.Fragment>
+                    <button 
+                      type="button" 
+                      className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
+                      style={{cursor:"pointer"}}
+                      onClick={downLoadFileJson}
+                    >
+                      <span className="material-symbols-outlined fw-bold " style={{fontSize:"30px"}}>
+                        download
+                      </span>
+                      <span className="text-capitalize mx-2" style={{cursor:"pointer"}}>{t('download json encryption key')}</span>
+                    </button>
+                    <div className="mx-3">
+                      <hr style={{ width: '100px' }}/>
+                    </div>
+                    <button 
+                      type="button" 
+                      className="btn btn-outline-danger py-1 px-2 d-flex align-items-center justify-content-center"
+                      // onClick={()=>setOpenDeleteConfirm(true)}
+                    >
+                      <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
+                        delete
+                      </span>
+                      <span className="text-uppercase mx-2">{t('remove encryption key form device')}</span>
+                    </button>
+                  </React.Fragment>
+                  :
+                  <React.Fragment>
+                    <button 
+                      type="button" 
+                      className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
+                      style={{cursor:"pointer"}}
+                    >
+                      <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
+                        upload
+                      </span>
+                      <label htmlFor="upload_json" className="text-capitalize" style={{cursor:"pointer"}}>{t('upload a encryption key')}</label>
+                      <input id="upload_json" className="d-none" type={'file'} accept=".json" onChange={upLoadFileJson}/>
+                    </button>
+                  </React.Fragment>
+                }
+              </div>
+              <div className="mt-3 d-flex flex-column justify-content-center align-items-center mb-3 mx-5">
+                <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key was generate by')} <span className="mc-color fw-bold fs-5">{selectedPatient?.['Doctor.fullName']}</span></span>
+                <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key is stored in browser and cannot be recovered if browser is uninstalled.')}</span>
+                <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('We strongly advise you to export encryption key to a secured location in your computer so it can be recovered once necessary.')}</span>
+              </div>
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 }

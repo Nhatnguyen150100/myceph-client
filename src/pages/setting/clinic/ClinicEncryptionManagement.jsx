@@ -145,7 +145,7 @@ export default function ClinicEncryptionManagement(props){
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
-    link.download = "cryptoKey.json";
+    link.download = "crypto_Key_For_Clinic.json";
     link.click();
   };
 
@@ -185,8 +185,8 @@ export default function ClinicEncryptionManagement(props){
                   <span className="text-capitalize mx-2" style={{cursor:"pointer"}}>{t('download json encryption key')}</span>
                 </button>
                 <div className="mx-3">
-                    <hr style={{ width: '100px' }}/>
-                  </div>
+                  <hr style={{ width: '100px' }}/>
+                </div>
                 <button 
                   type="button" 
                   className="btn btn-outline-danger py-1 px-2 d-flex align-items-center justify-content-center"

@@ -63,6 +63,21 @@ export const getData = (db,id,dbName) => {
   })
 }
 
+export const getAllData = (db,dbName) => {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([dbName],"readwrite");
+    const store = transaction.objectStore(dbName);
+    let request = store.getAll();
+    request.onerror = (event) => {
+      reject(event.target.error);
+    }
+    request.onsuccess = (event) => {
+      const data = event.target.result;
+      resolve(data);
+    }
+  })
+}
+
 export const deleteData = (db,id,dbName) => {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction([dbName],"readwrite");

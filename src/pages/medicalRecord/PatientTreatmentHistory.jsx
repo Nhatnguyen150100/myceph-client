@@ -24,6 +24,7 @@ export default function PatientTreatmentHistory(props){
   const doctor = useSelector(state=>state.doctor);
   const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
+  const encryptKeySharePatient = useSelector(state=>state.patient.encryptKeySharePatient);
   
   const [consultationDate,setConsultationDate] = useState(toISODateString(new Date()));
   const [performedProcedures,setPerformedProcedures] = useState();
@@ -40,7 +41,8 @@ export default function PatientTreatmentHistory(props){
   const isEncrypted = patient.currentPatient.isEncrypted;
   const modeKey = useMemo(()=>{
     if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
-    else return encryptKeyClinic;
+    else if(selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT) return encryptKeyClinic;
+    else return encryptKeySharePatient;
   },[selectPatientOnMode])
 
   const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');

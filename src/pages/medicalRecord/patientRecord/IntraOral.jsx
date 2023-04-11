@@ -26,6 +26,7 @@ export default function IntraOral(props){
   const doctor = useSelector(state=>state.doctor);
   const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
+  const encryptKeySharePatient = useSelector(state=>state.patient.encryptKeySharePatient);
 
   const [editMode,setEditMode] = useState();
   const [oralHygiene,setOralHygiene] = useState();
@@ -69,7 +70,8 @@ export default function IntraOral(props){
   const isEncrypted = patient.currentPatient.isEncrypted;
   const modeKey = useMemo(()=>{
     if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
-    else return encryptKeyClinic;
+    else if(selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT) return encryptKeyClinic;
+    else return encryptKeySharePatient;
   },[selectPatientOnMode])
 
   useEffect(()=>{

@@ -7,7 +7,9 @@ export const PatientSlice = createSlice({
     arrayPatients: [],
     selectPatientOnMode: null,
     getAllPatientDoctor: false,
-    getAllPatientClinic: false
+    getAllPatientClinic: false,
+    arrayEncryptKeySharePatient: [],
+    encryptKeySharePatient: null
   },
   reducers:{
     setCurrentPatient: (state,action) => {
@@ -25,19 +27,27 @@ export const PatientSlice = createSlice({
     setArrayPatient: (state,action) => {
       state.arrayPatients = action.payload;
     },
-    clearPatientSlice: (state,action) => {
+    setArrayEncryptKeySharePatient: (state,action) => {
+      state.arrayEncryptKeySharePatient = action.payload;
+    },
+    setEncryptKeySharePatient: (state,action) => {
+      state.encryptKeySharePatient = action.payload;
+    },
+    clearPatientSlice: (state) => {
       state.arrayPatients = [];
       state.selectPatientOnMode = null;
       state.currentPatient = null;
       state.getAllPatientDoctor = false;
-      state.getAllPatientClinic = false
+      state.getAllPatientClinic = false;
+      state.arrayEncryptKeySharePatient = [];
+      state.encryptKeySharePatient = null;
     }
   }
 })
 
 export const {
-  setCurrentPatient,setGetAllPatientDoctor,setGetAllPatientClinic,
-  clearPatientSlice,setSelectPatientOnMode,setArrayPatient
+  setCurrentPatient,setGetAllPatientDoctor,setGetAllPatientClinic,setArrayEncryptKeySharePatient,
+  clearPatientSlice,setSelectPatientOnMode,setArrayPatient,setEncryptKeySharePatient
 } = PatientSlice.actions;
 
 export default PatientSlice.reducer;

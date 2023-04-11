@@ -207,5 +207,10 @@
     "Doctors share patient":"Doctors share patient",
     "Encryption patient":"Encryption patient",
     "You need an encryption key to decrypt patient data":"You need an encryption key to decrypt patient data",
-    "Your encryption key cannot decrypt this patient":"Your encryption key cannot decrypt this patient"
+    "Your encryption key cannot decrypt this patient":"Your encryption key cannot decrypt this patient",
+    "select clinic":"select clinic",
+    "you are":"you are",
+    "admin":"admin",
+    "member":"member",
+    "Manage patient encryption key":"Manage patient encryption key"
 }

@@ -27,6 +27,7 @@ const SelectPatientComponent = (props) => {
   const [nameSearch,setNameSearch] = useState('');
   const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
+  const encryptKeySharePatient = useSelector(state=>state.patient.encryptKeySharePatient);
   const nav = useNavigate();
   const dispatch = useDispatch();
 
@@ -118,7 +119,7 @@ const SelectPatientComponent = (props) => {
                   arrayPatients?.map((patient,index) => {
                     return <button 
                       onClick={e=>{
-                        if(patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---'){
+                        if(patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient)==='---'){
                           ((selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
                         }else dispatch(setCurrentPatient(patient))
                       }} 
@@ -128,9 +129,9 @@ const SelectPatientComponent = (props) => {
                       className="btn btn-hover-bg text-capitalize py-1 m-0 d-flex flex-column flex-grow-1 justify-content-center align-items-center w-100"
                     >
                       <div className="d-flex justify-content-justify-center align-items-center">
-                        <span className={`${patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'} me-2`}>{patient.fullName}</span>
+                        <span className={`${patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient)==='---' && 'text-danger'} me-2`}>{patient.fullName}</span>
                         {
-                          (patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && patient.isEncrypted) ? <span className="material-symbols-outlined text-danger mb-1" style={{fontSize:"20px"}}>
+                          (patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient)==='---' && patient.isEncrypted) ? <span className="material-symbols-outlined text-danger mb-1" style={{fontSize:"20px"}}>
                           lock
                           </span>
                           :
@@ -140,17 +141,17 @@ const SelectPatientComponent = (props) => {
                       <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
                         <div className="w-auto d-flex flex-row align-items-center justify-content-start">
                           <span 
-                            className={`text-capitalize fw-bold ${patient?.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'}`} 
-                            style={{fontSize:FONT_TEXT}}>{'( '}{t(patient?.isEncrypted?onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic):patient.gender)}{' |'}
+                            className={`text-capitalize fw-bold ${patient?.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient)==='---' && 'text-danger'}`} 
+                            style={{fontSize:FONT_TEXT}}>{'( '}{t(patient?.isEncrypted?onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient):patient.gender)}{' |'}
                           </span>
                           {
                             patient.isEncrypted ? <>
-                              { onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic) !== '---' ? <img className="mx-1" src={`/assets/images/${patient.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${patient.gender==='male'?'male.png':'female.png'}`}/> : <span style={{fontSize:FONT_TEXT}} className='text-danger fw-bold mx-1'>---</span>}
+                              { onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient) !== '---' ? <img className="mx-1" src={`/assets/images/${patient.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${patient.gender==='male'?'male.png':'female.png'}`}/> : <span style={{fontSize:FONT_TEXT}} className='text-danger fw-bold mx-1'>---</span>}
                             </>
                             :
                             <img className="mx-1" src={`/assets/images/${patient.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${patient.gender==='male'?'male.png':'female.png'}`}/>
                           }
-                          <span className={`${patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic)==='---' && 'text-danger'} fw-bold`} style={{fontSize:FONT_TEXT}}>{')'}</span>
+                          <span className={`${patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient)==='---' && 'text-danger'} fw-bold`} style={{fontSize:FONT_TEXT}}>{')'}</span>
                         </div>
                         <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(patient.birthday).age} {t('age')}{computeAge(patient.birthday).month>0 && (' - '+computeAge(patient.birthday).month+t(' month'))}{' )'}</span>
                       </div>
@@ -164,7 +165,7 @@ const SelectPatientComponent = (props) => {
             </div>
             <div className="d-flex flex-grow-1 flex-row justify-content-between w-100 align-items-center">
               <div className="w-auto d-flex flex-row align-items-center justify-content-start">
-                <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{t((currentPatient?.isEncrypted?onDecryptedDataPreview(selectPatientOnMode,currentPatient?.gender,encryptKeyDoctor,encryptKeyClinic):currentPatient?.gender)?.toString())}{' |'}</span>
+                <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{t((currentPatient?.isEncrypted?onDecryptedDataPreview(selectPatientOnMode,currentPatient?.gender,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient):currentPatient?.gender)?.toString())}{' |'}</span>
                 <img className="mx-1" src={`/assets/images/${currentPatient?.gender==='male'?'male.png':'female.png'}`} height="15" alt={`${currentPatient?.gender==='male'?'male.png':'female.png'}`}/>
                 <span className="fw-bold" style={{fontSize:FONT_TEXT}}>{')'}</span>
               </div>

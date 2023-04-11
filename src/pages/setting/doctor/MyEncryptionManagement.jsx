@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import { addData, DB_ENCRYPTION_DOCTOR, deleteData, disConnectIndexDB, getData, onOpenIndexDB } from "../../../common/ConnectIndexDB.jsx";
 import { deCryptData, encryptData, generateIvForEncryption, generateKeyForEncryption } from "../../../common/Crypto.jsx";
-import { FONT_SIZE } from "../../../common/Utility.jsx";
+import { FONT_SIZE, removeVietnameseDiacritics } from "../../../common/Utility.jsx";
 import { setDataDoctor, setEncryptKeyDoctor } from "../../../redux/DoctorSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../../services/getAPI.jsx";
@@ -109,7 +109,7 @@ export default function MyEncryptionManagement(props){
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
-    link.download = "cryptoKey.json";
+    link.download = `crypto_Key_For_Doctor_${removeVietnameseDiacritics(doctor.fullName)}.json`;
     link.click();
   };
 

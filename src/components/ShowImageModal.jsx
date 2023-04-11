@@ -30,7 +30,7 @@ export default function ShowImageModal(props) {
   const [filtersMap, setFiltersMap] = useState(new Map());
   const [openGrid,setOpenGrid] = useState(false);
 
-  const [imageObject,setimageObject] = useState(null);
+  const [imageObject,setImageObject] = useState(null);
   const [isGrab,setIsGrab] = useState(false);
   const [stateImage,setStateImage] = useState({
     isDragging: false,
@@ -110,7 +110,7 @@ export default function ShowImageModal(props) {
           const scale = image.height/(window.innerHeight-50-(105*2));
           image.width = image.width/scale;
           image.height = image.height/scale;
-          setimageObject(image);
+          setImageObject(image);
         } else {
           toast.error(t('Error loading image'));
         }

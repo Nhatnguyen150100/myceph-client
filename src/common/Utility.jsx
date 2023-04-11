@@ -137,14 +137,20 @@ export function getHoursMinutesSeconds(date){
 
 /**
  * todo: Giải mã trước data
- * @param {*} data 
- * @returns 
+ * @param {*} mode trạng thái của bệnh nhân
+ * @param {*} data dữ liệu bệnh nhân
+ * @param {*} encryptKeyDoctor khóa của bác sĩ
+ * @param {*} encryptKeyClinic khóa của phòng khám
+ * @param {*} encryptKeySharePatient khóa của bệnh nhân được chia sẻ
+ * @returns dữ liệu sau giải mã
  */
-export const onDecryptedDataPreview = (mode,data,encryptKeyDoctor,encryptKeyClinic) => {
+export const onDecryptedDataPreview = (mode,data,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient) => {
   if(mode===SELECT_PATIENT_MODE.MY_PATIENT && encryptKeyDoctor && data){
     return deCryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
   }else if(mode===SELECT_PATIENT_MODE.CLINIC_PATIENT && encryptKeyClinic && data){
     return deCryptData(encryptKeyClinic.key,encryptKeyClinic.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
+  }else if(mode===SELECT_PATIENT_MODE.SHARE_PATIENT && encryptKeySharePatient && data){
+    return deCryptData(encryptKeySharePatient.key,encryptKeySharePatient.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
   }else{
     return '---'
   }
@@ -158,7 +164,7 @@ export const onDecryptedDataPreview = (mode,data,encryptKeyDoctor,encryptKeyClin
  * @returns Object cần tìm trong array
  */
 export const findObjectFromArray = (array, idObject) =>{
-  if(array){
+  if(array && array.length > 0){
     for (let index = 0; index < array.length; index++) {
       const element = array[index];
       if(element.id === idObject) return element;
@@ -445,4 +451,23 @@ export const getImage = (url) => {
     img.src = url
   })
 }
+
+export const removeVietnameseDiacritics = (str) => {
+  if(!str) return '';
+  return str.replace(/[\u00E0\u00E1\u00E2\u00E3\u00E4\u00E5]/g, "a")
+            .replace(/[\u00E8\u00E9\u00EA\u00EB]/g, "e")
+            .replace(/[\u00EC\u00ED\u00EE\u00EF]/g, "i")
+            .replace(/[\u00F2\u00F3\u00F4\u00F5\u00F6]/g, "o")
+            .replace(/[\u00F9\u00FA\u00FB\u00FC]/g, "u")
+            .replace(/[\u00FD\u00FF]/g, "y")
+            .replace(/[\u0111]/g, "d")
+            .replace(/[\u00C0\u00C1\u00C2\u00C3\u00C4\u00C5]/g, "A")
+            .replace(/[\u00C8\u00C9\u00CA\u00CB]/g, "E")
+            .replace(/[\u00CC\u00CD\u00CE\u00CF]/g, "I")
+            .replace(/[\u00D2\u00D3\u00D4\u00D5\u00D6]/g, "O")
+            .replace(/[\u00D9\u00DA\u00DB\u00DC]/g, "U")
+            .replace(/[\u00DD]/g, "Y")
+            .replace(/[\u0110]/g, "D");
+}
+
 

@@ -207,6 +207,11 @@
     "Doctors share patient":"Bác sĩ được chia sẻ bệnh nhân",
     "Encryption patient":"Mã hóa bệnh nhân",
     "You need an encryption key to decrypt patient data":"Bạn cần khóa mã hóa để giải mã dữ liệu bệnh nhân",
-    "Your encryption key cannot decrypt this patient":"Khóa mã hóa của bạn không thể giải mã bệnh nhân này"
+    "Your encryption key cannot decrypt this patient":"Khóa mã hóa của bạn không thể giải mã bệnh nhân này",
+    "select clinic":"chọn phòng khám",
+    "you are":"bạn là",
+    "admin":"quản trị viên",
+    "member":"thành viên",
+    "Manage patient encryption key":"Quản lý khóa mã hóa bệnh nhân"
 }
 

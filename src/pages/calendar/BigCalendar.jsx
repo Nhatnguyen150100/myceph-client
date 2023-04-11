@@ -70,14 +70,14 @@ export default function BigCalendar(props){
     /**
      * todo: Nếu ở chế độ xem theo bệnh nhân mà không có bệnh nhân hoặc bệnh nhân không thuộc phòng khám thì đặt lại bệnh nhân đầu của phòng khám
      */
-    if(selectedTab===VIEW_CALENDAR.BY_DATE && !patient.currentPatient.idPatientOfClinic && patient.arrayPatients.length > 0){
+    if(selectedTab===VIEW_CALENDAR.BY_DATE && !patient.currentPatient?.idPatientOfClinic && patient.arrayPatients.length > 0){
       dispatch(setCurrentPatient(patient.arrayPatients[0]));
     }
   }, [selectedTab])
 
   useEffect(()=>{
-    getPropertiesClinic();
-  },[patient.currentPatient,clinic.idClinicDefault])
+    if(clinic.idClinicDefault) getPropertiesClinic();
+  },[patient.currentPatient?.id])
 
   const onSortAppointmentDate = (condition) => {
     const indexList = [...listAppointmentDate];

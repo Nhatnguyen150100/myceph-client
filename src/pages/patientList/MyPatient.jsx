@@ -126,7 +126,7 @@ export default function MyPatient(props){
         {
           (!loadingSearch || listPatient.length>0) && 
           <React.Fragment>
-            <tbody>{listPatient.map((patient, index) => <PatientRows key={patient.id} stt={index} selectPatientMode={SELECT_PATIENT_MODE.MY_PATIENT} patient={patient} action={true} onDeleteHandle={idPaient=>onDeleteHandle(idPaient)} />)}</tbody>
+            <tbody>{listPatient.map((patient, index) => <PatientRows key={patient.id} stt={index} selectPatientMode={SELECT_PATIENT_MODE.MY_PATIENT} patient={patient} onDeleteHandle={idPaient=>onDeleteHandle(idPaient)} />)}</tbody>
             {
               listPatient.length!==0 && <tfoot className="align-middle">
                 <tr>
