@@ -185,7 +185,7 @@ export default function Discussion(props){
                         {
                           convertISOToVNDateString(toISODateString(new Date(value.createdAt))) !== convertISOToVNDateString(toISODateString(new Date())) && 
                           <React.Fragment>
-                            <span className="vr"></span>
+                            <span className="ms-1 vr"></span>
                             <span className="ms-1 fst-italic" style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(value.createdAt)))}</span>
                           </React.Fragment>
                         }

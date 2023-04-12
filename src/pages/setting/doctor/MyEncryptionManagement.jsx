@@ -144,7 +144,7 @@ export default function MyEncryptionManagement(props){
   return <div className="h-100 d-flex flex-column justify-content-start align-items-center">
     <fieldset className='w-100 border rounded p-2 mt-1 d-flex justify-content-center'>
       <legend style={{ fontSize: '1.5rem'}} className="w-auto float-none px-2 text-capitalize mc-color fw-bold">
-        {t('Doctor\'s encryption key management')}
+        {t('doctor\'s encryption key management')}
       </legend>
       {
         doctor.encryptionKey ?
@@ -191,7 +191,7 @@ export default function MyEncryptionManagement(props){
           </div>
           <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center mb-3">
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key was generate by')} <span className="mc-color fw-bold fs-5">{doctor?.fullName}</span></span>
-            <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key is stored in browser and cannot be recovered if browser is uninstalled.')}</span>
+            <span className="text-gray my-1" style={{fontSize:FONT_SIZE}}>{t('Encryption key is stored in browser and cannot be recovered if browser is uninstalled.')}</span>
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('We strongly advise you to export encryption key to a secured location in your computer so it can be recovered once necessary.')}</span>
           </div>
         </div>
@@ -203,7 +203,7 @@ export default function MyEncryptionManagement(props){
                 key
               </span>
               <span className="text-capitalize ms-2">
-                {t('Create a new encryption key')}
+                {t('create a new encryption key')}
               </span>
             </button>
             <div className="d-flex align-items-center justify-content-center mx-3">
@@ -225,7 +225,7 @@ export default function MyEncryptionManagement(props){
           </div>
           <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center mb-3">
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('To encrypt the patient you need to create a private encryption key.')}</span>
-            <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('The encryption key will be saved in your device\'s browser.')}</span>
+            <span className="text-gray my-1" style={{fontSize:FONT_SIZE}}>{t('The encryption key will be saved in your device\'s browser.')}</span>
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('We strongly advise you to export encryption key to a secured location in your computer so it can be recovered once necessary.')}</span>
           </div>
         </div>

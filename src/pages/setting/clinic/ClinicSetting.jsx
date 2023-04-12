@@ -61,7 +61,7 @@ export default function ClinicSetting(props){
         }
         {
           clinic.idClinicDefault && <button type="button" className={`btn px-3 py-0 text-white-hover ${selectedTab===5?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setClinicSettingTab(5))}>
-            <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{t('Encryption management')}</span>
+            <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{t('encryption management')}</span>
           </button>
         }
       </div>

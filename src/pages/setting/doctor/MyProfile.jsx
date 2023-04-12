@@ -26,7 +26,7 @@ export default function MyProfile(props){
   const [gender,setGender] = useState();
   const [birthday,setBirthday] = useState();
   const [phoneNumber,setPhoneNumber] = useState();
-  const [speciality,setSpeciality] = useState();
+  const [specialty,setSpecialty] = useState();
   const [diploma,setDiploma] = useState();
   const [position,setPosition] = useState();
   const [description,setDescription] = useState();
@@ -48,7 +48,7 @@ export default function MyProfile(props){
         setGender(result.data.gender);
         setBirthday(result.data.birthday);
         setPhoneNumber(result.data.phoneNumber);
-        setSpeciality(result.data.speciality);
+        setSpecialty(result.data.specialty);
         setDiploma(result.data.diploma);
         setPosition(result.data.position);
         setDescription(result.data.description);
@@ -71,7 +71,7 @@ export default function MyProfile(props){
     setGender(doctor.gender);
     setBirthday(doctor.birthday);
     setPhoneNumber(doctor.phoneNumber);
-    setSpeciality(doctor.speciality);
+    setSpecialty(doctor.specialty);
     setDiploma(doctor.diploma);
     setPosition(doctor.position);
     setDescription(doctor.description);
@@ -87,7 +87,7 @@ export default function MyProfile(props){
       gender: gender,
       birthday: birthday,
       phoneNumber: phoneNumber,
-      speciality: speciality,
+      specialty: specialty,
       diploma: diploma,
       position: position,
       description: description
@@ -223,12 +223,12 @@ export default function MyProfile(props){
           }
           
           <div className="d-flex flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
-          <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('speciality')}:</label>
+          <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('specialty')}:</label>
           {
             editMode ? 
-            <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={speciality} onChange={e=>setSpeciality(e.target.value)}/>
+            <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={specialty} onChange={e=>setSpecialty(e.target.value)}/>
             :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{speciality?speciality:'no data'}</span>
+            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{specialty?specialty:'no data'}</span>
           }
           </div>
         </div>

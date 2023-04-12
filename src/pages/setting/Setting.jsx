@@ -49,14 +49,14 @@ export default function Setting(props){
             <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               clinical_notes
             </span>
-            <span className="mx-2 mb-0 fw-bold" style={{fontSize:FONT_SIZE_HEAD}}>{t('Doctor')}</span>
+            <span className="mx-2 mb-0 fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('doctor')}</span>
           </div>
           :
           <button className='btn btn-hover-bg p-0 me-3 border d-flex flex-row align-items-end justify-content-start' style={{height:FONT_SIZE_ICONS}} onClick={e=>{dispatch(setSettingTab(0));setTabName(t('doctor'))}}>
             <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               clinical_notes
             </span>
-            <span className="mx-2 mb-0 fw-bold" style={{fontSize:FONT_SIZE_HEAD}}>{t('Doctor')}</span>
+            <span className="mx-2 mb-0 fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('doctor')}</span>
           </button>
         }
         {
@@ -65,19 +65,19 @@ export default function Setting(props){
             <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               local_hospital
             </span>
-            <span className="mx-2 mb-0 fw-bold" style={{fontSize:FONT_SIZE_HEAD}}>{t('Clinic')}</span>
+            <span className="mx-2 mb-0 fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('clinic')}</span>
           </div>
           :
           <button className='btn btn-hover-bg p-0 me-3 border d-flex flex-row align-items-end justify-content-start' style={{height:FONT_SIZE_ICONS}} onClick={e=>{dispatch(setSettingTab(1));setTabName(t('clinic'))}}>
             <span className="material-symbols-outlined m-0" style={{fontSize:FONT_SIZE_ICONS,fontWeight:"100"}}>
               local_hospital
             </span>
-            <span className="mx-2 mb-0 fw-bold" style={{fontSize:FONT_SIZE_HEAD}}>{t('Clinic')}</span>
+            <span className="mx-2 mb-0 fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('clinic')}</span>
           </button>
         }
       </div>
       <div className="w-100 mc-background py-1 d-flex justify-content-center rounded">
-        <span className="text-white text-center text-uppercase fw-bold " style={{fontSize:FONT_SIZE_HEADER}}>{tabName}</span>
+        <span className="text-white text-center text-uppercase fw-bold " style={{fontSize:FONT_SIZE_HEADER}}>{t(tabName)}</span>
       </div>
       {currentTab}
     </div>

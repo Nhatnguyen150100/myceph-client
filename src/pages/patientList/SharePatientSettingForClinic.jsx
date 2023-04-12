@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { deCryptData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_HEAD, splitAvatar, toISODateString, WIDTH_HEAD } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
@@ -23,6 +24,7 @@ const WIDTH_ATTRIBUTES ="80px";
 export default function SharePatientSettingForClinic(props){
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const {t} = useTranslation();
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -320,9 +322,9 @@ export default function SharePatientSettingForClinic(props){
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('full name')}</span>
                       <span className="text-wrap" style={{fontSize:FONT_SIZE}}>{patient.fullName}</span>
                     </div>
-                    <div className="d-flex ms-3 flex-column justify-content-center align-items-cente d-noner" style={{width:WIDTH_ATTRIBUTES}}>
+                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center d-none" style={{width:WIDTH_ATTRIBUTES}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
-                      <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.gender}</span>
+                      <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyClinic.key,encryptKeyClinic.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
                     </div>
                     <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('birth day')}</span>
@@ -352,7 +354,7 @@ export default function SharePatientSettingForClinic(props){
                   </div>
                   <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
                     <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
-                    <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.gender}</span>
+                    <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyClinic.key,encryptKeyClinic.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
                   </div>
                   <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
                     <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('birth day')}</span>

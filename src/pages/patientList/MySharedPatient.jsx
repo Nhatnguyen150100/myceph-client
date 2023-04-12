@@ -131,7 +131,7 @@ export default function MySharedPatient(props){
           <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"80px",fontSize:FONT_SIZE}}>{t("gender")}</th>
           <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{minWidth:"150px",fontSize:FONT_SIZE}}>{t("note")}</th>
           <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("feature")}</th>
-          <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE}}>{t("Shared by doctor")}</th>
+          <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE}}>{t("shared by doctor")}</th>
         </tr>
       </thead>
       {
@@ -203,7 +203,7 @@ export default function MySharedPatient(props){
                       <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
                         delete
                       </span>
-                      <span className="text-uppercase mx-2">{t('remove encryption key form device')}</span>
+                      <span className="text-uppercase mx-2">{t('remove encryption key from device')}</span>
                     </button>
                   </React.Fragment>
                   :

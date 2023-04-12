@@ -202,7 +202,7 @@ export default function MemberOfClinic(props){
       {
         clinic.roleOfDoctor==='admin' && <div className="d-flex flex-row align-items-end">
           <div className="position-relative" style={{width:"300px"}}>
-            <TextFieldInput className="p-1" legend={t('Add new doctor to clinic')} placeholder={t('Email of new doctor')} value={newDoctor} onChange={value=>onEmailSearchChange(value)}/>
+            <TextFieldInput className="p-1" legend={t('add new doctor to clinic')} placeholder={t('Email of new doctor')} value={newDoctor} onChange={value=>onEmailSearchChange(value)}/>
             <ul className={`position-absolute d-flex flex-grow-1 p-0 w-100 flex-column me-2 bg-white border-start border-end ${listEmailSearch.length>0?'border-bottom':''}`} style={{zIndex:"1"}}>
               {
                 listEmailSearch?.map(doctor=>{
@@ -248,7 +248,7 @@ export default function MemberOfClinic(props){
               <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("date of birth")}</th>
               <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"60px",fontSize:FONT_SIZE}}>{t("gender")}</th>
               <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"50px",fontSize:FONT_SIZE}}>{t("admin")}</th>
-              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("speciality")}</th>
+              <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("specialty")}</th>
               <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE}}>{t("action")}</th>             
             </tr>
           </thead>
@@ -313,7 +313,7 @@ export default function MemberOfClinic(props){
     <div className="my-3 d-flex align-items-center justify-content-center w-100 flex-column">
       <div className="d-flex flex-row align-items-center justify-content-center">
         <hr style={{ width: '140px' }} />
-        <span className="mx-3 mc-color fw-bold text-uppercase text-center">{t('member clinic')}</span>
+        <span className="mx-3 mc-color fw-bold text-uppercase text-center">{t('member of clinic')}</span>
         <hr style={{ width: '140px' }} />
       </div>
     </div>

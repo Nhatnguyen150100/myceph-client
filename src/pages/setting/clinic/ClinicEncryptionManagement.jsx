@@ -195,7 +195,7 @@ export default function ClinicEncryptionManagement(props){
                   <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
                     delete
                   </span>
-                  <span className="text-uppercase mx-2">{clinic.roleOfDoctor === 'admin'?t('delete encryption key'):t('remove encryption key form device')}</span>
+                  <span className="text-uppercase mx-2">{clinic.roleOfDoctor === 'admin'?t('delete encryption key'):t('remove encryption key from device')}</span>
                 </button>
               </React.Fragment>
               :
@@ -213,8 +213,8 @@ export default function ClinicEncryptionManagement(props){
             }
           </div>
           <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center mb-3">
-            <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key was generate by admin of ')} <span className="mc-color fw-bold fs-5">{findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault).nameClinic} : {findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault)?.encryptedBy.nameDoctor} ({findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault)?.encryptedBy.emailDoctor})</span></span>
-            <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key is stored in browser and cannot be recovered if browser is uninstalled.')}</span>
+            <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key was generate by admin of')} <span className="mc-color fw-bold fs-5"> {findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault).nameClinic} : {findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault)?.encryptedBy.nameDoctor} ({findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault)?.encryptedBy.emailDoctor})</span></span>
+            <span className="text-gray my-1" style={{fontSize:FONT_SIZE}}>{t('Encryption key is stored in browser and cannot be recovered if browser is uninstalled.')}</span>
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('We strongly advise you to export encryption key to a secured location in your computer so it can be recovered once necessary.')}</span>
           </div>
         </div>
@@ -228,7 +228,7 @@ export default function ClinicEncryptionManagement(props){
                     key
                   </span>
                   <span className="text-capitalize ms-2">
-                    {t('Create a new encryption key')}
+                    {t('create a new encryption key')}
                   </span>
                 </button>
                 <div className="d-flex align-items-center justify-content-center mx-3">
@@ -252,7 +252,7 @@ export default function ClinicEncryptionManagement(props){
           </div>
           <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center  mb-3">
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t(`To encrypt the patient you need to ${clinic.roleOfDoctor === 'admin'?'create':'upload'} a private encryption key.`)}</span>
-            <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('The encryption key will be saved in your device\'s browser.')}</span>
+            <span className="text-gray my-1" style={{fontSize:FONT_SIZE}}>{t('The encryption key will be saved in your device\'s browser.')}</span>
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('We strongly advise you to export encryption key to a secured location in your computer so it can be recovered once necessary.')}</span>
           </div>
         </div>

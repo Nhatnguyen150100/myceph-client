@@ -235,7 +235,7 @@ export default function Myclinic(props){
       </div>
       <div className="d-flex flex-row align-items-end">
         <div style={{width:"400px"}}>
-          <TextFieldInput className="p-1 me-2" legend={t('Add new clinic')} placeholder={t('Name of new clinic')} value={newClinic} onChange={value=>setNewClinic(value)}/>
+          <TextFieldInput className="p-1 me-2" legend={t('add new clinic')} placeholder={t('Name of new clinic')} value={newClinic} onChange={value=>setNewClinic(value)}/>
         </div>
         <IconButtonComponent className="btn-outline-success" styleButton={{height:"50px",width:"50px"}} onClick={createClinic} icon="add" FONT_SIZE_ICON={"40px"} title={t("add clinic")}/>
       </div>

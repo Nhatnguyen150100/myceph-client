@@ -427,7 +427,7 @@ export default function SharePatientSettingForDoctor(props){
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('full name')}</span>
                       <span className="text-wrap" style={{fontSize:FONT_SIZE}}>{patient.fullName}</span>
                     </div>
-                    <div className="d-flex ms-3 flex-column justify-content-center align-items-cente d-noner" style={{width:WIDTH_ATTRIBUTES}}>
+                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center d-none" style={{width:WIDTH_ATTRIBUTES}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
                       <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
                     </div>

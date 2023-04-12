@@ -130,7 +130,7 @@ export default function RoomSetting(props){
     <div style={{width:"400px"}}>
       <SelectPatientComponent condition={true} showSelectedPatient={false}/>
     </div>
-    <h4 className="text-capitalize mc-color mt-1 text-center fw-bold">{t('list room of clinic')}</h4>
+    <h4 className="text-capitalize mc-color mt-1 text-center fw-bold">{t('list rooms of clinic')}</h4>
     <table className="table table-bordered table-striped text-center rounded my-4">
       <thead className='mc-background text-white text-uppercase'>
         <tr>

@@ -22,7 +22,7 @@ export default function PatientRows(props){
   const clinic = useSelector(state=>state.clinic);
   const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
-  
+
   const [listOfDoctorSharedPatient,setListOfDoctorSharedPatient] = useState([]);
   const dispatch = useDispatch();
   const nav = useNavigate();
@@ -51,7 +51,7 @@ export default function PatientRows(props){
   }
 
   const onToSoftWare = (tab) => {
-    if(props.selectPatientMode===SELECT_PATIENT_MODE.SHARE_PATIENT) dispatch(setEncryptKeySharePatient({
+    if(props.selectPatientMode===SELECT_PATIENT_MODE.SHARE_PATIENT && props.patient.isEncrypted) dispatch(setEncryptKeySharePatient({
       key: props.encryptKeyObject.key?props.encryptKeyObject.key:null,
       iv: props.encryptKeyObject.iv?props.encryptKeyObject.iv:null
     }));
