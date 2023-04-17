@@ -222,11 +222,14 @@ export default function PatientRows(props){
           <img src="/assets/images/ImageLibrary.png" width="34" height="34" alt="ImageLibrary"/>
         </Link>
         <Link 
+          to={`${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic,props.encryptKeyObject)==='---' ? '' : '/lateralCeph'}`} 
           title={t("LateralCeph")} 
           className="btn btn-outline-info p-1 border-0 me-2 mb-2"
           onClick={()=>{
             if(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic,props.encryptKeyObject)==='---'){
               ((props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic) || (props.selectPatientMode===SELECT_PATIENT_MODE.SHARE_PATIENT && !props.encryptKeyObject)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
+            }else{
+              onToSoftWare(SOFT_WARE_LIST.LATERALCEPH);
             }
           }}
         >

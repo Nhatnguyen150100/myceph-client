@@ -75,7 +75,7 @@ export default function SoftWareListComponent(props){
             <img src="/assets/images/LateralCeph_active.png" width="34" height="34" alt="MedicalRecord"/>
           </div>
           :
-          <Link title={t("LateralCeph")} className="btn btn-outline-info p-1 me-3 border-0">
+          <Link onClick={e=>dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.LATERALCEPH))} to={`/lateralCeph`} title={t("LateralCeph")} className="btn btn-outline-info p-1 me-3 border-0">
             <img src="/assets/images/LateralCeph.png" width="34" height="34" alt="MedicalRecord"/>
           </Link>
         }

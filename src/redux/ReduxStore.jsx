@@ -5,6 +5,7 @@ import CalendarSlice from './CalendarSlice.jsx';
 import ClinicSlice from './ClinicSlice.jsx';
 import DoctorSlice from './DoctorSlice.jsx';
 import GeneralSlice from './GeneralSlice.jsx';
+import LateralCephSlice from './LateralCephSlice.jsx';
 import LibraryImageSlice from './LibraryImageSlice.jsx';
 import PatientSlice from './PatientSlice.jsx';
 
@@ -14,7 +15,7 @@ const persistConfig = {
 	storage
 };
 
-const rootReducer = combineReducers({doctor: DoctorSlice, general: GeneralSlice, clinic: ClinicSlice, patient: PatientSlice, libraryImage: LibraryImageSlice, calendar: CalendarSlice});
+const rootReducer = combineReducers({doctor: DoctorSlice, general: GeneralSlice, clinic: ClinicSlice, patient: PatientSlice, libraryImage: LibraryImageSlice, calendar: CalendarSlice, lateralCeph: LateralCephSlice});
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

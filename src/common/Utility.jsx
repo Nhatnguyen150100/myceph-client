@@ -9,6 +9,7 @@ import { clearImageSlice } from '../redux/LibraryImageSlice.jsx';
 import { clearCalendarSlice } from '../redux/CalendarSlice.jsx';
 import { toast } from 'react-toastify';
 import { deCryptData } from './Crypto.jsx';
+import { clearLateralCephSlice } from '../redux/LateralCephSlice.jsx';
 const { Buffer } = require('buffer');
 
 // Đảm bảo rằng đối tượng Buffer được định nghĩa đúng cách trong môi trường trình duyệt
@@ -110,6 +111,7 @@ export const clearAllSlice = (dispatch) => {
   dispatch(clearClinicSlice());
   dispatch(clearPatientSlice());
   dispatch(clearCalendarSlice());
+  dispatch(clearLateralCephSlice());
 }
 
 /**
@@ -450,6 +452,14 @@ export const getImage = (url) => {
     }
     img.src = url
   })
+}
+
+export const getKeyByValue = (object, value) => {
+  return Object.keys(object).find(key => object[key] === value);
+}
+
+export const getKeyByNameValue = (object, value) => {
+  return Object.keys(object).find(key => object[key].name === value);
 }
 
 export const removeVietnameseDiacritics = (str) => {

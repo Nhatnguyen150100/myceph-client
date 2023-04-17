@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { Routes, Route } from 'react-router-dom';
 import Discussion from "./pages/discussion/Discussion.jsx";
+import LateralCeph from "./pages/lateralCephalometricAnalysis/LateralCeph.jsx";
 const ForgotPassword = lazy(() => import('./auth/ForgotPassword.jsx'));
 const Login = lazy(() => import('./auth/login.jsx'));
 const Register = lazy(() => import('./auth/Register.jsx'));
@@ -31,6 +32,7 @@ function App() {
         <Route path="/libraryImagesManagement" exact element={<LibraryImages />}/>
         <Route path="/schedule" exact element={<BigCalendar />}/>
         <Route path="/discussion" exact element={<Discussion />}/>
+        <Route path="/lateralCeph" exact element={<LateralCeph />}/>
       </Routes>
     </Suspense>
     
