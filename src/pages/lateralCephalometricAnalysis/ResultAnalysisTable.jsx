@@ -104,7 +104,7 @@ export default function ResultAnalysisTable(props) {
                 </td>
                 <td style={{fontSize:FONT_SIZE}}>
                   {
-                     value.valueFn && value.valueFn(...value.markerArray?.map(element => {
+                     value.valueFn && markerPoints && value.valueFn(...value.markerArray?.map(element => {
                       return markerPoints[element] ? markerPoints[element] : null;
                     }))
                   }

@@ -344,7 +344,7 @@ export default function ShowImageModal(props) {
                 offsetX={-((contentModelRef.current?.clientWidth-2)/2-imageObject.width/2)}
                 x={stateImage.x}
                 y={stateImage.y}
-                draggable
+                draggable={true}
                 onMouseDown={()=>setIsGrab(true)}
                 onDragStart={()=>setStateImage(true,stateImage.x,stateImage.y)}
                 onDragEnd={(e) => {

@@ -17,12 +17,14 @@ export const MARKER_LIST = {
   U1A:'Upper 1 Apex',
   S:"Sella turcica",  
   C1:"Calibration point 1",
-  C2:"Calibration point 2"
+  C2:"Calibration point 2",
+  Go:"Gonion"
 };
 
 export const ANALYSIS = {
   STEINER: {
     name: "Steiner",
+    markerPoints: ['C1','C2','S','N','A','U1A','Cm','Ls','Li','U1E','L1E','Mo','B','L1A','Pog\'','Go','Gn'],
     arrayListValue: [
       {
         indicator: "SNA",
@@ -119,6 +121,7 @@ export const ANALYSIS = {
   },
   NAGASAKI: {
     name: "Nagasaki",
+    markerPoints: ['C1','C2','S','N','A','U1A','U1E','L1E','Mo','B','L1A','Go','Me'],
     arrayListValue: [
       {
         indicator: "SNA",

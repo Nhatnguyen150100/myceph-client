@@ -8,15 +8,19 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import UploadImage from "../../common/UploadImage.jsx";
-import { FONT_SIZE, IMAGE_TYPE_LIST, splitAvatar, upLoadImageLibrary } from "../../common/Utility.jsx";
+import { FONT_SIZE, getKeyByNameValue, IMAGE_TYPE_LIST, splitAvatar, upLoadImageLibrary } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
+import { Slider } from "@mui/material";
+import { ANALYSIS, MARKER_LIST } from "./LateralCephalometricUtility.jsx";
 
-const ICON_SIZE = '25px'
+const ICON_SIZE = '22px'
 
-export default function ControlSection(props) {
+const ControlSection = React.memo((props) => {
   const currentPatient = useSelector(state=>state.patient.currentPatient);
   const listImageFontSide = useSelector(state=>state.lateralCeph.listImageFontSide);
+  const markerPoints = useSelector(state=>state.lateralCeph.markerPoints);
   const currentImageAnalysis = useSelector(state=>state.lateralCeph.currentImageAnalysis);
+  const currentAnalysis = useSelector(state=>state.lateralCeph.currentAnalysis);
   const doctor = useSelector(state=>state.doctor);
 
   const dispatch = useDispatch();
@@ -32,8 +36,12 @@ export default function ControlSection(props) {
   },[])
 
   useEffect(()=>{
-    if(!currentImageAnalysis) imageModal.current.show();
+    if(!currentImageAnalysis && !currentImageAnalysis && doctor) imageModal.current.show();
   },[currentImageAnalysis,currentPatient])
+
+  useEffect(()=>{
+    if(props.imageObject) imageModal.current.hide();
+  },[props.imageObject])
 
   const onLoad = () => {
     setIsLoadImage(false);
@@ -118,7 +126,7 @@ export default function ControlSection(props) {
     <div className="d-flex flex-column">
       <button 
         type="button" 
-        className="btn btn-outline-secondary border-0 p-0 my-2 d-flex flex-row justify-content-center align-items-center"
+        className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center"
         onClick={()=>imageModal.current.show()}
       >
         <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
@@ -126,94 +134,202 @@ export default function ControlSection(props) {
         </span>
       </button>
       <div className="btn-group dropend">
-        <button type="button" className="btn btn-outline-secondary border-0 dropdown-toggle p-0 my-2 d-flex flex-row justify-content-center align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded" data-bs-toggle="dropdown" aria-expanded="false">
           <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
             straighten
           </span>
         </button>
-        <ul className="dropdown-menu">
-          
+        <ul className="dropdown-menu ms-2">
+          <div className="d-flex flex-row justify-content-evenly align-items-center">
+            <span className="fw-bold mc-color ms-2" style={{fontSize:FONT_SIZE}}>
+              C1
+            </span>
+            <select className="form-select mx-2" value={props.lengthOfRuler} onChange={e=>{props.onSetLengthOfRuler(e.target.value)}}>
+              <option value={10} className="text-gray" style={{fontSize:FONT_SIZE}}>
+                10 cm
+              </option>
+              <option value={20} className="text-gray" style={{fontSize:FONT_SIZE}}>
+                20 cm
+              </option>
+              <option value={30} className="text-gray" style={{fontSize:FONT_SIZE}}>
+                30 cm
+              </option>
+            </select>
+            <span className="fw-bold mc-color me-2" style={{fontSize:FONT_SIZE}}>
+              C2
+            </span>
+          </div>
         </ul>
       </div>
-      <div className="btn-group dropend">
-        <button type="button" className="btn btn-outline-secondary border-0 dropdown-toggle p-0 my-2 d-flex flex-row justify-content-center align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+      {
+        props.currentMarkerPoint ? 
+        <button 
+          type="button" 
+          className={`btn btn-outline-danger border-0 p-0 m-2`}
+          onClick={()=>props.onSetCurrentMarkerPoint('')}
+        >
           <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
-            my_location
+            cancel
           </span>
         </button>
-        <ul className="dropdown-menu">
-          
-        </ul>
-      </div>
+        :
+        <div className="btn-group dropend">
+          <button 
+            type="button" 
+            className={`btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded`}
+            data-bs-toggle='dropdown'
+            aria-expanded="false"
+          >
+            <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
+              my_location
+            </span>
+          </button>
+          <ul className="dropdown-menu ms-2 w-auto" style={{maxHeight:window.innerHeight/2,overflowY:"auto"}}>
+            {
+              ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints.map((point,index) => {
+                return <button 
+                  key={index+Math.random(1,1000)} 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={markerPoints && markerPoints[point]}
+                  onClick={()=>{
+                    props.onSetCurrentMarkerPoint(point)
+                  }}
+                >
+                  <span className={`text-uppercase fw-bold ${markerPoints && markerPoints[point] && 'text-success'}`} style={{fontSize:FONT_SIZE}}>
+                    ({point})
+                  </span>
+                  <span className={`text-capitalize fw-bold ms-2 text-nowrap ${markerPoints && markerPoints[point] && 'text-success'}`} style={{fontSize:FONT_SIZE}}>
+                    {MARKER_LIST[point]}
+                  </span>
+                </button>
+              })
+            }
+          </ul>
+        </div>
+      }
       <div className="btn-group dropend">
-        <button type="button" className="btn btn-outline-secondary border-0 dropdown-toggle p-0 my-2 d-flex flex-row justify-content-center align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded" data-bs-toggle="dropdown" aria-expanded="false">
           <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
             autorenew
           </span>
         </button>
-        <ul className="dropdown-menu">
-          
+        <ul className="dropdown-menu ms-2">
+          <div className="d-flex flex-row justify-content-evenly align-items-center">
+            <button className="btn btn-outline-primary p-0 border-0" type="button" onClick={(e)=>{e.stopPropagation();props.onRotation(props.rotation-1)}}>
+              <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
+                swipe_left
+              </span>
+            </button>
+            <span className="mx-2 fw-bold">
+              {props.rotation}°
+            </span>
+            <button className="btn btn-outline-primary p-0 border-0" type="button" onClick={(e)=>{e.stopPropagation();props.onRotation(props.rotation+1)}}>
+              <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
+                swipe_right
+              </span>
+            </button>
+          </div>
         </ul>
       </div>
-      <button type="button" className="btn btn-outline-secondary border-0 p-0 my-2 d-flex flex-row justify-content-center align-items-center">
+      <button 
+        type="button" 
+        className={`btn ${props.isDragImage ?'btn-primary':'btn-outline-primary'} border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded`}
+        onClick={()=>props.onDragImage(props.isDragImage?false:true)}
+      >
+        <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
+          back_hand
+        </span>
+      </button>
+      <button 
+        type="button" 
+        className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded"
+        onClick={props.onZoomInHandle}
+      >
         <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
           zoom_in
         </span>
       </button>
-      <button type="button" className="btn btn-outline-secondary border-0 p-0 my-2 d-flex flex-row justify-content-center align-items-center">
+      <button 
+        type="button" 
+        className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded"
+        onClick={props.onZoomOutHandle}
+      >
         <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
           zoom_out
         </span>
       </button>
       <div className="btn-group dropend">
-        <button type="button" className="btn btn-outline-secondary border-0 dropdown-toggle p-0 my-2 d-flex flex-row justify-content-center align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded" data-bs-toggle="dropdown" aria-expanded="false">
           <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
             contrast
           </span>
         </button>
-        <ul className="dropdown-menu">
-          
+        <ul className="dropdown-menu ms-2">
+          <Slider
+            className="py-1"
+            size="small"
+            defaultValue={0}
+            min={-100}
+            max={100}
+            step={10}
+            marks
+            onChange={e=>props.onChangeContrast(e.target.value)}
+            aria-label="Small"
+            valueLabelDisplay="auto"
+          />
         </ul>
       </div>
       <div className="btn-group dropend">
-        <button type="button" className="btn btn-outline-secondary border-0 dropdown-toggle p-0 my-2 d-flex flex-row justify-content-center align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded" data-bs-toggle="dropdown" aria-expanded="false">
           <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
-          brightness_medium
+            brightness_medium
           </span>
         </button>
-        <ul className="dropdown-menu">
-          
+        <ul className="dropdown-menu ms-2">
+          <Slider
+            className="py-1"
+            size="small"
+            defaultValue={0}
+            min={-1}
+            max={1}
+            step={0.1}
+            marks
+            onChange={e=>props.onChangeBrightness(e.target.value)}
+            aria-label="Small"
+            valueLabelDisplay="auto"
+          />
         </ul>
       </div>
       <div className="btn-group dropend">
-        <button type="button" className="btn btn-outline-secondary border-0 dropdown-toggle p-0 my-2 d-flex flex-row justify-content-center align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded" data-bs-toggle="dropdown" aria-expanded="false">
           <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
             visibility
           </span>
         </button>
-        <ul className="dropdown-menu">
+        <ul className="dropdown-menu ms-2">
           
         </ul>
       </div>
-      <button type="button" className="btn btn-outline-secondary border-0 p-0 my-2 d-flex flex-row justify-content-center align-items-center">
+      <button type="button" className="btn btn-outline-success border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded">
         <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
           save
         </span>
       </button>
     </div>
     <div className="d-flex flex-column">
-      <button type="button" className="btn btn-outline-danger border-0 p-0 my-2 d-flex flex-row justify-content-center align-items-center">
+      <button type="button" className="btn btn-outline-danger border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded">
         <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
           delete
         </span>
       </button>
       <div className="btn-group dropend">
-        <button type="button" className="btn btn-outline-info border-0 dropdown-toggle p-0 my-2 d-flex flex-row justify-content-center align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" className="btn btn-outline-info border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded" data-bs-toggle="dropdown" aria-expanded="false">
           <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
             info
           </span>
         </button>
-        <ul className="dropdown-menu">
+        <ul className="dropdown-menu ms-2">
           
         </ul>
       </div>
@@ -262,4 +378,6 @@ export default function ControlSection(props) {
       </div>
     </div>
   </div>
-}
+})
+
+export default ControlSection;

@@ -1,109 +1,117 @@
-.mc-background{
+.mc-background {
   background-color: #003366;
 }
 
-.mc-pale-background{
+.mc-pale-background {
   background-color: #40bab5 !important;
 }
 
-.mc-color{
+.mc-color {
   color: #003366 !important;
 }
 
-.mc-pale-color{
-  color: #40bab5 !important
-}
-
-.text-gray{
-  color: #4e4e4e;
-}
-
-.mc-color-hover:hover{
-  color: #003366 !important;
-}
-
-.mc-color-hover:hover{
+.mc-pale-color {
   color: #40bab5 !important;
 }
 
-.mc-border-pale{
+.text-gray {
+  color: #4e4e4e;
+}
+
+.mc-color-hover:hover {
+  color: #003366 !important;
+}
+
+.mc-color-hover:hover {
+  color: #40bab5 !important;
+}
+
+.mc-border-pale {
   border-color: #40bab5 !important;
 }
 
-.mc-yellow-background{
+.mc-yellow-background {
   background-color: goldenrod !important;
 }
 
-.mc-yellow-hover:hover{
+.mc-yellow-hover:hover {
   background-color: goldenrod !important;
 }
 
-.hoverGreenLight:hover{
+.hoverGreenLight:hover {
   background-color: #40bab5 !important;
 }
 
-.vr{
+.vr {
   display: inline-block;
   align-self: stretch;
   width: 1px;
   min-height: 1em;
   background-color: currentcolor;
-  opacity: .25;
+  opacity: 0.25;
 }
 
-.mc-background-color-white{
+.mc-background-color-white {
   background-color: #f7f7f7;
 }
 
-.hover-font-weight:hover{
+.hover-font-weight:hover {
   font-weight: bold;
 }
 
-.cursor-grabbing{
-  cursor: grabbing;
+.cursor-grab {
+  cursor: grab !important;
 }
 
-.mc-background-light{
-  background: #F0F8FF;
+.cursor-grabbing {
+  cursor: grabbing !important;
 }
 
-.mc-heading-middle{
+.cursor-crosshair {
+  cursor: crosshair;
+}
+
+.mc-background-light {
+  background: #f0f8ff;
+}
+
+.mc-heading-middle {
   font-family: sans-serif;
   font-weight: 400;
 }
 
-.mc-heading{
+.mc-heading {
   font-family: sans-serif;
   font-weight: 700;
   font-size: 16;
   color: #043d5d;
 }
 
-.btn-hover-bg:hover{
+.btn-hover-bg:hover {
   color: white !important;
   background-color: #40bab5 !important;
   border-color: #40bab5 !important;
-  --bs-btn-color:#40bab5 !important;
+  --bs-btn-color: #40bab5 !important;
 }
 
-.react-calendar{
-  font-family: 'Quicksand', sans-serif !important;
+.react-calendar {
+  font-family: "Quicksand", sans-serif !important;
 }
 
-.mc-font{
-  font-family: 'Quicksand', sans-serif !important;
+.mc-font {
+  font-family: "Quicksand", sans-serif !important;
 }
 
-.text-white-hover:hover{
+.text-white-hover:hover {
   color: white !important;
 }
 
-.btn-outline-light{
+.btn-outline-light {
   --bs-btn-hover-color: #043d5d !important;
   --bs-btn-active-color: #043d5d !important;
 }
 
-.btn-primary{
+.btn-primary {
   --bs-btn-bg: #043d5d !important;
   --bs-btn-border-color: #043d5d !important;
   --bs-btn-hover-bg: #40bab5 !important;
@@ -114,17 +122,17 @@
   --bs-btn-disabled-border-color: #043d5d !important;
 }
 
-.transform-hover:hover{
+.transform-hover:hover {
   transition-duration: 0.5s;
   transform: scale(1.03);
 }
 
-.transform-hover-small:hover{
+.transform-hover-small:hover {
   transition-duration: 0.5s;
   transform: scaleX(1.01);
 }
 
-.body-table:hover > :not(:hover){
+.body-table:hover > :not(:hover) {
   transition-duration: 0.3s;
   transform: scaleX(0.99);
 }
@@ -145,7 +153,7 @@
   animation: rotation 2s linear infinite;
 }
 .loader::after {
-  content: '';  
+  content: "";
   box-sizing: border-box;
   position: absolute;
   left: 0;
@@ -161,7 +169,7 @@
   animation: rotationBack 1s linear infinite;
   transform-origin: center center;
 }
-    
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
@@ -169,7 +177,7 @@
   100% {
     transform: rotate(360deg);
   }
-} 
+}
 @keyframes rotationBack {
   0% {
     transform: rotate(0deg);
@@ -177,7 +185,7 @@
   100% {
     transform: rotate(-360deg);
   }
-} 
+}
 
 @keyframes crescendo {
   0% {
