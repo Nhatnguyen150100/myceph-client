@@ -265,12 +265,11 @@ export default function LateralCeph(props) {
       setIsDragImage(false);
     }
   };
-  console.log("🚀 ~ file: LateralCeph.jsx:281 ~ drawMarkerPoints ~ scale:", scale)
 
   const drawMarkerPoints = useMemo(()=>{
     let circleWithTextArray = [];
     for (const key of Object.keys(markerPoints)) {
-      if(markerPoints[key]) {
+      if(markerPoints[key]){
         circleWithTextArray.push(
           <Group>
             <Circle
@@ -278,18 +277,12 @@ export default function LateralCeph(props) {
               fill={'red'}
               draggable={true}
               opacity={1}
-              radius={3/scale}
+              radius={scale>2?2:3}
               x={markerPoints[key].x}
               y={markerPoints[key].y}
               onDragStart={(event) => {
                 const circle = event.target;
                 circle.fill('blue');
-              }}
-              onDragMove={(event) => {
-                event.target.findOne('Text').setAttrs({
-                  x: event.target.x() + 3, // cộng thêm 10 pixel với giá trị x của Circle
-                  y: event.target.y() + 3, // cộng thêm 10 pixel với giá trị y của Circle
-                });
               }}
               onMouseOver={(event) => {
                 const circle = event.target;
@@ -310,23 +303,35 @@ export default function LateralCeph(props) {
                 };
                 dispatch(setMarkerPoints(newMarkerPoints));
               }}
+              onDragMove={(event) => {
+                const group = event.target.findAncestor('Group');
+                if (group) {
+                  const textNode = group.findOne('Text');
+                  if (textNode) {
+                    textNode.setAttrs({
+                      x: event.target.x() + 5,
+                      y: event.target.y() + 5,
+                    });
+                  }
+                }
+              }}
             />
             <Text 
-              x={markerPoints[key].x + 3}
-              y={markerPoints[key].y + 3}
+              x={markerPoints[key].x + 5}
+              y={markerPoints[key].y + 5}
               scaleX={scale.x}
               scaleY={scale.y}
               draggable={false}
               text={key}
               fill="#AAFF00"
-              fontSize={12/scale}
+              fontSize={15/scale}
             />
           </Group>
         )
       }
     }
     return circleWithTextArray
-  },[markerPoints])
+  },[markerPoints,scale])
 
   return <div className="d-flex flex-column justify-content-start align-items-center" style={{height:window.innerHeight}}>
     <NavbarComponent />
@@ -434,16 +439,6 @@ export default function LateralCeph(props) {
                           fontStyle={'bold'}
                         />
                       }
-                             {/* <Circle
-          x={circlePos.x}
-          y={circlePos.y}
-          radius={50}
-          fill="red"
-          draggable={true}
-          onDragStart={handleDragStart}
-          onDragMove={handleDragMove}
-          onDragEnd={handleDragEnd}
-        /> */}
                       {
                         markerPoints && imageObject && drawMarkerPoints
                       }
