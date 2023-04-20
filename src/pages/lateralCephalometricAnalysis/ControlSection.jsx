@@ -146,13 +146,13 @@ const ControlSection = React.memo((props) => {
             </span>
             <select className="form-select mx-2" value={props.lengthOfRuler} onChange={e=>{props.onSetLengthOfRuler(e.target.value)}}>
               <option value={10} className="text-gray" style={{fontSize:FONT_SIZE}}>
-                10 cm
+                10 mm
               </option>
               <option value={20} className="text-gray" style={{fontSize:FONT_SIZE}}>
-                20 cm
+                20 mm
               </option>
               <option value={30} className="text-gray" style={{fontSize:FONT_SIZE}}>
-                30 cm
+                30 mm
               </option>
             </select>
             <span className="fw-bold mc-color me-2" style={{fontSize:FONT_SIZE}}>

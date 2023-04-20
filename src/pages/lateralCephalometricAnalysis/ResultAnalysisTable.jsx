@@ -102,7 +102,30 @@ export default function ResultAnalysisTable(props) {
                     value.indicator
                   }
                 </td>
-                <td style={{fontSize:FONT_SIZE}}>
+                <td 
+                  style={{fontSize:FONT_SIZE}} 
+                  className={`${
+                    value.valueFn(...value.markerArray?.map(element => {
+                      return markerPoints[element] ? markerPoints[element] : null;
+                    })) && value.valueFn(...value.markerArray?.map(element => {
+                      return markerPoints[element] ? markerPoints[element] : null;
+                    })) < currentNorm?.data[value.normName]?.data[genderPatient==='male'?'M':'F'].MIN 
+                    ?
+                    'text-primary'
+                    :
+                    (
+                      value.valueFn(...value.markerArray?.map(element => {
+                        return markerPoints[element] ? markerPoints[element] : null;
+                      })) && value.valueFn(...value.markerArray?.map(element => {
+                        return markerPoints[element] ? markerPoints[element] : null;
+                      })) > currentNorm?.data[value.normName]?.data[genderPatient==='male'?'M':'F'].MAX 
+                      ?
+                      'text-danger'
+                      :
+                      ''
+                    )
+                  }`}
+                >
                   {
                      value.valueFn && markerPoints && value.valueFn(...value.markerArray?.map(element => {
                       return markerPoints[element] ? markerPoints[element] : null;

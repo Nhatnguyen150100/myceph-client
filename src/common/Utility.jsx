@@ -480,4 +480,25 @@ export const removeVietnameseDiacritics = (str) => {
             .replace(/[\u0110]/g, "D");
 }
 
+export const findNextObject = (currentKey,keyArray,checkObject) => {
+  if(!currentKey || !keyArray || !checkObject) return null;
+  const currentIndexObject = keyArray.findIndex(element => element === currentKey);
+  let nextIndexObject;
+  if(currentIndexObject === keyArray.length - 1) nextIndexObject = 0;
+  else nextIndexObject = currentIndexObject + 1;
+
+  while(true){
+    // eslint-disable-next-line no-loop-func
+    if(!Object.keys(checkObject).find(element => element === keyArray[nextIndexObject])) return keyArray[nextIndexObject]
+    else nextIndexObject++;
+
+    if(nextIndexObject === keyArray.length - 1){
+      nextIndexObject = 0;
+    }
+    
+    if(currentIndexObject === nextIndexObject) break;
+  }
+  return null;
+}
+
 

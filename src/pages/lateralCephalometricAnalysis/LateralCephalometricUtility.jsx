@@ -24,7 +24,15 @@ export const MARKER_LIST = {
 export const ANALYSIS = {
   STEINER: {
     name: "Steiner",
-    markerPoints: ['C1','C2','S','N','A','U1A','Cm','Ls','Li','U1E','L1E','Mo','B','L1A','Pog\'','Go','Gn'],
+    markerPoints: ['C1','C2','S','N','A','U1A','Cm','Ls','Li','U1E','L1E','Mo','B','D','L1A','Pog\'','Go','Gn'],
+    lines: [
+      ["S","N"],
+      ["N","A"],
+      ["N","B"],
+      ["Mo","U1E"],
+      ["Cm","pog'"],
+      ["Go","Gn"]
+    ],
     arrayListValue: [
       {
         indicator: "SNA",
@@ -122,6 +130,17 @@ export const ANALYSIS = {
   NAGASAKI: {
     name: "Nagasaki",
     markerPoints: ['C1','C2','S','N','A','U1A','U1E','L1E','Mo','B','L1A','Go','Me'],
+    lines: [
+      ["S","N"],
+      ["N","A"],
+      ["A","U1E"],
+      ["U1A","U1E"],
+      ["U1A","L1E"],
+      ["L1E","L1A"],
+      ["L1A","B"],
+      ["B","Me"],
+      ["Go","Me"]
+    ],
     arrayListValue: [
       {
         indicator: "SNA",
@@ -405,9 +424,10 @@ export const calculateAngleFromFourPoint = (pointA, pointB, pointC, pointD) => {
   const theta = Math.acos(cosTheta);
 
   // Đổi từ radian sang độ
-  const degree = theta * 180 / Math.PI;
+  const degree = (theta * 180 / Math.PI);
+  const roundDegree = (180-degree).toFixed(2);
 
-  return degree;
+  return roundDegree;
 }
 
 /**
@@ -443,7 +463,7 @@ export const distanceFromPointToLine = (pointA, pointB, pointC) => {
   const numerator = Math.abs((xB - xA) * (yC - yB) - (xC - xB) * (yB - yA));
   const denominator = Math.sqrt((xB - xA) ** 2 + (yB - yA) ** 2);
 
-  return numerator / denominator;
+  return (numerator / denominator).toFixed(2);
 }
 
 
@@ -495,6 +515,6 @@ export const projectPointOntoLine = (pointA,pointB,pointC) => {
 export const distanceFromTwoPoint = (pointA, pointB) => {
   if(!pointA || !pointB) return '-';
   const distance = Math.sqrt((pointB.y - pointA.y) **2 + (pointB.x - pointA.x) **2);
-  return distance;
+  return distance.toFixed(2);
 }
 

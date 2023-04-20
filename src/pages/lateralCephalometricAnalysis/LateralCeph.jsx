@@ -2,11 +2,11 @@ import Konva from "konva";
 import React, { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Circle, Group, Image, Label, Layer, Line, Rect, Stage, Text } from "react-konva";
+import { Arrow, Circle, Group, Image, Label, Layer, Line, Rect, Stage, Text } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FONT_SIZE, FONT_SIZE_HEAD, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../../common/Utility.jsx";
+import { findNextObject, FONT_SIZE, FONT_SIZE_HEAD, getKeyByNameValue, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../../common/Utility.jsx";
 import NavbarComponent from "../../components/NavbarComponent.jsx";
 import SelectPatientComponent from "../../components/SelectPatientComponent.jsx";
 import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
@@ -14,7 +14,9 @@ import { setAppName } from "../../redux/GeneralSlice.jsx";
 import { setMarkerPoints } from "../../redux/LateralCephSlice.jsx";
 import ControlSection from "./ControlSection.jsx";
 import CustomIndicator from "./CustomIndicator.jsx";
+import { ANALYSIS } from "./LateralCephalometricUtility.jsx";
 import ResultAnalysisTable from "./ResultAnalysisTable.jsx";
+import Ruler from "./Ruler.jsx";
 
 const filterMap = {
   contrast: Konva.Filters.Contrast,
@@ -31,6 +33,7 @@ export default function LateralCeph(props) {
   const nav = useNavigate();
   const {t} = useTranslation();
   const doctor = useSelector(state=>state.doctor);
+  const currentAnalysis = useSelector(state=>state.lateralCeph.currentAnalysis);
   const selectPatientOnMode = useSelector(state=>state.patient.selectPatientOnMode);
   const currentPatient = useSelector(state=>state.patient.currentPatient);
   const markerPoints = useSelector(state=>state.lateralCeph.markerPoints);
@@ -116,7 +119,7 @@ export default function LateralCeph(props) {
       image.setAttribute("crossOrigin","anonymous");
       image.onload = () => {
         if (image.width > 0 && image.height > 0) {
-          const scale = image.height/(window.innerHeight-50-(105*2));
+          const scale = 1.89;
           image.width = image.width/scale;
           image.height = image.height/scale;
           setImageObject(image);
@@ -149,6 +152,8 @@ export default function LateralCeph(props) {
         [currentMarkerPoint]: mousePointTo
       }}
       dispatch(setMarkerPoints(newMarkerPoints));
+      const nextPoint = findNextObject(currentMarkerPoint,ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints,markerPoints);
+      setCurrentMarkerPoint(nextPoint);
     }
   }
 
@@ -266,6 +271,26 @@ export default function LateralCeph(props) {
     }
   };
 
+  const drawLines = useMemo(()=>{
+    let linesArray = [];
+    for (const lines of ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.lines) {
+      if(markerPoints[lines[0]] && markerPoints[lines[1]]){
+        linesArray.push(
+          <Line
+            key={markerPoints[lines[0]].x+markerPoints[lines[0]].y+markerPoints[lines[1]].x+markerPoints[lines[1]].y+Math.random(1,1000)}
+            x={0}
+            y={0}
+            points={[markerPoints[lines[0]].x, markerPoints[lines[0]].y, markerPoints[lines[1]].x, markerPoints[lines[1]].y]}
+            stroke="#8B008B"
+            strokeWidth={1.5/scale}
+            opacity={0.8}
+          />
+        )
+      }
+    }
+    return linesArray;
+  },[markerPoints,scale])
+
   const drawMarkerPoints = useMemo(()=>{
     let circleWithTextArray = [];
     for (const key of Object.keys(markerPoints)) {
@@ -277,33 +302,35 @@ export default function LateralCeph(props) {
               fill={'red'}
               draggable={true}
               opacity={1}
-              radius={scale>2?2:3}
+              radius={4/scale}
               x={markerPoints[key].x}
               y={markerPoints[key].y}
               onDragStart={(event) => {
                 const circle = event.target;
-                circle.fill('blue');
+                circle.fill('#27a9f1');
               }}
               onMouseOver={(event) => {
+                // setCurrentMarkerPoint(key);
                 const circle = event.target;
-                circle.fill('blue');
+                circle.fill('#27a9f1');
               }}
               onMouseLeave={(event) => {
+                // setCurrentMarkerPoint(null);
                 const circle = event.target;
                 circle.fill('red');
               }}
               onDragEnd={(event) => {
-                const circle = event.target;
-                circle.fill('red');
                 const newMarkerPoints = Object.assign({}, markerPoints);
                 newMarkerPoints[key] = {
-                  ...newMarkerPoints[key],
                   x: event.target.x(),
                   y: event.target.y()
                 };
                 dispatch(setMarkerPoints(newMarkerPoints));
+                const circle = event.target;
+                circle.fill('red');
               }}
               onDragMove={(event) => {
+                setCurrentMarkerPoint(null);
                 const group = event.target.findAncestor('Group');
                 if (group) {
                   const textNode = group.findOne('Text');
@@ -317,14 +344,14 @@ export default function LateralCeph(props) {
               }}
             />
             <Text 
-              x={markerPoints[key].x + 5}
-              y={markerPoints[key].y + 5}
+              x={markerPoints[key].x + 3}
+              y={markerPoints[key].y + 3}
               scaleX={scale.x}
               scaleY={scale.y}
               draggable={false}
               text={key}
               fill="#AAFF00"
-              fontSize={15/scale}
+              fontSize={10/scale}
             />
           </Group>
         )
@@ -435,9 +462,41 @@ export default function LateralCeph(props) {
                           y={crosshairPos.y + 10}
                           text={currentMarkerPoint}
                           fill="#AAFF00"
-                          fontSize={15}
+                          fontSize={15/scale}
                           fontStyle={'bold'}
                         />
+                      }
+                      {
+                        markerPoints['C1'] && markerPoints['C2'] && 
+                        <Group>
+                          <Arrow
+                            points={[markerPoints['C1'].x, markerPoints['C1'].y, markerPoints['C2'].x, markerPoints['C2'].y + 3/scale]}
+                            stroke='green'
+                            strokeWidth={1/scale}
+                            pointerLength={6/scale}
+                            pointerWidth={6/scale}
+                            fill='green'
+                          />
+                          <Text
+                            x={(markerPoints['C1'].x + markerPoints['C2'].x)/2}
+                            y={(markerPoints['C1'].y + markerPoints['C2'].y)/2}
+                            fill="#54c0ff"
+                            fontSize={12/scale}
+                            fontStyle={'bold'}
+                            text={`${lengthOfRuler}mm`}
+                          />
+                          <Arrow
+                            points={[markerPoints['C2'].x, markerPoints['C2'].y, markerPoints['C1'].x, markerPoints['C1'].y - 3/scale]}
+                            stroke='green'
+                            strokeWidth={1/scale}
+                            pointerLength={6/scale}
+                            pointerWidth={6/scale}
+                            fill='green'
+                          />
+                        </Group>
+                      }
+                      {
+                        markerPoints && imageObject && drawLines
                       }
                       {
                         markerPoints && imageObject && drawMarkerPoints
