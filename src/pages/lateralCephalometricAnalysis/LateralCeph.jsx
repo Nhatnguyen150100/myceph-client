@@ -11,7 +11,7 @@ import NavbarComponent from "../../components/NavbarComponent.jsx";
 import SelectPatientComponent from "../../components/SelectPatientComponent.jsx";
 import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import { setAppName } from "../../redux/GeneralSlice.jsx";
-import { setMarkerPoints } from "../../redux/LateralCephSlice.jsx";
+import { setLengthOfRuler, setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
 import ControlSection from "./ControlSection.jsx";
 import CustomIndicator from "./CustomIndicator.jsx";
 import { ANALYSIS } from "./LateralCephalometricUtility.jsx";
@@ -38,12 +38,15 @@ export default function LateralCeph(props) {
   const currentPatient = useSelector(state=>state.patient.currentPatient);
   const markerPoints = useSelector(state=>state.lateralCeph.markerPoints);
   const currentImageAnalysis = useSelector(state=>state.lateralCeph.currentImageAnalysis);
+  const scaleImage = useSelector(state=>state.lateralCeph.scaleImage);
+  const lengthOfRuler = useSelector(state=>state.lateralCeph.lengthOfRuler);
   const [prevPatient,setPrevPatient] = useState(currentPatient?.id);
 
   const stageRef = useRef();
   const imageRef = useRef();
   const contentAnalysisRef = useRef();
 
+  const [markerPointList,setMarkerPointList] = useState(markerPoints);
   const [filtersMap, setFiltersMap] = useState(new Map());
   const [openGrid,setOpenGrid] = useState(false);
 
@@ -53,7 +56,6 @@ export default function LateralCeph(props) {
   const [heightStage,setHeightStage] = useState(0);
   const [widthStage,setWidthStage] = useState(0);
   const [rotation,setRotation] = useState(0);
-  const [lengthOfRuler,setLengthOfRuler] = useState(10);
   const [scale,setScale] = useState(1);
 
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
@@ -115,11 +117,12 @@ export default function LateralCeph(props) {
       stage.position({ x: 0, y: 0 });
       stage.batchDraw();
       let image = new window.Image();
-      image.src = currentImageAnalysis;
+      image.src = currentImageAnalysis.linkImage;
       image.setAttribute("crossOrigin","anonymous");
       image.onload = () => {
         if (image.width > 0 && image.height > 0) {
-          const scale = 1.89;
+          const scale = scaleImage?scaleImage:(image.height/(window.innerHeight-50-(105*2))).toFixed(2);
+          if(!scaleImage) dispatch(setScaleImage(scale));
           image.width = image.width/scale;
           image.height = image.height/scale;
           setImageObject(image);
@@ -131,7 +134,7 @@ export default function LateralCeph(props) {
       setPrevPatient(currentPatient?.id);
       setImageObject(null);
     } 
-  }, [currentImageAnalysis,currentPatient])
+  }, [currentImageAnalysis,scaleImage,currentPatient])
 
   useEffect(()=>{
     if(imageObject){
@@ -152,6 +155,7 @@ export default function LateralCeph(props) {
         [currentMarkerPoint]: mousePointTo
       }}
       dispatch(setMarkerPoints(newMarkerPoints));
+      setMarkerPointList(newMarkerPoints);
       const nextPoint = findNextObject(currentMarkerPoint,ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints,markerPoints);
       setCurrentMarkerPoint(nextPoint);
     }
@@ -289,48 +293,52 @@ export default function LateralCeph(props) {
       }
     }
     return linesArray;
-  },[markerPoints,scale])
+  },[markerPoints,currentAnalysis,scale])
 
   const drawMarkerPoints = useMemo(()=>{
     let circleWithTextArray = [];
-    for (const key of Object.keys(markerPoints)) {
-      if(markerPoints[key]){
+    for (const key of Object.keys(markerPointList)) {
+      if(markerPointList[key] && ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints.find(point => point === key)){
         circleWithTextArray.push(
           <Group>
             <Circle
-              key={markerPoints[key].x+markerPoints[key].y}
+              key={markerPointList[key].x+markerPointList[key].y}
               fill={'red'}
               draggable={true}
               opacity={1}
               radius={4/scale}
-              x={markerPoints[key].x}
-              y={markerPoints[key].y}
+              x={markerPointList[key].x}
+              y={markerPointList[key].y}
               onDragStart={(event) => {
                 const circle = event.target;
                 circle.fill('#27a9f1');
               }}
               onMouseOver={(event) => {
-                // setCurrentMarkerPoint(key);
                 const circle = event.target;
                 circle.fill('#27a9f1');
               }}
               onMouseLeave={(event) => {
-                // setCurrentMarkerPoint(null);
                 const circle = event.target;
                 circle.fill('red');
               }}
               onDragEnd={(event) => {
-                const newMarkerPoints = Object.assign({}, markerPoints);
+                const newMarkerPoints = Object.assign({}, markerPointList);
                 newMarkerPoints[key] = {
                   x: event.target.x(),
                   y: event.target.y()
                 };
                 dispatch(setMarkerPoints(newMarkerPoints));
+                setMarkerPointList(newMarkerPoints);
                 const circle = event.target;
                 circle.fill('red');
               }}
               onDragMove={(event) => {
-                setCurrentMarkerPoint(null);
+                const newMarkerPoints = Object.assign({}, markerPointList);
+                newMarkerPoints[key] = {
+                  x: event.target.x(),
+                  y: event.target.y()
+                };
+                dispatch(setMarkerPoints(newMarkerPoints));
                 const group = event.target.findAncestor('Group');
                 if (group) {
                   const textNode = group.findOne('Text');
@@ -344,8 +352,8 @@ export default function LateralCeph(props) {
               }}
             />
             <Text 
-              x={markerPoints[key].x + 3}
-              y={markerPoints[key].y + 3}
+              x={markerPointList[key].x + 3/scale}
+              y={markerPointList[key].y + 3/scale}
               scaleX={scale.x}
               scaleY={scale.y}
               draggable={false}
@@ -358,7 +366,7 @@ export default function LateralCeph(props) {
       }
     }
     return circleWithTextArray
-  },[markerPoints,scale])
+  },[markerPointList,currentAnalysis,scale])
 
   return <div className="d-flex flex-column justify-content-start align-items-center" style={{height:window.innerHeight}}>
     <NavbarComponent />
@@ -370,14 +378,17 @@ export default function LateralCeph(props) {
     </div>
     <div className="row container-fluid h-100 mb-4">
       <div className="col-md-3 h-100 border-start border-top border-bottom p-0" style={{borderTopLeftRadius:"5px",borderBottomLeftRadius:"5px"}}>
-        <ResultAnalysisTable />
+        <ResultAnalysisTable lengthOfRuler={lengthOfRuler}/>
       </div>
       <div className="col-md-9 h-100 border p-0" style={{borderTopRightRadius:"5px",borderBottomRightRadius:"5px"}}>
         <div className="d-flex flex-column w-100 h-100 p-0">
           <div className="row p-0 d-flex flex-grow-1">
             <div className="col-md-9 d-flex flex-column flex-grow-1 pe-0">
-              <div className="py-1 mc-background row px-2" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
-                <span className="text-white fw-bold text-capitalize  border-start" style={{fontSize:FONT_SIZE_HEAD}}>{t('radiography')}</span>
+              <div className="py-1 mc-background px-2" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
+                <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('radiography')}</span>
+                {
+                  imageObject && <span className="ms-2 text-white text-capitalize" style={{fontSize:FONT_SIZE}}>( X-ray: {imageObject?.height*2}px x {imageObject?.width*2}px )</span>
+                }
               </div>
               <div className="d-flex flex-grow-1 flex-row">
                 <ControlSection 
@@ -386,13 +397,12 @@ export default function LateralCeph(props) {
                   onChangeContrast={value=>handleChange('contrast', value)}
                   onChangeBrightness={value=>handleChange('brightness', value)}
                   onRotation={value=>setRotation(value)}
-                  onSetLengthOfRuler={value=>setLengthOfRuler(value)}
                   onSetCurrentMarkerPoint={point=>setCurrentMarkerPoint(point)}
                   currentMarkerPoint={currentMarkerPoint}
+                  onSetMarkerPointList={markerPoints=>setMarkerPointList(markerPoints)}
                   rotation={rotation}
                   imageObject={imageObject}
                   isDragImage={isDragImage}
-                  lengthOfRuler={lengthOfRuler}
                   onDragImage={value=>setIsDragImage(value)}
                 />
                 <div 
@@ -413,6 +423,9 @@ export default function LateralCeph(props) {
                     y={0} 
                     offsetX={0} 
                     offsetY={0}
+                    onDragStart={()=>setIsGrab(true)}
+                    onDragMove={()=>setIsGrab(true)}
+                    onDragEnd={()=>setIsGrab(false)}
                     draggable={isDragImage}
                     onMouseMove={handleMouseMove}
                     onClick={onAddMarkerPoint}
@@ -441,8 +454,8 @@ export default function LateralCeph(props) {
                             y={0}
                             points={[0, -window.innerHeight, 0, window.innerHeight]}
                             stroke="red"
-                            strokeWidth={0.8}
-                            opacity={0.8}
+                            strokeWidth={1/scale}
+                            opacity={1/scale}
                           />
                           <Line
                             ref={crosshairHorizontalRef}
@@ -450,8 +463,8 @@ export default function LateralCeph(props) {
                             y={crosshairPos.y}
                             points={[-window.innerWidth, 0, window.innerWidth, 0]}
                             stroke="red"
-                            strokeWidth={0.8}
-                            opacity={0.8}
+                            strokeWidth={1/scale}
+                            opacity={1/scale}
                           />
                         </React.Fragment>
                       }
@@ -467,33 +480,8 @@ export default function LateralCeph(props) {
                         />
                       }
                       {
-                        markerPoints['C1'] && markerPoints['C2'] && 
-                        <Group>
-                          <Arrow
-                            points={[markerPoints['C1'].x, markerPoints['C1'].y, markerPoints['C2'].x, markerPoints['C2'].y + 3/scale]}
-                            stroke='green'
-                            strokeWidth={1/scale}
-                            pointerLength={6/scale}
-                            pointerWidth={6/scale}
-                            fill='green'
-                          />
-                          <Text
-                            x={(markerPoints['C1'].x + markerPoints['C2'].x)/2}
-                            y={(markerPoints['C1'].y + markerPoints['C2'].y)/2}
-                            fill="#54c0ff"
-                            fontSize={12/scale}
-                            fontStyle={'bold'}
-                            text={`${lengthOfRuler}mm`}
-                          />
-                          <Arrow
-                            points={[markerPoints['C2'].x, markerPoints['C2'].y, markerPoints['C1'].x, markerPoints['C1'].y - 3/scale]}
-                            stroke='green'
-                            strokeWidth={1/scale}
-                            pointerLength={6/scale}
-                            pointerWidth={6/scale}
-                            fill='green'
-                          />
-                        </Group>
+                        markerPoints['C1'] && markerPoints['C2'] && imageObject &&
+                        <Ruler c1={markerPoints['C1']} c2={markerPoints['C2']} scale={scale} lengthOfRuler={lengthOfRuler}/>
                       }
                       {
                         markerPoints && imageObject && drawLines

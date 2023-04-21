@@ -492,11 +492,11 @@ export const findNextObject = (currentKey,keyArray,checkObject) => {
     if(!Object.keys(checkObject).find(element => element === keyArray[nextIndexObject])) return keyArray[nextIndexObject]
     else nextIndexObject++;
 
+    if(currentIndexObject === nextIndexObject) break;
+    
     if(nextIndexObject === keyArray.length - 1){
       nextIndexObject = 0;
     }
-    
-    if(currentIndexObject === nextIndexObject) break;
   }
   return null;
 }

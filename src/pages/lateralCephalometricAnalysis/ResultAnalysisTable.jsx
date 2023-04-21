@@ -107,18 +107,18 @@ export default function ResultAnalysisTable(props) {
                   className={`${
                     value.valueFn(...value.markerArray?.map(element => {
                       return markerPoints[element] ? markerPoints[element] : null;
-                    })) && value.valueFn(...value.markerArray?.map(element => {
+                    }), props.lengthOfRuler) && value.valueFn(...value.markerArray?.map(element => {
                       return markerPoints[element] ? markerPoints[element] : null;
-                    })) < currentNorm?.data[value.normName]?.data[genderPatient==='male'?'M':'F'].MIN 
+                    }), props.lengthOfRuler) < currentNorm?.data[value.normName]?.data[genderPatient==='male'?'M':'F'].MIN 
                     ?
                     'text-primary'
                     :
                     (
                       value.valueFn(...value.markerArray?.map(element => {
                         return markerPoints[element] ? markerPoints[element] : null;
-                      })) && value.valueFn(...value.markerArray?.map(element => {
+                      }), props.lengthOfRuler) && value.valueFn(...value.markerArray?.map(element => {
                         return markerPoints[element] ? markerPoints[element] : null;
-                      })) > currentNorm?.data[value.normName]?.data[genderPatient==='male'?'M':'F'].MAX 
+                      }), props.lengthOfRuler) > currentNorm?.data[value.normName]?.data[genderPatient==='male'?'M':'F'].MAX 
                       ?
                       'text-danger'
                       :
@@ -129,7 +129,7 @@ export default function ResultAnalysisTable(props) {
                   {
                      value.valueFn && markerPoints && value.valueFn(...value.markerArray?.map(element => {
                       return markerPoints[element] ? markerPoints[element] : null;
-                    }))
+                    }), props.lengthOfRuler)
                   }
                 </td>
                 <td style={{fontSize:FONT_SIZE}}>

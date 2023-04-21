@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
-import { getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
-import { setCurrentImageAnalysis, setListImageFontSide } from "../../redux/LateralCephSlice.jsx";
+import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
+import { setCurrentImageAnalysis, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -21,6 +21,8 @@ const ControlSection = React.memo((props) => {
   const markerPoints = useSelector(state=>state.lateralCeph.markerPoints);
   const currentImageAnalysis = useSelector(state=>state.lateralCeph.currentImageAnalysis);
   const currentAnalysis = useSelector(state=>state.lateralCeph.currentAnalysis);
+  const lengthOfRuler = useSelector(state=>state.lateralCeph.lengthOfRuler);
+  const scaleImage = useSelector(state=>state.lateralCeph.scaleImage);
   const doctor = useSelector(state=>state.doctor);
 
   const dispatch = useDispatch();
@@ -36,8 +38,9 @@ const ControlSection = React.memo((props) => {
   },[])
 
   useEffect(()=>{
-    if(!currentImageAnalysis && !currentImageAnalysis && doctor) imageModal.current.show();
-  },[currentImageAnalysis,currentPatient])
+    if(!currentImageAnalysis && doctor.data) imageModal.current.show();
+    else imageModal.current.hide();
+  },[currentImageAnalysis,currentPatient,doctor.data])
 
   useEffect(()=>{
     if(props.imageObject) imageModal.current.hide();
@@ -122,6 +125,84 @@ const ControlSection = React.memo((props) => {
     })
   }
 
+  const getImageAnalysis = (image) => {
+    return new Promise((resolve, reject) => {
+      dispatch(setLoadingModal(true));
+      getToServerWithToken(`/v1/lateralCeph/getImageAnalysis/${image.id}`).then(result => {
+        if(result.data){
+          dispatch(setMarkerPoints(JSON.parse(result.data.markerPoints)));
+          props.onSetMarkerPointList(JSON.parse(result.data.markerPoints));
+          dispatch(setScaleImage(result.data.scaleImage));
+          dispatch(setLengthOfRuler(result.data.lengthOfRuler));
+          toast.info(t(result.message));
+        }else{
+          dispatch(setMarkerPoints({}));
+          props.onSetMarkerPointList({});
+          dispatch(setScaleImage(null));
+          dispatch(setLengthOfRuler(10));
+          toast.warning(t(result.message))
+        }
+        resolve();
+      }).catch(err =>{
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>getImageAnalysis(image.id));
+        }else{
+          toast.error(err.message);
+        }
+        reject();
+      }).finally(()=>{
+        dispatch(setLoadingModal(false))
+        dispatch(setCurrentImageAnalysis({
+          id: image.id,
+          linkImage: splitAvatar(image.linkImage)
+        }));
+      });
+    })
+  }
+
+  const setImageAnalysis = () => {
+    return new Promise((resolve, reject) =>{
+      dispatch(setLoadingModal(true));
+      postToServerWithToken(`/v1/lateralCeph/setImageAnalysis`,{
+        idImageAnalysis: currentImageAnalysis.id,
+        markerPoints: markerPoints,
+        scaleImage: scaleImage,
+        lengthOfRuler: lengthOfRuler
+      }).then(result => {
+        toast.success(t(result.message));
+        resolve();
+      }).catch(err =>{
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>setImageAnalysis());
+        }else{
+          toast.error(err.message);
+        }
+        reject();
+      }).finally(()=>dispatch(setLoadingModal(false)));
+    })
+  }
+
+  const deleteImageAnalysis = () => {
+    return new Promise((resolve,reject) =>{
+      dispatch(setLoadingModal(true));
+      deleteToServerWithToken(`/v1/lateralCeph/deleteImageAnalysis/${currentImageAnalysis.id}`).then(result => {
+        dispatch(setMarkerPoints({}));
+        props.onSetMarkerPointList({});
+        dispatch(setScaleImage(null));
+        dispatch(setLengthOfRuler(10));
+        toast.warning(t(result.message));
+        resolve();
+      }).catch(err =>{
+        if(err.refreshToken){
+          refreshToken(nav,dispatch).then(()=>deleteImageAnalysis());
+        }else{
+          toast.error(err.message);
+        }
+        reject();
+      }).finally(()=>dispatch(setLoadingModal(false)));
+    })
+  }
+
   return <div className={`d-flex flex-column justify-content-between align-items-center px-1 border-end`}>
     <div className="d-flex flex-column">
       <button 
@@ -144,7 +225,7 @@ const ControlSection = React.memo((props) => {
             <span className="fw-bold mc-color ms-2" style={{fontSize:FONT_SIZE}}>
               C1
             </span>
-            <select className="form-select mx-2" value={props.lengthOfRuler} onChange={e=>{props.onSetLengthOfRuler(e.target.value)}}>
+            <select className="form-select mx-2" value={lengthOfRuler} onChange={e=>{dispatch(setLengthOfRuler(e.target.value))}}>
               <option value={10} className="text-gray" style={{fontSize:FONT_SIZE}}>
                 10 mm
               </option>
@@ -311,14 +392,22 @@ const ControlSection = React.memo((props) => {
           
         </ul>
       </div>
-      <button type="button" className="btn btn-outline-success border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded">
+      <button 
+        type="button" 
+        className="btn btn-outline-success border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded"
+        onClick={setImageAnalysis}
+      >
         <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
           save
         </span>
       </button>
     </div>
     <div className="d-flex flex-column">
-      <button type="button" className="btn btn-outline-danger border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded">
+      <button 
+        type="button" 
+        className="btn btn-outline-danger border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded"
+        onClick={deleteImageAnalysis}
+      >
         <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
           delete
         </span>
@@ -359,7 +448,7 @@ const ControlSection = React.memo((props) => {
                     type="button" 
                     className="btn btn-primary p-0 me-3 mb-3 transform-hover w-auto" 
                     onClick={()=>{
-                      dispatch(setCurrentImageAnalysis(splitAvatar(image.linkImage)));
+                      getImageAnalysis(image);
                       imageModal.current.hide();
                     }}
                   >

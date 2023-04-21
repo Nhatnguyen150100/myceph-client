@@ -30,7 +30,7 @@ export const ANALYSIS = {
       ["N","A"],
       ["N","B"],
       ["Mo","U1E"],
-      ["Cm","pog'"],
+      ["Cm","Pog'"],
       ["Go","Gn"]
     ],
     arrayListValue: [
@@ -79,8 +79,8 @@ export const ANALYSIS = {
       {
         indicator: "U1E->NA",
         normName: "U1ENA",
-        markerArray: ["U1E","N","A"],
-        valueFn: (pointU1E,pointN,pointA) => distanceFromPointToLine(pointU1E,pointN,pointA),
+        markerArray: ["U1E","N","A","C1","C2"],
+        valueFn: (pointU1E,pointN,pointA,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointU1E,pointN,pointA,pointC1,pointC2,lengthOfRuler),
         unit: "mm"
       },
       {
@@ -93,8 +93,8 @@ export const ANALYSIS = {
       {
         indicator: "L1E->NB",
         normName: "L1ENB",
-        markerArray: ["L1E","N","B"],
-        valueFn: (pointU1E,pointN,pointB) => distanceFromPointToLine(pointU1E,pointN,pointB),
+        markerArray: ["L1E","N","B","C1","C2"],
+        valueFn: (pointU1E,pointN,pointB,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointU1E,pointN,pointB,pointC1,pointC2,lengthOfRuler),
         unit: "mm"
       },
       {
@@ -114,15 +114,15 @@ export const ANALYSIS = {
       {
         indicator: "Ls->S-line",
         normName: "LS_TO_SLINE",
-        markerArray: ["Ls","Cm","Pog'"],
-        valueFn: (pointLs,pointCm,pointPo_g) => distanceFromPointToLine(pointLs,pointCm,pointPo_g),
+        markerArray: ["Ls","Cm","Pog'","C1","C2"],
+        valueFn: (pointLs,pointCm,pointPo_g,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointLs,pointCm,pointPo_g,pointC1,pointC2,lengthOfRuler),
         unit: "mm"
       },
       {
         indicator: "Li->S-line",
         normName: "LI_TO_SLINE",
-        markerArray: ["Li","Cm","Pog'"],
-        valueFn: (pointLi,pointCm,pointPo_g) => distanceFromPointToLine(pointLi,pointCm,pointPo_g),
+        markerArray: ["Li","Cm","Pog'","C1","C2"],
+        valueFn: (pointLi,pointCm,pointPo_g,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointLi,pointCm,pointPo_g,pointC1,pointC2,lengthOfRuler),
         unit:"mm"
       }
     ]
@@ -180,8 +180,8 @@ export const ANALYSIS = {
       {
         indicator: "L1E->NA",
         normName: "L1ENA",
-        markerArray: ["L1E","N","A"],
-        valueFn: (pointU1E,pointN,pointA) => distanceFromPointToLine(pointU1E,pointN,pointA),
+        markerArray: ["L1E","N","A","C1","C2"],
+        valueFn: (pointU1E,pointN,pointA,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointU1E,pointN,pointA,pointC1,pointC2,lengthOfRuler),
         unit: "mm"
       },
       {
@@ -451,7 +451,7 @@ export const calculateAngleFromThreePoint = (startPoint,centerPoint,endPoint) =>
  * @param {*} pointC điểm thuộc đường thẳng
  * @returns khoảng cách từ pointA đến đường thẳng đi qua pointB và pointC
  */
-export const distanceFromPointToLine = (pointA, pointB, pointC) => {
+export const distanceFromPointToLine = (pointA, pointB, pointC, pointC1, pointC2, lengthOfRuler) => {
   if(!pointA || !pointB || !pointC) return '-';
   const xA = pointA.x;
   const yA = pointA.y;
@@ -460,10 +460,19 @@ export const distanceFromPointToLine = (pointA, pointB, pointC) => {
   const xC = pointC.x;
   const yC = pointC.y;
 
-  const numerator = Math.abs((xB - xA) * (yC - yB) - (xC - xB) * (yB - yA));
-  const denominator = Math.sqrt((xB - xA) ** 2 + (yB - yA) ** 2);
+  const vectorBC = { x: xC - xB, y: yC - yB };
+  const vectorAB = { x: xB - xA, y: yB - yA };
 
-  return (numerator / denominator).toFixed(2);
+  const vectorN = { x: -vectorBC.y, y: vectorBC.x };
+
+  const magnitudeN = Math.sqrt(vectorN.x ** 2 + vectorN.y ** 2);
+
+  const dotProductABN = vectorAB.x * vectorN.x + vectorAB.y * vectorN.y;
+
+  const distance = Math.abs(dotProductABN) / magnitudeN;
+
+  const realResult =  (distance *lengthOfRuler) / point2PointDistance(pointC1,pointC2);
+  return realResult.toFixed(2);
 }
 
 
@@ -512,9 +521,22 @@ export const projectPointOntoLine = (pointA,pointB,pointC) => {
  * @param {*} pointB 
  * @returns 
  */
-export const distanceFromTwoPoint = (pointA, pointB) => {
+export const distanceFromTwoPoint = (pointA, pointB, pointC1, pointC2, lengthOfRuler) => {
   if(!pointA || !pointB) return '-';
   const distance = Math.sqrt((pointB.y - pointA.y) **2 + (pointB.x - pointA.x) **2);
-  return distance.toFixed(2);
+  const realResult = distance/point2PointDistance(pointC1,pointC2);
+  return (realResult*lengthOfRuler).toFixed(2);
+}
+
+/**
+ * 
+ * @param {*} p1 
+ * @param {*} p2 
+ * @returns khoảng cách giữa 2 điểm p1 và p2
+ */
+ export function point2PointDistance(p1,p2) {
+  let result = null;
+  if(p1 && p2) result = Math.sqrt((p2.x-p1.x)*(p2.x-p1.x)+(p2.y-p1.y)*(p2.y-p1.y));
+  return result;
 }
 
