@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { deCryptData } from "../../common/Crypto.jsx";
 import { FONT_SIZE, FONT_SIZE_HEAD, getKeyByNameValue, getKeyByValue, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
-import { setCurrentAnalysis, setCurrentNorm } from "../../redux/LateralCephSlice.jsx";
+import { setCurrentAnalysis, setCurrentNorm, setHighLightIndicator } from "../../redux/LateralCephSlice.jsx";
 import { ANALYSIS, PREDEFINED_NORMS } from "./LateralCephalometricUtility.jsx";
 
 export default function ResultAnalysisTable(props) {
@@ -96,7 +96,19 @@ export default function ResultAnalysisTable(props) {
         <tbody style={{overflowY:"auto",height:"300px"}}>
           {
             ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.arrayListValue.map((value,index) => {
-              return  <tr className="align-middle" key={index+Math.random(1,1000)}> 
+              return  <tr className="align-middle" key={index+Math.random(1,1000)}
+              style={{cursor:"pointer"}}
+              onMouseEnter={()=>{
+                if(value.valueFn && markerPoints){
+                  props.onSetHighLightIndicator(
+                    value.highLightFn(...value.markerArray?.map(element => {
+                      return markerPoints[element] ? markerPoints[element] : null;
+                    }))
+                  )
+                }
+              }}
+              onMouseLeave={()=>props.onSetHighLightIndicator([])}
+              > 
                 <td className="text-gray" style={{fontSize:FONT_SIZE}}>
                   {
                     value.indicator

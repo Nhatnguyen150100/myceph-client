@@ -21,6 +21,10 @@ export const MARKER_LIST = {
   Go:"Gonion"
 };
 
+export const HIGHLIGHT_COLOR = "#54c0ff";
+export const LINE_RESULT_COLOR = "#ffad00";
+
+
 export const ANALYSIS = {
   STEINER: {
     name: "Steiner",
@@ -38,27 +42,75 @@ export const ANALYSIS = {
         indicator: "SNA",
         normName: "SNA",
         markerArray: ["S","N","A"],
-        valueFn: (pointS,pointN,pointA) => calculateAngleFromThreePoint(pointS,pointN,pointA),
+        valueFn: (pointS,pointN,pointA) => calculateAngleFromThreePoint(pointS,pointN,pointA,false),
+        highLightFn: (pointS,pointN,pointA) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointS,pointN]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointA,pointN]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
         indicator: "SNB",
         normName: "SNB",
         markerArray: ["S","N","B"],
-        valueFn: (pointS,pointN,pointB) => calculateAngleFromThreePoint(pointS,pointN,pointB),
+        valueFn: (pointS,pointN,pointB) => calculateAngleFromThreePoint(pointS,pointN,pointB,false),
+        highLightFn: (pointS,pointN,pointB) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointS,pointN]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointB,pointN]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
         indicator: "ANB",
         normName: "ANB",
         markerArray: ["A","N","B"],
-        valueFn: (pointA,pointN,pointB) => calculateAngleFromThreePoint(pointA,pointN,pointB),
+        valueFn: (pointA,pointN,pointB) => calculateAngleFromThreePoint(pointA,pointN,pointB,false),
+        highLightFn: (pointA,pointN,pointB) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointA,pointN]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointB,pointN]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
         indicator: "Inter-incisal",
         normName: "INTERINCISAL",
         markerArray: ["L1A","L1E","U1A","U1E"],
+        highLightFn: (pointL1A,pointL1E,pointU1A,pointU1E) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointL1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointU1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
+            }
+          ]
+        },
         valueFn: (pointL1A,pointL1E,pointU1A,pointU1E) => calculateAngleFromFourPoint(pointL1A,pointL1E,pointU1A,pointU1E),
         unit: "deg"
       },
@@ -66,14 +118,38 @@ export const ANALYSIS = {
         indicator: "Mandible (S-N vs Go-Gn)",
         normName: "MANDIBLE_STEINER",
         markerArray: ["S","N","Gn","Go"],
-        valueFn: (pointN,pointS,pointGn,pointGo) => calculateAngleFromFourPoint(pointN,pointS,pointGn,pointGo),
+        valueFn: (pointN,pointS,pointGn,pointGo) => calculateAngleFromFourPoint(pointN,pointS,pointGn,pointGo,false),
+        highLightFn: (pointN,pointS,pointGn,pointGo) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,intersectPoint(pointN,pointS,pointGn,pointGo)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointGn,intersectPoint(pointN,pointS,pointGn,pointGo)]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
         indicator: "SND",
         normName: "SND",
         markerArray: ["S","N","D"],
-        valueFn: (pointS,pointN,pointD) => calculateAngleFromThreePoint(pointS,pointN,pointD),
+        valueFn: (pointS,pointN,pointD) => calculateAngleFromThreePoint(pointS,pointN,pointD,false),
+        highLightFn: (pointS,pointN,pointD) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointS,pointN]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointD,pointN]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
@@ -81,20 +157,56 @@ export const ANALYSIS = {
         normName: "U1ENA",
         markerArray: ["U1E","N","A","C1","C2"],
         valueFn: (pointU1E,pointN,pointA,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointU1E,pointN,pointA,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointU1E,pointN,pointA) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,projectPointOntoLine(pointU1E,pointN,pointA)]
+            },
+            {
+              color: LINE_RESULT_COLOR,
+              linesArray: [pointU1E,projectPointOntoLine(pointU1E,pointN,pointA)]
+            }
+          ]
+        },
         unit: "mm"
       },
       {
         indicator: "U1-NA",
         normName: "U1NA",
         markerArray: ["N","A","U1E","U1A"],
-        valueFn: (pointN,pointA,pointU1E,pointU1A) => calculateAngleFromFourPoint(pointN,pointA,pointU1E,pointU1A),
+        valueFn: (pointN,pointA,pointU1E,pointU1A) => calculateAngleFromFourPoint(pointN,pointA,pointU1E,pointU1A,false),
+        highLightFn: (pointN,pointA,pointU1E,pointU1A) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,intersectPoint(pointN,pointA,pointU1E,pointU1A)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointU1E,intersectPoint(pointN,pointA,pointU1E,pointU1A)]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
         indicator: "L1E->NB",
         normName: "L1ENB",
         markerArray: ["L1E","N","B","C1","C2"],
-        valueFn: (pointU1E,pointN,pointB,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointU1E,pointN,pointB,pointC1,pointC2,lengthOfRuler),
+        valueFn: (pointL1E,pointN,pointB,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointL1E,pointN,pointB,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointL1E,pointN,pointB) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray:  [pointN,projectPointOntoLine(pointL1E,pointN,pointB)]
+            },
+            {
+              color: LINE_RESULT_COLOR,
+              linesArray: [pointL1E,projectPointOntoLine(pointL1E,pointN,pointB)]
+            }
+          ]
+        },
         unit: "mm"
       },
       {
@@ -102,6 +214,18 @@ export const ANALYSIS = {
         normName: "L1NB",
         markerArray: ["L1E","L1A","N","B"],
         valueFn: (pointL1E,pointL1A,pointN,pointB) => calculateAngleFromFourPoint(pointL1E,pointL1A,pointN,pointB),
+        highLightFn: (pointL1E,pointL1A,pointN,pointB) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,intersectPoint(pointL1E,pointL1A,pointN,pointB)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointL1A,intersectPoint(pointL1E,pointL1A,pointN,pointB)]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
@@ -109,6 +233,18 @@ export const ANALYSIS = {
         normName: "SNMOU1E",
         markerArray: ["N","S","U1E","Mo"],
         valueFn: (pointN,pointS,pointU1E,pointMo) => calculateAngleFromFourPoint(pointN,pointS,pointU1E,pointMo),
+        highLightFn: (pointN,pointS,pointU1E,pointMo) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,intersectPoint(pointN,pointS,pointU1E,pointMo)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointU1E,intersectPoint(pointN,pointS,pointU1E,pointMo)]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
@@ -116,6 +252,18 @@ export const ANALYSIS = {
         normName: "LS_TO_SLINE",
         markerArray: ["Ls","Cm","Pog'","C1","C2"],
         valueFn: (pointLs,pointCm,pointPo_g,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointLs,pointCm,pointPo_g,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointLs,pointCm,pointPo_g) => {
+          return [
+            {
+              color: LINE_RESULT_COLOR,
+              linesArray: [pointLs,projectPointOntoLine(pointLs,pointCm,pointPo_g)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointCm,pointPo_g] 
+            }
+          ]
+        },
         unit: "mm"
       },
       {
@@ -123,6 +271,18 @@ export const ANALYSIS = {
         normName: "LI_TO_SLINE",
         markerArray: ["Li","Cm","Pog'","C1","C2"],
         valueFn: (pointLi,pointCm,pointPo_g,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointLi,pointCm,pointPo_g,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointLi,pointCm,pointPo_g) => {
+          return [
+            {
+              color: LINE_RESULT_COLOR,
+              linesArray: [pointLi,projectPointOntoLine(pointLi,pointCm,pointPo_g)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointCm,pointPo_g] 
+            }
+          ]
+        },
         unit:"mm"
       }
     ]
@@ -146,21 +306,57 @@ export const ANALYSIS = {
         indicator: "SNA",
         normName: "SNA",
         markerArray: ["S","N","A"],
-        valueFn: (pointS,pointN,pointA) => calculateAngleFromThreePoint(pointS,pointN,pointA),
+        valueFn: (pointS,pointN,pointA) => calculateAngleFromThreePoint(pointS,pointN,pointA,false),
+        highLightFn: (pointS,pointN,pointA) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointS,pointN]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointA,pointN]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
         indicator: "SNB",
         normName: "SNB",
         markerArray: ["S","N","B"],
-        valueFn: (pointS,pointN,pointB) => calculateAngleFromThreePoint(pointS,pointN,pointB),
+        valueFn: (pointS,pointN,pointB) => calculateAngleFromThreePoint(pointS,pointN,pointB,false),
+        highLightFn: (pointS,pointN,pointB) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointS,pointN]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointB,pointN]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
         indicator: "ANB",
         normName: "ANB",
         markerArray: ["A","N","B"],
-        valueFn: (pointA,pointN,pointB) => calculateAngleFromThreePoint(pointA,pointN,pointB),
+        valueFn: (pointA,pointN,pointB) => calculateAngleFromThreePoint(pointA,pointN,pointB,false),
+        highLightFn: (pointA,pointN,pointB) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointA,pointN]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointB,pointN]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
@@ -168,6 +364,18 @@ export const ANALYSIS = {
         normName: "INTERINCISAL",
         markerArray: ["L1A","L1E","U1A","U1E"],
         valueFn: (pointL1A,pointL1E,pointU1A,pointU1E) => calculateAngleFromFourPoint(pointL1A,pointL1E,pointU1A,pointU1E),
+        highLightFn: (pointL1A,pointL1E,pointU1A,pointU1E) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointL1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointU1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
@@ -175,13 +383,37 @@ export const ANALYSIS = {
         normName: "MANDIBLE_NAGASAKI",
         markerArray: ["N","S","Me","Go"],
         valueFn: (pointN,pointS,pointMe,pointGo) => calculateAngleFromFourPoint(pointN,pointS,pointMe,pointGo),
+        highLightFn: (pointN,pointS,pointMe,pointGo) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,intersectPoint(pointN,pointS,pointMe,pointGo)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointMe,intersectPoint(pointN,pointS,pointMe,pointGo)]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
         indicator: "L1E->NA",
         normName: "L1ENA",
         markerArray: ["L1E","N","A","C1","C2"],
-        valueFn: (pointU1E,pointN,pointA,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointU1E,pointN,pointA,pointC1,pointC2,lengthOfRuler),
+        valueFn: (pointL1E,pointN,pointA,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointL1E,pointN,pointA,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointL1E,pointN,pointA) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,projectPointOntoLine(pointL1E,pointN,pointA)]
+            },
+            {
+              color: LINE_RESULT_COLOR,
+              linesArray: [pointL1E,projectPointOntoLine(pointL1E,pointN,pointA)]
+            }
+          ]
+        },
         unit: "mm"
       },
       {
@@ -189,6 +421,18 @@ export const ANALYSIS = {
         normName: "U1SN",
         markerArray: ["N","S","U1E","U1A"],
         valueFn: (pointN,pointS,pointU1E,pointU1A) => calculateAngleFromFourPoint(pointN,pointS,pointU1E,pointU1A),
+        highLightFn: (pointN,pointS,pointU1E,pointU1A) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointU1E,intersectPoint(pointN,pointS,pointU1E,pointU1A)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,pointS]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
@@ -196,13 +440,45 @@ export const ANALYSIS = {
         normName: "IMPA",
         markerArray: ["L1E","L1A","Go","Me"],
         valueFn: (pointL1E,pointL1A,pointGo,pointMe) => calculateAngleFromFourPoint(pointL1E,pointL1A,pointGo,pointMe),
+        highLightFn: (pointL1E,pointL1A,pointGo,pointMe) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointL1E,intersectPoint(pointL1E,pointL1A,pointGo,pointMe)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointGo,pointMe]
+            }
+          ]
+        },
         unit: "deg"
       },
       {
         indicator: "Wits",
         normName: "WITS",
-        markerArray: ["A","B","Mo","U1E"],
-        valueFn: (pointA,pointB,pointMo,pointU1E) => distanceFromTwoPoint(projectPointOntoLine(pointA,pointMo,pointU1E),projectPointOntoLine(pointB,pointMo,pointU1E)),
+        markerArray: ["A","B","Mo","U1E","C1","C2"],
+        valueFn: (pointA,pointB,pointMo,pointU1E,pointC1,pointC2,lengthOfRuler) => distanceFromTwoPoint(projectPointOntoLine(pointA,pointMo,pointU1E),projectPointOntoLine(pointB,pointMo,pointU1E),pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointA,pointB,pointMo,pointU1E) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointA,projectPointOntoLine(pointA,pointMo,pointU1E)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointB,projectPointOntoLine(pointB,pointMo,pointU1E)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointMo,pointU1E]
+            },
+            {
+              color: LINE_RESULT_COLOR,
+              linesArray: [projectPointOntoLine(pointA,pointMo,pointU1E),projectPointOntoLine(pointB,pointMo,pointU1E)]
+            }
+          ]
+        },
         unit: "mm"
       }
     ]
@@ -404,7 +680,7 @@ export const PREDEFINED_NORMS = {
  * @param {*} pointD điểm D
  * @returns góc tạo bởi vector AB và CD
  */
-export const calculateAngleFromFourPoint = (pointA, pointB, pointC, pointD) => {
+export const calculateAngleFromFourPoint = (pointA, pointB, pointC, pointD, reverse = true) => {
   if(!pointA || !pointB || !pointC || !pointD) return '-';
   // Tính vector AB và vector CD
   const ABx = pointB.x - pointA.x;
@@ -425,9 +701,8 @@ export const calculateAngleFromFourPoint = (pointA, pointB, pointC, pointD) => {
 
   // Đổi từ radian sang độ
   const degree = (theta * 180 / Math.PI);
-  const roundDegree = (180-degree).toFixed(2);
-
-  return roundDegree;
+  if(reverse) return degree.toFixed(2)
+  else return (180-degree).toFixed(2);
 }
 
 /**
@@ -437,9 +712,9 @@ export const calculateAngleFromFourPoint = (pointA, pointB, pointC, pointD) => {
  * @param {*} endPoint điểm cuối
  * @returns góc tạo bởi 3 điểm
  */
-export const calculateAngleFromThreePoint = (startPoint,centerPoint,endPoint) => {
+export const calculateAngleFromThreePoint = (startPoint,centerPoint,endPoint,reverse = true) => {
   if(!startPoint || !centerPoint || !endPoint) return '-';
-  const degree = calculateAngleFromFourPoint(startPoint,centerPoint,centerPoint,endPoint);
+  const degree = calculateAngleFromFourPoint(startPoint,centerPoint,centerPoint,endPoint,reverse);
   return degree;
 }
 
@@ -478,42 +753,31 @@ export const distanceFromPointToLine = (pointA, pointB, pointC, pointC1, pointC2
 
 /**
  * todo: tọa độ của chân đường vuông góc của pointA lên đường thẳng pointB,pointC
- * @param {*} pointA điểm cần lấy chân đường vuông góc
- * @param {*} pointB điểm đầu
- * @param {*} pointC điểm cuối
+ * @param {*} pointP điểm cần lấy chân đường vuông góc
+ * @param {*} pointA điểm đầu
+ * @param {*} pointB điểm cuối
  * @returns tọa độ của chân đường vuông góc
  */
-export const projectPointOntoLine = (pointA,pointB,pointC) => {
-  if(!pointA || !pointB || !pointC) return null;
-  // vector vô hướng của BC
-  const vector_v = {x: pointC.x - pointB.x, y: pointC.y - pointB.y};
+export const projectPointOntoLine = (pointP, pointA, pointB) => {
+  if(!pointA || !pointB || !pointP) return null;
+  // tính vector AB và AP
+  const vectorAB = {x: pointB.x - pointA.x, y: pointB.y - pointA.y};
+  const vectorAP = {x: pointP.x - pointA.x, y: pointP.y - pointA.y};
 
-  // vector vô hướng của AB
-  const vector_u = {x: pointA.x - pointB.x, y: pointA.y - pointB.y};
+  // tính t
+  const dotAB = vectorAB.x * vectorAB.x + vectorAB.y * vectorAB.y;
+  const dotAPAB = vectorAP.x * vectorAB.x + vectorAP.y * vectorAB.y;
+  const t = dotAPAB / dotAB;
 
-  // độ dài vector BC
-  const length_v = Math.sqrt(vector_v.x ** 2 + vector_v.y ** 2);
-
-  // độ dài vector AB
-  const length_u = Math.sqrt(vector_u.x ** 2 + vector_u.y ** 2);
-
-  // tích vô hướng của AB và BC
-  const dot_product = vector_v.x * vector_u.x + vector_v.y * vector_u.y;
-
-  //góc tạo bởi vector AB và BC ( công thức : a.b = |a|.|b|.cos(a,b) tài liệu: https://loigiaihay.com/ly-thuyet-tich-vo-huong-cua-hai-vecto-c45a4971.html)
-  const angle = Math.acos(dot_product / (length_v * length_u));
-
-  // khoảng cách từ A đến BC 
-  const distance = length_u * Math.sin(angle);
-
-  // tọa độ điểm projection là chân hình chiếu của A lên BC
+  // tính tọa độ của điểm P trên đường thẳng AB
   const projection = {
-    x: pointB.x + distance * (vector_v.x / length_v),
-    y: pointB.y + distance * (vector_v.y / length_v)
+    x: pointA.x + vectorAB.x * t,
+    y: pointA.y + vectorAB.y * t
   };
 
   return projection;
 }
+
 
 /**
  * todo: khoảng cách giữa 2 điểm
@@ -538,5 +802,24 @@ export const distanceFromTwoPoint = (pointA, pointB, pointC1, pointC2, lengthOfR
   let result = null;
   if(p1 && p2) result = Math.sqrt((p2.x-p1.x)*(p2.x-p1.x)+(p2.y-p1.y)*(p2.y-p1.y));
   return result;
+}
+
+/**
+ * 
+ * @param {*} p1 format {x,y}
+ * @param {*} p2 format {x,y}
+ * @param {*} p3 format {x,y}
+ * @param {*} p4 format {x,y}
+ * @returns tọa độ của giao điểm 2 đường thằng p1-p2 và p3-p4 theo format {x,y}
+ */
+ export function intersectPoint(p1,p2,p3,p4) { //computer intersect of 2 lines p1-p2 and p3-p4
+  if(!p1 || !p2 || !p3 || !p4) return null;
+  let tx = (p1.x*p2.y-p1.y*p2.x)*(p3.x-p4.x) - (p1.x-p2.x)*(p3.x*p4.y-p3.y*p4.x);
+  let bx = (p1.x-p2.x)*(p3.y-p4.y) - (p1.y-p2.y)*(p3.x-p4.x);
+  let x = parseFloat(tx)/parseFloat(bx);
+  let ty = (p1.x*p2.y-p1.y*p2.x)*(p3.y-p4.y)-(p1.y-p2.y)*(p3.x*p4.y-p3.y*p4.x);
+  let by = (p1.x-p2.x)*(p3.y-p4.y) - (p1.y-p2.y)*(p3.x-p4.x);
+  let y = parseFloat(ty)/parseFloat(by);
+  return {x:x,y:y};
 }
 

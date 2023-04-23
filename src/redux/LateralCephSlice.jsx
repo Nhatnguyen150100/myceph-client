@@ -10,7 +10,7 @@ export const LateralCephSlice = createSlice({
     listImageFontSide: [],
     currentImageAnalysis: null,
     scaleImage: null,
-    lengthOfRuler: 10
+    lengthOfRuler: 10,
   },
   reducers: {
     setMarkerPoints: (state,action) => {
@@ -47,7 +47,8 @@ export const LateralCephSlice = createSlice({
 })
 
 export const {
-  setCurrentAnalysis, setCurrentNorm, clearLateralCephSlice,setMarkerPoints,setListImageFontSide,setCurrentImageAnalysis,setScaleImage,setLengthOfRuler
+  setCurrentAnalysis, setCurrentNorm, clearLateralCephSlice,setMarkerPoints,
+  setListImageFontSide,setCurrentImageAnalysis,setScaleImage,setLengthOfRuler
 } = LateralCephSlice.actions;
 
 export default LateralCephSlice.reducer;

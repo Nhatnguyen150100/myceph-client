@@ -2,7 +2,7 @@ import Konva from "konva";
 import React, { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Arrow, Circle, Group, Image, Label, Layer, Line, Rect, Stage, Text } from "react-konva";
+import { Circle, Group, Image, Label, Layer, Line, Rect, Stage, Text } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -11,12 +11,12 @@ import NavbarComponent from "../../components/NavbarComponent.jsx";
 import SelectPatientComponent from "../../components/SelectPatientComponent.jsx";
 import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import { setAppName } from "../../redux/GeneralSlice.jsx";
-import { setLengthOfRuler, setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
+import { setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
 import ControlSection from "./ControlSection.jsx";
-import CustomIndicator from "./CustomIndicator.jsx";
 import { ANALYSIS } from "./LateralCephalometricUtility.jsx";
 import ResultAnalysisTable from "./ResultAnalysisTable.jsx";
 import Ruler from "./Ruler.jsx";
+import UtilitiesAnalysis from "./UtilitiesAnalysis.jsx";
 
 const filterMap = {
   contrast: Konva.Filters.Contrast,
@@ -40,6 +40,7 @@ export default function LateralCeph(props) {
   const currentImageAnalysis = useSelector(state=>state.lateralCeph.currentImageAnalysis);
   const scaleImage = useSelector(state=>state.lateralCeph.scaleImage);
   const lengthOfRuler = useSelector(state=>state.lateralCeph.lengthOfRuler);
+  const [highLightIndicator,setHighLightIndicator] = useState([])
   const [prevPatient,setPrevPatient] = useState(currentPatient?.id);
 
   const stageRef = useRef();
@@ -295,6 +296,28 @@ export default function LateralCeph(props) {
     return linesArray;
   },[markerPoints,currentAnalysis,scale])
 
+  const hightLightLines = useMemo(()=>{
+    let linesArray = [];
+    if(highLightIndicator?.length > 0){
+      for (const lines of highLightIndicator) {
+        if(lines.linesArray[0] && lines.linesArray[1]){
+          linesArray.push(
+            <Line
+              key={lines.linesArray[0].x+lines.linesArray[0].y+lines.linesArray[1].x+lines.linesArray[1].y+Math.random(1,1000)}
+              x={0}
+              y={0}
+              points={[lines.linesArray[0].x, lines.linesArray[0].y, lines.linesArray[1].x, lines.linesArray[1].y]}
+              stroke={lines.color}
+              strokeWidth={2/scale}
+              opacity={1}
+            />
+          )
+        }
+      }
+    }
+    return linesArray;
+  },[highLightIndicator,markerPointList,scale])
+
   const drawMarkerPoints = useMemo(()=>{
     let circleWithTextArray = [];
     for (const key of Object.keys(markerPointList)) {
@@ -378,7 +401,7 @@ export default function LateralCeph(props) {
     </div>
     <div className="row container-fluid h-100 mb-4">
       <div className="col-md-3 h-100 border-start border-top border-bottom p-0" style={{borderTopLeftRadius:"5px",borderBottomLeftRadius:"5px"}}>
-        <ResultAnalysisTable lengthOfRuler={lengthOfRuler}/>
+        <ResultAnalysisTable lengthOfRuler={lengthOfRuler} onSetHighLightIndicator={value=>setHighLightIndicator(value)}/>
       </div>
       <div className="col-md-9 h-100 border p-0" style={{borderTopRightRadius:"5px",borderBottomRightRadius:"5px"}}>
         <div className="d-flex flex-column w-100 h-100 p-0">
@@ -427,6 +450,7 @@ export default function LateralCeph(props) {
                     onDragMove={()=>setIsGrab(true)}
                     onDragEnd={()=>setIsGrab(false)}
                     draggable={isDragImage}
+                    rotation={rotation}
                     onMouseMove={handleMouseMove}
                     onClick={onAddMarkerPoint}
                   >
@@ -442,7 +466,6 @@ export default function LateralCeph(props) {
                           offsetY={0}
                           x={0}
                           y={0}
-                          rotation={rotation}
                         />
                       }
                       {openGrid && gridComponents}
@@ -487,6 +510,9 @@ export default function LateralCeph(props) {
                         markerPoints && imageObject && drawLines
                       }
                       {
+                        markerPoints && imageObject && highLightIndicator?.length>0 && hightLightLines
+                      }
+                      {
                         markerPoints && imageObject && drawMarkerPoints
                       }
                     </Layer>
@@ -494,7 +520,7 @@ export default function LateralCeph(props) {
                 </div>
               </div>
             </div>
-            <CustomIndicator col='col-md-3 ps-0' />
+            <UtilitiesAnalysis col='col-md-3 ps-0' currentMarkerPoint={currentMarkerPoint}/>
           </div>
         </div>
       </div>
