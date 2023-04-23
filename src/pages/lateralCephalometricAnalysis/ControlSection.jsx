@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
-import { setCurrentImageAnalysis, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
+import { setCurrentImageAnalysis, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setNoteAnalysis, setScaleImage } from "../../redux/LateralCephSlice.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -24,6 +24,7 @@ const ControlSection = React.memo((props) => {
   const lengthOfRuler = useSelector(state=>state.lateralCeph.lengthOfRuler);
   const scaleImage = useSelector(state=>state.lateralCeph.scaleImage);
   const doctor = useSelector(state=>state.doctor);
+  const noteAnalysis = useSelector(state=>state.lateralCeph.noteAnalysis);
 
   const dispatch = useDispatch();
   const {t} = useTranslation();
@@ -134,12 +135,14 @@ const ControlSection = React.memo((props) => {
           props.onSetMarkerPointList(JSON.parse(result.data.markerPoints));
           dispatch(setScaleImage(result.data.scaleImage));
           dispatch(setLengthOfRuler(result.data.lengthOfRuler));
+          dispatch(setNoteAnalysis(result.data.noteAnalysis));
           toast.info(t(result.message));
         }else{
           dispatch(setMarkerPoints({}));
           props.onSetMarkerPointList({});
           dispatch(setScaleImage(null));
           dispatch(setLengthOfRuler(10));
+          dispatch(setNoteAnalysis(null));
           toast.warning(t(result.message))
         }
         resolve();
@@ -167,7 +170,8 @@ const ControlSection = React.memo((props) => {
         idImageAnalysis: currentImageAnalysis.id,
         markerPoints: markerPoints,
         scaleImage: scaleImage,
-        lengthOfRuler: lengthOfRuler
+        lengthOfRuler: lengthOfRuler,
+        noteAnalysis: noteAnalysis
       }).then(result => {
         toast.success(t(result.message));
         resolve();
@@ -190,6 +194,7 @@ const ControlSection = React.memo((props) => {
         props.onSetMarkerPointList({});
         dispatch(setScaleImage(null));
         dispatch(setLengthOfRuler(10));
+        dispatch(setNoteAnalysis(null));
         toast.warning(t(result.message));
         resolve();
       }).catch(err =>{

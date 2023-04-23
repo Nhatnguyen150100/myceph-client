@@ -11,6 +11,7 @@ export const LateralCephSlice = createSlice({
     currentImageAnalysis: null,
     scaleImage: null,
     lengthOfRuler: 10,
+    noteAnalysis: null
   },
   reducers: {
     setMarkerPoints: (state,action) => {
@@ -34,6 +35,9 @@ export const LateralCephSlice = createSlice({
     setLengthOfRuler: (state,action) => {
       state.lengthOfRuler = action.payload;
     },
+    setNoteAnalysis: (state,action) => {
+      state.noteAnalysis = action.payload;
+    },
     clearLateralCephSlice: (state) => {
       state.markerPoints = {};
       state.currentAnalysis = ANALYSIS.STEINER.name;
@@ -42,13 +46,14 @@ export const LateralCephSlice = createSlice({
       state.currentImageAnalysis =  null;
       state.scaleImage = null;
       state.lengthOfRuler = 10;
+      state.noteAnalysis = null;
     }
   }
 })
 
 export const {
   setCurrentAnalysis, setCurrentNorm, clearLateralCephSlice,setMarkerPoints,
-  setListImageFontSide,setCurrentImageAnalysis,setScaleImage,setLengthOfRuler
+  setListImageFontSide,setCurrentImageAnalysis,setScaleImage,setLengthOfRuler,setNoteAnalysis
 } = LateralCephSlice.actions;
 
 export default LateralCephSlice.reducer;

@@ -3,7 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Circle, Image, Layer, Stage } from "react-konva";
+import { useDispatch, useSelector } from "react-redux";
 import { FONT_SIZE, FONT_SIZE_HEAD } from "../../common/Utility.jsx";
+import { setNoteAnalysis } from "../../redux/LateralCephSlice.jsx";
 
 const MARKER_POINT_LIST = {
   Co:{
@@ -82,10 +84,20 @@ const MARKER_POINT_LIST = {
 
 export default function UtilitiesAnalysis(props){
   const {t} = useTranslation();
+  const dispatch = useDispatch();
   const stageRef = useRef();
   const circleRef = useRef();
   const [heightStage,setHeightStage] = useState(0);
   const [widthStage,setWidthStage] = useState(0);
+  const noteAnalysis = useSelector(state=>state.lateralCeph.noteAnalysis);
+  const currentImageAnalysis = useSelector(state=>state.lateralCeph.currentImageAnalysis);
+
+  const [note,setNote] = useState();
+
+  useEffect(()=>{
+    if(!noteAnalysis) setNote('')
+    else setNote(noteAnalysis);
+  },[noteAnalysis,currentImageAnalysis])
 
   useEffect(()=>{
     if(stageRef && (!heightStage || !widthStage)){
@@ -127,7 +139,7 @@ export default function UtilitiesAnalysis(props){
       <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('Note for analysis')}</span>
     </div>
     <div style={{height:"50%"}}>
-      <textarea className="form-control h-100 text-gray" placeholder={t('Enter note for analysis')} rows={5} style={{fontSize:FONT_SIZE}}/>
+      <textarea onMouseLeave={()=>dispatch(setNoteAnalysis(note))} className="form-control h-100 text-gray" value={note} onChange={e=>setNote(e.target.value)} placeholder={t('Enter note for analysis')} rows={5} style={{fontSize:FONT_SIZE}}/>
     </div>
     <div className="d-flex flex-grow-1 flex-column justify-content-start" ref={stageRef}>
       <div className="py-1 px-3 mc-pale-background" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
