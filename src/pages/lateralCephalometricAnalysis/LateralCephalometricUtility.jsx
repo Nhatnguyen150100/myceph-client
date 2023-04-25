@@ -1,6 +1,7 @@
 export const MARKER_LIST = {
   Co:'Condylion',
   A:'A point',
+  ANS: 'Anterior Nasal Spine',
   B:'B point',
   Cm:'Columella',
   D:'D point',
@@ -18,7 +19,22 @@ export const MARKER_LIST = {
   S:"Sella turcica",  
   C1:"Calibration point 1",
   C2:"Calibration point 2",
-  Go:"Gonion"
+  Go:"Gonion",
+  Po:'Porion',
+  Or:'Orbital',
+  Pt: 'PT Point',
+  DC:'Condyle',
+  Ba: 'Basion',
+  R1:"R1 point",  
+  R2:"R2 point",  
+  R3:"R3 point", 
+  R4:"R4 point", 
+  PNS: 'Posterior Nasal Spine',
+  Prn: 'Pronasale',
+  Mx6D: 'Most Distal Point of Maxillary First Molar',
+  Md6O: 'Distal Cusp of Mandibular First Molar',
+  PreM: 'Premolar',
+  Pm: 'Suprapogonion'
 };
 
 export const HIGHLIGHT_COLOR = "#54c0ff";
@@ -29,14 +45,16 @@ export const ANALYSIS = {
   STEINER: {
     name: "Steiner",
     markerPoints: ['C1','C2','S','N','A','U1A','Cm','Ls','Li','U1E','L1E','Mo','B','D','L1A','Pog\'','Go','Gn'],
-    lines: [
-      ["S","N"],
-      ["N","A"],
-      ["N","B"],
-      ["Mo","U1E"],
-      ["Cm","Pog'"],
-      ["Go","Gn"]
-    ],
+    lines: (markerPoint) => {
+      return [
+        [markerPoint["S"],markerPoint["N"]],
+        [markerPoint["N"],markerPoint["A"]],
+        [markerPoint["N"],markerPoint["B"]],
+        [markerPoint["Mo"],markerPoint["U1E"]],
+        [markerPoint["Cm"],markerPoint['Pog\'']],
+        [markerPoint["Go"],markerPoint["Gn"]]
+      ]
+    },
     arrayListValue: [
       {
         indicator: "SNA",
@@ -290,17 +308,19 @@ export const ANALYSIS = {
   NAGASAKI: {
     name: "Nagasaki",
     markerPoints: ['C1','C2','S','N','A','U1A','U1E','L1E','Mo','B','L1A','Go','Me'],
-    lines: [
-      ["S","N"],
-      ["N","A"],
-      ["A","U1E"],
-      ["U1A","U1E"],
-      ["U1A","L1E"],
-      ["L1E","L1A"],
-      ["L1A","B"],
-      ["B","Me"],
-      ["Go","Me"]
-    ],
+    lines: (markerPoint) => { 
+      return [
+        [markerPoint["S"],markerPoint["N"]],
+        [markerPoint["N"],markerPoint["A"]],
+        [markerPoint["A"],markerPoint["U1E"]],
+        [markerPoint["U1A"],markerPoint["U1E"]],
+        [markerPoint["U1A"],markerPoint["L1E"]],
+        [markerPoint["L1E"],markerPoint["L1A"]],
+        [markerPoint["L1A"],markerPoint["B"]],
+        [markerPoint["B"],markerPoint["Me"]],
+        [markerPoint["Go"],markerPoint["Me"]]
+      ]
+    },
     arrayListValue: [
       {
         indicator: "SNA",
@@ -481,6 +501,15 @@ export const ANALYSIS = {
         },
         unit: "mm"
       }
+    ]
+  },
+  RICKETTS: {
+    name: "Ricketts",
+    markerPoints: ['C1','C2','N','Po','Pt','Or','DC','R1','R2','R3','R4','Ba','PNS','Go','Gn','Pog','Pm','L1A','Pog\'','Li','Ls','Prn','ANS','A','U1A','Mx60','Md60','Mo','PreM','L1E','U1E'],
+    lines: [
+      ['N','Po'],
+      ['N','Ba'],
+      ['Or','Po']
     ]
   }
 }

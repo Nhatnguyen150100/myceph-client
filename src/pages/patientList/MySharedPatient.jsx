@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { addData, DB_ENCRYPTION_SHAREPATIENT, disConnectIndexDB, getAllData, onOpenIndexDB } from "../../common/ConnectIndexDB.jsx";
+import { addData, DB_ENCRYPTION_SHAREPATIENT, deleteData, disConnectIndexDB, getAllData, onOpenIndexDB } from "../../common/ConnectIndexDB.jsx";
 import { findObjectFromArray, FONT_SIZE, removeVietnameseDiacritics, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
 import { getToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
@@ -101,6 +101,7 @@ export default function MySharedPatient(props){
         getAllData(indexDB,DB_ENCRYPTION_SHAREPATIENT).then(data => 
           dispatch(setArrayEncryptKeySharePatient(data))
         ).catch(error => toast.error(t(error)));
+        keyManagementModal.current.hide();
         toast.success(t(message))
       }).catch(error => toast.error(t(error)));
     };
@@ -108,13 +109,25 @@ export default function MySharedPatient(props){
 
   const downLoadFileJson = () => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-      JSON.stringify({...encryptKeySelectedPatient,...{id: doctor.id}})
+      JSON.stringify({...encryptKeySelectedPatient})
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
     link.download = `crypto_Key_For_Share_Patient_${removeVietnameseDiacritics(selectedPatient.fullName)}.json`;
     link.click();
   };
+
+  const deleteEncryptionKey = () => {
+    if(indexDB && window.confirm(t('Are you want to remove this encryption key from device?'))) deleteData(indexDB,encryptKeySelectedPatient.id,DB_ENCRYPTION_SHAREPATIENT).then(message => {
+      getAllData(indexDB,DB_ENCRYPTION_SHAREPATIENT).then(data => 
+        dispatch(setArrayEncryptKeySharePatient(data))
+      ).catch(error => toast.error(t(error)));
+      setEncryptKeySelectedPatient(null);
+      toast.success(t(message));
+      keyManagementModal.current.hide();
+    }).catch(error => toast.error(t(error)));
+    else toast.error(t('Can not connect to the database'));
+  }
 
   return <div className="h-100 w-100 container">
     <table className="table table-bordered table-striped text-center rounded my-4">
@@ -198,7 +211,7 @@ export default function MySharedPatient(props){
                     <button 
                       type="button" 
                       className="btn btn-outline-danger py-1 px-2 d-flex align-items-center justify-content-center"
-                      // onClick={()=>setOpenDeleteConfirm(true)}
+                      onClick={deleteEncryptionKey}
                     >
                       <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
                         delete

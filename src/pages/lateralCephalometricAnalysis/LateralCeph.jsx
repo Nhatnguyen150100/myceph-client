@@ -112,7 +112,7 @@ export default function LateralCeph(props) {
   };
 
   useEffect(() => {
-    if (currentImageAnalysis && prevPatient===currentPatient?.id){
+    if(currentImageAnalysis && prevPatient===currentPatient?.id){
       const stage = stageRef.current;
       stage.scale({ x: 1, y: 1 });
       stage.position({ x: 0, y: 0 });
@@ -135,7 +135,7 @@ export default function LateralCeph(props) {
       setPrevPatient(currentPatient?.id);
       setImageObject(null);
     } 
-  }, [currentImageAnalysis,scaleImage,currentPatient])
+  }, [currentImageAnalysis,scaleImage,currentPatient,prevPatient])
 
   useEffect(()=>{
     if(imageObject){
@@ -278,14 +278,14 @@ export default function LateralCeph(props) {
 
   const drawLines = useMemo(()=>{
     let linesArray = [];
-    for (const lines of ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.lines) {
-      if(markerPoints[lines[0]] && markerPoints[lines[1]]){
+    for (const lines of ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.lines(markerPointList)) {
+      if(lines[0] && lines[1]){
         linesArray.push(
           <Line
-            key={markerPoints[lines[0]].x+markerPoints[lines[0]].y+markerPoints[lines[1]].x+markerPoints[lines[1]].y+Math.random(1,1000)}
+            key={lines[0].x+lines[0].y+lines[1].x+lines[1].y+Math.random(1,1000)}
             x={0}
             y={0}
-            points={[markerPoints[lines[0]].x, markerPoints[lines[0]].y, markerPoints[lines[1]].x, markerPoints[lines[1]].y]}
+            points={[lines[0].x, lines[0].y, lines[1].x,lines[1].y]}
             stroke="#8B008B"
             strokeWidth={1.5/scale}
             opacity={0.8}

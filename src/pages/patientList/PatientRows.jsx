@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { deCryptData, decryptPatientData, encryptPatientData } from "../../common/Crypto.jsx";
+import { decryptPatientData, encryptPatientData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import { convertISOToVNDateString, FONT_SIZE, onDecryptedDataPreview, SELECT_PATIENT_MODE, SOFT_WARE_LIST, splitAvatar, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { setViewCalendar } from "../../redux/CalendarSlice.jsx";
@@ -277,7 +277,8 @@ export default function PatientRows(props){
               props.onShowModal(props.patient);
               if(props.encryptKeyObject) props.onSetEncryptKeySelectedPatient({
                 key: props.encryptKeyObject.key?props.encryptKeyObject.key:null,
-                iv: props.encryptKeyObject.iv?props.encryptKeyObject.iv:null
+                iv: props.encryptKeyObject.iv?props.encryptKeyObject.iv:null,
+                id: props.encryptKeyObject.id?props.encryptKeyObject.id:null,
               })
             }}
             disabled={!props.patient.isEncrypted}

@@ -97,17 +97,6 @@ export default function ResultAnalysisTable(props) {
           {
             ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.arrayListValue.map((value,index) => {
               return  <tr className="align-middle" key={index+Math.random(1,1000)}
-              style={{cursor:"pointer"}}
-              onMouseEnter={()=>{
-                if(value.valueFn && markerPoints){
-                  props.onSetHighLightIndicator(
-                    value.highLightFn(...value.markerArray?.map(element => {
-                      return markerPoints[element] ? markerPoints[element] : null;
-                    }))
-                  )
-                }
-              }}
-              onMouseLeave={()=>props.onSetHighLightIndicator([])}
               > 
                 <td className="text-gray" style={{fontSize:FONT_SIZE}}>
                   {
@@ -115,7 +104,7 @@ export default function ResultAnalysisTable(props) {
                   }
                 </td>
                 <td 
-                  style={{fontSize:FONT_SIZE}} 
+                  style={{fontSize:FONT_SIZE,cursor:"pointer"}} 
                   className={`${
                     value.valueFn(...value.markerArray?.map(element => {
                       return markerPoints[element] ? markerPoints[element] : null;
@@ -137,6 +126,16 @@ export default function ResultAnalysisTable(props) {
                       ''
                     )
                   }`}
+                  onMouseEnter={()=>{
+                    if(value.valueFn && markerPoints){
+                      props.onSetHighLightIndicator(
+                        value.highLightFn(...value.markerArray?.map(element => {
+                          return markerPoints[element] ? markerPoints[element] : null;
+                        }))
+                      )
+                    }
+                  }}
+                  onMouseOut={()=>props.onSetHighLightIndicator([])}
                 >
                   {
                      value.valueFn && markerPoints && value.valueFn(...value.markerArray?.map(element => {
