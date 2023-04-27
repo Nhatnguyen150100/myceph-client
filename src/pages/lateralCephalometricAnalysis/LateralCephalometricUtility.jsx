@@ -1157,7 +1157,7 @@ export const PREDEFINED_NORMS = {
  * @param {*} pointC điểm C
  * @param {*} pointD điểm D
  * @param {*} reverse xác định có phải là góc bù của giá trị cần tìm không
- * @returns góc tạo bởi vector AB và CD
+ * @returns góc tạo bởi vector AB và CD || trả về null nếu thiếu điểm
  */
 export const calculateAngleFromFourPoint = (pointA, pointB, pointC, pointD, reverse = true) => {
   if(!pointA || !pointB || !pointC || !pointD) return '-';
@@ -1189,7 +1189,7 @@ export const calculateAngleFromFourPoint = (pointA, pointB, pointC, pointD, reve
  * @param {*} startPoint điểm đầu
  * @param {*} centerPoint điểm giữa (đỉnh của góc)
  * @param {*} endPoint điểm cuối
- * @returns góc tạo bởi 3 điểm
+ * @returns góc tạo bởi 3 điểm || trả về null nếu thiếu điểm
  */
 export const calculateAngleFromThreePoint = (startPoint,centerPoint,endPoint,reverse = true) => {
   if(!startPoint || !centerPoint || !endPoint) return '-';
@@ -1203,7 +1203,7 @@ export const calculateAngleFromThreePoint = (startPoint,centerPoint,endPoint,rev
  * @param {*} pointA điểm cần tính khoảng cách
  * @param {*} pointB điểm thuộc đường thẳng
  * @param {*} pointC điểm thuộc đường thẳng
- * @returns khoảng cách từ pointA đến đường thẳng đi qua pointB và pointC
+ * @returns khoảng cách từ pointA đến đường thẳng đi qua pointB và pointC || trả về null nếu thiếu điểm
  * ? công thức tham khảo: vectorAB.vectorBC = |vectorAB|.|vectorBC|.cos(vectorAB,vectorBC)
  */
 export const distanceFromPointToLine = (pointA, pointB, pointC, pointC1, pointC2, lengthOfRuler) => {
@@ -1239,7 +1239,7 @@ export const distanceFromPointToLine = (pointA, pointB, pointC, pointC1, pointC2
  * @param {*} pointP điểm cần lấy chân đường vuông góc
  * @param {*} pointA điểm đầu
  * @param {*} pointB điểm cuối
- * @returns tọa độ của chân đường vuông góc
+ * @returns tọa độ của chân đường vuông góc || trả về null nếu thiếu điểm
  */
 export const projectPointOntoLine = (pointP, pointA, pointB) => {
   if(!pointA || !pointB || !pointP) return null;
@@ -1266,7 +1266,7 @@ export const projectPointOntoLine = (pointP, pointA, pointB) => {
  * todo: khoảng cách giữa 2 điểm dựa vào khoản cách thực tế được cung cấp bởi độ dài C1, C2 và độ dài thước đo lengthOfRuler
  * @param {*} pointA tọa độ điểm A
  * @param {*} pointB tọa độ điểm B
- * @returns khoảng cách giữa A và B theo giá trị thực tế và làm tròn 2 chữ số sau dấu phẩy
+ * @returns khoảng cách giữa A và B theo giá trị thực tế và làm tròn 2 chữ số sau dấu phẩy || trả về null nếu thiếu điểm
  */
 export const distanceFromTwoPoint = (pointA, pointB, pointC1, pointC2, lengthOfRuler) => {
   if(!pointA || !pointB) return '-';
@@ -1279,7 +1279,7 @@ export const distanceFromTwoPoint = (pointA, pointB, pointC1, pointC2, lengthOfR
  * todo: khoảng cách 2 điểm đầu thước C1 và C2
  * @param {*} pointC1 điểm C1
  * @param {*} C2 điểm C2
- * @returns khoảng cách giữa 2 điểm đầu thước C1 và C2
+ * @returns khoảng cách giữa 2 điểm đầu thước C1 và C2 || trả về null nếu thiếu điểm
  */
  export function point2PointDistance(pointC1,pointC2) {
   let result = null;
@@ -1293,7 +1293,7 @@ export const distanceFromTwoPoint = (pointA, pointB, pointC1, pointC2, lengthOfR
  * @param {*} p2 format {x,y}
  * @param {*} p3 format {x,y}
  * @param {*} p4 format {x,y}
- * @returns tọa độ của giao điểm 2 đường thằng p1-p2 và p3-p4 theo format {x,y}
+ * @returns tọa độ của giao điểm 2 đường thằng p1-p2 và p3-p4 theo format {x,y} || trả về null nếu thiếu điểm
  */
  export function intersectPoint(p1,p2,p3,p4) { //computer intersect of 2 lines p1-p2 and p3-p4
   if(!p1 || !p2 || !p3 || !p4) return null;
@@ -1313,9 +1313,9 @@ export const distanceFromTwoPoint = (pointA, pointB, pointC1, pointC2, lengthOfR
  * @param {*} pointR2 điểm thuộc cạnh hình chữ nhật
  * @param {*} pointR3 điểm thuộc cạnh hình chữ nhật
  * @param {*} pointR4 điểm thuộc cạnh hình chữ nhật
- * @returns tọa độ giao điểm của 2 đường chéo hình chữ nhật
+ * @returns tọa độ giao điểm của 2 đường chéo hình chữ nhật || trả về null nếu thiếu điểm
  */
-export function intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4) {
+export const intersectPointDiagonalLineOfRectangle = (pointR1,pointR2,pointR3,pointR4) => {
   if(!pointR1 || !pointR2 || !pointR3 || !pointR4) return null;
   // điểm trên cùng bên trái của hình chữ nhật
   const topLeftPoint = {
@@ -1338,7 +1338,36 @@ export function intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,po
   return intersectPointDiagonalLine;
 }
 
+/**
+ * todo: Tọa độ 1 điểm bất kỳ nằm trên đường thẳng đi qua điểm P và song song với đường thẳng MN
+ * @param {*} pointP điểm mà đường thẳng song song đi qua
+ * @param {*} pointM điểm đầu đường thẳng song song
+ * @param {*} pointN điểm cuối đường thẳng song song
+ * @returns tọa độ điểm thuộc đường thẳng song song || trả về null nếu thiếu điểm
+ */
+export const intersectPointOfParallel = (pointP,pointM,pointN) => {
+  if(!pointP || !pointM || !pointN) return null;
 
+  // vector chỉ phương của MN
+  const vectorMN = {
+    x: pointN.x - pointP.x,
+    y: pointN.y - pointP.y
+  }
+
+  // hệ số đường thẳng song song
+  const coefficientParallel = -vectorMN.y;
+
+  // hằng số của đường thẳng song song
+  const intercept = pointP.y - coefficientParallel * pointN.x;
+
+  const resultX = pointP.x+(Math.random(0,10));
+  const resultY = coefficientParallel * resultX + intercept;
+
+  return {
+    x: resultX,
+    y: resultY
+  }
+}
 
 
 
