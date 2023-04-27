@@ -278,7 +278,7 @@ export default function LateralCeph(props) {
 
   const drawLines = useMemo(()=>{
     let linesArray = [];
-    for (const lines of ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.lines(markerPointList)) {
+    for (const lines of ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.lines(markerPoints)) {
       if(lines[0] && lines[1]){
         linesArray.push(
           <Line

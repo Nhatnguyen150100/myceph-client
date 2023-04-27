@@ -56,6 +56,7 @@ const ControlSection = React.memo((props) => {
   }
 
   useEffect(()=>{
+    dispatch(setNoteAnalysis(null));
     dispatch(setCurrentImageAnalysis(null));
     if(currentPatient) getListFontSideImages();
   },[currentPatient])

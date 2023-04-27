@@ -45,14 +45,14 @@ export const ANALYSIS = {
   STEINER: {
     name: "Steiner",
     markerPoints: ['C1','C2','S','N','A','U1A','Cm','Ls','Li','U1E','L1E','Mo','B','D','L1A','Pog\'','Go','Gn'],
-    lines: (markerPoint) => {
+    lines: (markerPoints) => {
       return [
-        [markerPoint["S"],markerPoint["N"]],
-        [markerPoint["N"],markerPoint["A"]],
-        [markerPoint["N"],markerPoint["B"]],
-        [markerPoint["Mo"],markerPoint["U1E"]],
-        [markerPoint["Cm"],markerPoint['Pog\'']],
-        [markerPoint["Go"],markerPoint["Gn"]]
+        [markerPoints["S"],markerPoints["N"]],
+        [markerPoints["N"],markerPoints["A"]],
+        [markerPoints["N"],markerPoints["B"]],
+        [markerPoints["Mo"],markerPoints["U1E"]],
+        [markerPoints["Cm"],markerPoints['Pog\'']],
+        [markerPoints["Go"],markerPoints["Gn"]]
       ]
     },
     arrayListValue: [
@@ -308,17 +308,17 @@ export const ANALYSIS = {
   NAGASAKI: {
     name: "Nagasaki",
     markerPoints: ['C1','C2','S','N','A','U1A','U1E','L1E','Mo','B','L1A','Go','Me'],
-    lines: (markerPoint) => { 
+    lines: (markerPoints) => { 
       return [
-        [markerPoint["S"],markerPoint["N"]],
-        [markerPoint["N"],markerPoint["A"]],
-        [markerPoint["A"],markerPoint["U1E"]],
-        [markerPoint["U1A"],markerPoint["U1E"]],
-        [markerPoint["U1A"],markerPoint["L1E"]],
-        [markerPoint["L1E"],markerPoint["L1A"]],
-        [markerPoint["L1A"],markerPoint["B"]],
-        [markerPoint["B"],markerPoint["Me"]],
-        [markerPoint["Go"],markerPoint["Me"]]
+        [markerPoints["S"],markerPoints["N"]],
+        [markerPoints["N"],markerPoints["A"]],
+        [markerPoints["A"],markerPoints["U1E"]],
+        [markerPoints["U1A"],markerPoints["U1E"]],
+        [markerPoints["U1A"],markerPoints["L1E"]],
+        [markerPoints["L1E"],markerPoints["L1A"]],
+        [markerPoints["L1A"],markerPoints["B"]],
+        [markerPoints["B"],markerPoints["Me"]],
+        [markerPoints["Go"],markerPoints["Me"]]
       ]
     },
     arrayListValue: [
@@ -506,10 +506,459 @@ export const ANALYSIS = {
   RICKETTS: {
     name: "Ricketts",
     markerPoints: ['C1','C2','N','Po','Pt','Or','DC','R1','R2','R3','R4','Ba','PNS','Go','Gn','Pog','Pm','L1A','Pog\'','Li','Ls','Prn','ANS','A','U1A','Mx60','Md60','Mo','PreM','L1E','U1E'],
-    lines: [
-      ['N','Po'],
-      ['N','Ba'],
-      ['Or','Po']
+    lines: (markerPoints) => {
+      return [
+        [markerPoints['N'],markerPoints['Ba']],
+        [markerPoints['Or'],markerPoints['Po']],
+        [markerPoints['Pt'],markerPoints['Gn']],
+        [markerPoints['Pog\''],markerPoints['Prn']],
+        [markerPoints['Pog'],markerPoints['N']],
+        [markerPoints['U1A'],markerPoints['U1E']],
+        [markerPoints['L1A'],markerPoints['L1E']],
+        [markerPoints['Co'],markerPoints['Gn']],
+        [markerPoints['DC'],intersectPointDiagonalLineOfRectangle(markerPoints['R1'],markerPoints['R2'],markerPoints['R3'],markerPoints['R4'])],
+        [markerPoints['Pm'],intersectPointDiagonalLineOfRectangle(markerPoints['R1'],markerPoints['R2'],markerPoints['R3'],markerPoints['R4'])]
+      ]
+    },
+    arrayListValue: [
+      {
+        indicator: "Facial Axis",
+        normName: "FACIAL_AXIS",
+        markerArray: ["Ba","N","Gn","Pt"],
+        valueFn: (pointBa,pointN,pointGn,pointPt) => calculateAngleFromFourPoint(pointBa,pointN,pointGn,pointPt,true),
+        highLightFn: (pointBa,pointN,pointGn,pointPt) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointBa,pointN]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointGn,intersectPoint(pointBa,pointN,pointGn,pointPt)]
+            }
+          ]
+        },
+        unit: "deg"
+      },
+      {
+        indicator: "Facial Depth",
+        normName: "FACIAL_DEPTH",
+        markerArray: ["Po","Or","N","Pog"],
+        valueFn: (pointPo,pointOr,pointN,pointPog) => calculateAngleFromFourPoint(pointPo,pointOr,pointN,pointPog,true),
+        highLightFn: (pointPo,pointOr,pointN,pointPog) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,pointPog]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointPo,intersectPoint(pointPo,pointOr,pointN,pointPog)]
+            }
+          ]
+        },
+        unit: "deg"
+      },
+      {
+        indicator: "MD-FH",
+        normName: "MD_FH",
+        markerArray: ["Or","Pr","Gn","Go"],
+        valueFn: (pointOr,pointPr,pointGn,pointGo) => calculateAngleFromFourPoint(pointOr,pointPr,pointGn,pointGo,true),
+        highLightFn: (pointOr,pointPr,pointGn,pointGo) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointOr,intersectPoint(pointOr,pointPr,pointGn,pointGo)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointGn,intersectPoint(pointOr,pointPr,pointGn,pointGo)]
+            }
+          ]
+        },
+        unit: "deg"
+      },
+      {
+        indicator: "Facial Taper",
+        normName: "FACIAL_TAPER",
+        markerArray: ["N","Pog","Go","Gn"],
+        valueFn: (pointN,pointPog,pointGo,pointGn) => calculateAngleFromFourPoint(pointN,pointPog,pointGo,pointGn,true),
+        highLightFn: (pointN,pointPog,pointGo,pointGn) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,intersectPoint(pointN,pointPog,pointGo,pointGn)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointGo,intersectPoint(pointN,pointPog,pointGo,pointGn)]
+            }
+          ]
+        },
+        unit: "deg"
+      },
+      {
+        indicator: "Lower facial height",
+        normName: "LOWER_FACIAL_HEIGHT",
+        markerArray: ["R1","R2","R3","R4","ANS","Pm"],
+        valueFn: (pointR1,pointR2,pointR3,pointR4,pointANS,pointPm) => calculateAngleFromThreePoint(pointANS,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4),pointPm),
+        highLightFn: (pointR1,pointR2,pointR3,pointR4,pointANS,pointPm) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: cạnh trên cùng của hình chữ nhật tạo bởi 4 điểm 
+               */
+              linesArray: [
+                // topLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // topRight
+                {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: cạnh bên trái của hình chữ nhật tạo bởi 4 điểm 
+               */
+              linesArray: [
+                // topLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: cạnh bên phải của hình chữ nhật tạo bởi 4 điểm
+               */
+              linesArray: [
+                {
+                  color: HIGHLIGHT_COLOR,
+                  linesArray: [
+                    // topRight
+                    {
+                      x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                      y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                    },
+                    // bottomRight
+                    {
+                      x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                      y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: cạnh dưới cùng của hình chữ nhật tạo bởi 4 điểm
+               */
+              linesArray: [
+                // bottomLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomRight
+                {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: đường chéo thứ nhất của hình chữ nhật
+               */
+              linesArray: [
+                // topLeft
+                  {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomRight
+                  {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: đường chéo thứ hai của hình chữ nhật
+               */
+              linesArray: [
+                // topRight
+                {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointANS,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointPm,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)] 
+            }
+          ]
+        },
+        unit: "deg"
+      },
+      {
+        indicator: "Mandibular Arc",
+        normName: "MANDIBULAR_ARC",
+        markerArray: ["R1","R2","R3","R4","DC","Pm"],
+        valueFn: (pointR1,pointR2,pointR3,pointR4,pointDC,pointPm) => calculateAngleFromThreePoint(pointDC,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4),pointPm),
+        highLightFn: (pointR1,pointR2,pointR3,pointR4,pointDC,pointPm) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: cạnh trên cùng của hình chữ nhật tạo bởi 4 điểm 
+               */
+              linesArray: [
+                // topLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // topRight
+                {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: cạnh bên trái của hình chữ nhật tạo bởi 4 điểm 
+               */
+              linesArray: [
+                // topLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: cạnh bên phải của hình chữ nhật tạo bởi 4 điểm
+               */
+              linesArray: [
+                {
+                  color: HIGHLIGHT_COLOR,
+                  linesArray: [
+                    // topRight
+                    {
+                      x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                      y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                    },
+                    // bottomRight
+                    {
+                      x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                      y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: cạnh dưới cùng của hình chữ nhật tạo bởi 4 điểm
+               */
+              linesArray: [
+                // bottomLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomRight
+                {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: đường chéo thứ nhất của hình chữ nhật
+               */
+              linesArray: [
+                // topLeft
+                  {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomRight
+                  {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                }
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              /**
+               * todo: đường chéo thứ hai của hình chữ nhật
+               */
+              linesArray: [
+                // topRight
+                {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomLeft
+                {
+                  x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+              ]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointDC,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointPm,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)] 
+            }
+          ]
+        },
+        unit: "deg"
+      },
+      {
+        indicator: "Palatal plane to FH",
+        normName: "PALATAL_FH",
+        markerArray: ["Po","Or","PNS","ANS"],
+        valueFn: (pointPo,pointOr,pointPNS,pointANS) => calculateAngleFromFourPoint(pointPo,pointOr,pointPNS,pointANS),
+        highLightFn: (pointPo,pointOr,pointPNS,pointANS) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointPo,pointOr]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointPNS,pointANS]
+            }
+          ]
+        },
+        unit: "deg"
+      },
+      {
+        indicator: "Maxillary Convexity",
+        normName: "MAXILLARY_CONVEXITY",
+        markerArray: ["N","A","Pog","C1","C2"],
+        valueFn: (pointN,pointA,pointPog,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointA,pointN,pointPog,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointN,pointA,pointPog) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointN,pointPog]
+            },
+            {
+              color: LINE_RESULT_COLOR,
+              linesArray: [pointA,projectPointOntoLine(pointA,pointN,pointPog)]
+            }
+          ]
+        },
+        unit: "mm"
+      },
+      {
+        indicator: "Upper incisor to A-Pog",
+        normName: "U1EAPOG",
+        markerArray: ["A","U1E","Pog","C1","C2"],
+        valueFn: (pointU1E,pointA,pointPog,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointU1E,pointA,pointPog,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointU1E,pointA,pointPog) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointA,pointPog]
+            },
+            {
+              color: LINE_RESULT_COLOR,
+              linesArray: [pointU1E,projectPointOntoLine(pointU1E,pointA,pointPog)]
+            }
+          ]
+        },
+        unit: "mm"
+      },
+      {
+        indicator: "Lower incisor to A-Pog",
+        normName: "L1EAPOG",
+        markerArray: ["A","L1E","Pog","C1","C2"],
+        valueFn: (pointL1E,pointA,pointPog,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointL1E,pointA,pointPog,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointL1E,pointA,pointPog) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointA,pointPog]
+            },
+            {
+              color: LINE_RESULT_COLOR,
+              linesArray: [pointL1E,projectPointOntoLine(pointL1E,pointA,pointPog)]
+            }
+          ]
+        },
+        unit: "mm"
+      },
+      {
+        indicator: "Lower Incisor Inclination",
+        normName: "L1APOG",
+        markerArray: ["L1E","L1A","A","Pog"],
+        valueFn: (pointL1E,pointL1A,pointA,pointPog) => calculateAngleFromFourPoint(pointL1E,pointL1A,pointA,pointPog,true),
+        highLightFn: (pointL1E,pointL1A,pointA,pointPog) => {
+          return [
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointL1E,pointL1A]
+            },
+            {
+              color: HIGHLIGHT_COLOR,
+              linesArray: [pointA,pointPog]
+            }
+          ]
+        },
+        unit: "deg"
+      },
+      // {
+      //   indicator: "U6 -> Ptv"
+      // }
     ]
   }
 }
@@ -707,6 +1156,7 @@ export const PREDEFINED_NORMS = {
  * @param {*} pointB điểm B
  * @param {*} pointC điểm C
  * @param {*} pointD điểm D
+ * @param {*} reverse xác định có phải là góc bù của giá trị cần tìm không
  * @returns góc tạo bởi vector AB và CD
  */
 export const calculateAngleFromFourPoint = (pointA, pointB, pointC, pointD, reverse = true) => {
@@ -754,6 +1204,7 @@ export const calculateAngleFromThreePoint = (startPoint,centerPoint,endPoint,rev
  * @param {*} pointB điểm thuộc đường thẳng
  * @param {*} pointC điểm thuộc đường thẳng
  * @returns khoảng cách từ pointA đến đường thẳng đi qua pointB và pointC
+ * ? công thức tham khảo: vectorAB.vectorBC = |vectorAB|.|vectorBC|.cos(vectorAB,vectorBC)
  */
 export const distanceFromPointToLine = (pointA, pointB, pointC, pointC1, pointC2, lengthOfRuler) => {
   if(!pointA || !pointB || !pointC) return '-';
@@ -767,10 +1218,13 @@ export const distanceFromPointToLine = (pointA, pointB, pointC, pointC1, pointC2
   const vectorBC = { x: xC - xB, y: yC - yB };
   const vectorAB = { x: xB - xA, y: yB - yA };
 
+  // vector pháp tuyến của BC
   const vectorN = { x: -vectorBC.y, y: vectorBC.x };
 
+  // độ dài vector N
   const magnitudeN = Math.sqrt(vectorN.x ** 2 + vectorN.y ** 2);
 
+  // tích vô hướng của vector AB và N
   const dotProductABN = vectorAB.x * vectorN.x + vectorAB.y * vectorN.y;
 
   const distance = Math.abs(dotProductABN) / magnitudeN;
@@ -791,10 +1245,10 @@ export const projectPointOntoLine = (pointP, pointA, pointB) => {
   if(!pointA || !pointB || !pointP) return null;
   // tính vector AB và AP
   const vectorAB = {x: pointB.x - pointA.x, y: pointB.y - pointA.y};
-  const vectorAP = {x: pointP.x - pointA.x, y: pointP.y - pointA.y};
+  const vectorAP = {x: pointP.x - pointA.x, y: pointP.y - pointA.y};  
 
-  // tính t
-  const dotAB = vectorAB.x * vectorAB.x + vectorAB.y * vectorAB.y;
+  // tính t là tỷ lệ khoảng cách của chân đường vuông góc của P với điểm A và AB
+  const dotAB = vectorAB.x ** 2 + vectorAB.y ** 2;
   const dotAPAB = vectorAP.x * vectorAB.x + vectorAP.y * vectorAB.y;
   const t = dotAPAB / dotAB;
 
@@ -809,10 +1263,10 @@ export const projectPointOntoLine = (pointP, pointA, pointB) => {
 
 
 /**
- * todo: khoảng cách giữa 2 điểm
- * @param {*} pointA 
- * @param {*} pointB 
- * @returns 
+ * todo: khoảng cách giữa 2 điểm dựa vào khoản cách thực tế được cung cấp bởi độ dài C1, C2 và độ dài thước đo lengthOfRuler
+ * @param {*} pointA tọa độ điểm A
+ * @param {*} pointB tọa độ điểm B
+ * @returns khoảng cách giữa A và B theo giá trị thực tế và làm tròn 2 chữ số sau dấu phẩy
  */
 export const distanceFromTwoPoint = (pointA, pointB, pointC1, pointC2, lengthOfRuler) => {
   if(!pointA || !pointB) return '-';
@@ -822,19 +1276,19 @@ export const distanceFromTwoPoint = (pointA, pointB, pointC1, pointC2, lengthOfR
 }
 
 /**
- * 
- * @param {*} p1 
- * @param {*} p2 
- * @returns khoảng cách giữa 2 điểm p1 và p2
+ * todo: khoảng cách 2 điểm đầu thước C1 và C2
+ * @param {*} pointC1 điểm C1
+ * @param {*} C2 điểm C2
+ * @returns khoảng cách giữa 2 điểm đầu thước C1 và C2
  */
- export function point2PointDistance(p1,p2) {
+ export function point2PointDistance(pointC1,pointC2) {
   let result = null;
-  if(p1 && p2) result = Math.sqrt((p2.x-p1.x)*(p2.x-p1.x)+(p2.y-p1.y)*(p2.y-p1.y));
+  if(pointC1 && pointC2) result = Math.sqrt((pointC2.x-pointC1.x)*(pointC2.x-pointC1.x)+(pointC2.y-pointC1.y)*(pointC2.y-pointC1.y));
   return result;
 }
 
 /**
- * 
+ * todo: tính tọa độ giao điểm của 2 đường thẳng p1p2 và p3p4
  * @param {*} p1 format {x,y}
  * @param {*} p2 format {x,y}
  * @param {*} p3 format {x,y}
@@ -851,4 +1305,41 @@ export const distanceFromTwoPoint = (pointA, pointB, pointC1, pointC2, lengthOfR
   let y = parseFloat(ty)/parseFloat(by);
   return {x:x,y:y};
 }
+
+
+/**
+ * todo: tính tọa độ của hình chữ nhật tạo bởi đường thẳng song song đi qua 4 điểm R1, R2, R3, R4 
+ * @param {*} pointR1 điểm thuộc cạnh hình chữ nhật
+ * @param {*} pointR2 điểm thuộc cạnh hình chữ nhật
+ * @param {*} pointR3 điểm thuộc cạnh hình chữ nhật
+ * @param {*} pointR4 điểm thuộc cạnh hình chữ nhật
+ * @returns tọa độ giao điểm của 2 đường chéo hình chữ nhật
+ */
+export function intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4) {
+  if(!pointR1 || !pointR2 || !pointR3 || !pointR4) return null;
+  // điểm trên cùng bên trái của hình chữ nhật
+  const topLeftPoint = {
+    x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+    y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+  }
+
+  // điểm dưới cùng bên phải của hình chữ nhật
+  const bottomRightPoint = {
+    x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+    y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+  }
+
+  // tọa độ giao điểm của 2 đường chéo là trung điểm của 1 đường chéo
+  const intersectPointDiagonalLine = {
+    x: (topLeftPoint.x + bottomRightPoint.x) / 2,
+    y: (topLeftPoint.y + bottomRightPoint.y) / 2
+  }
+
+  return intersectPointDiagonalLine;
+}
+
+
+
+
+
 

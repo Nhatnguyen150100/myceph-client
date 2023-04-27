@@ -8,7 +8,7 @@ import { deCryptData, encryptData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import InputWithLabel from "../../common/InputWithLabel.jsx";
 import SelectWithLabel from "../../common/SelectWithLabel.jsx";
-import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_ICON, onDecryptedDataPreview, SELECT_PATIENT_MODE, SIZE_IMAGE_IN_RECORD, splitAvatar, toISODateString, toTimeString } from "../../common/Utility.jsx";
+import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE, SIZE_IMAGE_IN_RECORD, splitAvatar, toISODateString, toTimeString } from "../../common/Utility.jsx";
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../redux/GeneralSlice.jsx";
 import { setCurrentPatient } from "../../redux/PatientSlice.jsx";
