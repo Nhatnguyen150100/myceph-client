@@ -1,3 +1,6 @@
+export const COLOR_HIGHLIGHT = "#54c0ff";
+export const COLOR_RESULT_LINE = "#ffad00";
+
 export const MARKER_LIST = {
   Co:'Condylion',
   A:'A point',
@@ -37,15 +40,11 @@ export const MARKER_LIST = {
   Pm: 'Suprapogonion'
 };
 
-export const HIGHLIGHT_COLOR = "#54c0ff";
-export const LINE_RESULT_COLOR = "#ffad00";
-
-
 export const ANALYSIS = {
   STEINER: {
     name: "Steiner",
     markerPoints: ['C1','C2','S','N','A','U1A','Cm','Ls','Li','U1E','L1E','Mo','B','D','L1A','Pog\'','Go','Gn'],
-    lines: (markerPoints) => {
+    linesArray: (markerPoints) => {
       return [
         [markerPoints["S"],markerPoints["N"]],
         [markerPoints["N"],markerPoints["A"]],
@@ -64,12 +63,12 @@ export const ANALYSIS = {
         highLightFn: (pointS,pointN,pointA) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointS,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointS,pointN]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointA,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointA,pointN]
             }
           ]
         },
@@ -83,12 +82,12 @@ export const ANALYSIS = {
         highLightFn: (pointS,pointN,pointB) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointS,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointS,pointN]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointB,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointB,pointN]
             }
           ]
         },
@@ -102,12 +101,12 @@ export const ANALYSIS = {
         highLightFn: (pointA,pointN,pointB) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointA,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointA,pointN]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointB,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointB,pointN]
             }
           ]
         },
@@ -120,12 +119,12 @@ export const ANALYSIS = {
         highLightFn: (pointL1A,pointL1E,pointU1A,pointU1E) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointL1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointL1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointU1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointU1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
             }
           ]
         },
@@ -135,17 +134,17 @@ export const ANALYSIS = {
       {
         indicator: "Mandible (S-N vs Go-Gn)",
         normName: "MANDIBLE_STEINER",
-        markerArray: ["S","N","Gn","Go"],
+        markerArray: ["N","S","Gn","Go"],
         valueFn: (pointN,pointS,pointGn,pointGo) => calculateAngleFromFourPoint(pointN,pointS,pointGn,pointGo,false),
         highLightFn: (pointN,pointS,pointGn,pointGo) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,intersectPoint(pointN,pointS,pointGn,pointGo)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,intersectPoint(pointN,pointS,pointGn,pointGo)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointGn,intersectPoint(pointN,pointS,pointGn,pointGo)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointGn,intersectPoint(pointN,pointS,pointGn,pointGo)]
             }
           ]
         },
@@ -159,12 +158,12 @@ export const ANALYSIS = {
         highLightFn: (pointS,pointN,pointD) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointS,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointS,pointN]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointD,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointD,pointN]
             }
           ]
         },
@@ -178,12 +177,12 @@ export const ANALYSIS = {
         highLightFn: (pointU1E,pointN,pointA) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,projectPointOntoLine(pointU1E,pointN,pointA)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,projectPointOntoLine(pointU1E,pointN,pointA)]
             },
             {
-              color: LINE_RESULT_COLOR,
-              linesArray: [pointU1E,projectPointOntoLine(pointU1E,pointN,pointA)]
+              color: COLOR_RESULT_LINE,
+              line: [pointU1E,projectPointOntoLine(pointU1E,pointN,pointA)]
             }
           ]
         },
@@ -197,12 +196,12 @@ export const ANALYSIS = {
         highLightFn: (pointN,pointA,pointU1E,pointU1A) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,intersectPoint(pointN,pointA,pointU1E,pointU1A)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,intersectPoint(pointN,pointA,pointU1E,pointU1A)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointU1E,intersectPoint(pointN,pointA,pointU1E,pointU1A)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointU1E,intersectPoint(pointN,pointA,pointU1E,pointU1A)]
             }
           ]
         },
@@ -216,12 +215,12 @@ export const ANALYSIS = {
         highLightFn: (pointL1E,pointN,pointB) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray:  [pointN,projectPointOntoLine(pointL1E,pointN,pointB)]
+              color: COLOR_HIGHLIGHT,
+              line:  [pointN,projectPointOntoLine(pointL1E,pointN,pointB)]
             },
             {
-              color: LINE_RESULT_COLOR,
-              linesArray: [pointL1E,projectPointOntoLine(pointL1E,pointN,pointB)]
+              color: COLOR_RESULT_LINE,
+              line: [pointL1E,projectPointOntoLine(pointL1E,pointN,pointB)]
             }
           ]
         },
@@ -235,12 +234,12 @@ export const ANALYSIS = {
         highLightFn: (pointL1E,pointL1A,pointN,pointB) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,intersectPoint(pointL1E,pointL1A,pointN,pointB)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,intersectPoint(pointL1E,pointL1A,pointN,pointB)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointL1A,intersectPoint(pointL1E,pointL1A,pointN,pointB)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointL1A,intersectPoint(pointL1E,pointL1A,pointN,pointB)]
             }
           ]
         },
@@ -254,12 +253,12 @@ export const ANALYSIS = {
         highLightFn: (pointN,pointS,pointU1E,pointMo) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,intersectPoint(pointN,pointS,pointU1E,pointMo)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,intersectPoint(pointN,pointS,pointU1E,pointMo)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointU1E,intersectPoint(pointN,pointS,pointU1E,pointMo)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointU1E,intersectPoint(pointN,pointS,pointU1E,pointMo)]
             }
           ]
         },
@@ -273,12 +272,12 @@ export const ANALYSIS = {
         highLightFn: (pointLs,pointCm,pointPo_g) => {
           return [
             {
-              color: LINE_RESULT_COLOR,
-              linesArray: [pointLs,projectPointOntoLine(pointLs,pointCm,pointPo_g)]
+              color: COLOR_RESULT_LINE,
+              line: [pointLs,projectPointOntoLine(pointLs,pointCm,pointPo_g)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointCm,pointPo_g] 
+              color: COLOR_HIGHLIGHT,
+              line: [pointCm,pointPo_g] 
             }
           ]
         },
@@ -292,12 +291,12 @@ export const ANALYSIS = {
         highLightFn: (pointLi,pointCm,pointPo_g) => {
           return [
             {
-              color: LINE_RESULT_COLOR,
-              linesArray: [pointLi,projectPointOntoLine(pointLi,pointCm,pointPo_g)]
+              color: COLOR_RESULT_LINE,
+              line: [pointLi,projectPointOntoLine(pointLi,pointCm,pointPo_g)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointCm,pointPo_g] 
+              color: COLOR_HIGHLIGHT,
+              line: [pointCm,pointPo_g] 
             }
           ]
         },
@@ -308,7 +307,7 @@ export const ANALYSIS = {
   NAGASAKI: {
     name: "Nagasaki",
     markerPoints: ['C1','C2','S','N','A','U1A','U1E','L1E','Mo','B','L1A','Go','Me'],
-    lines: (markerPoints) => { 
+    linesArray: (markerPoints) => { 
       return [
         [markerPoints["S"],markerPoints["N"]],
         [markerPoints["N"],markerPoints["A"]],
@@ -330,12 +329,12 @@ export const ANALYSIS = {
         highLightFn: (pointS,pointN,pointA) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointS,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointS,pointN]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointA,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointA,pointN]
             }
           ]
         },
@@ -349,12 +348,12 @@ export const ANALYSIS = {
         highLightFn: (pointS,pointN,pointB) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointS,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointS,pointN]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointB,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointB,pointN]
             }
           ]
         },
@@ -368,12 +367,12 @@ export const ANALYSIS = {
         highLightFn: (pointA,pointN,pointB) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointA,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointA,pointN]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointB,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointB,pointN]
             }
           ]
         },
@@ -387,12 +386,12 @@ export const ANALYSIS = {
         highLightFn: (pointL1A,pointL1E,pointU1A,pointU1E) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointL1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointL1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointU1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointU1A,intersectPoint(pointL1A,pointL1E,pointU1A,pointU1E)]
             }
           ]
         },
@@ -406,12 +405,12 @@ export const ANALYSIS = {
         highLightFn: (pointN,pointS,pointMe,pointGo) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,intersectPoint(pointN,pointS,pointMe,pointGo)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,intersectPoint(pointN,pointS,pointMe,pointGo)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointMe,intersectPoint(pointN,pointS,pointMe,pointGo)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointMe,intersectPoint(pointN,pointS,pointMe,pointGo)]
             }
           ]
         },
@@ -425,12 +424,12 @@ export const ANALYSIS = {
         highLightFn: (pointL1E,pointN,pointA) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,projectPointOntoLine(pointL1E,pointN,pointA)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,projectPointOntoLine(pointL1E,pointN,pointA)]
             },
             {
-              color: LINE_RESULT_COLOR,
-              linesArray: [pointL1E,projectPointOntoLine(pointL1E,pointN,pointA)]
+              color: COLOR_RESULT_LINE,
+              line: [pointL1E,projectPointOntoLine(pointL1E,pointN,pointA)]
             }
           ]
         },
@@ -444,12 +443,12 @@ export const ANALYSIS = {
         highLightFn: (pointN,pointS,pointU1E,pointU1A) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointU1E,intersectPoint(pointN,pointS,pointU1E,pointU1A)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointU1E,intersectPoint(pointN,pointS,pointU1E,pointU1A)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,pointS]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,pointS]
             }
           ]
         },
@@ -463,12 +462,12 @@ export const ANALYSIS = {
         highLightFn: (pointL1E,pointL1A,pointGo,pointMe) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointL1E,intersectPoint(pointL1E,pointL1A,pointGo,pointMe)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointL1E,intersectPoint(pointL1E,pointL1A,pointGo,pointMe)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointGo,pointMe]
+              color: COLOR_HIGHLIGHT,
+              line: [pointGo,pointMe]
             }
           ]
         },
@@ -482,20 +481,20 @@ export const ANALYSIS = {
         highLightFn: (pointA,pointB,pointMo,pointU1E) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointA,projectPointOntoLine(pointA,pointMo,pointU1E)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointA,projectPointOntoLine(pointA,pointMo,pointU1E)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointB,projectPointOntoLine(pointB,pointMo,pointU1E)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointB,projectPointOntoLine(pointB,pointMo,pointU1E)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointMo,pointU1E]
+              color: COLOR_HIGHLIGHT,
+              line: [pointMo,pointU1E]
             },
             {
-              color: LINE_RESULT_COLOR,
-              linesArray: [projectPointOntoLine(pointA,pointMo,pointU1E),projectPointOntoLine(pointB,pointMo,pointU1E)]
+              color: COLOR_RESULT_LINE,
+              line: [projectPointOntoLine(pointA,pointMo,pointU1E),projectPointOntoLine(pointB,pointMo,pointU1E)]
             }
           ]
         },
@@ -505,8 +504,8 @@ export const ANALYSIS = {
   },
   RICKETTS: {
     name: "Ricketts",
-    markerPoints: ['C1','C2','N','Po','Pt','Or','DC','R1','R2','R3','R4','Ba','PNS','Go','Gn','Pog','Pm','L1A','Pog\'','Li','Ls','Prn','ANS','A','U1A','Mx60','Md60','Mo','PreM','L1E','U1E'],
-    lines: (markerPoints) => {
+    markerPoints: ['C1','C2','N','Po','Pt','Or','DC','R1','R2','R3','R4','Ba','PNS','Go','Gn','Pog','Pm','L1A','Pog\'','Li','Ls','Prn','ANS','A','U1A','Mx6D','Md6O','Mo','PreM','L1E','U1E'],
+    linesArray: (markerPoints) => {
       return [
         [markerPoints['N'],markerPoints['Ba']],
         [markerPoints['Or'],markerPoints['Po']],
@@ -529,12 +528,12 @@ export const ANALYSIS = {
         highLightFn: (pointBa,pointN,pointGn,pointPt) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointBa,pointN]
+              color: COLOR_HIGHLIGHT,
+              line: [pointBa,pointN]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointGn,intersectPoint(pointBa,pointN,pointGn,pointPt)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointGn,intersectPoint(pointBa,pointN,pointGn,pointPt)]
             }
           ]
         },
@@ -548,12 +547,12 @@ export const ANALYSIS = {
         highLightFn: (pointPo,pointOr,pointN,pointPog) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,pointPog]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,pointPog]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointPo,intersectPoint(pointPo,pointOr,pointN,pointPog)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointPo,intersectPoint(pointPo,pointOr,pointN,pointPog)]
             }
           ]
         },
@@ -562,17 +561,17 @@ export const ANALYSIS = {
       {
         indicator: "MD-FH",
         normName: "MD_FH",
-        markerArray: ["Or","Pr","Gn","Go"],
-        valueFn: (pointOr,pointPr,pointGn,pointGo) => calculateAngleFromFourPoint(pointOr,pointPr,pointGn,pointGo,true),
-        highLightFn: (pointOr,pointPr,pointGn,pointGo) => {
+        markerArray: ["Or","Po","Gn","Go"],
+        valueFn: (pointOr,pointPo,pointGn,pointGo) => calculateAngleFromFourPoint(pointOr,pointPo,pointGn,pointGo,true),
+        highLightFn: (pointOr,pointPo,pointGn,pointGo) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointOr,intersectPoint(pointOr,pointPr,pointGn,pointGo)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointOr,intersectPoint(pointOr,pointPo,pointGn,pointGo)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointGn,intersectPoint(pointOr,pointPr,pointGn,pointGo)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointGn,intersectPoint(pointOr,pointPo,pointGn,pointGo)]
             }
           ]
         },
@@ -586,12 +585,12 @@ export const ANALYSIS = {
         highLightFn: (pointN,pointPog,pointGo,pointGn) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,intersectPoint(pointN,pointPog,pointGo,pointGn)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,intersectPoint(pointN,pointPog,pointGo,pointGn)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointGo,intersectPoint(pointN,pointPog,pointGo,pointGn)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointGo,intersectPoint(pointN,pointPog,pointGo,pointGn)]
             }
           ]
         },
@@ -605,11 +604,11 @@ export const ANALYSIS = {
         highLightFn: (pointR1,pointR2,pointR3,pointR4,pointANS,pointPm) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: cạnh trên cùng của hình chữ nhật tạo bởi 4 điểm 
                */
-              linesArray: [
+              line: [
                 // topLeft
                 {
                   x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -623,11 +622,11 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: cạnh bên trái của hình chữ nhật tạo bởi 4 điểm 
                */
-              linesArray: [
+              line: [
                 // topLeft
                 {
                   x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -641,34 +640,29 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: cạnh bên phải của hình chữ nhật tạo bởi 4 điểm
                */
-              linesArray: [
+              line: [
+                // topRight
                 {
-                  color: HIGHLIGHT_COLOR,
-                  linesArray: [
-                    // topRight
-                    {
-                      x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
-                      y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
-                    },
-                    // bottomRight
-                    {
-                      x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
-                      y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
-                    }
-                  ]
-                }
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomRight
+                {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                }   
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: cạnh dưới cùng của hình chữ nhật tạo bởi 4 điểm
                */
-              linesArray: [
+              line: [
                 // bottomLeft
                 {
                   x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -682,11 +676,11 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: đường chéo thứ nhất của hình chữ nhật
                */
-              linesArray: [
+              line: [
                 // topLeft
                   {
                   x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -700,11 +694,11 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: đường chéo thứ hai của hình chữ nhật
                */
-              linesArray: [
+              line: [
                 // topRight
                 {
                   x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -718,12 +712,12 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointANS,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointANS,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointPm,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)] 
+              color: COLOR_HIGHLIGHT,
+              line: [pointPm,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)] 
             }
           ]
         },
@@ -737,11 +731,11 @@ export const ANALYSIS = {
         highLightFn: (pointR1,pointR2,pointR3,pointR4,pointDC,pointPm) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: cạnh trên cùng của hình chữ nhật tạo bởi 4 điểm 
                */
-              linesArray: [
+              line: [
                 // topLeft
                 {
                   x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -755,11 +749,11 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: cạnh bên trái của hình chữ nhật tạo bởi 4 điểm 
                */
-              linesArray: [
+              line: [
                 // topLeft
                 {
                   x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -773,14 +767,14 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: cạnh bên phải của hình chữ nhật tạo bởi 4 điểm
                */
-              linesArray: [
+              line: [
                 {
-                  color: HIGHLIGHT_COLOR,
-                  linesArray: [
+                  color: COLOR_HIGHLIGHT,
+                  line: [
                     // topRight
                     {
                       x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -796,11 +790,11 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: cạnh dưới cùng của hình chữ nhật tạo bởi 4 điểm
                */
-              linesArray: [
+              line: [
                 // bottomLeft
                 {
                   x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -814,11 +808,11 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: đường chéo thứ nhất của hình chữ nhật
                */
-              linesArray: [
+              line: [
                 // topLeft
                   {
                   x: Math.min(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -832,11 +826,11 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
+              color: COLOR_HIGHLIGHT,
               /**
                * todo: đường chéo thứ hai của hình chữ nhật
                */
-              linesArray: [
+              line: [
                 // topRight
                 {
                   x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
@@ -850,12 +844,12 @@ export const ANALYSIS = {
               ]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointDC,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)]
+              color: COLOR_HIGHLIGHT,
+              line: [pointDC,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointPm,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)] 
+              color: COLOR_HIGHLIGHT,
+              line: [pointPm,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4)] 
             }
           ]
         },
@@ -869,12 +863,12 @@ export const ANALYSIS = {
         highLightFn: (pointPo,pointOr,pointPNS,pointANS) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointPo,pointOr]
+              color: COLOR_HIGHLIGHT,
+              line: [pointOr,intersectPoint(pointPo,pointOr,pointPNS,pointANS)]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointPNS,pointANS]
+              color: COLOR_HIGHLIGHT,
+              line: [pointANS,intersectPoint(pointPo,pointOr,pointPNS,pointANS)]
             }
           ]
         },
@@ -888,12 +882,12 @@ export const ANALYSIS = {
         highLightFn: (pointN,pointA,pointPog) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointN,pointPog]
+              color: COLOR_HIGHLIGHT,
+              line: [pointN,pointPog]
             },
             {
-              color: LINE_RESULT_COLOR,
-              linesArray: [pointA,projectPointOntoLine(pointA,pointN,pointPog)]
+              color: COLOR_RESULT_LINE,
+              line: [pointA,projectPointOntoLine(pointA,pointN,pointPog)]
             }
           ]
         },
@@ -902,17 +896,17 @@ export const ANALYSIS = {
       {
         indicator: "Upper incisor to A-Pog",
         normName: "U1EAPOG",
-        markerArray: ["A","U1E","Pog","C1","C2"],
+        markerArray: ["U1E","A","Pog","C1","C2"],
         valueFn: (pointU1E,pointA,pointPog,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointU1E,pointA,pointPog,pointC1,pointC2,lengthOfRuler),
         highLightFn: (pointU1E,pointA,pointPog) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointA,pointPog]
+              color: COLOR_HIGHLIGHT,
+              line: [pointA,pointPog]
             },
             {
-              color: LINE_RESULT_COLOR,
-              linesArray: [pointU1E,projectPointOntoLine(pointU1E,pointA,pointPog)]
+              color: COLOR_RESULT_LINE,
+              line: [pointU1E,projectPointOntoLine(pointU1E,pointA,pointPog)]
             }
           ]
         },
@@ -921,17 +915,17 @@ export const ANALYSIS = {
       {
         indicator: "Lower incisor to A-Pog",
         normName: "L1EAPOG",
-        markerArray: ["A","L1E","Pog","C1","C2"],
+        markerArray: ["L1E","A","Pog","C1","C2"],
         valueFn: (pointL1E,pointA,pointPog,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointL1E,pointA,pointPog,pointC1,pointC2,lengthOfRuler),
         highLightFn: (pointL1E,pointA,pointPog) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointA,pointPog]
+              color: COLOR_HIGHLIGHT,
+              line: [pointA,pointPog]
             },
             {
-              color: LINE_RESULT_COLOR,
-              linesArray: [pointL1E,projectPointOntoLine(pointL1E,pointA,pointPog)]
+              color: COLOR_RESULT_LINE,
+              line: [pointL1E,projectPointOntoLine(pointL1E,pointA,pointPog)]
             }
           ]
         },
@@ -945,20 +939,143 @@ export const ANALYSIS = {
         highLightFn: (pointL1E,pointL1A,pointA,pointPog) => {
           return [
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointL1E,pointL1A]
+              color: COLOR_HIGHLIGHT,
+              line: [pointL1E,pointL1A]
             },
             {
-              color: HIGHLIGHT_COLOR,
-              linesArray: [pointA,pointPog]
+              color: COLOR_HIGHLIGHT,
+              line: [pointA,pointPog]
             }
           ]
         },
         unit: "deg"
       },
-      // {
-      //   indicator: "U6 -> Ptv"
-      // }
+      {
+        indicator: "U6 -> Ptv",
+        normName: "U6PTV",
+        markerArray: ["Po","Pt","Or","Mx6D","Mo","PreM","C1","C2"],
+        valueFn: (pointPo,pointPt,pointOr,pointMx6D,pointMo,pointPreM,pointC1,pointC2,lengthOfRuler) => distanceFromTwoPoint(pointMx6D,intersectPoint(pointPt,projectPointOntoLine(pointPt,pointPo,pointOr),pointMx6D,intersectPointOfParallel(pointMx6D,pointMo,pointPreM)),pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointPo,pointPt,pointOr,pointMx6D,pointMo,pointPreM) => {
+          return [
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointPo,pointOr]
+            },
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointMo,pointPreM]
+            },
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointPt,intersectPoint(pointPt,projectPointOntoLine(pointPt,pointPo,pointOr),pointMx6D,intersectPointOfParallel(pointMx6D,pointMo,pointPreM))]
+            },
+            {
+              color: COLOR_RESULT_LINE,
+              line: [pointMx6D,intersectPoint(pointPt,projectPointOntoLine(pointPt,pointPo,pointOr),pointMx6D,intersectPointOfParallel(pointMx6D,pointMo,pointPreM))]
+            }
+          ]
+        },
+        unit: "mm"
+      },
+      {
+        indicator: "Inter-incisal",
+        normName: "INTERINCISAL",
+        markerArray: ["U1A","U1E","L1A","L1E"],
+        valueFn: (pointU1A,pointU1E,pointL1A,pointL1E) => calculateAngleFromFourPoint(pointU1A,pointU1E,pointL1A,pointL1E,false),
+        highLightFn: (pointU1A,pointU1E,pointL1A,pointL1E) => {
+          return [
+            {
+              color: COLOR_HIGHLIGHT,
+              line:[pointU1A,pointU1E]
+            },
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointL1A,intersectPoint(pointU1A,pointU1E,pointL1A,pointL1E)]
+            }
+          ]
+        },
+        unit: "deg"
+      },
+      {
+        indicator: "Upper Lip to E Plane",
+        normName: "LS_EPLANE",
+        markerArray: ["Prn","Pog'","Ls","C1","C2"],
+        valueFn: (pointPrn,point_Pog,pointLs,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointLs,pointPrn,point_Pog,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointPrn,point_Pog,pointLs) => {
+          return [
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointPrn,point_Pog]
+            },
+            {
+              color: COLOR_RESULT_LINE,
+              line: [pointLs,projectPointOntoLine(pointLs,pointPrn,point_Pog)]
+            }
+          ]
+        },
+        unit: "mm"
+      },
+      {
+        indicator: "Lower Lip to E Plane",
+        normName: "LI_EPLANE",
+        markerArray: ["Prn","Pog'","Li","C1","C2"],
+        valueFn: (pointPrn,point_Pog,pointLi,pointC1,pointC2,lengthOfRuler) => distanceFromPointToLine(pointLi,pointPrn,point_Pog,pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointPrn,point_Pog,pointLi) => {
+          return [
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointPrn,point_Pog]
+            },
+            {
+              color: COLOR_RESULT_LINE,
+              line: [pointLi,projectPointOntoLine(pointLi,pointPrn,point_Pog)]
+            }
+          ]
+        },
+        unit: "mm"
+      },
+      {
+        indicator: "Molar Relationship",
+        normName: "MOLAR_REL",
+        markerArray: ["Mx6D","Md6O","Mo","PreM","C1","C2"],
+        valueFn: (pointMx6D,pointMd6O,pointMo,pointPreM,pointC1,pointC2,lengthOfRuler) => distanceFromTwoPoint(pointMd6O,intersectPoint(pointMx6D,projectPointOntoLine(pointMx6D,pointMo,pointPreM),pointMd6O,intersectPointOfParallel(pointMd6O,pointMo,pointPreM)),pointC1,pointC2,lengthOfRuler),
+        highLightFn: (pointMx6D,pointMd6O,pointMo,pointPreM) => {
+          return [
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointMo,pointPreM]
+            },
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointMx6D,intersectPoint(pointMx6D,projectPointOntoLine(pointMx6D,pointMo,pointPreM),pointMd6O,intersectPointOfParallel(pointMd6O,pointMo,pointPreM))]
+            },
+            {
+              color: COLOR_RESULT_LINE,
+              line: [pointMd6O,intersectPoint(pointMx6D,projectPointOntoLine(pointMx6D,pointMo,pointPreM),pointMd6O,intersectPointOfParallel(pointMd6O,pointMo,pointPreM))]
+            }
+          ]
+        },
+        unit: "mm"
+      },
+      {
+        indicator: "Upper Incisor Inclination",
+        normName: "U1APOG",
+        markerArray: ["A","Pog'","U1A","U1E"],
+        valueFn: (pointA,point_Pog,pointU1A,pointU1E) => calculateAngleFromFourPoint(pointA,point_Pog,pointU1A,pointU1E),
+        highLightFn: (pointA,point_Pog,pointU1A,pointU1E) => {
+          return [
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointA,point_Pog]
+            },
+            {
+              color: COLOR_HIGHLIGHT,
+              line: [pointU1A,pointU1E]
+            }
+          ]
+        },
+        unit: "deg"
+      }
     ]
   }
 }
@@ -1015,7 +1132,7 @@ export const PREDEFINED_NORMS = {
       "U6PTV": {"data":{"F": {"MIN": 11.1,"MAX":20.3},"M": {"MIN":12.4,"MAX":23}}},
       "LS_EPLANE": {"data":{"F": {"MIN": -4.8,"MAX":0.8},"M": {"MIN":-5.6,"MAX":1.6}}},
       "LI_EPLANE": {"data":{"F": {"MIN": -1.2,"MAX":4.8},"M": {"MIN":-1.5,"MAX":6.5}}},
-      "MOLAR_REL": {"data":{"F": {"MIN": "","MAX":""},"M": {"MIN":"","MAX":""}}},
+      "MOLAR_REL": {"data":{"F": {"MIN": "No data","MAX":"No data"},"M": {"MIN":"No data","MAX":"No data"}}},
       "U1APOG": {"data":{"F": {"MIN": "","MAX":""},"M": {"MIN":"","MAX":""}}},
       "MANDIBULAR_AB":{"data":{"F":{"MIN": "","MAX": ""},"M":{"MIN": "","MAX": ""}}},
       "PALATAL_FH":{"data":{"F":{"MIN": -6,"MAX": 3.2},"M":{"MIN": -4.9,"MAX": 3.3}}},
@@ -1075,7 +1192,7 @@ export const PREDEFINED_NORMS = {
       "U6PTV": {"data":{"F": {"MIN": "","MAX":""},"M": {"MIN":"","MAX":""}}},
       "LS_EPLANE": {"data":{"F": {"MIN": -0.7,"MAX":-0.7},"M": {"MIN":-0.7,"MAX":-0.7}}},
       "LI_EPLANE": {"data":{"F": {"MIN": -2.7,"MAX":3.3},"M": {"MIN":-2.7,"MAX":3.3}}},
-      "MOLAR_REL": {"data":{"F": {"MIN": "","MAX":""},"M": {"MIN":"","MAX":""}}},
+      "MOLAR_REL": {"data":{"F": {"MIN": "No data","MAX":"No data"},"M": {"MIN":"No data","MAX":"No data"}}},
       "U1APOG": {"data":{"F": {"MIN": "","MAX":""},"M": {"MIN":"","MAX":""}}},
       "MANDIBULAR_AB":{"data":{"F":{"MIN": "","MAX": ""},"M":{"MIN": "","MAX": ""}}},
       "PALATAL_FH":{"data":{"F":{"MIN": -3,"MAX": 3},"M":{"MIN": -3,"MAX": 3}}},
@@ -1133,7 +1250,7 @@ export const PREDEFINED_NORMS = {
       "U6PTV": {"data":{"F": {"MIN": 13.6,"MAX":20.2},"M": {"MIN":15.4,"MAX":23}}},
       "LS_EPLANE": {"data":{"F": {"MIN": -0.7,"MAX":-0.7},"M": {"MIN":-0.7,"MAX":-0.7}}},
       "LI_EPLANE": {"data":{"F": {"MIN": -2.7,"MAX":3.3},"M": {"MIN":-2.7,"MAX":3.3}}},
-      "MOLAR_REL": {"data":{"F": {"MIN": "","MAX":""},"M": {"MIN":"","MAX":""}}},
+      "MOLAR_REL": {"data":{"F": {"MIN": "No data","MAX":"No data"},"M": {"MIN":"No data","MAX":"No data"}}},
       "U1APOG": {"data":{"F": {"MIN": 21.9,"MAX":30.5},"M": {"MIN":23.1,"MAX":32.9}}},
       "MANDIBULAR_AB":{"data":{"F":{"MIN": "","MAX": ""},"M":{"MIN": "","MAX": ""}}},
       "PALATAL_FH":{"data":{"F":{"MIN": -3,"MAX": 3},"M":{"MIN": -3,"MAX": 3}}},
@@ -1263,7 +1380,7 @@ export const projectPointOntoLine = (pointP, pointA, pointB) => {
 
 
 /**
- * todo: khoảng cách giữa 2 điểm dựa vào khoản cách thực tế được cung cấp bởi độ dài C1, C2 và độ dài thước đo lengthOfRuler
+ * todo: khoảng cách giữa 2 điểm dựa vào khoảng cách thực tế được cung cấp bởi độ dài C1, C2 và độ dài thước đo lengthOfRuler
  * @param {*} pointA tọa độ điểm A
  * @param {*} pointB tọa độ điểm B
  * @returns khoảng cách giữa A và B theo giá trị thực tế và làm tròn 2 chữ số sau dấu phẩy || trả về null nếu thiếu điểm
@@ -1346,26 +1463,16 @@ export const intersectPointDiagonalLineOfRectangle = (pointR1,pointR2,pointR3,po
  * @returns tọa độ điểm thuộc đường thẳng song song || trả về null nếu thiếu điểm
  */
 export const intersectPointOfParallel = (pointP,pointM,pointN) => {
+  console.log("🚀 ~ file: lateralCephalometricUtility.jsx:1466 ~ intersectPointOfParallel ~ pointP,pointM,pointN:", pointP,pointM,pointN)
   if(!pointP || !pointM || !pointN) return null;
 
-  // vector chỉ phương của MN
-  const vectorMN = {
-    x: pointN.x - pointP.x,
-    y: pointN.y - pointP.y
-  }
+  const vectorMN = { x: pointN.x - pointM.x, y: pointN.y - pointM.y };
 
-  // hệ số đường thẳng song song
-  const coefficientParallel = -vectorMN.y;
-
-  // hằng số của đường thẳng song song
-  const intercept = pointP.y - coefficientParallel * pointN.x;
-
-  const resultX = pointP.x+(Math.random(0,10));
-  const resultY = coefficientParallel * resultX + intercept;
+  const distanceFactor = (pointP.x - pointM.x) / vectorMN.x;
 
   return {
-    x: resultX,
-    y: resultY
+    x: pointP.x - distanceFactor * vectorMN.x,
+    y: pointP.y - distanceFactor * vectorMN.y,
   }
 }
 

@@ -40,12 +40,17 @@ export default function LateralCeph(props) {
   const currentImageAnalysis = useSelector(state=>state.lateralCeph.currentImageAnalysis);
   const scaleImage = useSelector(state=>state.lateralCeph.scaleImage);
   const lengthOfRuler = useSelector(state=>state.lateralCeph.lengthOfRuler);
-  const [highLightIndicator,setHighLightIndicator] = useState([])
-  const [prevPatient,setPrevPatient] = useState(currentPatient?.id);
+  const isVisitableMarkerPoints = useSelector(state=>state.lateralCeph.isVisitableMarkerPoints);
+  const isVisitableAnalysisLines = useSelector(state=>state.lateralCeph.isVisitableAnalysisLines);
 
   const stageRef = useRef();
   const imageRef = useRef();
   const contentAnalysisRef = useRef();
+  const crosshairVerticalRef = useRef();
+  const crosshairHorizontalRef = useRef();
+
+  const [highLightIndicator,setHighLightIndicator] = useState([])
+  const [prevPatient,setPrevPatient] = useState(currentPatient?.id);
 
   const [markerPointList,setMarkerPointList] = useState(markerPoints);
   const [filtersMap, setFiltersMap] = useState(new Map());
@@ -61,10 +66,6 @@ export default function LateralCeph(props) {
 
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [currentMarkerPoint, setCurrentMarkerPoint] = useState();
-
-  const crosshairVerticalRef = useRef();
-  const crosshairHorizontalRef = useRef();
-  
 
   const handleMouseMove = () => {
     // Lấy tọa độ chuột trên Stage
@@ -278,10 +279,11 @@ export default function LateralCeph(props) {
 
   const drawLines = useMemo(()=>{
     let linesArray = [];
-    for (const lines of ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.lines(markerPoints)) {
+    for (const lines of ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.linesArray(markerPoints)) {
       if(lines[0] && lines[1]){
         linesArray.push(
           <Line
+            visible={isVisitableAnalysisLines}
             key={lines[0].x+lines[0].y+lines[1].x+lines[1].y+Math.random(1,1000)}
             x={0}
             y={0}
@@ -294,19 +296,19 @@ export default function LateralCeph(props) {
       }
     }
     return linesArray;
-  },[markerPoints,currentAnalysis,scale])
+  },[markerPoints,currentAnalysis,scale,isVisitableAnalysisLines])
 
   const hightLightLines = useMemo(()=>{
     let linesArray = [];
     if(highLightIndicator?.length > 0){
       for (const lines of highLightIndicator) {
-        if(lines.linesArray[0] && lines.linesArray[1]){
+        if(lines.line[0] && lines.line[1]){
           linesArray.push(
             <Line
-              key={lines.linesArray[0].x+lines.linesArray[0].y+lines.linesArray[1].x+lines.linesArray[1].y+Math.random(1,1000)}
+              key={lines.line[0].x+lines.line[0].y+lines.line[1].x+lines.line[1].y+Math.random(1,1000)}
               x={0}
               y={0}
-              points={[lines.linesArray[0].x, lines.linesArray[0].y, lines.linesArray[1].x, lines.linesArray[1].y]}
+              points={[lines.line[0].x, lines.line[0].y, lines.line[1].x, lines.line[1].y]}
               stroke={lines.color}
               strokeWidth={2/scale}
               opacity={1}
@@ -323,7 +325,9 @@ export default function LateralCeph(props) {
     for (const key of Object.keys(markerPointList)) {
       if(markerPointList[key] && ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints.find(point => point === key)){
         circleWithTextArray.push(
-          <Group>
+          <Group
+            visible={isVisitableMarkerPoints}
+          >
             <Circle
               key={markerPointList[key].x+markerPointList[key].y}
               fill={'red'}
@@ -389,7 +393,7 @@ export default function LateralCeph(props) {
       }
     }
     return circleWithTextArray
-  },[markerPointList,currentAnalysis,scale])
+  },[markerPointList,currentAnalysis,scale,isVisitableMarkerPoints])
 
   return <div className="d-flex flex-column justify-content-start align-items-center" style={{height:window.innerHeight}}>
     <NavbarComponent />

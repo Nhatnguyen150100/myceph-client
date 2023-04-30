@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
-import { setCurrentImageAnalysis, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setNoteAnalysis, setScaleImage } from "../../redux/LateralCephSlice.jsx";
+import { setCurrentImageAnalysis, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setNoteAnalysis, setScaleImage, setVisitableAnalysisLines, setVisitableMarkerPoints } from "../../redux/LateralCephSlice.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -25,6 +25,8 @@ const ControlSection = React.memo((props) => {
   const scaleImage = useSelector(state=>state.lateralCeph.scaleImage);
   const doctor = useSelector(state=>state.doctor);
   const noteAnalysis = useSelector(state=>state.lateralCeph.noteAnalysis);
+  const isVisitableMarkerPoints = useSelector(state=>state.lateralCeph.isVisitableMarkerPoints);
+  const isVisitableAnalysisLines = useSelector(state=>state.lateralCeph.isVisitableAnalysisLines);
 
   const dispatch = useDispatch();
   const {t} = useTranslation();
@@ -325,7 +327,7 @@ const ControlSection = React.memo((props) => {
         onClick={()=>props.onDragImage(props.isDragImage?false:true)}
       >
         <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
-          back_hand
+          {props.isDragImage?'back_hand':'do_not_touch'}
         </span>
       </button>
       <button 
@@ -395,7 +397,30 @@ const ControlSection = React.memo((props) => {
           </span>
         </button>
         <ul className="dropdown-menu ms-2">
-          
+          <button 
+            type="button" 
+            className="w-100 btn btn-outline-secondary border-0 d-flex flex-grow-1 align-items-center justify-content-center"
+            onClick={()=>dispatch(setVisitableMarkerPoints(isVisitableMarkerPoints?false:true))}
+          >
+            <span className="material-symbols-outlined mt-1" style={{fontSize:ICON_SIZE}}>
+              {isVisitableMarkerPoints?'visibility':'visibility_off'}
+            </span>
+            <span className="mc-color text-capitalize mx-1" style={{fontSize:FONT_SIZE}}>
+              {t('marker points')}
+            </span>
+          </button>
+          <button 
+            type="button" 
+            className="w-100 btn btn-outline-secondary border-0 d-flex flex-grow-1 align-items-center justify-content-center"
+            onClick={()=>dispatch(setVisitableAnalysisLines(isVisitableAnalysisLines?false:true))}
+          >
+            <span className="material-symbols-outlined mt-1" style={{fontSize:ICON_SIZE}}>
+              {isVisitableAnalysisLines?'visibility':'visibility_off'}
+            </span>
+            <span className="mc-color text-capitalize mx-1" style={{fontSize:FONT_SIZE}}>
+              {t('analysis lines')}
+            </span>
+          </button>
         </ul>
       </div>
       <button 
