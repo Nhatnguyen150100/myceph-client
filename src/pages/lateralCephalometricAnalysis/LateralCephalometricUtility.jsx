@@ -17,6 +17,7 @@ export const MARKER_LIST = {
   Mo:'Molar occlusion',
   N:"Nasion",
   "Pog'": "Soft tissue Pogonion",
+  Pog: 'Pogonion',  
   U1E:'Upper 1 Edge',
   U1A:'Upper 1 Apex',
   S:"Sella turcica",  
@@ -600,7 +601,7 @@ export const ANALYSIS = {
         indicator: "Lower facial height",
         normName: "LOWER_FACIAL_HEIGHT",
         markerArray: ["R1","R2","R3","R4","ANS","Pm"],
-        valueFn: (pointR1,pointR2,pointR3,pointR4,pointANS,pointPm) => calculateAngleFromThreePoint(pointANS,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4),pointPm),
+        valueFn: (pointR1,pointR2,pointR3,pointR4,pointANS,pointPm) => calculateAngleFromThreePoint(pointANS,intersectPointDiagonalLineOfRectangle(pointR1,pointR2,pointR3,pointR4),pointPm,false),
         highLightFn: (pointR1,pointR2,pointR3,pointR4,pointANS,pointPm) => {
           return [
             {
