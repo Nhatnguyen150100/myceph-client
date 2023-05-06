@@ -773,20 +773,15 @@ export const ANALYSIS = {
                * todo: cạnh bên phải của hình chữ nhật tạo bởi 4 điểm
                */
               line: [
+                // topRight
                 {
-                  color: COLOR_HIGHLIGHT,
-                  line: [
-                    // topRight
-                    {
-                      x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
-                      y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
-                    },
-                    // bottomRight
-                    {
-                      x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
-                      y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
-                    }
-                  ]
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.min(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
+                },
+                // bottomRight
+                {
+                  x: Math.max(pointR1.x, pointR2.x, pointR3.x, pointR4.x),
+                  y: Math.max(pointR1.y, pointR2.y, pointR3.y, pointR4.y)
                 }
               ]
             },

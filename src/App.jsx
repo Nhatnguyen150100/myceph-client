@@ -35,7 +35,6 @@ function App() {
         <Route path="/lateralCeph" exact element={<LateralCeph />}/>
       </Routes>
     </Suspense>
-    
   );
 }
 

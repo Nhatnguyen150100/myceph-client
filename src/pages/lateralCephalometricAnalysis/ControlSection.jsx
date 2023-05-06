@@ -396,7 +396,7 @@ const ControlSection = React.memo((props) => {
             visibility
           </span>
         </button>
-        <ul className="dropdown-menu ms-2">
+        <ul className="dropdown-menu ms-2 p-0">
           <button 
             type="button" 
             className="w-100 btn btn-outline-secondary border-0 d-flex flex-grow-1 align-items-center justify-content-center"

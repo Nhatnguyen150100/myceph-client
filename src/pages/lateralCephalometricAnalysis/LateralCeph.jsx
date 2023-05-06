@@ -2,7 +2,7 @@ import Konva from "konva";
 import React, { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Circle, Group, Image, Label, Layer, Line, Rect, Stage, Text } from "react-konva";
+import { Circle, Group, Image, Layer, Line, Rect, Stage, Text } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -22,11 +22,6 @@ const filterMap = {
   contrast: Konva.Filters.Contrast,
   brightness: Konva.Filters.Brighten
 }
-
-const stagePos = {x:0, y: 0}
-
-const WIDTH = 30;
-const HEIGHT = 30;
 
 export default function LateralCeph(props) {
   const dispatch = useDispatch();
@@ -54,7 +49,6 @@ export default function LateralCeph(props) {
 
   const [markerPointList,setMarkerPointList] = useState(markerPoints);
   const [filtersMap, setFiltersMap] = useState(new Map());
-  const [openGrid,setOpenGrid] = useState(false);
 
   const [imageObject,setImageObject] = useState(null);
   const [isGrab,setIsGrab] = useState(false);
@@ -78,28 +72,6 @@ export default function LateralCeph(props) {
     };
     setCrosshairPos(mousePointTo);
   };
-
-  const startX = Math.floor((-stagePos.x - window.innerWidth) / WIDTH) * WIDTH;
-  const endX = Math.floor((-stagePos.x + window.innerWidth * 2) / WIDTH) * WIDTH;
-
-  const startY = Math.floor((-stagePos.y - window.innerHeight) / HEIGHT) * HEIGHT;
-  const endY = Math.floor((-stagePos.y + window.innerHeight * 2) / HEIGHT) * HEIGHT;
-
-  const gridComponents = [];
-  for (var x = startX; x < endX; x += WIDTH) {
-    for (var y = startY; y < endY; y += HEIGHT) {
-      gridComponents.push(
-        <Rect
-          x={x}
-          y={y}
-          width={WIDTH}
-          height={HEIGHT}
-          stroke="blue"
-          strokeWidth = {0.15}
-        />
-      );
-    }
-  }
 
   const filterFuncs = [];
   const filterVals = {};
@@ -472,7 +444,6 @@ export default function LateralCeph(props) {
                           y={0}
                         />
                       }
-                      {openGrid && gridComponents}
                       {currentMarkerPoint && !isDragImage &&
                         <React.Fragment>
                           <Line

@@ -204,7 +204,7 @@ export const timeString12hr = (timeString) => {
  * @param {*} hours hh:mm giờ và phút
  * @returns 
  */
-export function concatDayAndHours(day, hours) {
+export const concatDayAndHours = (day, hours) => {
   let splitHours = hours.split(':');
   let fullDay = new Date(day);
   fullDay.setHours(splitHours[0]);
@@ -221,7 +221,7 @@ export function concatDayAndHours(day, hours) {
  * @param {*} quarter quý trong 1 năm: quarter1, quarter2, quarter3, quarter4
  * @returns [data1,data2,data3,data4]
  */
-export function getServicesDataForChart(listAppointmentDate,id,mode,quarter){
+export const getServicesDataForChart = (listAppointmentDate,id,mode,quarter) => {
   // 4 data tương ứng với 4 tháng của 1 quý
   let data1 = 0;
   let data2 = 0;
@@ -269,7 +269,7 @@ export function getServicesDataForChart(listAppointmentDate,id,mode,quarter){
  * @param {*} listAppointmentDate 
  * @returns 
  */
-export function convertAppointmentDateToEvents(listAppointmentDate) {
+export const convertAppointmentDateToEvents = (listAppointmentDate) => {
   let events = [];
   for (let index = 0; index < listAppointmentDate.length; index++) {
     const element = listAppointmentDate[index];
@@ -295,7 +295,7 @@ export function convertAppointmentDateToEvents(listAppointmentDate) {
  * @param {*} listAppointmentDate 
  * @returns 
  */
- export function convertAppointmentDateToEvent(appointmentDate) {
+ export const convertAppointmentDateToEvent = (appointmentDate) => {
   let event;
   event = {
     title: appointmentDate.Patient.fullName,
@@ -322,7 +322,7 @@ export async function readPEMFile(filePath) {
   }
 }
 
-export function settingForImage(value,linkImage){
+export const settingForImage = (value,linkImage) => {
   if(linkImage){
     const urlSplit = linkImage.split('upload');
     let newUrl =  urlSplit[0].concat('upload',`${value}`,urlSplit[1]);
@@ -330,7 +330,7 @@ export function settingForImage(value,linkImage){
   }else return '';
 }
 
-export function splitAvatar(url,imageUrl) {
+export const splitAvatar = (url,imageUrl) => {
   if(url){
     const avatarUrl = url.split('|');
     return avatarUrl[0];
@@ -338,17 +338,17 @@ export function splitAvatar(url,imageUrl) {
   return imageUrl;
 }
 
-export function splitFirst(string) {
+export const splitFirst = (string) => {
   const stringSplit = string.split('_');
   return stringSplit[0];
 }
 
-export function splitLast(string) {
+export const splitLast = (string) => {
   const stringSplit = string.split('_');
   return stringSplit[1];
 }
 
-export function splitPublic_id(url) {
+export const splitPublic_id = (url) => {
   if(url){
     const avatarUrl = url.split('|');
     return avatarUrl[1];
@@ -356,7 +356,7 @@ export function splitPublic_id(url) {
   return '';
 }
 
-export function toISODateString(dateObject) {
+export const toISODateString = (dateObject) => {
   let result = '';
   if(dateObject && typeof dateObject.getMonth === 'function') {
     let month = '' + (dateObject.getMonth() + 1);
@@ -378,14 +378,14 @@ export const timeRefreshToken = () => {
   return expireToken;
 }
 
-export function toTimeString(dateObject){
+export const toTimeString = (dateObject) => {
   let hour = dateObject.getHours();
   let minutes  = dateObject.getMinutes();
   let seconds = dateObject.getSeconds();
   return `${hour}:${minutes}:${seconds}`;
 }
 
-export function convertISOToVNDateString(dateString) {
+export const convertISOToVNDateString = (dateString) => {
   let result = "";
   if(dateString) {
     let partArray = dateString.split("-").reverse();
@@ -411,7 +411,7 @@ export const deleteImage = (publicIdAvatar) => {
   })
 }
 
-export function computeAge(birthday) {
+export const computeAge = (birthday) => {
   let age,month;
   if(birthday) {
     let currentMonth = (new Date(Date.now())).getMonth();
