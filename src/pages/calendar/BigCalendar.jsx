@@ -52,6 +52,10 @@ export default function BigCalendar(props){
   let currentTab = null;
 
   useEffect(()=>{
+    if(!doctor?.id) nav('/login');
+  },[])
+
+  useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t(SOFT_WARE_LIST.CALENDAR)}`));
   },[])
   

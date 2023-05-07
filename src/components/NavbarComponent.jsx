@@ -34,7 +34,7 @@ export default function NavbarComponent(props) {
   const logout = () => {
     dispatch(setLoadingModal(true));
     postToServerWithToken(`/v1/auth/logout`,{
-      idDoctor: doctor.id,
+      idDoctor: doctor?.id,
       refreshToken: cookies.get('refreshToken')
     }).then(response => {
       clearAllSlice(dispatch);
@@ -63,14 +63,19 @@ export default function NavbarComponent(props) {
               <Link to={"/"} style={{textDecoration:"none"}}>
                 <span className="me-3 ms-2 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('homepage')}</span>
               </Link>
-              <span className="vr"></span>
-              <Link to={"/schedule"} style={{textDecoration:"none"}} onClick={()=>{dispatch(setSelectPatientOnMode(SELECT_PATIENT_MODE.CLINIC_PATIENT));dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR))}}>
-                <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
-              </Link>
-              <span className="vr"></span>
-              <Link to={"/patientListManagement"} style={{textDecoration:"none"}}>
-                <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('patient list')}</span>
-              </Link>
+              {
+                doctor?.id && 
+                <React.Fragment>
+                  <span className="vr"></span>
+                  <Link to={"/schedule"} style={{textDecoration:"none"}} onClick={()=>{dispatch(setSelectPatientOnMode(SELECT_PATIENT_MODE.CLINIC_PATIENT));dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR))}}>
+                    <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
+                  </Link>
+                  <span className="vr"></span>
+                  <Link to={"/patientListManagement"} style={{textDecoration:"none"}}>
+                    <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('patient list')}</span>
+                  </Link>
+                </React.Fragment>
+              }
             </div>
             <div className="d-flex flex-row align-items-center">
               <div className="dropdown">

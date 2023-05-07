@@ -100,21 +100,21 @@ export default function HomePage(props) {
           <div className="col-md-6">
             <div className="m-2 p-4 d-flex flex-column align-items-start justify-content-center">
               <h1 className="mc-color text-uppercase fw-bold">
-                myceph - comprehensive clinical support tool
+                {t('myceph - comprehensive clinical support tool')}
               </h1>
               <img className="my-2" src="/assets/images/line_green.png" alt="img" width={200}/>
               <h4 className="mt-1 fst-italic" style={{fontSize:"18px",textAlign:"justify",color:"#53575d"}}>
                 {t('Developed based on orthodontic research, combined with collected data.')}
               </h4>
               <h4 className="mt-1 fst-italic" style={{fontSize:"18px",textAlign:"justify",color:"#53575d"}}>
-                {t('We have launched MyCeph - software that not only effectively supports doctors but also clinics. Help the clinic optimize work in patient management and monitoring.')}
+                {t('We build Ceph - software that not only effectively supports doctors but also clinics. Help the clinic optimize work in patient management and monitoring.')}
               </h4>
             </div>
           </div>
         </div>
         <div className="w-100 mt-5">
           <h1 className="text-center fw-bold mc-color text-uppercase">
-            {t('main features of the software')}
+            {t('the main features in the software')}
           </h1>
           <div className="w-100 d-flex justify-content-center align-items-center my-2">
             <img className="text-center" src="/assets/images/line_center.png" alt="img" width={300}/>
@@ -152,7 +152,7 @@ export default function HomePage(props) {
                   <img className="ms-1" src="/assets/images/encryption_icon.png" alt="img" height={60} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
-                  {t('Encryption')}
+                  {t('encryption')}
                 </h2>
                 <h3 className="fst-italic mt-3 px-3 text-white" style={{fontSize:"16px",textAlign:"justify"}}>
                   {t('The use of end-to-end encryption software is employed to protect patient information, including medical information, medical history, and other health-related information.')}
@@ -196,7 +196,7 @@ export default function HomePage(props) {
                   {t(SOFT_WARE_LIST.CALENDAR)}
                 </h2>
                 <h3 className="fst-italic mt-3 px-3 text-white" style={{fontSize:"16px",textAlign:"justify"}}>
-                  {t('Analysis of craniofacial films. Supports Steiner, Ricketts, Nagasaki analysis types. Quickly provide analytical results with high accuracy')}
+                  {t('Help orthodontic clinics to schedule patient appointments as well as manage costs for treatments. Statistics of services as well as calendar status by month or by patient')}
                 </h3>
               </div>
             </div>
@@ -204,7 +204,7 @@ export default function HomePage(props) {
         </div>
       </div>
       <div className="h-100" style={{
-        marginTop:"1400px",
+        marginTop:"1350px",
         backgroundImage: `url("/assets/images/intro_background.png")`,
         backgroundSize: 'cover',
       }}>
@@ -217,7 +217,7 @@ export default function HomePage(props) {
                 </h1>
                 <img className="my-2" src="/assets/images/line_green.png" alt="img" width={200}/>
                 <h4 className="mt-1 fst-italic" style={{fontSize:"18px",textAlign:"justify",color:"#53575d"}}>
-                  {t('Myceph - cephalometric software uses advanced image analysis technology to measure and analyze inclined film. This ensures that the analysis results provided are accurate and reliable')}
+                  {t('Myceph - cephalometric software uses advanced image analysis technology to measure and analyze inclined film. This ensures that the analysis results provided are accurate and reliable.')}
                 </h4>
                 <h4 className="mt-1 fst-italic" style={{fontSize:"18px",textAlign:"justify",color:"#53575d"}}>
                   {t('Myceph - cephalometric software is designed to be easy to use and user-friendly. It provides an intuitive graphical interface to help users easily select and enter patient information, and clearly displays analysis results.')}
@@ -245,7 +245,7 @@ export default function HomePage(props) {
           </div>
           <div className="mt-5">
             <h1 className="text-center fw-bold mc-color text-uppercase">
-              {t('Features under development')}
+              {t('the features being developed')}
             </h1>
             <div className="w-100 d-flex flex-column justify-content-center align-items-center my-2">
               <img src="/assets/images/line_center.png" alt="img" width={300}/>
@@ -290,7 +290,7 @@ export default function HomePage(props) {
                 </h2>
                 <div className="d-flex justify-content-start align-items-center mb-2">
                   <h5 className="me-2 text-capitalize text-white m-0">
-                    {t('product name:')}
+                    {t('product name')}:
                   </h5>
                   <span className="fw-bold mc-color text-uppercase">
                     {t('Dental Imaging Software')}
@@ -298,7 +298,7 @@ export default function HomePage(props) {
                 </div>
                 <div className="d-flex justify-content-start align-items-center mb-2">
                   <h5 className="me-2 text-capitalize text-white m-0">
-                    {t('Software Version:')}
+                    {t('Software Version')}:
                   </h5>
                   <span className="fw-bold mc-color text-uppercase">
                     1.0.0
@@ -306,7 +306,7 @@ export default function HomePage(props) {
                 </div>
                 <div className="d-flex justify-content-start align-items-center mb-2">
                   <h5 className="me-2 text-capitalize text-white m-0">
-                    {t('author of software:')}
+                    {t('author of software')}:
                   </h5>
                   <span className="fw-bold mc-color text-uppercase">
                     Nguyễn Xuân Nhất
@@ -315,7 +315,7 @@ export default function HomePage(props) {
               </div>
               <div className="col-md-6">
                 <p className="text-white fst-italic text-center d-flex align-items-center h-100" style={{fontSize:"18px"}}>
-                  {t('"This software is developed for research purposes and is inspired by Viceph software. And there is no use value in the market"')}
+                  "{t('The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product\'s concept includes design and norm data taken from Viceph software. The product has no value on the market.')}"
                 </p>
               </div>
             </div>
