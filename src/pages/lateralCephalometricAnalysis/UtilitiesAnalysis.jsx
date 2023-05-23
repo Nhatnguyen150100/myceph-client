@@ -85,12 +85,10 @@ const MARKER_POINT_LIST = {
 export default function UtilitiesAnalysis(props){
   const {t} = useTranslation();
   const dispatch = useDispatch();
-  const stageRef = useRef();
   const circleRef = useRef();
-  const [heightStage,setHeightStage] = useState(0);
-  const [widthStage,setWidthStage] = useState(0);
   const noteAnalysis = useSelector(state=>state.lateralCeph.noteAnalysis);
   const currentImageAnalysis = useSelector(state=>state.lateralCeph.currentImageAnalysis);
+  const isVisitableHelper = useSelector(state=>state.lateralCeph.isVisitableHelper);
 
   const [note,setNote] = useState();
 
@@ -99,15 +97,8 @@ export default function UtilitiesAnalysis(props){
     else setNote(noteAnalysis);
   },[noteAnalysis,currentImageAnalysis])
 
-  useEffect(()=>{
-    if(stageRef && (!heightStage || !widthStage)){
-      setHeightStage(stageRef.current.clientHeight);
-      setWidthStage(stageRef.current.clientWidth);
-    }
-  },[stageRef])
-
   const drawCircleNode = useMemo(()=>{
-    if(props.currentMarkerPoint && MARKER_POINT_LIST[props.currentMarkerPoint]){
+    if(props.currentMarkerPoint && props.currentMarkerPoint!=='C1' && props.currentMarkerPoint!=='C2' && isVisitableHelper && MARKER_POINT_LIST[props.currentMarkerPoint]){
       return <Circle 
         ref={circleRef}
         x={MARKER_POINT_LIST[props.currentMarkerPoint].x}
@@ -117,7 +108,7 @@ export default function UtilitiesAnalysis(props){
         opacity={1}
       />
     }else return null;
-  },[props.currentMarkerPoint])
+  },[props.currentMarkerPoint,isVisitableHelper])
 
   
   useEffect(()=>{
@@ -138,32 +129,32 @@ export default function UtilitiesAnalysis(props){
     <div className="py-1 px-3 mc-pale-background" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
       <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('Note for analysis')}</span>
     </div>
-    <div style={{height:"50%"}}>
+    <div className="h-100">
       <textarea onMouseLeave={()=>dispatch(setNoteAnalysis(note))} className="form-control h-100 text-gray" value={note} onChange={e=>setNote(e.target.value)} placeholder={t('Enter note for analysis')} rows={5} style={{fontSize:FONT_SIZE}}/>
     </div>
-    <div className="d-flex flex-grow-1 flex-column justify-content-start" ref={stageRef}>
-      <div className="py-1 px-3 mc-pale-background" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
-        <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('image helper for analysis')}</span>
+    {
+      props.currentMarkerPoint && props.currentMarkerPoint!=='C1' && props.currentMarkerPoint!=='C2' && isVisitableHelper && 
+      <div className="d-flex flex-grow-1 flex-column justify-content-start position-absolute end-0 bottom-0 mb-1 border me-1 bg-white">
+        <Stage
+          x={0}
+          y={0} 
+          height={346}
+          width={360}
+          offsetX={0}
+          offsetY={0}
+        >
+          <Layer>
+            <Image
+              x={0}
+              y={0}
+              height={348}
+              width={335}
+              image={imageHelper} 
+            />
+            {drawCircleNode}
+          </Layer>
+        </Stage>
       </div>
-      <Stage
-        x={0}
-        y={0} 
-        height={heightStage}
-        width={widthStage}
-        offsetX={0}
-        offsetY={0}
-      >
-        <Layer>
-          <Image
-            x={0}
-            y={0}
-            height={heightStage-10}
-            width={widthStage-10}
-            image={imageHelper} 
-          />
-          {props.currentMarkerPoint && drawCircleNode}
-        </Layer>
-      </Stage>
-    </div>
+    }
   </div>
 }

@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FONT_SIZE } from "./Utility.jsx";
 
 export default function SelectWithLabel(props){
+  const { t } = useTranslation();
   return <div className='d-flex mb-3 pb-1 border-bottom flex-grow-1'>
     <label className="text-capitalize mc-color fw-bold ms-2" style={props.style}>{props.label}:</label>
     {
@@ -13,14 +15,14 @@ export default function SelectWithLabel(props){
         value={props.value} 
         onChange={e=>props.onChange(e.target.value)}>
         {
-          !props.value && <option selected disabled={true}>no data</option>
+          !props.value && <option selected disabled={true}>{t('no data')}</option>
         }
         {props.children}
       </select>
       :
       <span 
         className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded d-flex align-items-center" 
-        style={{fontSize:FONT_SIZE}}>{props.value?props.value:'no data'}
+        style={{fontSize:FONT_SIZE}}>{props.value?t(props.value):t('no data')}
       </span>
     }
   </div>

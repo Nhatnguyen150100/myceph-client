@@ -226,14 +226,14 @@ export default function SharePatientSettingForClinic(props){
   return <div className="h-100 w-100 container">
     <fieldset className="border-top p-2 d-flex flex-row align-items-center h-100 pb-5">
       <legend style={{fontSize:FONT_SIZE_HEAD}} className="mx-auto mb-0 float-none w-auto px-2 text-uppercase mc-color fw-bold">
-        {t(`share patient setting for clinic`)}
+        {t(`Setting patient sharing for doctors`)}
       </legend>
       {
         clinic.roleOfDoctor==='admin'?
         <div className="row w-100 h-100 mt-4">
         <fieldset className="border rounded p-2 col-lg-6 col-sm-12 h-100">
           <legend style={{fontSize:FONT_SIZE_HEAD}} className="mx-auto mb-0 float-none w-auto px-2 text-uppercase mc-color fw-bold">
-            {t(`Doctor is shared patient`)}
+            {t(`Doctors are assigned shared patients`)}
           </legend>
           <div className="d-flex flex-row align-items-center border rounded p-1">
             <input 
@@ -259,7 +259,7 @@ export default function SharePatientSettingForClinic(props){
                       <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{doctor.gender?doctor.gender:t('no data')}</span>
                     </div>
                     <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_NAME}}>
-                      <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('birth day')}</span>
+                      <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>
                       <span style={{fontSize:FONT_SIZE}}>{doctor.birthday?convertISOToVNDateString(toISODateString(new Date(doctor.birthday))):t('no data')}</span>
                     </div>
                   </button>
@@ -279,7 +279,7 @@ export default function SharePatientSettingForClinic(props){
         </fieldset>
         <fieldset className="border rounded p-2 col-lg-6 col-sm-12">
           <legend style={{fontSize:FONT_SIZE_HEAD}} className="mx-auto mb-0 float-none w-auto px-2 text-uppercase mc-color fw-bold">
-            {t(`list patient is shared`)}
+            {t(`List of shared patients`)}
           </legend>
           <div className="position-relative d-flex flex-row align-items-center border rounded p-1">
             <input 
@@ -327,7 +327,7 @@ export default function SharePatientSettingForClinic(props){
                       <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyClinic.key,encryptKeyClinic.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
                     </div>
                     <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
-                      <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('birth day')}</span>
+                      <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>
                       <span style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(patient.birthday)))}</span>
                     </div>
                   </button>
@@ -357,11 +357,11 @@ export default function SharePatientSettingForClinic(props){
                     <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyClinic.key,encryptKeyClinic.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
                   </div>
                   <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
-                    <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('birth day')}</span>
+                    <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>
                     <span style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(patient.birthday)))}</span>
                   </div>
                   <div className="border-start mx-2 d-flex flex-column align-items-center justify-content-center ps-3">
-                    <span className="mc-color fw-bold text-capitalize" style={{fontSize:FONT_SIZE}}>{patient['SharePatients.roleOfOwnerDoctor']}</span>
+                    <span className="mc-color fw-bold text-capitalize" style={{fontSize:FONT_SIZE}}>{t(patient['SharePatients.roleOfOwnerDoctor'])}</span>
                     <div className="form-check form-switch d-flex justify-content-center">
                       <input 
                         className="form-check-input" 
@@ -376,7 +376,7 @@ export default function SharePatientSettingForClinic(props){
                     </div>
                   </div>
                   <div className="border-start mx-2 d-flex align-items-center justify-content-center">
-                    <IconButtonComponent className="btn-outline-danger border-0 h-100 ms-2" icon="delete" onClick={e=>removeSharePatient(patient['SharePatients.idSharedPatient'])} FONT_SIZE_ICON={"30px"} title={t("delete this doctor")}/>                 
+                    <IconButtonComponent className="btn-outline-danger border-0 h-100 ms-2" icon="delete" onClick={e=>removeSharePatient(patient['SharePatients.idSharedPatient'])} FONT_SIZE_ICON={"30px"} title={t("delete this patient")}/>                 
                   </div>
                 </div>
               })

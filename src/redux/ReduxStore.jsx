@@ -12,7 +12,8 @@ import PatientSlice from './PatientSlice.jsx';
 const persistConfig = {
 	key: 'root',
 	version: 1,
-	storage
+	storage,
+	blacklist: ['lateralCeph']
 };
 
 const rootReducer = combineReducers({doctor: DoctorSlice, general: GeneralSlice, clinic: ClinicSlice, patient: PatientSlice, libraryImage: LibraryImageSlice, calendar: CalendarSlice, lateralCeph: LateralCephSlice});

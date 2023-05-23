@@ -14,7 +14,8 @@ export const LateralCephSlice = createSlice({
     lengthOfRuler: 10,
     noteAnalysis: null,
     isVisitableMarkerPoints: true,
-    isVisitableAnalysisLines: true
+    isVisitableAnalysisLines: true,
+    isVisitableHelper: true
   },
   reducers: {
     setMarkerPoints: (state,action) => {
@@ -47,6 +48,9 @@ export const LateralCephSlice = createSlice({
     setVisitableAnalysisLines: (state,action) => {
       state.isVisitableAnalysisLines = action.payload;
     },
+    setIsVisitableHelper: (state,action) => {
+      state.isVisitableHelper = action.payload;
+    },
     clearLateralCephSlice: (state) => {
       state.markerPoints = {};
       state.currentAnalysis = ANALYSIS.STEINER.name;
@@ -58,6 +62,7 @@ export const LateralCephSlice = createSlice({
       state.noteAnalysis = null;
       state.isVisitableMarkerPoints = true;
       state.isVisitableAnalysisLines = true;
+      state.isVisitableHelper = true;
     }
   }
 })
@@ -65,7 +70,7 @@ export const LateralCephSlice = createSlice({
 export const {
   setCurrentAnalysis, setCurrentNorm, clearLateralCephSlice,setMarkerPoints,
   setListImageFontSide,setCurrentImageAnalysis,setScaleImage,setLengthOfRuler,setNoteAnalysis,
-  setVisitableMarkerPoints,setVisitableAnalysisLines
+  setVisitableMarkerPoints,setVisitableAnalysisLines,setIsVisitableHelper
 } = LateralCephSlice.actions;
 
 export default LateralCephSlice.reducer;

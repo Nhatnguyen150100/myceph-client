@@ -42,7 +42,7 @@ export default function Setting(props){
   return <div className="d-flex flex-column justify-content-start align-items-center h-100">
     <NavbarComponent />
     <div className="d-flex flex-column h-100 container">
-      <div className="d-flex w-100 justify-content-start align-items-center my-2">
+      <div className="d-flex w-100 justify-content-start align-items-center my-3">
         {
           selectedTab === 0 ? 
           <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white d-flex flex-row align-items-end justify-content-start' style={{height:FONT_SIZE_ICONS}}>

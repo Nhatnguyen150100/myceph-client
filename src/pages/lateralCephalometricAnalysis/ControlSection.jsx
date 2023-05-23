@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
-import { setCurrentImageAnalysis, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setNoteAnalysis, setScaleImage, setVisitableAnalysisLines, setVisitableMarkerPoints } from "../../redux/LateralCephSlice.jsx";
+import { setCurrentImageAnalysis, setIsVisitableHelper, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setNoteAnalysis, setScaleImage, setVisitableAnalysisLines, setVisitableMarkerPoints } from "../../redux/LateralCephSlice.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -27,6 +27,7 @@ const ControlSection = React.memo((props) => {
   const noteAnalysis = useSelector(state=>state.lateralCeph.noteAnalysis);
   const isVisitableMarkerPoints = useSelector(state=>state.lateralCeph.isVisitableMarkerPoints);
   const isVisitableAnalysisLines = useSelector(state=>state.lateralCeph.isVisitableAnalysisLines);
+  const isVisitableHelper = useSelector(state=>state.lateralCeph.isVisitableHelper);
 
   const dispatch = useDispatch();
   const {t} = useTranslation();
@@ -233,7 +234,7 @@ const ControlSection = React.memo((props) => {
             <span className="fw-bold mc-color ms-2" style={{fontSize:FONT_SIZE}}>
               C1
             </span>
-            <select className="form-select mx-2" value={lengthOfRuler} onChange={e=>{dispatch(setLengthOfRuler(e.target.value))}}>
+            <select className="form-select mx-2 w-auto" value={lengthOfRuler} onChange={e=>{dispatch(setLengthOfRuler(e.target.value))}}>
               <option value={10} className="text-gray" style={{fontSize:FONT_SIZE}}>
                 10 mm
               </option>
@@ -423,6 +424,18 @@ const ControlSection = React.memo((props) => {
           </button>
         </ul>
       </div>
+      <button 
+        type="button" 
+        className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded"
+        onClick={()=>{
+          if(isVisitableHelper) dispatch(setIsVisitableHelper(false));
+          else dispatch(setIsVisitableHelper(true));
+        }}
+      >
+        <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
+          {isVisitableHelper?'auto_fix_normal':'auto_fix_off'}
+        </span>
+      </button>
       <button 
         type="button" 
         className="btn btn-outline-success border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded"
