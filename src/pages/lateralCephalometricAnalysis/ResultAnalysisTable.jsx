@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { deCryptData } from "../../common/Crypto.jsx";
 import { FONT_SIZE, FONT_SIZE_HEAD, getKeyByNameValue, getKeyByValue, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
-import { setCurrentAnalysis, setCurrentNorm, setHighLightIndicator } from "../../redux/LateralCephSlice.jsx";
-import { ANALYSIS, PREDEFINED_NORMS } from "./LateralCephalometricUtility.jsx";
+import { setCurrentAnalysis, setCurrentNorm } from "../../redux/LateralCephSlice.jsx";
+import { ANALYSIS } from "./LateralCephalometricUtility.jsx";
+import PREDEFINED_NORMS from '../../mocks/Norms.json';
 
 export default function ResultAnalysisTable(props) {
   const {t} = useTranslation();

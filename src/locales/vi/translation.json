@@ -310,6 +310,12 @@
   "This technique helps to reduce time and effort for dental professionals, while increasing the accuracy and reliability of the diagnostic evaluation process. AI can detect and mark necessary points on the image, such as tooth positions, angles, and jawbone sections. This helps dentists to easily identify the condition of the dental arch and adjust the treatment plan more accurately. In addition, the use of AI also helps to save time and reduce errors in the evaluation process, ensuring a safe and effective treatment process for patients.": "Kỹ thuật này giúp giảm thiểu thời gian và công sức cho các chuyên gia nha khoa, đồng thời tăng độ chính xác và độ tin cậy của quá trình đánh giá chẩn đoán. AI có thể phát hiện và đánh dấu những điểm cần thiết trên ảnh như vị trí răng, góc độ, phần xương hàm. Điều này giúp nha sĩ dễ dàng xác định tình trạng cung răng và điều chỉnh kế hoạch điều trị chính xác hơn. Ngoài ra, việc sử dụng AI còn giúp tiết kiệm thời gian, giảm sai sót trong quá trình đánh giá, đảm bảo quá trình điều trị an toàn và hiệu quả cho bệnh nhân.",
   "The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product's concept includes design and norm data taken from Viceph software. The product has no value on the market.": "Phần mềm Myceph - Cephalometric là chương trình do sinh viên tạo ra nhằm mục đích nghiên cứu và hoàn thành luận văn tốt nghiệp. Ý tưởng của sản phẩm bao gồm dữ liệu thiết kế và bộ giá trị tham khảo được tham khảo từ phần mềm Viceph. Sản phẩm không có giá trị trên thị trường.",
   "product name": "tên sản phẩm",
+  "Failed to fetch": "Không thể kết nối tới server",
+  "login by google": "Đăng nhập bằng google",
   "Software Version": "phiên bản phần mềm",
-  "author of software": "tác giả phần mềm"
+  "author of software": "tác giả phần mềm",
+  "Doctor record management": "Quản lý hồ sơ bác sĩ",
+  "Doctor record management helps clinics easily manage members and positions of each doctor in the clinic": "Quản lý hồ sơ bác sĩ giúp phòng khám dễ dàng quản lý thành viên cũng như chức vụ của từng bác sĩ trong phòng khám",
+  "Sharing patient records": "Chia sẻ hồ sơ bệnh nhân",
+  "Sharing patient records among the clinic and between different doctors helps doctors easily access, discuss the patient's condition and provide appropriate treatment methods": "Chia sẻ hồ sơ bệnh nhân trong phòng khám và giữa các bác sĩ khác nhau giúp các bác sĩ dễ dàng tiếp cận, thảo luận về tình trạng bệnh và đưa ra phương pháp điều trị phù hợp"
 }

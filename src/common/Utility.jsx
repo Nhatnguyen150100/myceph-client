@@ -10,6 +10,7 @@ import { clearCalendarSlice } from '../redux/CalendarSlice.jsx';
 import { toast } from 'react-toastify';
 import { deCryptData } from './Crypto.jsx';
 import { clearLateralCephSlice } from '../redux/LateralCephSlice.jsx';
+import { CLOUDINARY_BASE_URL, CLOUDINARY_KEY, CLOUDINARY_SECRET } from '../config/Cloudinary.jsx';
 const { Buffer } = require('buffer');
 
 // Đảm bảo rằng đối tượng Buffer được định nghĩa đúng cách trong môi trường trình duyệt
@@ -18,12 +19,6 @@ if (typeof window !== 'undefined') {
 }
 
 export const cookies = new Cookies();
-
-export const SITE_KEY_RECAPTCHA = '6LdjIm8kAAAAAFhR2XpewgD4_t-aSsES5cTjNr5L';
-export const CLOUDINARY_NAME = 'dvzgiho5t';
-export const CLOUDINARY_KEY = '621123368244999';
-export const CLOUDINARY_SECRET = 'bg5jrQ0D-YvLgDTDU1fKtFqCyMI';
-export const CLOUDINARY_BASE_URL = 'https://api.cloudinary.com/v1_1/dvzgiho5t';
 
 export const WIDTH_HEAD = "150px";
 export const WIDTH_CHILD = "300px";
@@ -39,11 +34,14 @@ export const FONT_SIZE_HEADER = '17px';
 export const SIZE_IMAGE_IN_RECORD = '170px'
 
 export const SOFT_WARE_LIST = {
+  SHARE_PATIENT: 'Sharing patient records',
+  DOCTOR_MANAGEMENT: 'Doctor record management',
   MEDICAL_RECORD: 'Medical Record',
   IMAGE_LIBRARY: 'Image Library',
   LATERALCEPH: 'LateralCeph',
   CALENDAR: 'Calendar',
-  DISCUSSION: 'Discussion'
+  DISCUSSION: 'Discussion',
+  CALCULATOR_TOOTH_MOVEMENT:"Calculator tooth movement"
 }
 
 export const VIEW_CALENDAR = {
@@ -454,10 +452,22 @@ export const getImage = (url) => {
   })
 }
 
+/**
+ * todo: Tìm key của object dựa vào value
+ * @param {*} object 
+ * @param {*} value 
+ * @returns 
+ */
 export const getKeyByValue = (object, value) => {
   return Object.keys(object).find(key => object[key] === value);
 }
 
+/**
+ * todo: Tìm key của object dựa vào value
+ * @param {*} object 
+ * @param {*} value 
+ * @returns 
+ */
 export const getKeyByNameValue = (object, value) => {
   return Object.keys(object).find(key => object[key].name === value);
 }

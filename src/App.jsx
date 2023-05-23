@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Routes, Route } from 'react-router-dom';
+import CalculatorToothMovement from "./pages/CalculatorToothMovement/CalculatorToothMovement.jsx";
 import Discussion from "./pages/discussion/Discussion.jsx";
 import LateralCeph from "./pages/lateralCephalometricAnalysis/LateralCeph.jsx";
 const ForgotPassword = lazy(() => import('./auth/ForgotPassword.jsx'));
@@ -22,17 +23,18 @@ function App() {
     }>
       <Routes>
         <Route path="*" element={<NotFoundPage />}/>
-        <Route path="/" exact element={<HomePage />}/>
-        <Route path="/login" exact element={<Login />}/>
-        <Route path="/register" exact element={<Register />}/>
-        <Route path="/forgotPassword" exact element={<ForgotPassword />}/>
-        <Route path="/setting" exact element={<Setting />}/>
-        <Route path="/patientListManagement" exact element={<PatientList />}/>
-        <Route path="/medicalRecord" exact element={<MedicalRecord />}/>
-        <Route path="/libraryImagesManagement" exact element={<LibraryImages />}/>
-        <Route path="/schedule" exact element={<BigCalendar />}/>
-        <Route path="/discussion" exact element={<Discussion />}/>
-        <Route path="/lateralCeph" exact element={<LateralCeph />}/>
+        <Route path="/" element={<HomePage />}/>
+        <Route path="/login" element={<Login />}/>
+        <Route path="/register" element={<Register />}/>
+        <Route path="/forgotPassword" element={<ForgotPassword />}/>
+        <Route path="/setting" element={<Setting />}/>
+        <Route path="/patientListManagement" element={<PatientList />}/>
+        <Route path="/medicalRecord" element={<MedicalRecord />}/>
+        <Route path="/libraryImagesManagement" element={<LibraryImages />}/>
+        <Route path="/schedule" element={<BigCalendar />}/>
+        <Route path="/discussion" element={<Discussion />}/>
+        <Route path="/lateralCeph" element={<LateralCeph />}/>
+        <Route path="/calculatorTooth" element={<CalculatorToothMovement />} />
       </Routes>
     </Suspense>
   );

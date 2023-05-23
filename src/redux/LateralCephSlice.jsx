@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ANALYSIS, PREDEFINED_NORMS } from "../pages/lateralCephalometricAnalysis/LateralCephalometricUtility.jsx";
+import { ANALYSIS } from "../pages/lateralCephalometricAnalysis/LateralCephalometricUtility.jsx";
+import PREDEFINED_NORMS from '../mocks/Norms.json'
 
 export const LateralCephSlice = createSlice({
   name: 'LateralCeph',

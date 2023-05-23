@@ -5,10 +5,11 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import NavbarComponent from '../components/NavbarComponent.jsx';
 import { useTranslation } from 'react-i18next';
-import { isValidEmail, SITE_KEY_RECAPTCHA } from '../common/Utility.jsx';
+import { isValidEmail } from '../common/Utility.jsx';
 import { useDispatch } from 'react-redux';
 import { setAppName } from '../redux/GeneralSlice.jsx';
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { SITE_KEY_RECAPTCHA } from '../config/GoogleReCAPTCHA.jsx';
 
 function RegisterPage(props) {
   const [email, setEmail] = useState('');

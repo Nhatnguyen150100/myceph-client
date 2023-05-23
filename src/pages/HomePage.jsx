@@ -71,9 +71,10 @@ export default function HomePage(props) {
       <img className="position-absolute start-0 " src="/assets/images/technology_place.png" alt="img" height={580}/>
       <img className="position-absolute" src="/assets/images/background_technology.png" alt="img" width={700} style={{top:"450px",left:"-100px",opacity:"85%"}}/>
       <img className="position-absolute" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"800px",right:"0px"}}/>
-      <img className="position-absolute" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"2600px",left:"0px"}}/>
+      <img className="position-absolute" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"3000px",left:"0px"}}/>
+      <img className="position-absolute" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"1500px",left:"-140px"}}/>
       <div className="container h-100 position-relative">
-        <img className="position-absolute translate-middle" src="/assets/images/medical_technology.png" alt="img" height={500} style={{right:"-180px",top:"330px"}}/>
+        <img className="position-absolute translate-middle" src="/assets/images/medical_technology.png" alt="img" height={550} style={{right:"-235px",top:"330px"}}/>
         <div className="d-flex flex-grow-1 justify-content-start">
           <div className="d-flex flex-column align-items-end justify-content-center" style={{marginTop:"100px", marginLeft:"20px"}}>
             <img src="/assets/images/teeth.png" alt="teeth" height={80}/>
@@ -190,6 +191,32 @@ export default function HomePage(props) {
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
+                  <img src="/assets/images/doctor_homepage.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
+                </div>
+                <h2 className="my-3 text-uppercase fw-bold text-center text-white">
+                  {t(SOFT_WARE_LIST.DOCTOR_MANAGEMENT)}
+                </h2>
+                <h3 className="fst-italic mt-3 px-3 text-white" style={{fontSize:"16px",textAlign:"justify"}}>
+                  {t('Doctor record management helps clinics easily manage members and positions of each doctor in the clinic')}
+                </h3>
+              </div>
+            </div>
+            <div className="col-md-4 px-3 mt-5">
+              <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
+                <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
+                  <img src="/assets/images/patient-100.png" alt="img" height={90} style={{backgroundSize:"cover"}}/>
+                </div>
+                <h2 className="my-3 text-uppercase fw-bold text-center text-white">
+                  {t(SOFT_WARE_LIST.SHARE_PATIENT)}
+                </h2>
+                <h3 className="fst-italic mt-2 px-3 text-white" style={{fontSize:"16px",textAlign:"justify"}}>
+                  {t('Sharing patient records among the clinic and between different doctors helps doctors easily access, discuss the patient\'s condition and provide appropriate treatment methods')}
+                </h3>
+              </div>
+            </div>
+            <div className="col-md-4 px-3 mt-5">
+              <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
+                <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
                   <img src="/assets/images/calendar_homepage.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
@@ -204,7 +231,7 @@ export default function HomePage(props) {
         </div>
       </div>
       <div className="h-100" style={{
-        marginTop:"1350px",
+        marginTop:"1850px",
         backgroundImage: `url("/assets/images/intro_background.png")`,
         backgroundSize: 'cover',
       }}>
