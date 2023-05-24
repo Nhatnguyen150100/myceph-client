@@ -188,15 +188,15 @@ const AppointmentModal = (props) => {
   }
 
   return <div className="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={'-1'} aria-labelledby="staticBackdropLabel" aria-hidden="true" ref={appointmentModelRef}>
-    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div className="modal-content">
         <div className="modal-header">
-          <h1 className="modal-title fs-3 text-center w-100 mc-color fw-bold" id="staticBackdropLabel">{props.createAppointment?t('Create Appointment'):t('Appointment')}</h1>
+          <h1 className="modal-title fs-3 text-center w-100 mc-color fw-bold text-capitalize" id="staticBackdropLabel">{props.createAppointment?t('create appointment'):t('appointment')}</h1>
         </div>
         <div className="modal-body col">
           <div className="d-flex flex-column justify-content-center align-items-start">
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
-              <span className="mc-heading text-capitalize">{t("Patient")}:</span>
+              <span className="mc-heading text-capitalize">{t("patient")}:</span>
               <select 
                 className="form-select w-100 text-gray" 
                 style={{fontSize:FONT_SIZE}} 
@@ -219,7 +219,7 @@ const AppointmentModal = (props) => {
               </select>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
-              <span className="mc-heading text-capitalize">{t("Doctor")}:</span>
+              <span className="mc-heading text-capitalize">{t("doctor")}:</span>
               <select 
                 className="form-select w-100 text-gray" 
                 style={{fontSize:FONT_SIZE}} 
@@ -242,7 +242,7 @@ const AppointmentModal = (props) => {
               </select>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
-              <span className="mc-heading text-capitalize">{t("Status of clinic")}:</span>
+              <span className="mc-heading text-capitalize">{t("status of clinic")}:</span>
               <div className="d-flex flex-row align-items-center">
                 {
                   statusSelected && <input style={{ outline:"none" }} className="border-0 p-0 rounded me-3" type={'color'} value={(findObjectFromArray(statusOfClinic,statusSelected).colorStatus)} disabled />
@@ -270,7 +270,7 @@ const AppointmentModal = (props) => {
               </div>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
-              <span className="mc-heading text-capitalize">{t("Rooms of clinic")}:</span>
+              <span className="mc-heading text-capitalize">{t("room of clinic")}:</span>
               <div className="d-flex flex-row align-items-center">
                 {
                   roomSelected && <input style={{ outline:"none" }} className="border-0 p-0 rounded me-3" type={'color'} value={(findObjectFromArray(roomOfClinic,roomSelected).colorRoom)} disabled />
@@ -298,7 +298,7 @@ const AppointmentModal = (props) => {
               </div>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
-              <span className="mc-heading text-capitalize">{t("Services of clinic")}:</span>
+              <span className="mc-heading text-capitalize">{t("service of clinic")}:</span>
               <div className="d-flex flex-row align-items-center">
                 {
                   serviceSelected && <input style={{ outline:"none" }} className="border-0 p-0 rounded me-3" type={'color'} value={(findObjectFromArray(servicesOfClinic,serviceSelected).colorService)} disabled />
@@ -334,16 +334,16 @@ const AppointmentModal = (props) => {
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-row mb-4 align-items-center justify-content-between">
               <div className="d-flex flex-column align-items-start justify-content-center">
-                <span className="mc-heading text-capitalize">{t("Time start")}:</span>
+                <span className="mc-heading text-capitalize">{t("time start")}:</span>
                 <input className="mc-gray form-control" type={'time'} value={timeStart?timeStart:''} onChange={e=>setTimeStart(e.target.value)} min={'08:00'} max={'18:00'} disabled={clinic.roleOfDoctor==='member'}/>
               </div>
               <div className="d-flex flex-column align-items-start justify-content-center">
-                <span className="mc-heading text-capitalize">{t("Time end")}:</span>
+                <span className="mc-heading text-capitalize">{t("time end")}:</span>
                 <input className="mc-gray form-control" type={'time'} value={timeEnd?timeEnd:''} onChange={e=>setTimeEnd(e.target.value)} min={'08:00'} max={'18:00'} disabled={clinic.roleOfDoctor==='member'}/>
               </div>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-2">
-              <span className="mc-heading text-capitalize">{t("Note for appointment")}:</span>
+              <span className="mc-heading text-capitalize">{t("note for appointment")}:</span>
               <textarea className="text-gray form-control" placeholder={t('Note something for schedule ...')} style={{fontSize:FONT_SIZE}} value={note} onChange={e=>setNote(e.target.value)} disabled={clinic.roleOfDoctor==='member'}/>
             </div>
           </div>
@@ -370,7 +370,7 @@ const AppointmentModal = (props) => {
                   <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
                     close
                   </span>
-                  <span>{t('Close')}</span>
+                  <span className="text-capitalize">{t('close')}</span>
                 </button>
                 {
                   clinic.roleOfDoctor!=='member' && <button type="button" className="btn btn-primary d-flex align-items-center py-2 px-3" 
@@ -382,7 +382,7 @@ const AppointmentModal = (props) => {
                     <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
                       {props.createAppointment?'save':'update'}
                     </span>
-                    <span>{props.createAppointment?t('Save'):t('Update')}</span>
+                    <span className="text-capitalize">{props.createAppointment?t('save'):t('update')}</span>
                   </button>
                 }
               </div>

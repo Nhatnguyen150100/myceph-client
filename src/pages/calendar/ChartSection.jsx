@@ -66,7 +66,6 @@ export default function ChartSection(props){
       },
     },
   };
-  
 
   const data = useMemo(()=>{
     if(typeChart==='idService' && propertiesClinic){
@@ -136,12 +135,12 @@ export default function ChartSection(props){
           {t('Fourth quarter')}
         </option>
       </SelectFieldInput>
-      <SelectFieldInput legend={t('Type chart')} fontSize={FONT_SIZE} onChange={value=>setTypeChart(value)}>
+      <SelectFieldInput legend={t('Statistics by')} fontSize={FONT_SIZE} onChange={value=>setTypeChart(value)}>
         <option value={'idService'}>
-          {t('Service of clinic')}
+          {t('service of clinic')}
         </option>
         <option value={'idStatus'}>
-          {t('Status of clinic')}
+          {t('status of clinic')}
         </option>
       </SelectFieldInput>
     </div>

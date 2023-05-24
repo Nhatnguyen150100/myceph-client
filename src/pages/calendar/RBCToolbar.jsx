@@ -97,7 +97,7 @@ function RBCToolbar(props) {
                 keyboard_double_arrow_left
               </span>
               <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
-                {t('Back')}
+                {t('back')}
               </span>
             </button>
             <button type="button" className="btn btn-success py-1 px-2 rounded d-flex align-items-center mx-2" onClick={goToToday}>
@@ -105,7 +105,7 @@ function RBCToolbar(props) {
                 today
               </span>
               <span className="fw-bold text-capitalize" style={{fontSize:FONT_SIZE}}>
-                {t('Today')}
+                {t('today')}
               </span>
             </button>
             <button type="button" className="btn btn-primary py-1 px-2 rounded d-flex align-items-center" onClick={goToNext}>
@@ -113,7 +113,7 @@ function RBCToolbar(props) {
               keyboard_double_arrow_right
               </span>
               <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
-                {t('Next')}
+                {t('next')}
               </span>
             </button>
           </span>
@@ -124,7 +124,7 @@ function RBCToolbar(props) {
                 date_range
               </span>
               <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
-                {t('View Week')}
+                {t('view week')}
               </span>
             </button>
             <button type="button" disabled={viewCalendar===Views.DAY} className={`btn ${viewCalendar===Views.DAY?'mc-pale-background border-0':'btn-primary'} py-1 px-2 rounded d-flex align-items-center`} onClick={goToDayView}>
@@ -132,7 +132,7 @@ function RBCToolbar(props) {
                 calendar_today
               </span>
               <span className="fw-bold text-capitalize text-white" style={{fontSize:FONT_SIZE}}>
-                {t('View Day')}
+                {t('view day')}
               </span>
             </button>
           </span>
