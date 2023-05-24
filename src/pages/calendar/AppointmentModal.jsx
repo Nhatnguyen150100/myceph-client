@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
-import { findObjectFromArray, FONT_SIZE, getHoursMinutesSeconds, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
+import { findObjectFromArray, FONT_SIZE, forMatMoneyVND, getHoursMinutesSeconds, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { toast } from "react-toastify";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
@@ -30,6 +30,7 @@ const AppointmentModal = (props) => {
   const [doctorSelected,setDoctorSelected] = useState();
   const [patientSelected,setPatientSelected] = useState();
   const [serviceSelected,setServiceSelected] = useState();
+  const [priceService,setPriceService] = useState();
   const [roomSelected,setRoomSelected] = useState();
   const [statusSelected,setStatusSelected] = useState();
   const [appointmentDate,setAppointmentDate] = useState(toISODateString(new Date()));
@@ -46,10 +47,12 @@ const AppointmentModal = (props) => {
       setTimeEnd(getHoursMinutesSeconds(props.slotInfo.end));
     }
     if(!props.createAppointment && props.slotInfo){
+      console.log("🚀 ~ file: AppointmentModal.jsx:50 ~ useEffect ~ props.slotInfo:", props.slotInfo)
       setDoctorSelected(props.slotInfo.doctor.idDoctor);
       setPatientSelected(props.slotInfo.idPatient);
       setServiceSelected(props.slotInfo.service.idService);
       setStatusSelected(props.slotInfo.status.idStatus);
+      setPriceService(props.slotInfo.service.priceService);
       setNote(props.slotInfo.note);
     }
   },[props.slotInfo,props.createAppointment])
@@ -69,6 +72,7 @@ const AppointmentModal = (props) => {
       setRoomSelected();
       setAppointmentDate(toISODateString(new Date()));
       setStatusSelected();
+      setPriceService();
       setNote('');
     } 
   },[props.showAppointmentModal])
@@ -303,7 +307,10 @@ const AppointmentModal = (props) => {
                   className="form-select text-gray" 
                   style={{fontSize:FONT_SIZE}} 
                   value={serviceSelected} 
-                  onChange={e=>setServiceSelected(e.target.value)}
+                  onChange={e=>{
+                    setServiceSelected(e.target.value)
+                    setPriceService(findObjectFromArray(servicesOfClinic,e.target.value)?.priceService)
+                  }}
                   disabled={clinic.roleOfDoctor==='member'}
                 >
                   {
@@ -314,10 +321,10 @@ const AppointmentModal = (props) => {
                   {
                     servicesOfClinic?.map((value,_)=>{
                     return <option key={value.id} value={value.id}>
-                      {value.nameService}
-                    </option>
-                  })
-                }
+                        {value.nameService}
+                      </option>
+                    })
+                  }
                 </select>
               </div>
             </div>
@@ -342,34 +349,44 @@ const AppointmentModal = (props) => {
           </div>
         </div>
         <div className={`modal-footer d-flex flex-row align-items-center ${props.createAppointment?'justify-content-end':'justify-content-between'}`}>
-          {
-            !props.createAppointment && clinic.roleOfDoctor!=='member' && <button type="button" className="btn btn-danger d-flex align-items-center py-2 px-3" data-bs-dismiss="modal" onClick={()=>setOpenDeleteConfirm(true)}>
-              <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
-                delete
-              </span>
-              <span className="text-capitalize">delete</span>
-            </button>
-          }
-          <div className="d-flex flex-row">
-            <button type="button" className="btn btn-secondary d-flex align-items-center py-2 px-3 me-2" data-bs-dismiss="modal" onClick={props.closeModal}>
-              <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
-                close
-              </span>
-              <span>{t('Close')}</span>
-            </button>
+          <div className="d-flex flex-column justify-content-center align-items-start mb-2 w-100">
             {
-              clinic.roleOfDoctor!=='member' && <button type="button" className="btn btn-primary d-flex align-items-center py-2 px-3" 
-                onClick={()=>{ 
-                  if(props.createAppointment) createAppointment()
-                  else updateAppointment()
-                }}
-              >
-                <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
-                  {props.createAppointment?'save':'update'}
-                </span>
-                <span>{props.createAppointment?t('Save'):t('Update')}</span>
-              </button>
+              priceService && <div className="d-flex flex-row justify-content-center align-items-center mb-2">
+                <span className="text-capitalize fw-bold mc-color" style={{fontSize:"18px"}}>{t('total payment')}:</span>
+                <span className="ms-2 text-primary" style={{fontSize:"16px"}}>{forMatMoneyVND(priceService)}</span>
+              </div>
             }
+            <div className={`d-flex flex-row w-100 ${(!props.createAppointment && clinic.roleOfDoctor!=='member')?'justify-content-between':'justify-content-end'}`}>
+              {
+                !props.createAppointment && clinic.roleOfDoctor!=='member' && <button type="button" className="btn btn-danger d-flex align-items-center py-2 px-3" data-bs-dismiss="modal" onClick={()=>setOpenDeleteConfirm(true)}>
+                  <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
+                    delete
+                  </span>
+                  <span className="text-capitalize">delete</span>
+                </button>
+              }
+              <div className="d-flex align-items-center">
+                <button type="button" className="btn btn-secondary d-flex align-items-center py-2 px-3 me-2" data-bs-dismiss="modal" onClick={props.closeModal}>
+                  <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
+                    close
+                  </span>
+                  <span>{t('Close')}</span>
+                </button>
+                {
+                  clinic.roleOfDoctor!=='member' && <button type="button" className="btn btn-primary d-flex align-items-center py-2 px-3" 
+                    onClick={()=>{ 
+                      if(props.createAppointment) createAppointment()
+                      else updateAppointment()
+                    }}
+                  >
+                    <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
+                      {props.createAppointment?'save':'update'}
+                    </span>
+                    <span>{props.createAppointment?t('Save'):t('Update')}</span>
+                  </button>
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>

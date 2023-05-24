@@ -154,14 +154,14 @@ export default function OtherProfile(props){
             <div className={`d-flex mb-3 `}>
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('gender')}:</label>
               <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{gender?gender:'no data'}</span>
-              <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('birth of day')}:</label>   
+              <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('date of birth')}:</label>   
               <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(birthday?birthday:new Date())))}</span>
             </div>
             <div className={`d-flex mb-3 `}>
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
               <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumber?phoneNumber:'no data'}</span>
               <div className="d-flex flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
-                <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('speciality')}:</label>
+                <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('specialty')}:</label>
                 <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{speciality?speciality:'no data'}</span>
               </div>
             </div>

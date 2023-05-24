@@ -42,8 +42,8 @@ export default function DoctorRows(props){
     <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>
       {props.doctor.birthday?convertISOToVNDateString(toISODateString(new Date(props.doctor.birthday))):t('no data')}
     </td>
-    <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>
-      {props.doctor.gender?props.doctor.gender:t('no data')}
+    <td className={`d-lg-table-cell d-none text-capitalize ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>
+      {props.doctor.gender?t(props.doctor.gender):t('no data')}
     </td>
     <td className={`d-lg-table-cell ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`}>
       <div className="form-check form-switch d-flex justify-content-center">

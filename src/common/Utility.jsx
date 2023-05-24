@@ -311,6 +311,15 @@ export const convertAppointmentDateToEvents = (listAppointmentDate) => {
   return event;
 }
 
+/**
+ * todo: format số sang tiền Việt Nam
+ * @param {*} money số tiền
+ * @returns tiền Việt Nam
+ */
+export const forMatMoneyVND = (money) => {
+  return money.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
+}
+
 export async function readPEMFile(filePath) {
   try {
     const response = await axios.get(filePath);

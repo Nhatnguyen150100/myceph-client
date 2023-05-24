@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
-import { FONT_SIZE } from "../../../common/Utility.jsx";
+import { FONT_SIZE, forMatMoneyVND } from "../../../common/Utility.jsx";
 import SelectPatientComponent from "../../../components/SelectPatientComponent.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
@@ -22,9 +22,12 @@ export default function ServicesSetting(props){
   const [arrayServices,setArrayServices] = useState([]);
   const [newService,setNewService] = useState('');
   const [colorService,setColorService] = useState('#ffffff');
+  const [priceService,setPriceService] = useState();
+
   const [editServiceId,setEditServiceId] = useState('');
   const [editNameService,setEditNameService] = useState();
   const [editColorService,setEditColorService] = useState();
+  const [editPriceService,setEditPriceService] = useState();
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
   useEffect(()=>{
@@ -55,11 +58,13 @@ export default function ServicesSetting(props){
         dispatch(setLoadingModal(true));
         postToServerWithToken(`/v1/servicesOfClinic/${clinic.idClinicDefault}`,{
           nameService: newService,
-          colorService: colorService
+          colorService: colorService,
+          priceService: priceService
         }).then(result => {
           setArrayServices(result.data);
           setNewService('');
           setColorService('#ffffff');
+          setPriceService('');
           toast.success(t(result.message));
           resolve();
         }).catch((err) => {
@@ -80,12 +85,14 @@ export default function ServicesSetting(props){
       putToServerWithToken(`/v1/servicesOfClinic/${clinic.idClinicDefault}`,{
         idService: editServiceId,
         nameService: editNameService,
-        colorService: editColorService
+        colorService: editColorService,
+        priceService: editPriceService
       }).then(result => {
         setArrayServices(result.data);
         setEditColorService('');
         setEditNameService('');
         setEditServiceId('');
+        setEditPriceService();
         toast.success(t(result.message));
         resolve();
       }).catch((err) => {
@@ -107,6 +114,7 @@ export default function ServicesSetting(props){
         setEditColorService('');
         setEditNameService('');
         setEditServiceId('');
+        setEditPriceService();
         toast.success(t(result.message));
         resolve();
       }).catch((err) => {
@@ -154,6 +162,20 @@ export default function ServicesSetting(props){
               <input type="color" disabled={clinic.roleOfDoctor!=='admin'} className="border-0 p-0" style={{ outline: "none" }} value={colorService} onChange={e=>setColorService(e.target.value)}/>
             </div>
           </th>
+          <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE,minWidth:"100px"}}>
+            <div className={`d-flex flex-column align-items-center justify-content-center`} >
+              <span className="text-white fw-bold" style={{fontSize:FONT_SIZE}}>{t("price")}</span>
+              <input 
+                type="number" 
+                disabled={clinic.roleOfDoctor!=='admin'} 
+                className="border-0 px-2 py-1 rounded" 
+                style={{ outline: "none" }} 
+                onKeyDown={e=>{if(e.key === "Enter") createService()}}  
+                value={priceService} 
+                onChange={e=>setPriceService(e.target.value)}
+              />
+            </div>
+          </th>
           <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE, minWidth:"150px"}}>
             <IconButtonComponent className={`btn-success h-100 ${clinic.roleOfDoctor==='admin' && 'standout'}`} onClick={createService} icon="add" FONT_SIZE_ICON={"25px"} title={t("add new service")} disabled={clinic.roleOfDoctor!=='admin'}/>
           </th>
@@ -181,6 +203,22 @@ export default function ServicesSetting(props){
               <td className="d-lg-table-cell d-none">
                 <input type="color" disabled={editServiceId!==service.id} className="border-0" style={{ outline: "none" }} value={editServiceId!==service.id?service.colorService:editColorService} onChange={e=>setEditColorService(e.target.value)}/>
               </td>
+              <td className="d-lg-table-cell d-none">
+                {
+                  editServiceId!==service.id
+                  ?
+                  <span className="d-flex justify-content-center text-secondary">{forMatMoneyVND(service.priceService)}</span>
+                  :
+                  <input 
+                    type="number" 
+                    className="border-0 px-2 py-1 rounded" 
+                    style={{ outline: "none" }}
+                    onKeyDown={e=>{if(e.key === "Enter") updateService()}}  
+                    value={editPriceService} 
+                    onChange={e=>setEditPriceService(e.target.value)}
+                  />
+                }
+              </td>
               <td className="d-lg-table-cell d-none align-middle" style={{fontSize:FONT_SIZE}}>
                 {
                   editServiceId===service.id ?
@@ -196,6 +234,7 @@ export default function ServicesSetting(props){
                     setEditServiceId(service.id);
                     setEditNameService(service.nameService);
                     setEditColorService(service.colorService);
+                    setEditPriceService(service.priceService)
                   }} 
                   icon="edit" 
                   FONT_SIZE_ICON={"20px"} 
