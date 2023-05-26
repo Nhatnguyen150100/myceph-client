@@ -4,7 +4,7 @@ import CalculatorToothMovement from "./pages/CalculatorToothMovement/CalculatorT
 import Discussion from "./pages/discussion/Discussion.jsx";
 import LateralCeph from "./pages/lateralCephalometricAnalysis/LateralCeph.jsx";
 const ForgotPassword = lazy(() => import('./auth/ForgotPassword.jsx'));
-const Login = lazy(() => import('./auth/login.jsx'));
+const Login = lazy(() => import('./auth/Login.jsx'));
 const Register = lazy(() => import('./auth/Register.jsx'));
 const BigCalendar = lazy(() => import('./pages/calendar/BigCalendar.jsx'));
 const HomePage = lazy(() => import('./pages/HomePage.jsx'));
