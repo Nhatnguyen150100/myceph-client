@@ -254,12 +254,16 @@ export default function MemberOfClinic(props){
           </thead>
           {
             loadingSearch ? 
-            <div className="d-flex flex-grow-1 justify-content-center w-100">
+            <div className="d-flex flex-grow-1 justify-content-center align-items-center w-100">
               <div className="spinner-grow"></div>
             </div>
             :
             <React.Fragment>
-              <tbody>{listDoctor.map((doctor, index) => <DoctorRows key={index} stt={index} doctor={doctor} changeRoleOfDoctor={(idDoctor,roleOfDoctor)=>onChangeRoleOfDoctor(idDoctor,roleOfDoctor)} deleteDoctorFromClinic={onDeleteHandle}/>)}</tbody>
+              <tbody>
+                {
+                  listDoctor.map((doctor, index) => <DoctorRows key={index} stt={index} doctor={doctor} changeRoleOfDoctor={(idDoctor,roleOfDoctor)=>onChangeRoleOfDoctor(idDoctor,roleOfDoctor)} deleteDoctorFromClinic={onDeleteHandle}/>)
+                }
+              </tbody>
               <tfoot className="align-middle">
                 <tr>
                   <td colSpan={9} align='center'>

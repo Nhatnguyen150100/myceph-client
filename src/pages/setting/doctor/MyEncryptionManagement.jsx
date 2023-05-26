@@ -190,7 +190,7 @@ export default function MyEncryptionManagement(props){
             </button>
           </div>
           <div className="mt-3 w-100 d-flex flex-column justify-content-center align-items-center mb-3">
-            <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key was generate by')} <span className="mc-color fw-bold fs-5">{doctor?.fullName}</span></span>
+            <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('Encryption key was generate by')}<span className="mc-color fw-bold fs-5 ms-2">{doctor?.fullName?doctor.fullName:doctor.email}</span></span>
             <span className="text-gray my-1" style={{fontSize:FONT_SIZE}}>{t('Encryption key is stored in browser and cannot be recovered if browser is uninstalled.')}</span>
             <span className="text-gray" style={{fontSize:FONT_SIZE}}>{t('We strongly advise you to export encryption key to a secured location in your computer so it can be recovered once necessary.')}</span>
           </div>

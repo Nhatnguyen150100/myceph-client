@@ -40,6 +40,7 @@ export default function Myclinic(props){
 
   useEffect(()=>{
     if(clinic.idClinicDefault) getInformation();
+    else getAllClinicAndSetDefault(true)
   },[clinic.idClinicDefault]);
 
   console.info();
@@ -203,12 +204,18 @@ export default function Myclinic(props){
       dispatch(setLoadingModal(true));
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
         if(setDefault){
-          result.data.map(clinic=> {
+          let isDefaultAdmin = false;
+          result.data.map(clinic => {
             if(clinic.roleOfDoctor==='admin'){
+              isDefaultAdmin = true;
               dispatch(setIdClinicDefault(clinic.id));
               dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
             }
           })
+          if(!isDefaultAdmin){
+            dispatch(setIdClinicDefault(result.data[0].id));
+            dispatch(setRoleOfDoctor(result.data[0].roleOfDoctor))
+          }
         }
         dispatch(setArrayClinic(result.data));
         resolve();
