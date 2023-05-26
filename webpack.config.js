@@ -8,6 +8,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const Dotenv = require('dotenv-webpack');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -39,6 +40,11 @@ const config = {
       BROWSER_SUPPORTS_HTML5: true,
       TWO: '1+1',
       'typeof window': JSON.stringify('object')
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'public/assets/images', to: 'assets/images' }
+      ]
     })
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
