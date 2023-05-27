@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { cookies } from "../common/Utility.jsx";
 
-export const baseURL = process.env.BASE_URL_DEVELOPMENT;
+export const baseURL = 'https://myceph-cephalometric.onrender.com';
 
 export function postToServer(url, bodyObject) {
 	return new Promise((resolve, reject) =>
