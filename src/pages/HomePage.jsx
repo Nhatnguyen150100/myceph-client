@@ -23,7 +23,7 @@ export default function HomePage(props) {
 
   const getAllClinicAndSetDefault = (indexDB) => {
     return new Promise((resolve,reject) =>{
-      getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
+      getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor?.id}`).then(result => {
         result.data.map(clinic => {
           if(clinic.roleOfDoctor==='admin'){
             !currentPatient?.id && getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{dispatch(setArrayPatient(response.data));dispatch(setCurrentPatient(response.data[0]))})
@@ -53,9 +53,9 @@ export default function HomePage(props) {
       let indexDB = null;
       onOpenIndexDB().then(db=>{
         indexDB = db;
-        getData(db,doctor.id,DB_ENCRYPTION_DOCTOR).then(data => 
-          dispatch(setEncryptKeyDoctor({key: data.key, iv: data.iv}))
-        )
+        getData(db,doctor.id,DB_ENCRYPTION_DOCTOR).then(data =>{
+          if(data) dispatch(setEncryptKeyDoctor({key: data.key, iv: data.iv}))
+        })
         getAllClinicAndSetDefault(db).finally(()=>disConnectIndexDB(indexDB));
       });
     }

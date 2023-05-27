@@ -141,7 +141,7 @@ export default function Myclinic(props){
       let promise1;
       if(findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault)?.nameClinic !== nameClinic){
         promise1 = new Promise((resolve, reject) => {
-          getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
+          getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor?.id}`).then(result => {
             dispatch(setArrayClinic(result.data));
             resolve();
           }).catch(error=>{
@@ -202,8 +202,8 @@ export default function Myclinic(props){
   const getAllClinicAndSetDefault = (setDefault) => {
     return new Promise((resolve,reject) =>{
       dispatch(setLoadingModal(true));
-      getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
-        if(setDefault){
+      getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor?.id}`).then(result => {
+        if(setDefault && result.data.length > 0){
           let isDefaultAdmin = false;
           result.data.map(clinic => {
             if(clinic.roleOfDoctor==='admin'){
@@ -216,8 +216,8 @@ export default function Myclinic(props){
             dispatch(setIdClinicDefault(result.data[0].id));
             dispatch(setRoleOfDoctor(result.data[0].roleOfDoctor))
           }
+          dispatch(setArrayClinic(result.data));
         }
-        dispatch(setArrayClinic(result.data));
         resolve();
       }).catch((err) =>{
         if(err.refreshToken){

@@ -41,7 +41,7 @@ export default function ClinicEncryptionManagement(props){
 
   const getAllClinic = () => {
     return new Promise((resolve,reject) =>{
-      getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor.id}`).then(result => {
+      getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor?.id}`).then(result => {
         dispatch(setArrayClinic(result.data));
         resolve();
       }).catch((err) =>{

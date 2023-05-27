@@ -68,14 +68,16 @@ const SelectPatientComponent = (props) => {
   const getAllPatient = (name) => {
     return new Promise((resolve, reject) => {
       getToServerWithToken(`${url}page=${1}&pageSize=${10}&nameSearch=${name?name:''}`).then(result=>{
-        dispatch(setArrayPatient(result.data));
-        setCount(result.count);
-        if(result.count===0 && location.pathname !== '/setting') toast.warning(t('Cannot found patient'));
-        if(!currentPatient) dispatch(setCurrentPatient(result.data[0]));
-        // chuyển bệnh nhân trong cùng 1 phòng khám thì không bị reset lại currentPatient
-        if(clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)){
-          setPreviousClinicId(clinic.idClinicDefault);
-          if(previousClinicId!==clinic.idClinicDefault) dispatch(setCurrentPatient(result.data[0]));
+        if(result.data.length > 0){
+          dispatch(setArrayPatient(result.data));
+          setCount(result.count);
+          if(result.count===0 && location.pathname !== '/setting') toast.warning(t('Cannot found patient'));
+          if(!currentPatient) dispatch(setCurrentPatient(result.data[0]));
+          // chuyển bệnh nhân trong cùng 1 phòng khám thì không bị reset lại currentPatient
+          if(clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)){
+            setPreviousClinicId(clinic.idClinicDefault);
+            if(previousClinicId!==clinic.idClinicDefault) dispatch(setCurrentPatient(result.data[0]));
+          }
         }
         resolve();
       }).catch((err) =>{

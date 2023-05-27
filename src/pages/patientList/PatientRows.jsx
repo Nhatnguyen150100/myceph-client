@@ -348,7 +348,9 @@ export default function PatientRows(props){
       props.shareByDoctor &&  <td className={`d-lg-table-cell`} style={{fontSize:FONT_SIZE,cursor:"pointer"}}>
         <button onClick={e=>toOtherDoctorProfile(props.patient['Doctor.email'])} type="button" style={{background:"none"}} className="transform-hover btn-hover-bg rounded border-0 d-flex flex-column align-items-center justify-content-center h-100 w-100">
           <strong className="fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{props.patient['Doctor.email']}</strong>
-          <span style={{fontSize:FONT_SIZE}}>{'( '}{props.patient['Doctor.fullName']}{' )'}</span>
+          {
+            props.patient['Doctor.fullName'] && <span style={{fontSize:FONT_SIZE}}>{'( '}{props.patient['Doctor.fullName']}{' )'}</span>
+          }
         </button>
       </td>
     }

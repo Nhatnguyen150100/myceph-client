@@ -19,6 +19,7 @@ export default function NavbarComponent(props) {
   const doctor = useSelector(state=>state.doctor.data);
   const language = useSelector(state => state.general.language);
   const appName = useSelector(state => state.general.appName);
+  const clinic = useSelector(state => state.clinic);
   const dispatch  = useDispatch();
   const nav = useNavigate();
   const {t} = useTranslation();
@@ -67,9 +68,11 @@ export default function NavbarComponent(props) {
                 doctor?.id && 
                 <React.Fragment>
                   <span className="vr"></span>
-                  <Link to={"/schedule"} style={{textDecoration:"none"}} onClick={()=>{dispatch(setSelectPatientOnMode(SELECT_PATIENT_MODE.CLINIC_PATIENT));dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR))}}>
-                    <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
-                  </Link>
+                  {
+                    clinic.idClinicDefault && <Link to={"/schedule"} style={{textDecoration:"none"}} onClick={()=>{dispatch(setSelectPatientOnMode(SELECT_PATIENT_MODE.CLINIC_PATIENT));dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR))}}>
+                      <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
+                    </Link>
+                  }
                   <span className="vr"></span>
                   <Link to={"/patientListManagement"} style={{textDecoration:"none"}}>
                     <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('patient list')}</span>
