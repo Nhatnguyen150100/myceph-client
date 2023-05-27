@@ -43,7 +43,7 @@ const config = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'public/assets/images', to: 'assets/images' }
+        { from: 'public/assets', to: 'assets' }
       ]
     })
     // Add your plugins here
