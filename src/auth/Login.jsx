@@ -39,8 +39,7 @@ function LoginPage(props){
     dispatch(setAppName(`Myceph - ${t('login')}`));
   },[])
   
-	const loginSubmit = (e) => {
-    e.preventDefault();
+	const loginSubmit = () => {
 		if (!email) setEmailError(t('email is required'));
     else if (!isValidEmail(email)) setEmailError(t("email is incorrect format"));
 		else if (!password) setPasswordError(t('password is required'));
@@ -107,7 +106,10 @@ function LoginPage(props){
               setEmail(e.target.value);
               setEmailError('');
             }}
-            onKeyDown={e=>{if(e.key === "Enter") loginSubmit(e)}}
+            onKeyDown={e=>{if(e.key === "Enter"){
+              e.preventDefault();
+              loginSubmit();
+            }}}
             placeholder={t("Email")}
             autoComplete="off"
             style={{ height: '45px', outline: 'none' }}
@@ -132,7 +134,10 @@ function LoginPage(props){
               setPassword(e.target.value);
               setPasswordError('');
             }}
-            onKeyDown={e=>{if(e.key === "Enter") loginSubmit(e)}}
+            onKeyDown={e=>{if(e.key === "Enter"){
+              e.preventDefault();
+              loginSubmit();
+            }}}
             placeholder={t("password")}
             autoComplete="off"
             style={{ height: '45px', outline: 'none' }}
@@ -155,7 +160,10 @@ function LoginPage(props){
           </Link>
         </div>
         <span className="my-2"></span>
-        {loading ? <div className="spinner-grow"></div> : <ButtonComponent label={t('login')} onClick={e=>loginSubmit(e)} />}
+        {loading ? <div className="spinner-grow"></div> : <ButtonComponent label={t('login')} onClick={e=>{
+          e.preventDefault();
+          loginSubmit();
+        }}/>}
         <div className="my-3 d-flex align-items-center justify-content-center">
           <hr style={{ width: '140px' }} />
           <span className="mx-3 text-uppercase">or</span>
