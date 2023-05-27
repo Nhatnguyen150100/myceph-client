@@ -1,1 +1,1 @@
-export const SITE_KEY_RECAPTCHA = process.env.BASE_URL_DEVELOPMENT
+export const SITE_KEY_RECAPTCHA = process.env.SITE_KEY_RECAPTCHA
