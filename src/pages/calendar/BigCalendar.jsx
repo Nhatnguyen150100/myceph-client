@@ -328,7 +328,12 @@ export default function BigCalendar(props){
             type="button" 
             className={`px-2 py-1 btn-outline-secondary nav-link ${selectedTab===VIEW_CALENDAR.BY_PATIENT?'active':'btn-hover-bg'} d-flex align-items-center`} 
             style={{fontSize:FONT_SIZE}}
-            onClick={()=>{dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));getListAppointmentDateByMode(true)}}
+            onClick={()=>{
+              if(patient.currentPatient?.id){
+                dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
+                getListAppointmentDateByMode(true)
+              }else toast.error(t('This clinic has no patient'))
+            }}
             disabled={selectedTab===VIEW_CALENDAR.BY_PATIENT}
           >
             <span className="material-symbols-outlined me-2 mc-color">

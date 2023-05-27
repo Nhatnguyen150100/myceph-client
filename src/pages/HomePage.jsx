@@ -34,6 +34,7 @@ export default function HomePage(props) {
             dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
           }
         })
+        if(result.data.length > 0) dispatch(setIdClinicDefault(result.data[0]));
         dispatch(setArrayClinic(result.data));
         resolve();
       }).catch((err) =>{
