@@ -62,11 +62,11 @@ export default function SoftWareListComponent(props){
         {
           softWareSelectedTab === SOFT_WARE_LIST.IMAGE_LIBRARY ? 
           <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white p-1'>
-            <img src="/assets/images/imageLibrary_active.png" width="34" height="34" alt="MedicalRecord"/>
+            <img src="/assets/images/ImageLibrary_active.png" width="34" height="34" alt="ImageLibrary"/>
           </div>
           :
           <Link onClick={e=>dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.IMAGE_LIBRARY))} to={`/libraryImagesManagement`} title={t("ImageLibrary")} className="btn btn-outline-info p-1 me-3 border-0">
-            <img src="/assets/images/imageLibrary.png" width="34" height="34" alt="MedicalRecord"/>
+            <img src="/assets/images/ImageLibrary.png" width="34" height="34" alt="ImageLibrary"/>
           </Link>
         }
         {
