@@ -129,7 +129,7 @@ export default function BigCalendar(props){
   }
 
   const getListAppointmentDateByMode = (idPatient) => {
-    return new Promise((resolve, reject) => {
+    if(idPatient && patient.currentPatient?.id) return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
       getToServerWithToken(`/v1/schedule/getAllAppointments/${clinic.idClinicDefault}?idDoctor=${clinic.roleOfDoctor === 'admin'?'':doctor.id}&idPatient=${idPatient?patient.currentPatient?.id:''}`).then(result => {
         dispatch(setListAppointmentDate(result.data));
