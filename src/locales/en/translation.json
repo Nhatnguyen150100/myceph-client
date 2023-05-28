@@ -57,6 +57,7 @@
   "Enter patient chief complaint": "Enter patient chief complaint",
   "Enter phone number": "Enter phone number",
   "Enter address": "Enter address",
+  "You must have a encryption key to encrypt your patient": "You must have a encryption key to encrypt your patient",
   "confirm delete this clinic": "confirm delete this clinic",
   "To delete this clinic, enter the id clinic": "To delete this this clinic, enter the id clinic",
   "Id clinic": "Id clinic",

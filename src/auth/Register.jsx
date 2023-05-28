@@ -28,7 +28,8 @@ function RegisterPage(props) {
   useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t('sign up')}`));
   },[])
-
+  
+  console.log("🚀 ~ file: Register.jsx:43 ~ postToServer ~ process.env.NODE_ENV:", process.env.NODE_ENV)
   const onRegistration = (e) => {
     if (!email) setEmailError(t('email is required'));
     else if (!isValidEmail(email)) setEmailError(t("email is incorrect format"));

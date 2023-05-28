@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
 import { FONT_SIZE, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
-import { setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
+import { setCurrentPatient, setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import PatientRows from "./PatientRows.jsx";
@@ -18,6 +18,7 @@ let nameSearchTimeout = null;
 export default function MyPatient(props){
   const loading = useSelector(state=>state.general.loading);
   const getAllPatientDoctor = useSelector(state=>state.patient.getAllPatientDoctor);
+  const currentPatient = useSelector(state=>state.patient.currentPatient);
   const doctor = useSelector(state=>state.doctor.data);
   const {t} = useTranslation();
   const dispatch = useDispatch();
@@ -65,6 +66,7 @@ export default function MyPatient(props){
       return new Promise((resolve, reject) => {
         dispatch(setLoadingModal(true));
         deleteToServerWithToken(`/v1/patient/deletePatient/${idPatient}`).then(result=>{
+          if(idPatient === currentPatient.id) dispatch(setCurrentPatient(null))
           getAllPatientForDoctor().then(()=>{
             toast.success(result.message);
             resolve();
@@ -106,47 +108,47 @@ export default function MyPatient(props){
   }
 
   return <div className="h-100 w-100 container">
-      <table className="table table-bordered table-striped text-center rounded my-4">
-        <thead className='mc-background text-white text-uppercase'>
-          <tr>
-            <th className='align-middle mc-heading-middle d-lg-table-cell d-none text-uppercase' style={{fontSize:FONT_SIZE}}>stt</th>
-            <th colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>
-              <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
-                <input type="text" className="border-0 flex-grow-1 w-100" placeholder={t("Enter patient name to search")} style={{ outline: "none" }} value={nameSearch} onChange={onNameSearchChange}/>
-                <span className="material-symbols-outlined vc-teal fw-bolder">search</span>
-              </div>
-            </th>
-            <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("date of birth")}</th>
-            <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"80px",fontSize:FONT_SIZE}}>{t("gender")}</th>
-            <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{minWidth:"150px",fontSize:FONT_SIZE}}>{t("note")}</th>
-            <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("feature")}</th>
-            <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE}}>{t("action")}</th>
-          </tr>
-        </thead>
-        {
-          (!loadingSearch || listPatient.length>0) && 
-          <React.Fragment>
-            <tbody>{listPatient.map((patient, index) => <PatientRows key={patient.id} stt={index} selectPatientMode={SELECT_PATIENT_MODE.MY_PATIENT} patient={patient} onDeleteHandle={idPaient=>onDeleteHandle(idPaient)} />)}</tbody>
-            {
-              listPatient.length!==0 && <tfoot className="align-middle">
-                <tr>
-                  <td colSpan={8} align='center'>
-                    <div className="d-flex flex-grow-1 justify-content-center">
-                    <Pagination 
-                        count={Math.ceil(count/PAGE_SIZE) || 0}
-                        page={page}
-                        onChange={onChangePage}
-                        variant="outlined"
-                        color="primary"
-                      />
-                    </div>
-                  </td>
-                </tr>
-              </tfoot>
-            }
-          </React.Fragment>
-        }
-      </table>
+    <table className="table table-bordered table-striped text-center rounded my-4">
+      <thead className='mc-background text-white text-uppercase'>
+        <tr>
+          <th className='align-middle mc-heading-middle d-lg-table-cell d-none text-uppercase' style={{fontSize:FONT_SIZE}}>stt</th>
+          <th colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>
+            <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
+              <input type="text" className="border-0 flex-grow-1 w-100" placeholder={t("Enter patient name to search")} style={{ outline: "none" }} value={nameSearch} onChange={onNameSearchChange}/>
+              <span className="material-symbols-outlined vc-teal fw-bolder">search</span>
+            </div>
+          </th>
+          <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("date of birth")}</th>
+          <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"80px",fontSize:FONT_SIZE}}>{t("gender")}</th>
+          <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{minWidth:"150px",fontSize:FONT_SIZE}}>{t("note")}</th>
+          <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("feature")}</th>
+          <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE}}>{t("action")}</th>
+        </tr>
+      </thead>
+      {
+        (!loadingSearch || listPatient.length>0) && 
+        <React.Fragment>
+          <tbody>{listPatient.map((patient, index) => <PatientRows key={patient.id} stt={index} selectPatientMode={SELECT_PATIENT_MODE.MY_PATIENT} patient={patient} onDeleteHandle={idPaient=>onDeleteHandle(idPaient)} />)}</tbody>
+          {
+            listPatient.length!==0 && <tfoot className="align-middle">
+              <tr>
+                <td colSpan={8} align='center'>
+                  <div className="d-flex flex-grow-1 justify-content-center">
+                  <Pagination 
+                      count={Math.ceil(count/PAGE_SIZE) || 0}
+                      page={page}
+                      onChange={onChangePage}
+                      variant="outlined"
+                      color="primary"
+                    />
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+          }
+        </React.Fragment>
+      }
+    </table>
     {
       loadingSearch && <div className="d-flex flex-grow-1 justify-content-center w-100">
         <div className="spinner-grow"></div>

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { DB_ENCRYPTION_CLINIC, DB_ENCRYPTION_DOCTOR, DB_ENCRYPTION_SHAREPATIENT, disConnectIndexDB, getData, onOpenIndexDB } from "../common/ConnectIndexDB.jsx";
+import { DB_ENCRYPTION_CLINIC, DB_ENCRYPTION_DOCTOR, disConnectIndexDB, getData, onOpenIndexDB } from "../common/ConnectIndexDB.jsx";
 import { cookies, SOFT_WARE_LIST } from "../common/Utility.jsx";
 import NavbarComponent from "../components/NavbarComponent.jsx";
 import { setArrayClinic, setEncryptKeyClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
@@ -27,7 +27,10 @@ export default function HomePage(props) {
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor?.id}`).then(result => {
         result.data.map(clinic => {
           if(clinic.roleOfDoctor==='admin'){
-            !currentPatient?.id && getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{dispatch(setArrayPatient(response.data));dispatch(setCurrentPatient(response.data[0]))})
+            !currentPatient?.id && getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{
+              dispatch(setArrayPatient(response.data));
+              dispatch(setCurrentPatient(response.data[0]))
+            })
             dispatch(setIdClinicDefault(clinic.id));
             getData(indexDB,clinic.id,DB_ENCRYPTION_CLINIC).then(encryptedData => {
               encryptedData ? dispatch(setEncryptKeyClinic({key: encryptedData.key, iv: encryptedData.iv})) : dispatch(setEncryptKeyClinic(null))

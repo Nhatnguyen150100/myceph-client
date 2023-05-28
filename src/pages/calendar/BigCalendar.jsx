@@ -111,7 +111,22 @@ export default function BigCalendar(props){
         reject(err);
       })
     })
-  }  
+  } 
+  
+  const getAllPatientForClinic = () => {
+    return new Promise((resolve, reject) => {
+      getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.idClinicDefault}?page=${1}&pageSize=${4}&nameSearch=`).then(result=>{
+        resolve(result.data);
+      }).catch((err) =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>getAllPatientForClinic());
+        }else{
+          toast.error(err.message);
+        }
+        reject(err);
+      })
+    })
+  }
 
   const getListAppointmentDateByMode = (idPatient) => {
     return new Promise((resolve, reject) => {
@@ -329,10 +344,13 @@ export default function BigCalendar(props){
             className={`px-2 py-1 btn-outline-secondary nav-link ${selectedTab===VIEW_CALENDAR.BY_PATIENT?'active':'btn-hover-bg'} d-flex align-items-center`} 
             style={{fontSize:FONT_SIZE}}
             onClick={()=>{
-              if(patient.currentPatient?.id){
-                dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
-                getListAppointmentDateByMode(true)
-              }else toast.error(t('This clinic has no patient'))
+              getAllPatientForClinic().then(data => {
+                if(data.length > 0){
+                  dispatch(setCurrentPatient(data[0]));
+                  dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
+                  getListAppointmentDateByMode(true)
+                }else toast.error(t('This clinic has no patient'))
+              })
             }}
             disabled={selectedTab===VIEW_CALENDAR.BY_PATIENT}
           >

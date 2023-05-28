@@ -342,6 +342,7 @@
   "list intra oral images": "danh sách ảnh trong miệng",
   "price": "giá",
   "confirm delete this clinic": "xác nhận xóa phòng khám",
+  "You must have a encryption key to encrypt your patient": "Bạn phải có một khóa mã hóa để mã hóa bệnh nhân của bạn",
   "To delete this clinic, enter the id clinic": "Để xóa phòng khám này hãy nhập mã của phòng khám",
   "Id clinic": "Mã phòng khám",
   "in the box below and press agree": "vào ô bên dưới và nhấn đồng ý",

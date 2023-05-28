@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
 import { FONT_SIZE, SELECT_PATIENT_MODE } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
-import { setGetAllPatientClinic } from "../../redux/PatientSlice.jsx";
+import { setCurrentPatient, setGetAllPatientClinic } from "../../redux/PatientSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import PatientRows from "./PatientRows.jsx";
@@ -19,6 +19,7 @@ export default function PatientOfClinic(props){
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const loading = useSelector(state=>state.general.loading);
   const getAllPatientClinic = useSelector(state=>state.patient.getAllPatientClinic);
+  const currentPatient = useSelector(state=>state.patient.currentPatient);
   const clinic = useSelector(state=>state.clinic);
   const doctor = useSelector(state=>state.doctor.data);
   const {t} = useTranslation();
@@ -104,6 +105,7 @@ export default function PatientOfClinic(props){
       return new Promise((resolve, reject) => {
         dispatch(setLoadingModal(true));
         deleteToServerWithToken(`/v1/patient/deletePatient/${idPatient}`).then(result=>{
+          if(idPatient === currentPatient.id) dispatch(setCurrentPatient(null));
           getAllPatientForClinic().then(()=>{
             toast.success(result.message);
             resolve();

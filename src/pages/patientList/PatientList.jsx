@@ -10,7 +10,7 @@ import { FONT_SIZE, FONT_SIZE_HEAD, toISODateString, WIDTH_CHILD } from "../../c
 import NavbarComponent from "../../components/NavbarComponent.jsx";
 import SelectPatientComponent from "../../components/SelectPatientComponent.jsx";
 import { setAppName, setLoadingModal, setPatientListTab } from "../../redux/GeneralSlice.jsx";
-import { setGetAllPatientClinic, setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
+import { setCurrentPatient, setGetAllPatientClinic, setGetAllPatientDoctor } from "../../redux/PatientSlice.jsx";
 import { postToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import MyPatient from "./MyPatient.jsx";
@@ -24,6 +24,8 @@ export default function PatientList(props){
   const doctor = useSelector(state=>state.doctor.data);
   const clinic = useSelector(state=>state.clinic);
   const selectedTab = useSelector(state=>state.general.patientListTab);
+  const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const nav = useNavigate();
@@ -32,6 +34,7 @@ export default function PatientList(props){
   const [newPatientBirthday,setNewPatientBirthday] = useState(toISODateString(new Date()));
   const [newGenderPatient,setNewGenderPatient] = useState('male');
   const [newNotePatient,setNewNotePatient] = useState('');
+  const [isEncrypted,setIsEncrypted] = useState(false);
   
   let currentTab = 0;
 
@@ -50,7 +53,8 @@ export default function PatientList(props){
           birthday: newPatientBirthday,
           gender: newGenderPatient,
           note: newNotePatient,
-          idDoctor: doctor.id
+          idDoctor: doctor.id,
+          isEncrypted: isEncrypted
         }
       }else{
         patientObject = {
@@ -58,7 +62,8 @@ export default function PatientList(props){
           birthday: newPatientBirthday,
           gender: newGenderPatient,
           note: newNotePatient,
-          idClinic: clinic.idClinicDefault
+          idClinic: clinic.idClinicDefault,
+          isEncrypted: isEncrypted
         }
       }
       dispatch(setLoadingModal(true));
@@ -69,6 +74,7 @@ export default function PatientList(props){
         setNewNotePatient('');
         if(selectedTab===0) dispatch(setGetAllPatientDoctor(true));
         else dispatch(setGetAllPatientClinic(true)); 
+        dispatch(setCurrentPatient(result.data));
         toast.success(result.message)
         resolve();
         }).catch((err) =>{
@@ -184,6 +190,23 @@ export default function PatientList(props){
             legend={t('note')}
           />
           <div className="mt-1 pt-1" style={{height:"50px"}}>
+            <button 
+              type="button" 
+              className={`btn btn-outline-info rounded border-0 p-0 mx-1 h-100`} 
+              title={t('Decryption patient')}
+              onClick={()=>{
+                if((selectedTab === 0 && !encryptKeyDoctor) || (selectedTab === 1 && !encryptKeyClinic)) toast.error(t('You must have a encryption key to encrypt your patient'))
+                else{
+                  if(isEncrypted) setIsEncrypted(false)
+                  else setIsEncrypted(true)
+                }
+                
+              }}
+            >
+              <span className={`material-symbols-outlined ${isEncrypted?'text-danger':'text-success'}`} style={{fontSize:"50px"}}>
+                {isEncrypted?'lock':'lock_open'}
+              </span>
+            </button>
             <IconButtonComponent className="btn-outline-success h-100" onClick={addNewPatient} icon="add" FONT_SIZE_ICON={"30px"} title={t("add new patient")}/>
           </div>
         </fieldset>
