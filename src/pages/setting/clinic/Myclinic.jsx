@@ -80,7 +80,7 @@ export default function Myclinic(props){
         getAllClinicAndSetDefault(false).then(()=>resolve());
       }).catch((err) => {
         if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>getInformation());
+          refreshToken(nav,dispatch).then(()=>createClinic());
         }else{
           toast.error(t(err.message));
         }
@@ -203,7 +203,7 @@ export default function Myclinic(props){
     return new Promise((resolve,reject) =>{
       dispatch(setLoadingModal(true));
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor?.id}`).then(result => {
-        if(setDefault && result.data.length > 0){
+        if(setDefault){
           let isDefaultAdmin = false;
           result.data.map(clinic => {
             if(clinic.roleOfDoctor==='admin'){
@@ -213,11 +213,15 @@ export default function Myclinic(props){
             }
           })
           if(!isDefaultAdmin){
-            dispatch(setIdClinicDefault(result.data[0].id));
-            dispatch(setRoleOfDoctor(result.data[0].roleOfDoctor))
+            dispatch(setIdClinicDefault(result.data[0]?.id));
+            dispatch(setRoleOfDoctor(result.data[0]?.roleOfDoctor))
           }
-          dispatch(setArrayClinic(result.data));
         }
+        if(result.data.length === 0){
+          dispatch(setIdClinicDefault(null));
+          dispatch(setRoleOfDoctor(null))
+        }
+        dispatch(setArrayClinic(result.data));
         resolve();
       }).catch((err) =>{
         if(err.refreshToken){
@@ -351,7 +355,7 @@ export default function Myclinic(props){
       title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this clinic')}</span>} 
       content={
         <div>
-          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this this clinic, enter the id clinic')}</span>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this clinic, enter the id clinic')}</span>
           <span style={{fontSize:FONT_SIZE}} className="text-danger fw-bold">{clinic.idClinicDefault}</span>
           <span className="ms-1" style={{fontSize:FONT_SIZE}}>{t('in the box below and press agree')}</span>
         </div>

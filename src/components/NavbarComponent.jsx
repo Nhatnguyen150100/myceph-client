@@ -69,11 +69,14 @@ export default function NavbarComponent(props) {
                 <React.Fragment>
                   <span className="vr"></span>
                   {
-                    clinic.idClinicDefault && <Link to={"/schedule"} style={{textDecoration:"none"}} onClick={()=>{dispatch(setSelectPatientOnMode(SELECT_PATIENT_MODE.CLINIC_PATIENT));dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR))}}>
-                      <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
-                    </Link>
+                    clinic.idClinicDefault && 
+                    <React.Fragment>
+                      <Link to={"/schedule"} style={{textDecoration:"none"}} onClick={()=>{dispatch(setSelectPatientOnMode(SELECT_PATIENT_MODE.CLINIC_PATIENT));dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR))}}>
+                        <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
+                      </Link>
+                      <span className="vr"></span>
+                    </React.Fragment>
                   }
-                  <span className="vr"></span>
                   <Link to={"/patientListManagement"} style={{textDecoration:"none"}}>
                     <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('patient list')}</span>
                   </Link>
