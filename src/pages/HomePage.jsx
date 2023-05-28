@@ -8,7 +8,7 @@ import { cookies, SOFT_WARE_LIST } from "../common/Utility.jsx";
 import NavbarComponent from "../components/NavbarComponent.jsx";
 import { setArrayClinic, setEncryptKeyClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
 import { setEncryptKeyDoctor } from "../redux/DoctorSlice.jsx";
-import { setAppName } from "../redux/GeneralSlice.jsx";
+import { setAppName, setLoadingModal } from "../redux/GeneralSlice.jsx";
 import { setArrayPatient, setCurrentPatient } from "../redux/PatientSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
@@ -22,6 +22,7 @@ export default function HomePage(props) {
   const nav = useNavigate();
 
   const getAllClinicAndSetDefault = (indexDB) => {
+    dispatch(setLoadingModal(true));
     return new Promise((resolve,reject) =>{
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor?.id}`).then(result => {
         result.data.map(clinic => {
@@ -34,7 +35,7 @@ export default function HomePage(props) {
             dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
           }
         })
-        if(result.data.length > 0) dispatch(setIdClinicDefault(result.data[0]));
+        if(result.data.length > 0) dispatch(setIdClinicDefault(result.data[0]?.id));
         dispatch(setArrayClinic(result.data));
         resolve();
       }).catch((err) =>{
@@ -44,7 +45,7 @@ export default function HomePage(props) {
           toast.error(err.message);
         }
         reject(err);
-      })
+      }).finally(()=>dispatch(setLoadingModal(false)))
     })
   }
 
