@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
 import { cookies } from "../common/Utility.jsx";
 
-export const baseURL = 'http://localhost:8080';
-// export const baseURL = 'https://myceph-cephalometric.onrender.com';
-console.log(process.env.BASE_URL_SERVER);
+// export const baseURL = 'http://localhost:8080';
+export const baseURL = 'https://myceph-cephalometric.onrender.com';
+console.log("🚀 ~ file: getAPI.jsx:6 ~ baseURL:", process.env.BASE_URL_SERVER)
 
 export function postToServer(url, bodyObject) {
 	return new Promise((resolve, reject) =>
