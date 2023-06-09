@@ -3,6 +3,7 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage';
 import CalendarSlice from './CalendarSlice.jsx';
 import ClinicSlice from './ClinicSlice.jsx';
+import CurveSlice from './CurveSlice.jsx';
 import DoctorSlice from './DoctorSlice.jsx';
 import GeneralSlice from './GeneralSlice.jsx';
 import LateralCephSlice from './LateralCephSlice.jsx';
@@ -13,10 +14,19 @@ const persistConfig = {
 	key: 'root',
 	version: 1,
 	storage,
-	blacklist: ['lateralCeph']
+	blacklist: ['lateralCeph','curve']
 };
 
-const rootReducer = combineReducers({doctor: DoctorSlice, general: GeneralSlice, clinic: ClinicSlice, patient: PatientSlice, libraryImage: LibraryImageSlice, calendar: CalendarSlice, lateralCeph: LateralCephSlice});
+const rootReducer = combineReducers({
+	doctor: DoctorSlice, 
+	general: GeneralSlice, 
+	clinic: ClinicSlice, 
+	patient: PatientSlice, 
+	libraryImage: LibraryImageSlice, 
+	calendar: CalendarSlice, 
+	lateralCeph: LateralCephSlice,
+	curve: CurveSlice
+});
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({

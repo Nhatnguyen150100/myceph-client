@@ -193,7 +193,7 @@ export default function MyProfile(props){
           <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('gender')}:</label>
           {
             editMode ? 
-            <select className="text-gray border-0 p-0 text-capitalize flex-grow-1" style={{outline:"none"}} value={gender} onChange={e=>setGender(e.target.value)}>
+            <select className="text-gray border-0 p-0 text-capitalize" style={{outline:"none",width:"300px"}} value={gender} onChange={e=>setGender(e.target.value)}>
               <option selected disabled={true}>no data</option>
               <option className="text-gray border-0 text-capitalize" value={'male'} style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>
                 {t('male')}

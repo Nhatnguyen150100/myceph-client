@@ -1272,7 +1272,6 @@ export const intersectPointDiagonalLineOfRectangle = (pointR1,pointR2,pointR3,po
  * @returns tọa độ điểm thuộc đường thẳng song song || trả về null nếu thiếu điểm
  */
 export const intersectPointOfParallel = (pointP,pointM,pointN) => {
-  console.log("🚀 ~ file: lateralCephalometricUtility.jsx:1466 ~ intersectPointOfParallel ~ pointP,pointM,pointN:", pointP,pointM,pointN)
   if(!pointP || !pointM || !pointN) return null;
 
   const vectorMN = { x: pointN.x - pointM.x, y: pointN.y - pointM.y };

@@ -2,7 +2,7 @@ import Konva from "konva";
 import React, { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Circle, Group, Image, Layer, Line, Rect, Stage, Text } from "react-konva";
+import { Circle, Group, Image, Layer, Line, RegularPolygon, Shape, Stage, Text } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -10,8 +10,10 @@ import { findNextObject, FONT_SIZE, FONT_SIZE_HEAD, getKeyByNameValue, SELECT_PA
 import NavbarComponent from "../../components/NavbarComponent.jsx";
 import SelectPatientComponent from "../../components/SelectPatientComponent.jsx";
 import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
+import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setAppName } from "../../redux/GeneralSlice.jsx";
 import { setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
+import { checkAllPointsExist, getModelCurve, UPPER_JAW_BONE_CURVE } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import ControlSection from "./ControlSection.jsx";
 import { ANALYSIS } from "./LateralCephalometricUtility.jsx";
 import ResultAnalysisTable from "./ResultAnalysisTable.jsx";
@@ -22,6 +24,8 @@ const filterMap = {
   contrast: Konva.Filters.Contrast,
   brightness: Konva.Filters.Brighten
 }
+
+const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE]
 
 export default function LateralCeph(props) {
   const dispatch = useDispatch();
@@ -38,11 +42,15 @@ export default function LateralCeph(props) {
   const isVisitableMarkerPoints = useSelector(state=>state.lateralCeph.isVisitableMarkerPoints);
   const isVisitableAnalysisLines = useSelector(state=>state.lateralCeph.isVisitableAnalysisLines);
 
+  const selectedCurve = useSelector(state=>state.curve.selectedCurve);
+
   const stageRef = useRef();
   const imageRef = useRef();
   const contentAnalysisRef = useRef();
   const crosshairVerticalRef = useRef();
   const crosshairHorizontalRef = useRef();
+
+  const [stageMode,setStageMode] = useState(0);
 
   const [highLightIndicator,setHighLightIndicator] = useState([])
   const [prevPatient,setPrevPatient] = useState(currentPatient?.id);
@@ -116,7 +124,16 @@ export default function LateralCeph(props) {
     } 
   },[imageObject])
 
-  const onAddMarkerPoint = () => {
+  const handleClickStage = (event) => {
+    if((event.target === stageRef.current || event.target === imageRef.current) && !currentMarkerPoint) {
+      dispatch(setSelectedCurve(null))
+    }
+    if(currentMarkerPoint){
+      onAddMarkerPoint(stageMode === 0 ? ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints : Object.keys(getModelCurve(selectedCurve)?.markerPoints))
+    }
+  }
+
+  const onAddMarkerPoint = (currentMarkerPoints) => {
     if(currentMarkerPoint){
       const stage = stageRef.current;
       const oldScale = stage.scaleX();
@@ -130,7 +147,7 @@ export default function LateralCeph(props) {
       }}
       dispatch(setMarkerPoints(newMarkerPoints));
       setMarkerPointList(newMarkerPoints);
-      const nextPoint = findNextObject(currentMarkerPoint,ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints,markerPoints);
+      const nextPoint = findNextObject(currentMarkerPoint,currentMarkerPoints,markerPoints);
       setCurrentMarkerPoint(nextPoint);
     }
   }
@@ -290,7 +307,7 @@ export default function LateralCeph(props) {
       }
     }
     return linesArray;
-  },[highLightIndicator,markerPointList,scale])
+  },[highLightIndicator,scale])
 
   const drawMarkerPoints = useMemo(()=>{
     let circleWithTextArray = [];
@@ -298,10 +315,10 @@ export default function LateralCeph(props) {
       if(markerPointList[key] && ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints.find(point => point === key)){
         circleWithTextArray.push(
           <Group
+            key={markerPointList[key].x+markerPointList[key].y}
             visible={isVisitableMarkerPoints}
           >
             <Circle
-              key={markerPointList[key].x+markerPointList[key].y}
               fill={'red'}
               draggable={true}
               opacity={1}
@@ -367,6 +384,305 @@ export default function LateralCeph(props) {
     return circleWithTextArray
   },[markerPointList,currentAnalysis,scale,isVisitableMarkerPoints])
 
+  const drawMarkerPointsCurve = useMemo(()=>{
+    let allPointsAndLineFromModel = [];
+    for (const curveModel of ALL_MODEL_CURVES) {
+      curveModel.controlPoints.map((value,index) => {
+        if(markerPointList[value.startPoint]){
+          allPointsAndLineFromModel.push(
+            <React.Fragment key={index}>
+              <Line 
+                x={0}
+                y={0}
+                lineCap="round"
+                lineJoin="round"
+                visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
+                dash={[10/scale, 10/scale, 0.2/scale, 10/scale]}
+                points={[
+                  markerPointList[value.startPoint].x, 
+                  markerPointList[value.startPoint].y, 
+                  value.controlPoint1.positionDefault(markerPointList).x,
+                  value.controlPoint1.positionDefault(markerPointList).y
+                ]}
+                stroke="#00FF7F"
+                strokeWidth={2/scale}
+                opacity={1}
+              />
+              <Circle 
+                x={value.controlPoint1.positionDefault(markerPointList).x}
+                y={value.controlPoint1.positionDefault(markerPointList).y}
+                radius={4/scale}
+                fill="blue" 
+                onMouseOver={(event) => {
+                  const circle = event.target;
+                  circle.fill('#ffad00')
+                }}
+                onMouseLeave={event => {
+                  const circle = event.target;
+                  circle.fill('blue')
+                }}
+                visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
+                draggable
+                onDragEnd={(e) =>{
+                  const newMarkerPoints = Object.assign({}, markerPointList);
+                  newMarkerPoints[value.controlPoint1.name] = {
+                    name: value.controlPoint1.name,
+                    x: e.target.x(),
+                    y: e.target.y()
+                  };
+                  dispatch(setMarkerPoints(newMarkerPoints))
+                  setMarkerPointList(newMarkerPoints);
+                }}
+                onDragMove={(e) =>{
+                  const newMarkerPoints = Object.assign({}, markerPointList);
+                  newMarkerPoints[value.controlPoint1.name] = {
+                    name: value.controlPoint1.name,
+                    x: e.target.x(),
+                    y: e.target.y()
+                  };
+                  dispatch(setMarkerPoints(newMarkerPoints))
+                  setMarkerPointList(newMarkerPoints);
+                }}
+              />
+              <Group visible={selectedCurve === curveModel.name}>
+                <RegularPolygon
+                  sides={4}
+                  radius={5/scale}
+                  x={markerPointList[value.startPoint].x}
+                  y={markerPointList[value.startPoint].y}
+                  fill="red" 
+                  draggable={selectedCurve}
+                  onMouseOver={(event) => {
+                    const regularPolygon = event.target;
+                    regularPolygon.fill('#ffad00')
+                  }}
+                  onMouseLeave={event => {
+                    const regularPolygon = event.target;
+                    regularPolygon.fill('red')
+                  }}
+                  onDragEnd={(e) =>{
+                    const newMarkerPoints = Object.assign({}, markerPointList);
+                    newMarkerPoints[value.startPoint] = {
+                      x: e.target.x(),
+                      y: e.target.y()
+                    };
+                    dispatch(setMarkerPoints(newMarkerPoints))
+                    setMarkerPointList(newMarkerPoints);
+                  }}
+                  onDragMove={(e) =>{
+                    const newMarkerPoints = Object.assign({}, markerPointList);
+                    newMarkerPoints[value.startPoint] = {
+                      x: e.target.x(),
+                      y: e.target.y()
+                    };
+                    dispatch(setMarkerPoints(newMarkerPoints))
+                    setMarkerPointList(newMarkerPoints);
+                  }}
+                />
+                <Text 
+                  visible={curveModel.markerPoints[value.startPoint]?.isShow}
+                  x={markerPointList[value.startPoint].x + 7/scale}
+                  y={markerPointList[value.startPoint].y + 7/scale}
+                  draggable={false}
+                  scaleX={scale.x}
+                  scaleY={scale.y}
+                  text={value.startPoint}
+                  fill="#00FF7F"
+                  fontSize={13/scale}
+                />
+              </Group> 
+            </React.Fragment>
+          ) 
+        }
+        if(markerPointList[value.endPoint]){
+          allPointsAndLineFromModel.push(
+            <React.Fragment key={index}>
+              <Line 
+                x={0}
+                y={0}
+                lineCap="round"
+                lineJoin="round"
+                visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
+                dash={[10/scale, 10/scale, 0.2/scale, 10/scale]}
+                points={[
+                  markerPointList[value.endPoint].x, 
+                  markerPointList[value.endPoint].y, 
+                  value.controlPoint2.positionDefault(markerPointList).x,
+                  value.controlPoint2.positionDefault(markerPointList).y
+                ]}
+                stroke="#00FF7F"
+                strokeWidth={2/scale}
+                opacity={1}
+              />
+              <Circle 
+                x={value.controlPoint2.positionDefault(markerPointList).x}
+                y={value.controlPoint2.positionDefault(markerPointList).y}
+                radius={4/scale}
+                fill="blue" 
+                onMouseOver={(event) => {
+                  const circle = event.target;
+                  circle.fill('#ffad00')
+                }}
+                onMouseLeave={event => {
+                  const circle = event.target;
+                  circle.fill('blue')
+                }}
+                visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
+                draggable
+                onDragEnd={(e) =>{
+                  const newMarkerPoints = Object.assign({}, markerPointList);
+                  newMarkerPoints[value.controlPoint2.name] = {
+                    name: value.controlPoint2.name,
+                    x: e.target.x(),
+                    y: e.target.y()
+                  };
+                  dispatch(setMarkerPoints(newMarkerPoints))
+                  setMarkerPointList(newMarkerPoints);
+                }}
+                onDragMove={(e) =>{
+                  const newMarkerPoints = Object.assign({}, markerPointList);
+                  newMarkerPoints[value.controlPoint2.name] = {
+                    name: value.controlPoint2.name,
+                    x: e.target.x(),
+                    y: e.target.y()
+                  };
+                  dispatch(setMarkerPoints(newMarkerPoints))
+                  setMarkerPointList(newMarkerPoints);
+                }}
+              />
+              <Group visible={selectedCurve === curveModel.name}>
+                <RegularPolygon
+                  sides={4}
+                  radius={5/scale}
+                  x={markerPointList[value.endPoint].x}
+                  y={markerPointList[value.endPoint].y}
+                  fill="red"
+                  onMouseOver={(event) => {
+                    const regularPolygon = event.target;
+                    regularPolygon.fill('#ffad00')
+                  }}
+                  onMouseLeave={event => {
+                    const regularPolygon = event.target;
+                    regularPolygon.fill('red')
+                  }} 
+                  draggable={selectedCurve}
+                  onDragEnd={(e) =>{
+                    const newMarkerPoints = Object.assign({}, markerPointList);
+                    newMarkerPoints[value.endPoint] = {
+                      x: e.target.x(),
+                      y: e.target.y()
+                    };
+                    dispatch(setMarkerPoints(newMarkerPoints))
+                    setMarkerPointList(newMarkerPoints);
+                  }}
+                  onDragMove={(e) =>{
+                    const newMarkerPoints = Object.assign({}, markerPointList);
+                    newMarkerPoints[value.endPoint] = {
+                      x: e.target.x(),
+                      y: e.target.y()
+                    };
+                    dispatch(setMarkerPoints(newMarkerPoints))
+                    setMarkerPointList(newMarkerPoints);
+                  }}
+                />
+                <Text 
+                  x={markerPointList[value.endPoint].x + 7/scale}
+                  y={markerPointList[value.endPoint].y + 7/scale}
+                  visible={curveModel.markerPoints[value.endPoint]?.isShow}
+                  scaleX={scale.x}
+                  scaleY={scale.y}
+                  draggable={false}
+                  text={value.endPoint}
+                  fill="#00FF7F"
+                  fontSize={13/scale}
+                />
+              </Group>
+            </React.Fragment>
+          )
+        }
+      })
+      return allPointsAndLineFromModel
+    }
+  },[markerPointList,selectedCurve,scale])
+
+  const drawCustomShape = useMemo(()=>{
+    let allCustomShapeFromModel = [];
+    for (const curveModel of ALL_MODEL_CURVES) {
+      if(checkAllPointsExist(curveModel,markerPointList)){
+        const customShape =  <Shape
+          key={curveModel.id}
+          strokeWidth={2/scale}
+          sceneFunc={(context,shape) => {
+            context.beginPath();
+            context.moveTo(markerPointList[curveModel.controlPoints[0].startPoint].x, markerPointList[curveModel.controlPoints[0].startPoint].y);
+            curveModel.controlPoints.forEach((value) => {
+              context.bezierCurveTo(
+                value.controlPoint1.positionDefault(markerPointList).x,
+                value.controlPoint1.positionDefault(markerPointList).y,
+                value.controlPoint2.positionDefault(markerPointList).x,
+                value.controlPoint2.positionDefault(markerPointList).y,
+                markerPointList[value.endPoint].x,
+                markerPointList[value.endPoint].y,
+              )
+            })
+            context.closePath();
+            context.fillStrokeShape(shape);
+          }}
+          opacity={1}
+          stroke="#ff8da1"
+        />
+        allCustomShapeFromModel.push(customShape);
+      }
+    }
+    return allCustomShapeFromModel;
+  },[markerPointList,selectedCurve,scale])
+
+  const drawCustomShapeHover = useMemo(()=>{
+    let allCustomShapeFromModel = [];
+    for (const curveModel of ALL_MODEL_CURVES) {
+      if(checkAllPointsExist(curveModel,markerPointList)){
+        const customShape =  <Shape
+          key={curveModel.id}
+          strokeWidth={0}
+          onMouseDown={() => {
+            if(selectedCurve === curveModel.name){
+              dispatch(setSelectedCurve(null))
+            }else dispatch(setSelectedCurve(curveModel.name))
+          }}
+          onMouseOver={(event) => {
+            if(selectedCurve !== curveModel.name){
+              const shape = event.target;
+              shape.fill('#27a9f1');
+            }
+          }}
+          onMouseOut={event => {
+            const shape = event.target;
+            shape.fill(null)
+          }}
+          sceneFunc={(context,shape) => {
+            context.beginPath();
+            context.moveTo(markerPointList[curveModel.controlPoints[0].startPoint].x, markerPointList[curveModel.controlPoints[0].startPoint].y);
+            curveModel.controlPoints.forEach((value) => {
+              context.bezierCurveTo(
+                value.controlPoint1.positionDefault(markerPointList).x,
+                value.controlPoint1.positionDefault(markerPointList).y,
+                value.controlPoint2.positionDefault(markerPointList).x,
+                value.controlPoint2.positionDefault(markerPointList).y,
+                markerPointList[value.endPoint].x,
+                markerPointList[value.endPoint].y,
+              )
+            })
+            context.closePath();
+            context.fillStrokeShape(shape);
+          }}
+          opacity={0.3}
+        />
+        allCustomShapeFromModel.push(customShape);
+      }
+    }
+    return allCustomShapeFromModel;
+  },[markerPointList,selectedCurve,scale])
+
   return <div className="d-flex flex-column justify-content-start align-items-center" style={{height:window.innerHeight}}>
     <NavbarComponent />
     <div className="d-flex flex-column container my-1">
@@ -383,11 +699,17 @@ export default function LateralCeph(props) {
         <div className="d-flex flex-column w-100 h-100 p-0">
           <div className="row p-0 d-flex flex-grow-1">
             <div className="col-md-9 d-flex flex-column flex-grow-1 pe-0">
-              <div className="py-1 mc-background px-2" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
-                <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('radiography')}</span>
-                {
-                  imageObject && <span className="ms-2 text-white text-capitalize" style={{fontSize:FONT_SIZE}}>( X-ray: {imageObject?.height*2}px x {imageObject?.width*2}px )</span>
-                }
+              <div className="py-1 mc-background px-2 d-flex justify-content-between align-items-center" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
+                <div>
+                  <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('radiography')}</span>
+                  {
+                    imageObject && <span className="ms-2 text-white text-capitalize" style={{fontSize:FONT_SIZE}}>( X-ray: {imageObject?.height*2}px x {imageObject?.width*2}px )</span>
+                  }
+                </div>
+                <div className="text-white d-flex">
+                  <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('mode')}:</span>
+                  <span className="text-white fw-bold text-capitalize ms-2" style={{fontSize:FONT_SIZE_HEAD}}>{stageMode === 0?'line analysis':'curve'}</span>
+                </div>
               </div>
               <div className="d-flex flex-grow-1 flex-row">
                 <ControlSection 
@@ -399,99 +721,122 @@ export default function LateralCeph(props) {
                   onSetCurrentMarkerPoint={point=>setCurrentMarkerPoint(point)}
                   currentMarkerPoint={currentMarkerPoint}
                   onSetMarkerPointList={markerPoints=>setMarkerPointList(markerPoints)}
+                  stageMode={stageMode}
                   rotation={rotation}
                   imageObject={imageObject}
                   isDragImage={isDragImage}
                   onDragImage={value=>setIsDragImage(value)}
                 />
-                <div 
-                  className="h-100 d-flex flex-grow-1 border-0"
-                  style={{outline:"none"}} 
-                  ref={contentAnalysisRef} 
-                  tabIndex={0}
-                  onKeyDown={handleDragImageKeyDown} 
-                  onKeyUp={handleDragImageKeyUp}
-                >
-                  <Stage 
-                    ref={stageRef} 
-                    onWheel={handleWheel} 
-                    height={heightStage} 
-                    width={widthStage} 
-                    className={`${(isDragImage && isGrab) ? 'cursor-grabbing' : (isDragImage && 'cursor-grab')} ${currentMarkerPoint && 'cursor-crosshair'} border-start border-end m-0 position-relative`} 
-                    x={0} 
-                    y={0} 
-                    offsetX={0} 
-                    offsetY={0}
-                    onDragStart={()=>setIsGrab(true)}
-                    onDragMove={()=>setIsGrab(true)}
-                    onDragEnd={()=>setIsGrab(false)}
-                    draggable={isDragImage}
-                    rotation={rotation}
-                    onMouseMove={handleMouseMove}
-                    onClick={onAddMarkerPoint}
+                <div className="d-flex flex-column flex-grow-1 border-0">
+                  <div className="d-flex justify-content-end align-items-center bg-white border-0 me-2">
+                    <button className={`btn ${stageMode===0 ? 'btn-outline-success':'btn-outline-primary'} p-0 border-0 my-1 ms-2`} type="button" onClick={()=>setStageMode(0)} disabled={stageMode===0}>
+                      <span className="material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}}>
+                        polyline
+                      </span>
+                    </button>
+                    <span className="vr mx-2"></span>
+                    <button className={`btn ${stageMode===1 ? 'btn-outline-success':'btn-outline-primary'} p-0 border-0 my-1`} type="button" onClick={()=>setStageMode(1)} disabled={stageMode===1}>
+                      <span className="material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}}>
+                        shape_line
+                      </span>
+                    </button>
+                  </div>
+                  <div 
+                    className="h-100 d-flex flex-grow-1 border-0"
+                    style={{outline:"none"}} 
+                    ref={contentAnalysisRef} 
+                    tabIndex={0}
+                    onKeyDown={handleDragImageKeyDown} 
+                    onKeyUp={handleDragImageKeyUp}
                   >
-                    <Layer>
-                      {
-                        imageObject &&
-                        <Image
-                          ref={imageRef} 
-                          image={imageObject}
-                          filters={filterFuncs}
-                          {...filterVals}
-                          offsetX={0}
-                          offsetY={0}
-                          x={0}
-                          y={0}
-                        />
-                      }
-                      {currentMarkerPoint && !isDragImage &&
-                        <React.Fragment>
-                          <Line
-                            ref={crosshairVerticalRef}
-                            x={crosshairPos.x}
-                            y={0}
-                            points={[0, -window.innerHeight, 0, window.innerHeight]}
-                            stroke="red"
-                            strokeWidth={1/scale}
-                            opacity={1/scale}
-                          />
-                          <Line
-                            ref={crosshairHorizontalRef}
+                    <Stage 
+                      ref={stageRef} 
+                      onWheel={handleWheel} 
+                      height={heightStage} 
+                      width={widthStage} 
+                      className={`${(isDragImage && isGrab) ? 'cursor-grabbing' : (isDragImage && 'cursor-grab')} ${currentMarkerPoint && 'cursor-crosshair'} border-start border-end m-0 position-relative`} 
+                      x={0} 
+                      y={0} 
+                      offsetX={0} 
+                      offsetY={0}
+                      onDragStart={()=>setIsGrab(true)}
+                      onDragMove={()=>setIsGrab(true)}
+                      onDragEnd={()=>setIsGrab(false)}
+                      draggable={isDragImage}
+                      rotation={rotation}
+                      onMouseMove={handleMouseMove}
+                      onClick={handleClickStage}
+                    >
+                      <Layer>
+                        {
+                          imageObject &&
+                          <Image
+                            ref={imageRef} 
+                            image={imageObject}
+                            filters={filterFuncs}
+                            {...filterVals}
+                            offsetX={0}
+                            offsetY={0}
                             x={0}
-                            y={crosshairPos.y}
-                            points={[-window.innerWidth, 0, window.innerWidth, 0]}
-                            stroke="red"
-                            strokeWidth={1/scale}
-                            opacity={1/scale}
+                            y={0}
                           />
-                        </React.Fragment>
-                      }
-                      {
-                        currentMarkerPoint && !isDragImage &&
-                        <Text 
-                          x={crosshairPos.x + 10}
-                          y={crosshairPos.y + 10}
-                          text={currentMarkerPoint}
-                          fill="#AAFF00"
-                          fontSize={15/scale}
-                          fontStyle={'bold'}
-                        />
-                      }
-                      {
-                        markerPoints['C1'] && markerPoints['C2'] && imageObject &&
-                        <Ruler c1={markerPoints['C1']} c2={markerPoints['C2']} scale={scale} lengthOfRuler={lengthOfRuler}/>
-                      }
-                      {
-                        markerPoints && imageObject && drawLines
-                      }
-                      {
-                        markerPoints && imageObject && highLightIndicator?.length>0 && hightLightLines
-                      }
-                      {
-                        markerPoints && imageObject && drawMarkerPoints
-                      }
-                    </Layer>
-                  </Stage>
+                        }
+                        {currentMarkerPoint && !isDragImage &&
+                          <React.Fragment>
+                            <Line
+                              ref={crosshairVerticalRef}
+                              x={crosshairPos.x}
+                              y={0}
+                              points={[0, -window.innerHeight, 0, window.innerHeight]}
+                              stroke="red"
+                              strokeWidth={1.1/scale}
+                            />
+                            <Line
+                              ref={crosshairHorizontalRef}
+                              x={0}
+                              y={crosshairPos.y}
+                              points={[-window.innerWidth, 0, window.innerWidth, 0]}
+                              stroke="red"
+                              strokeWidth={1.1/scale}
+                            />
+                          </React.Fragment>
+                        }
+                        {
+                          currentMarkerPoint && !isDragImage &&
+                          <Text 
+                            x={crosshairPos.x + 10}
+                            y={crosshairPos.y + 10}
+                            text={currentMarkerPoint}
+                            fill="#AAFF00"
+                            fontSize={15/scale}
+                            fontStyle={'bold'}
+                          />
+                        }
+                        {
+                          markerPoints['C1'] && markerPoints['C2'] && imageObject &&
+                          <Ruler c1={markerPoints['C1']} c2={markerPoints['C2']} scale={scale} lengthOfRuler={lengthOfRuler}/>
+                        }
+                        {
+                          markerPoints && imageObject && stageMode === 0 && drawLines
+                        }
+                        {
+                          markerPoints && imageObject && highLightIndicator?.length>0 && stageMode === 0 && hightLightLines
+                        }
+                        {
+                          markerPoints && imageObject && stageMode === 0 && drawMarkerPoints
+                        }
+                        {
+                          markerPoints && imageObject && stageMode === 1 && drawCustomShape
+                        }
+                        {
+                          markerPoints && imageObject && stageMode === 1 && drawCustomShapeHover
+                        }
+                        {
+                          markerPoints && imageObject && stageMode === 1 && drawMarkerPointsCurve
+                        }
+                      </Layer>
+                    </Stage>
+                  </div>
                 </div>
               </div>
             </div>

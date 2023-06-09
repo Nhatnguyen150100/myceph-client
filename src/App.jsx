@@ -34,6 +34,7 @@ function App() {
         <Route path="/schedule" element={<BigCalendar />}/>
         <Route path="/discussion" element={<Discussion />}/>
         <Route path="/lateralCeph" element={<LateralCeph />}/>
+        {/* chức năng chưa hoàn thiện <Route path="/calculatorTooth" element={<CalculatorToothMovement />} /> */}
         <Route path="/calculatorTooth" element={<CalculatorToothMovement />} />
       </Routes>
     </Suspense>

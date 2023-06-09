@@ -12,6 +12,8 @@ import { FONT_SIZE, getKeyByNameValue, IMAGE_TYPE_LIST, splitAvatar, upLoadImage
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { Slider } from "@mui/material";
 import { ANALYSIS, MARKER_LIST } from "./LateralCephalometricUtility.jsx";
+import { checkAllPointsExist, UPPER_JAW_BONE_CURVE } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 
 const ICON_SIZE = '22px'
 
@@ -65,6 +67,7 @@ const ControlSection = React.memo((props) => {
   },[currentPatient])
 
   const getListFontSideImages = () => {
+    dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) => {
       getToServerWithToken(`/v1/lateralCeph/getListFontSideImages/${currentPatient.id}`).then(result => {
         dispatch(setListImageFontSide(result.data));
@@ -76,13 +79,13 @@ const ControlSection = React.memo((props) => {
           toast.error(t(err.message));
         }
         reject();
-      })
+      }).finally(()=>dispatch(setLoadingModal(false)));
     });
   }
   
   const uploadImageToCloudinary = (image,typeImage,linkImage) => {
+    dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      dispatch(setLoadingModal(true));
       if(linkImage){
         postToServerWithToken(`/v1/libraryImagePatient/${currentPatient.id}`,{
           idDoctor: doctor.data.id,
@@ -152,7 +155,7 @@ const ControlSection = React.memo((props) => {
         resolve();
       }).catch(err =>{
         if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>getImageAnalysis(image.id));
+          refreshToken(nav,dispatch).then(()=>getImageAnalysis(image));
         }else{
           toast.error(err.message);
         }
@@ -212,6 +215,15 @@ const ControlSection = React.memo((props) => {
     })
   }
 
+  const findCurrentMarkerPoint = (listPoints,markerPoints) => {
+    for (const point of Object.keys(listPoints)) {
+      const checkPointExist = Object.keys(markerPoints).find(isPoint => point === isPoint)
+      if (checkPointExist === undefined) {
+        return point
+      }
+    }
+  }
+
   return <div className={`d-flex flex-column justify-content-between align-items-center px-1 border-end`}>
     <div className="d-flex flex-column">
       <button 
@@ -252,7 +264,7 @@ const ControlSection = React.memo((props) => {
         </ul>
       </div>
       {
-        props.currentMarkerPoint ? 
+        props.currentMarkerPoint ?
         <button 
           type="button" 
           className={`btn btn-outline-danger border-0 p-0 m-2`}
@@ -263,41 +275,83 @@ const ControlSection = React.memo((props) => {
           </span>
         </button>
         :
-        <div className="btn-group dropend">
-          <button 
-            type="button" 
-            className={`btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded`}
-            data-bs-toggle='dropdown'
-            aria-expanded="false"
-          >
-            <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
-              my_location
-            </span>
-          </button>
-          <ul className="dropdown-menu ms-2 w-auto" style={{maxHeight:window.innerHeight/2,overflowY:"auto"}}>
-            {
-              ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints.map((point,index) => {
-                return <button 
-                  key={index+Math.random(1,1000)} 
+        <React.Fragment> 
+          {
+            props.stageMode === 0 ?
+            <div className="btn-group dropend">
+              <button 
+                type="button" 
+                className={`btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded`}
+                data-bs-toggle='dropdown'
+                aria-expanded="false"
+              >
+                <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
+                  my_location
+                </span>
+              </button>
+              <ul className="dropdown-menu ms-2 w-auto" style={{maxHeight:window.innerHeight/2,overflowY:"auto"}}>
+                {
+                  ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints.map((point,index) => {
+                    return <button 
+                      key={index+Math.random(1,1000)} 
+                      type="button" 
+                      className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                      disabled={markerPoints && markerPoints[point]}
+                      onClick={()=>{
+                        props.onSetCurrentMarkerPoint(point)
+                      }}
+                    >
+                      <span className={`text-uppercase fw-bold ${markerPoints && markerPoints[point] && 'text-success'}`} style={{fontSize:FONT_SIZE}}>
+                        ({point})
+                      </span>
+                      <span className={`text-capitalize fw-bold ms-2 text-nowrap ${markerPoints && markerPoints[point] && 'text-success'}`} style={{fontSize:FONT_SIZE}}>
+                        {MARKER_LIST[point]}
+                      </span>
+                    </button>
+                  })
+                }
+              </ul>
+            </div>
+            :
+            <div className="btn-group dropend">
+              <button 
+                type="button" 
+                className={`btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded`}
+                data-bs-toggle='dropdown'
+                aria-expanded="false"
+              >
+                <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
+                  gesture
+                </span>
+              </button>
+              <ul className="dropdown-menu ms-2 w-auto p-0" style={{maxHeight:window.innerHeight/2,overflowY:"auto"}}>
+                <button 
                   type="button" 
+                  disabled={checkAllPointsExist(UPPER_JAW_BONE_CURVE,markerPoints)}
                   className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
-                  disabled={markerPoints && markerPoints[point]}
                   onClick={()=>{
-                    props.onSetCurrentMarkerPoint(point)
+                    const currentMarker = findCurrentMarkerPoint(UPPER_JAW_BONE_CURVE.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(UPPER_JAW_BONE_CURVE.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
                   }}
                 >
-                  <span className={`text-uppercase fw-bold ${markerPoints && markerPoints[point] && 'text-success'}`} style={{fontSize:FONT_SIZE}}>
-                    ({point})
-                  </span>
-                  <span className={`text-capitalize fw-bold ms-2 text-nowrap ${markerPoints && markerPoints[point] && 'text-success'}`} style={{fontSize:FONT_SIZE}}>
-                    {MARKER_LIST[point]}
-                  </span>
+                  <img src={`${checkAllPointsExist(UPPER_JAW_BONE_CURVE,markerPoints) ? '/assets/images/MAXILLARY_delete.jpg' : '/assets/images/MAXILLARY_create.jpg'}`} alt="maxillary"/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_JAW_BONE_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('maxillary')}</span>
                 </button>
-              })
-            }
-          </ul>
-        </div>
+                <button disabled type="button" className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0">
+                  <img src="/assets/images/UPPER_INCISOR_create.jpg" alt="maxillary"/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap`} style={{fontSize:FONT_SIZE}}>{t('upper incisor')}</span>
+                </button>
+                <button disabled type="button" className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0">
+                  <img src="/assets/images/UNDER_INCISOR_create.jpg" alt="maxillary"/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap`} style={{fontSize:FONT_SIZE}}>{t('under incisor')}</span>
+                </button>
+              </ul>
+            </div>
+          }
+        </React.Fragment>
       }
+      
       <div className="btn-group dropend">
         <button type="button" className="btn btn-outline-primary border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded" data-bs-toggle="dropdown" aria-expanded="false">
           <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
