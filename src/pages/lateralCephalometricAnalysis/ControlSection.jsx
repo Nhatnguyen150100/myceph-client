@@ -12,7 +12,7 @@ import { FONT_SIZE, getKeyByNameValue, IMAGE_TYPE_LIST, splitAvatar, upLoadImage
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { Slider } from "@mui/material";
 import { ANALYSIS, MARKER_LIST } from "./LateralCephalometricUtility.jsx";
-import { checkAllPointsExist, UPPER_JAW_BONE_CURVE } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { checkAllPointsExist, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 
 const ICON_SIZE = '22px'
@@ -338,13 +338,31 @@ const ControlSection = React.memo((props) => {
                   <img src={`${checkAllPointsExist(UPPER_JAW_BONE_CURVE,markerPoints) ? '/assets/images/MAXILLARY_delete.jpg' : '/assets/images/MAXILLARY_create.jpg'}`} alt="maxillary"/>
                   <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_JAW_BONE_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('maxillary')}</span>
                 </button>
-                <button disabled type="button" className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0">
-                  <img src="/assets/images/UPPER_INCISOR_create.jpg" alt="maxillary"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap`} style={{fontSize:FONT_SIZE}}>{t('upper incisor')}</span>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(UPPER_INCISOR_CURVE,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(UPPER_INCISOR_CURVE.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(UPPER_INCISOR_CURVE.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(UPPER_INCISOR_CURVE,markerPoints) ? '/assets/images/UPPER_INCISOR_delete.jpg' : '/assets/images/UPPER_INCISOR_create.jpg'}`} alt="maxillary"/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_INCISOR_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('upper incisor')}</span>
                 </button>
-                <button disabled type="button" className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0">
-                  <img src="/assets/images/UNDER_INCISOR_create.jpg" alt="maxillary"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap`} style={{fontSize:FONT_SIZE}}>{t('under incisor')}</span>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(UNDER_INCISOR_CURVE,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(UNDER_INCISOR_CURVE.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(UNDER_INCISOR_CURVE.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(UNDER_INCISOR_CURVE,markerPoints) ? '/assets/images/UNDER_INCISOR_delete.jpg' : '/assets/images/UNDER_INCISOR_create.jpg'}`} alt="maxillary"/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UNDER_INCISOR_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('under incisor')}</span>
                 </button>
               </ul>
             </div>

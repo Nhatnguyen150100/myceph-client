@@ -13,7 +13,7 @@ import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setAppName } from "../../redux/GeneralSlice.jsx";
 import { setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
-import { checkAllPointsExist, getModelCurve, UPPER_JAW_BONE_CURVE } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { checkAllPointsExist, getModelCurve, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import ControlSection from "./ControlSection.jsx";
 import { ANALYSIS } from "./LateralCephalometricUtility.jsx";
 import ResultAnalysisTable from "./ResultAnalysisTable.jsx";
@@ -25,7 +25,7 @@ const filterMap = {
   brightness: Konva.Filters.Brighten
 }
 
-const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE]
+const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE,UPPER_INCISOR_CURVE,UNDER_INCISOR_CURVE]
 
 export default function LateralCeph(props) {
   const dispatch = useDispatch();
@@ -148,6 +148,7 @@ export default function LateralCeph(props) {
       dispatch(setMarkerPoints(newMarkerPoints));
       setMarkerPointList(newMarkerPoints);
       const nextPoint = findNextObject(currentMarkerPoint,currentMarkerPoints,markerPoints);
+      if(stageMode === 1 && !nextPoint) dispatch(setSelectedCurve(null))
       setCurrentMarkerPoint(nextPoint);
     }
   }
@@ -315,7 +316,7 @@ export default function LateralCeph(props) {
       if(markerPointList[key] && ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.markerPoints.find(point => point === key)){
         circleWithTextArray.push(
           <Group
-            key={markerPointList[key].x+markerPointList[key].y}
+            key={markerPointList[key].x-markerPointList[key].y}
             visible={isVisitableMarkerPoints}
           >
             <Circle
@@ -387,10 +388,10 @@ export default function LateralCeph(props) {
   const drawMarkerPointsCurve = useMemo(()=>{
     let allPointsAndLineFromModel = [];
     for (const curveModel of ALL_MODEL_CURVES) {
-      curveModel.controlPoints.map((value,index) => {
+      curveModel.controlPoints.map((value,_) => {
         if(markerPointList[value.startPoint]){
           allPointsAndLineFromModel.push(
-            <React.Fragment key={index}>
+            <React.Fragment key={value.startPoint}>
               <Line 
                 x={0}
                 y={0}
@@ -444,14 +445,72 @@ export default function LateralCeph(props) {
                   setMarkerPointList(newMarkerPoints);
                 }}
               />
+              {
+                markerPointList[value.endPoint] &&
+                <React.Fragment>
+                  <Line 
+                    x={0}
+                    y={0}
+                    lineCap="round"
+                    lineJoin="round"
+                    visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
+                    dash={[10/scale, 10/scale, 0.2/scale, 10/scale]}
+                    points={[
+                      markerPointList[value.endPoint].x, 
+                      markerPointList[value.endPoint].y, 
+                      value.controlPoint2.positionDefault(markerPointList).x,
+                      value.controlPoint2.positionDefault(markerPointList).y
+                    ]}
+                    stroke="#00FF7F"
+                    strokeWidth={2/scale}
+                    opacity={1}
+                  />
+                  <Circle 
+                    x={value.controlPoint2.positionDefault(markerPointList).x}
+                    y={value.controlPoint2.positionDefault(markerPointList).y}
+                    radius={4/scale}
+                    fill="blue" 
+                    onMouseOver={(event) => {
+                      const circle = event.target;
+                      circle.fill('#ffad00')
+                    }}
+                    onMouseLeave={event => {
+                      const circle = event.target;
+                      circle.fill('blue')
+                    }}
+                    visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
+                    draggable
+                    onDragEnd={(e) =>{
+                      const newMarkerPoints = Object.assign({}, markerPointList);
+                      newMarkerPoints[value.controlPoint2.name] = {
+                        name: value.controlPoint2.name,
+                        x: e.target.x(),
+                        y: e.target.y()
+                      };
+                      dispatch(setMarkerPoints(newMarkerPoints))
+                      setMarkerPointList(newMarkerPoints);
+                    }}
+                    onDragMove={(e) =>{
+                      const newMarkerPoints = Object.assign({}, markerPointList);
+                      newMarkerPoints[value.controlPoint2.name] = {
+                        name: value.controlPoint2.name,
+                        x: e.target.x(),
+                        y: e.target.y()
+                      };
+                      dispatch(setMarkerPoints(newMarkerPoints))
+                      setMarkerPointList(newMarkerPoints);
+                    }}
+                  />
+                </React.Fragment>
+              }
               <Group visible={selectedCurve === curveModel.name}>
                 <RegularPolygon
                   sides={4}
-                  radius={5/scale}
+                  radius={6/scale}
                   x={markerPointList[value.startPoint].x}
                   y={markerPointList[value.startPoint].y}
                   fill="red" 
-                  draggable={selectedCurve}
+                  draggable
                   onMouseOver={(event) => {
                     const regularPolygon = event.target;
                     regularPolygon.fill('#ffad00')
@@ -494,115 +553,9 @@ export default function LateralCeph(props) {
             </React.Fragment>
           ) 
         }
-        if(markerPointList[value.endPoint]){
-          allPointsAndLineFromModel.push(
-            <React.Fragment key={index}>
-              <Line 
-                x={0}
-                y={0}
-                lineCap="round"
-                lineJoin="round"
-                visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
-                dash={[10/scale, 10/scale, 0.2/scale, 10/scale]}
-                points={[
-                  markerPointList[value.endPoint].x, 
-                  markerPointList[value.endPoint].y, 
-                  value.controlPoint2.positionDefault(markerPointList).x,
-                  value.controlPoint2.positionDefault(markerPointList).y
-                ]}
-                stroke="#00FF7F"
-                strokeWidth={2/scale}
-                opacity={1}
-              />
-              <Circle 
-                x={value.controlPoint2.positionDefault(markerPointList).x}
-                y={value.controlPoint2.positionDefault(markerPointList).y}
-                radius={4/scale}
-                fill="blue" 
-                onMouseOver={(event) => {
-                  const circle = event.target;
-                  circle.fill('#ffad00')
-                }}
-                onMouseLeave={event => {
-                  const circle = event.target;
-                  circle.fill('blue')
-                }}
-                visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
-                draggable
-                onDragEnd={(e) =>{
-                  const newMarkerPoints = Object.assign({}, markerPointList);
-                  newMarkerPoints[value.controlPoint2.name] = {
-                    name: value.controlPoint2.name,
-                    x: e.target.x(),
-                    y: e.target.y()
-                  };
-                  dispatch(setMarkerPoints(newMarkerPoints))
-                  setMarkerPointList(newMarkerPoints);
-                }}
-                onDragMove={(e) =>{
-                  const newMarkerPoints = Object.assign({}, markerPointList);
-                  newMarkerPoints[value.controlPoint2.name] = {
-                    name: value.controlPoint2.name,
-                    x: e.target.x(),
-                    y: e.target.y()
-                  };
-                  dispatch(setMarkerPoints(newMarkerPoints))
-                  setMarkerPointList(newMarkerPoints);
-                }}
-              />
-              <Group visible={selectedCurve === curveModel.name}>
-                <RegularPolygon
-                  sides={4}
-                  radius={5/scale}
-                  x={markerPointList[value.endPoint].x}
-                  y={markerPointList[value.endPoint].y}
-                  fill="red"
-                  onMouseOver={(event) => {
-                    const regularPolygon = event.target;
-                    regularPolygon.fill('#ffad00')
-                  }}
-                  onMouseLeave={event => {
-                    const regularPolygon = event.target;
-                    regularPolygon.fill('red')
-                  }} 
-                  draggable={selectedCurve}
-                  onDragEnd={(e) =>{
-                    const newMarkerPoints = Object.assign({}, markerPointList);
-                    newMarkerPoints[value.endPoint] = {
-                      x: e.target.x(),
-                      y: e.target.y()
-                    };
-                    dispatch(setMarkerPoints(newMarkerPoints))
-                    setMarkerPointList(newMarkerPoints);
-                  }}
-                  onDragMove={(e) =>{
-                    const newMarkerPoints = Object.assign({}, markerPointList);
-                    newMarkerPoints[value.endPoint] = {
-                      x: e.target.x(),
-                      y: e.target.y()
-                    };
-                    dispatch(setMarkerPoints(newMarkerPoints))
-                    setMarkerPointList(newMarkerPoints);
-                  }}
-                />
-                <Text 
-                  x={markerPointList[value.endPoint].x + 7/scale}
-                  y={markerPointList[value.endPoint].y + 7/scale}
-                  visible={curveModel.markerPoints[value.endPoint]?.isShow}
-                  scaleX={scale.x}
-                  scaleY={scale.y}
-                  draggable={false}
-                  text={value.endPoint}
-                  fill="#00FF7F"
-                  fontSize={13/scale}
-                />
-              </Group>
-            </React.Fragment>
-          )
-        }
       })
-      return allPointsAndLineFromModel
     }
+    return allPointsAndLineFromModel
   },[markerPointList,selectedCurve,scale])
 
   const drawCustomShape = useMemo(()=>{
@@ -610,7 +563,7 @@ export default function LateralCeph(props) {
     for (const curveModel of ALL_MODEL_CURVES) {
       if(checkAllPointsExist(curveModel,markerPointList)){
         const customShape =  <Shape
-          key={curveModel.id}
+          key={curveModel.id+markerPointList[curveModel.controlPoints[0].startPoint].x+markerPointList[curveModel.controlPoints[0].startPoint].y}
           strokeWidth={2/scale}
           sceneFunc={(context,shape) => {
             context.beginPath();
@@ -650,10 +603,8 @@ export default function LateralCeph(props) {
             }else dispatch(setSelectedCurve(curveModel.name))
           }}
           onMouseOver={(event) => {
-            if(selectedCurve !== curveModel.name){
-              const shape = event.target;
-              shape.fill('#27a9f1');
-            }
+            const shape = event.target;
+            shape.fill('#BF40BF');
           }}
           onMouseOut={event => {
             const shape = event.target;
