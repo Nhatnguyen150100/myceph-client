@@ -12,7 +12,7 @@ import { FONT_SIZE, getKeyByNameValue, IMAGE_TYPE_LIST, splitAvatar, upLoadImage
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { Slider } from "@mui/material";
 import { ANALYSIS, MARKER_LIST } from "./LateralCephalometricUtility.jsx";
-import { checkAllPointsExist, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { checkAllPointsExist, MANDIBULAR, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 
 const ICON_SIZE = '22px'
@@ -363,6 +363,32 @@ const ControlSection = React.memo((props) => {
                 >
                   <img src={`${checkAllPointsExist(UNDER_INCISOR_CURVE,markerPoints) ? '/assets/images/UNDER_INCISOR_delete.jpg' : '/assets/images/UNDER_INCISOR_create.jpg'}`} alt="maxillary"/>
                   <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UNDER_INCISOR_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('under incisor')}</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(MANDIBULAR,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(MANDIBULAR.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(MANDIBULAR.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(MANDIBULAR,markerPoints) ? '/assets/images/MANDIBULAR1_DELETE.jpg' : '/assets/images/MANDIBULAR1_CREATE.jpg'}`} height={37} alt="mandibular"/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(MANDIBULAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('mandibular')}</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(UPPER_MOLAR,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(UPPER_MOLAR.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(UPPER_MOLAR.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(UPPER_MOLAR,markerPoints) ? '/assets/images/RANG_HAM_TREN_delete.jpg' : '/assets/images/RANG_HAM_TREN_create.jpg'}`} height={37} alt="mandibular"/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_MOLAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('mandibular')}</span>
                 </button>
               </ul>
             </div>

@@ -87,8 +87,8 @@ function LoginPage(props){
       className="d-flex flex-column justify-content-center align-items-center"
       style={{
         height: '100%',
-        backgroundImage: `url("/assets/images/login_background.jpg")`,
-        backgroundSize: '100% 100%',
+        backgroundImage: `url("/assets/images/background_desktop.jpg")`,
+        backgroundSize: '100% 125%',
       }}>
       <NavbarComponent />
       <div

@@ -176,8 +176,8 @@ function ForgotPasswordPage(props){
     className="d-flex flex-column justify-content-start align-items-center"
     style={{
       height: '100%',
-      backgroundImage: `url("/assets/images/login_background.jpg")`,
-      backgroundSize: '100% 100%',
+      backgroundImage: `url("/assets/images/background_desktop.jpg")`,
+      backgroundSize: '100% 125%',
     }}>
     <NavbarComponent />
     <div className="h-100 d-flex flex-column align-items-center justify-content-center">

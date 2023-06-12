@@ -13,7 +13,7 @@ import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setAppName } from "../../redux/GeneralSlice.jsx";
 import { setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
-import { checkAllPointsExist, getModelCurve, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { checkAllPointsExist, getModelCurve, MANDIBULAR, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import ControlSection from "./ControlSection.jsx";
 import { ANALYSIS } from "./LateralCephalometricUtility.jsx";
 import ResultAnalysisTable from "./ResultAnalysisTable.jsx";
@@ -25,7 +25,7 @@ const filterMap = {
   brightness: Konva.Filters.Brighten
 }
 
-const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE,UPPER_INCISOR_CURVE,UNDER_INCISOR_CURVE]
+const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE,UPPER_INCISOR_CURVE,UNDER_INCISOR_CURVE,MANDIBULAR,UPPER_MOLAR]
 
 export default function LateralCeph(props) {
   const dispatch = useDispatch();
@@ -564,6 +564,8 @@ export default function LateralCeph(props) {
       if(checkAllPointsExist(curveModel,markerPointList)){
         const customShape =  <Shape
           key={curveModel.id+markerPointList[curveModel.controlPoints[0].startPoint].x+markerPointList[curveModel.controlPoints[0].startPoint].y}
+          x={0}
+          y={0}
           strokeWidth={2/scale}
           sceneFunc={(context,shape) => {
             context.beginPath();
@@ -584,6 +586,25 @@ export default function LateralCeph(props) {
           opacity={1}
           stroke="#ff8da1"
         />
+        if(curveModel.lines.length > 0){
+          for (const line of curveModel.lines) {
+            const lineShape = <Line
+            key={markerPointList[line.startPoint].x+markerPointList[line.endPoint].y}
+            x={0}
+            y={0}
+            stroke={line.lineColor}
+            points={[
+              markerPointList[line.startPoint].x, 
+              markerPointList[line.startPoint].y, 
+              markerPointList[line.endPoint].x,
+              markerPointList[line.endPoint].y
+            ]}
+            strokeWidth={2/scale}
+            opacity={1}
+            />
+            allCustomShapeFromModel.push(lineShape)
+          }
+        }
         allCustomShapeFromModel.push(customShape);
       }
     }
@@ -596,15 +617,32 @@ export default function LateralCeph(props) {
       if(checkAllPointsExist(curveModel,markerPointList)){
         const customShape =  <Shape
           key={curveModel.id}
+          x={0}
+          y={0}
           strokeWidth={0}
           onMouseDown={() => {
-            if(selectedCurve === curveModel.name){
-              dispatch(setSelectedCurve(null))
-            }else dispatch(setSelectedCurve(curveModel.name))
+            if(!currentMarkerPoint){
+              if(selectedCurve !== curveModel.name){
+                dispatch(setSelectedCurve(curveModel.name))
+              }else dispatch(setSelectedCurve(null)) 
+            }
           }}
+          // draggable
+          // onDragStart={(event) => {
+          //   dispatch(setSelectedCurve(null))
+          //   const shape = event.target;
+          //   shape.fill('#0c1780');
+          // }}
+          // onDragEnd={e=>{
+          //   const pos = {
+          //     x: e.target.x(),
+          //     y: e.target.y()
+          //   }
+          //   console.log("🚀 ~ file: LateralCeph.jsx:616 ~ drawCustomShapeHover ~ pos:", pos)
+          // }}
           onMouseOver={(event) => {
             const shape = event.target;
-            shape.fill('#BF40BF');
+            shape.fill('#0c1780');
           }}
           onMouseOut={event => {
             const shape = event.target;
@@ -626,7 +664,7 @@ export default function LateralCeph(props) {
             context.closePath();
             context.fillStrokeShape(shape);
           }}
-          opacity={0.3}
+          opacity={0.4}
         />
         allCustomShapeFromModel.push(customShape);
       }
