@@ -155,7 +155,7 @@ export default function NavbarComponent(props) {
                   </ul>
                 </div>
                 :
-                <React.Fragment>
+                <div className="d-none d-lg-block">
                   <Link to={"/login"} style={{textDecoration:"none"}}>
                     <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('login')}</span>
                   </Link>
@@ -163,7 +163,7 @@ export default function NavbarComponent(props) {
                   <Link to={"/register"} style={{textDecoration:"none"}}>
                     <span className="mx-3 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('sign up')}</span>
                   </Link>
-                </React.Fragment>
+                </div>
               }
             </div>
           </div>
