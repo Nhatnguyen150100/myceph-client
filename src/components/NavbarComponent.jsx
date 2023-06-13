@@ -132,7 +132,7 @@ export default function NavbarComponent(props) {
               </div>
               {
                 doctor?
-                <div className="dropdown d-none d-lg-none" style={{marginLeft:"10px"}}>
+                <div className="dropdown d-none d-lg-block" style={{marginLeft:"10px"}}>
                   <button className="btn border-0 dropdown-toggle d-flex flex-row align-items-center px-2 text-gray" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{outline:"none"}}>
                     <div className="d-flex flex-row align-items-center" style={{background:"transparent"}}>
                       <img className="me-1 mb-1" src="/assets/icons/user.png" style={{height:"20px",background:"transparent"}} alt=""/>
