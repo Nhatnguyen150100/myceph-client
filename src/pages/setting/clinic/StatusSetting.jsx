@@ -133,7 +133,7 @@ export default function StatusSetting(props){
       <thead className='mc-background text-white text-uppercase'>
         <tr>
           <th className='align-middle mc-heading-middle d-lg-table-cell d-none text-uppercase' style={{fontSize:FONT_SIZE}}>stt</th>
-          <th style={{minWidth:"350px",fontSize:FONT_SIZE}}>
+          <th className="name-width" style={{minWidth:"350px",fontSize:FONT_SIZE}}>
             <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
               <input 
                 type="text" 
@@ -148,13 +148,13 @@ export default function StatusSetting(props){
               <span className="material-symbols-outlined mc-color fw-bolder" style={{fontSize:"30px"}}>checklist</span>
             </div>
           </th>
-          <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE,minWidth:"100px"}}>
+          <th className='align-middle mc-heading-middle d-lg-table-cell submit-icon' style={{fontSize:FONT_SIZE,minWidth:"100px"}}>
             <div className={`d-flex flex-column align-items-center justify-content-center`} >
               <span className="text-white fw-bold" style={{fontSize:FONT_SIZE}}>{t("color")}</span>
               <input type="color" disabled={clinic.roleOfDoctor!=='admin'} className="border-0 p-0" style={{ outline: "none" }} value={colorStatus} onChange={e=>setColorStatus(e.target.value)}/>
             </div>
           </th>
-          <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE, minWidth:"150px"}}>
+          <th className='align-middle mc-heading-middle d-lg-table-cell submit-icon' style={{fontSize:FONT_SIZE, minWidth:"150px"}}>
             <IconButtonComponent className={`btn-success h-100 ${clinic.roleOfDoctor==='admin' && 'standout'}`} onClick={createStatus} icon="add" FONT_SIZE_ICON={"25px"} title={t("add new status")} disabled={clinic.roleOfDoctor!=='admin'}/>
           </th>
         </tr>

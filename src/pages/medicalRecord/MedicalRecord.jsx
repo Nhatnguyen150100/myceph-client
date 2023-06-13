@@ -44,7 +44,7 @@ export default function MedicalRecord(props){
   return <div className="d-flex flex-column justify-content-start align-items-center">
     <NavbarComponent />
     <div className="d-flex flex-column h-100 container my-1">
-      <div className="d-flex flex-row justify-content-between align-items-center w-100 mb-3" style={{minHeight:`${selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT?'100px':'0px'}`}}>
+      <div className="d-flex flex-wrap flex-row justify-content-between align-items-center w-100 mb-3" style={{minHeight:`${selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT?'100px':'0px'}`}}>
         <SelectPatientComponent condition={selectPatientOnMode === SELECT_PATIENT_MODE.CLINIC_PATIENT} showSelectedPatient={true}/>
         <SoftWareListComponent />
       </div>

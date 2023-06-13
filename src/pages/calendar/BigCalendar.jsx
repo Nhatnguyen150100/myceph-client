@@ -248,7 +248,7 @@ export default function BigCalendar(props){
         style={{height:heightCalendar}}
       />
     break;
-    case VIEW_CALENDAR.BY_PATIENT: currentTab = <div className="col-md-9" style={{height:heightCalendar,overflow:"auto"}}>
+    case VIEW_CALENDAR.BY_PATIENT: currentTab = <div className="col-md-9 " style={{height:heightCalendar,overflow:"auto"}}>
         <table className="table table-bordered text-center rounded">
           <thead className="text-uppercase text-gray fw-bold" style={{fontSize:FONT_SIZE}}>
             <tr>
@@ -303,7 +303,7 @@ export default function BigCalendar(props){
                   <td>
                     <button type="button" className="text-white btn w-100 p-0 border-0 d-flex flex-row justify-content-center align-items-center" style={{fontSize:FONT_SIZE}}>
                       <span>{appoint.Doctor.fullName}</span>
-                      <span className="ms-2">({appoint.Doctor.email})</span>
+                      <span className="ms-2 d-none d-lg-block">({appoint.Doctor.email})</span>
                     </button>
                   </td>
                   <td className="text-white" style={{fontSize:FONT_SIZE}}>
@@ -362,11 +362,11 @@ export default function BigCalendar(props){
         </li>
       </ul>
       <div className="container-fluid my-1">
-        <div className={`d-flex flex-row ${selectedTab===VIEW_CALENDAR.BY_PATIENT?'justify-content-between':'justify-content-start'} align-items-center w-100`}>  
-          <div className="d-flex flex-row align-items-center">
+        <div className={`d-flex flex-wrap flex-row ${selectedTab===VIEW_CALENDAR.BY_PATIENT?'justify-content-between':'justify-content-start'} align-items-center w-100`}>  
+          <div className="d-flex flex-wrap flex-row align-items-center">
             <IconButtonComponent
               disabled={clinic.roleOfDoctor !== 'admin'} 
-              className={`btn-primary h-100 pb-1 d-flex align-items-center ms-2 me-4`} 
+              className={`btn-primary h-100 pb-1 d-flex align-items-center me-4`} 
               icon="add" 
               FONT_SIZE_ICON={"25px"} 
               title={t("Create appointment")}

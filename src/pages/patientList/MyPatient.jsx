@@ -112,7 +112,7 @@ export default function MyPatient(props){
       <thead className='mc-background text-white text-uppercase'>
         <tr>
           <th className='align-middle mc-heading-middle d-lg-table-cell d-none text-uppercase' style={{fontSize:FONT_SIZE}}>stt</th>
-          <th colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>
+          <th className="name-col" colSpan={2} style={{minWidth:"350px",fontSize:FONT_SIZE}}>
             <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
               <input type="text" className="border-0 flex-grow-1 w-100" placeholder={t("Enter patient name to search")} style={{ outline: "none" }} value={nameSearch} onChange={onNameSearchChange}/>
               <span className="material-symbols-outlined vc-teal fw-bolder">search</span>

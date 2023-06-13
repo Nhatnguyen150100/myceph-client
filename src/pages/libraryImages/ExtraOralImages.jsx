@@ -212,8 +212,8 @@ export default React.memo(function ExtraoralImages(props){
                 </fieldset>
               </div>
             </legend>
-            <div className="d-flex align-items-center mb-3 p-0 justify-content-start ps-4 flex-row w-100">
-                <div className="me-4" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
+            <div className="d-flex flex-wrap align-items-center mb-3 p-0 justify-content-start ps-4 flex-row w-100">
+                <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
                   <UploadImage 
                     imageIcon="/assets/images/5.png" 
                     styleImage={{height:"50px"}} 
@@ -224,7 +224,7 @@ export default React.memo(function ExtraoralImages(props){
                     getImage={value => uploadImageToCloudinary(value,5,false)}
                   />
                 </div>
-                <div className="me-4" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
+                <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
                   <UploadImage 
                     imageIcon="/assets/images/6.png" 
                     styleImage={{height:"50px"}} 
@@ -235,7 +235,7 @@ export default React.memo(function ExtraoralImages(props){
                     getImage={value => uploadImageToCloudinary(value,6,false)}
                   />
                 </div>
-                <div className="me-4" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
+                <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
                   <UploadImage 
                     imageIcon="/assets/images/7.png" 
                     styleImage={{height:"50px"}} 
@@ -246,7 +246,7 @@ export default React.memo(function ExtraoralImages(props){
                     getImage={value => uploadImageToCloudinary(value,7,false)}
                   />
                 </div>
-                <div className="me-4" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
+                <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
                   <UploadImage 
                     imageIcon="/assets/images/8.png" 
                     styleImage={{height:"50px"}} 
@@ -257,7 +257,7 @@ export default React.memo(function ExtraoralImages(props){
                     getImage={value => uploadImageToCloudinary(value,8,false)}
                   />
                 </div>
-                <div className="me-4" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
+                <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
                   <UploadImage 
                     imageIcon="/assets/images/9.png" 
                     styleImage={{height:"50px"}} 

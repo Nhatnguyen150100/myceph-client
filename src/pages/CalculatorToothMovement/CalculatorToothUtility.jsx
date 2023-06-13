@@ -37,6 +37,8 @@ export const getModelCurve = (name) => {
       break;
     case 'upper molar': model = UPPER_MOLAR;
       break;
+    case 'lower molar': model = LOWER_MOLAR;
+      break;
     default: model = null
       break;
   }
@@ -811,7 +813,7 @@ export const UPPER_MOLAR = {
           const endPoint = markerPoints['UP_M3'];
 
           return controlPoint? controlPoint : {
-            x: endPoint.x - point2PointDistance(startPoint,endPoint)/18,
+            x: endPoint.x - 1,
             y: endPoint.y - point2PointDistance(startPoint,endPoint)/8
           }
         }
@@ -949,7 +951,7 @@ export const UPPER_MOLAR = {
 
           return controlPoint? controlPoint : {
             x: startPoint.x - point2PointDistance(startPoint,endPoint)/4,
-            y: startPoint.y - 2
+            y: startPoint.y
           }
         }
       },
@@ -1008,7 +1010,7 @@ export const UPPER_MOLAR = {
           const endPoint = markerPoints['UP_M1'];
 
           return controlPoint? controlPoint : {
-            x: startPoint.x + point2PointDistance(startPoint,endPoint)/18,
+            x: startPoint.x + 1,
             y: startPoint.y - point2PointDistance(startPoint,endPoint)/8
           }
         }
@@ -1027,5 +1029,355 @@ export const UPPER_MOLAR = {
         }
       } 
     }
+  ]
+}
+
+export const LOWER_MOLAR = {
+  id: 6,
+  name: 'lower molar',
+  markerPoints: {
+    Md6O: {
+      name: 'Distal Cusp of Mandibular First Molar',
+      isShow: true,
+    },
+    L_M1: {
+      name: 'L_M1',
+      isShow: false
+    },
+    LO: {
+      name: 'LO',
+      isShow: true
+    },
+    Md6M: {
+      name: 'Md6M',
+      isShow: true
+    },
+    L_M2: {
+      name: 'L_M2',
+      isShow: false
+    },
+    LMR: {
+      name: 'LMR',
+      isShow: true
+    },
+    L_M3: {
+      name: 'L_M3',
+      isShow: false
+    },
+    L_M4: {
+      name: 'L_M4',
+      isShow: false
+    },
+    L_M5: {
+      name: 'L_M5',
+      isShow: false
+    },
+    L_M6: {
+      name: 'L_M6',
+      isShow: false
+    }
+  },
+  lines: [],
+  controlPoints: [
+    {
+      startPoint: 'Md6O',
+      endPoint: 'L_M1',
+      controlPoint1: {
+        name: 'Md6O_TO_L_M1_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['Md6O_TO_L_M1_P1'];
+          const startPoint = markerPoints['Md6O'];
+          const endPoint = markerPoints['L_M1'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x + point2PointDistance(startPoint,endPoint)/2,
+            y: startPoint.y + point2PointDistance(startPoint,endPoint)/2.8
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'Md6O_TO_L_M1_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['Md6O_TO_L_M1_P2'];
+          const startPoint = markerPoints['Md6O'];
+          const endPoint = markerPoints['L_M1'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x - point2PointDistance(startPoint,endPoint)/4,
+            y: endPoint.y - point2PointDistance(startPoint,endPoint)/7
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'L_M1',
+      endPoint: 'LO',
+      controlPoint1: {
+        name: 'L_M1_TO_LO_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M1_TO_LO_P1'];
+          const startPoint = markerPoints['L_M1'];
+          const endPoint = markerPoints['LO'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x + point2PointDistance(startPoint,endPoint)/3.5,
+            y: startPoint.y + point2PointDistance(startPoint,endPoint)/3
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'L_M1_TO_LO_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M1_TO_LO_P2'];
+          const startPoint = markerPoints['L_M1'];
+          const endPoint = markerPoints['LO'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x - point2PointDistance(startPoint,endPoint)/2.3,
+            y: endPoint.y - point2PointDistance(startPoint,endPoint)/5
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'LO',
+      endPoint: 'Md6M',
+      controlPoint1: {
+        name: 'LO_TO_Md6M_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['LO_TO_Md6M_P1'];
+          const startPoint = markerPoints['LO'];
+          const endPoint = markerPoints['Md6M'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x + point2PointDistance(startPoint,endPoint)/6,
+            y: startPoint.y
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'LO_TO_Md6M_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['LO_TO_Md6M_P2'];
+          const startPoint = markerPoints['LO'];
+          const endPoint = markerPoints['Md6M'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x + point2PointDistance(startPoint,endPoint)/8,
+            y: endPoint.y - point2PointDistance(startPoint,endPoint)/2.5
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'Md6M',
+      endPoint: 'L_M2',
+      controlPoint1: {
+        name: 'Md6M_TO_L_M2_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['Md6M_TO_L_M2_P1'];
+          const startPoint = markerPoints['Md6M'];
+          const endPoint = markerPoints['L_M2'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x - point2PointDistance(startPoint,endPoint)/7,
+            y: startPoint.y + point2PointDistance(startPoint,endPoint)/3.5
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'Md6M_TO_L_M2_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['Md6M_TO_L_M2_P2'];
+          const startPoint = markerPoints['Md6M'];
+          const endPoint = markerPoints['L_M2'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x + point2PointDistance(startPoint,endPoint)/7,
+            y: endPoint.y - point2PointDistance(startPoint,endPoint)/2.2
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'L_M2',
+      endPoint: 'LMR',
+      controlPoint1: {
+        name: 'L_M2_TO_LMR_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M2_TO_LMR_P1'];
+          const startPoint = markerPoints['L_M2'];
+          const endPoint = markerPoints['LMR'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x - point2PointDistance(startPoint,endPoint)/15,
+            y: startPoint.y + point2PointDistance(startPoint,endPoint)/14
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'L_M2_TO_LMR_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M2_TO_LMR_P2'];
+          const startPoint = markerPoints['L_M2'];
+          const endPoint = markerPoints['LMR'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x + point2PointDistance(startPoint,endPoint)/6,
+            y: endPoint.y + point2PointDistance(startPoint,endPoint)/15
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'LMR',
+      endPoint: 'L_M3',
+      controlPoint1: {
+        name: 'LMR_TO_L_M3_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['LMR_TO_L_M3_P1'];
+          const startPoint = markerPoints['LMR'];
+          const endPoint = markerPoints['L_M3'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x - point2PointDistance(startPoint,endPoint)/8,
+            y: startPoint.y - point2PointDistance(startPoint,endPoint)/10
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'LMR_TO_L_M3_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['LMR_TO_L_M3_P2'];
+          const startPoint = markerPoints['LMR'];
+          const endPoint = markerPoints['L_M3'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x + point2PointDistance(startPoint,endPoint)/6,
+            y: endPoint.y + point2PointDistance(startPoint,endPoint)/10
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'L_M3',
+      endPoint: 'L_M4',
+      controlPoint1: {
+        name: 'L_M3_TO_L_M4_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M3_TO_L_M4_P1'];
+          const startPoint = markerPoints['L_M3'];
+          const endPoint = markerPoints['L_M4'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x - point2PointDistance(startPoint,endPoint)/6,
+            y: startPoint.y - point2PointDistance(startPoint,endPoint)/8
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'L_M3_TO_L_M4_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M3_TO_L_M4_P2'];
+          const startPoint = markerPoints['L_M3'];
+          const endPoint = markerPoints['L_M4'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x + point2PointDistance(startPoint,endPoint)/7,
+            y: endPoint.y + point2PointDistance(startPoint,endPoint)/12
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'L_M4',
+      endPoint: 'L_M5',
+      controlPoint1: {
+        name: 'L_M4_TO_L_M5_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M4_TO_L_M5_P1'];
+          const startPoint = markerPoints['L_M4'];
+          const endPoint = markerPoints['L_M5'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x - point2PointDistance(startPoint,endPoint)/6,
+            y: startPoint.y
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'L_M4_TO_L_M5_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M4_TO_L_M5_P2'];
+          const startPoint = markerPoints['L_M4'];
+          const endPoint = markerPoints['L_M5'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x,
+            y: endPoint.y + point2PointDistance(startPoint,endPoint)/5
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'L_M5',
+      endPoint: 'L_M6',
+      controlPoint1: {
+        name: 'L_M5_TO_L_M6_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M5_TO_L_M6_P1'];
+          const startPoint = markerPoints['L_M5'];
+          const endPoint = markerPoints['L_M6'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x,
+            y: startPoint.y - point2PointDistance(startPoint,endPoint)/2.5
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'L_M5_TO_L_M6_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M5_TO_L_M6_P2'];
+          const startPoint = markerPoints['L_M5'];
+          const endPoint = markerPoints['L_M6'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x ,
+            y: endPoint.y + point2PointDistance(startPoint,endPoint)/2.5
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'L_M6',
+      endPoint: 'Md6O',
+      controlPoint1: {
+        name: 'L_M6_TO_Md6O_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M6_TO_Md6O_P1'];
+          const startPoint = markerPoints['L_M6'];
+          const endPoint = markerPoints['Md6O'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x,
+            y: startPoint.y - point2PointDistance(startPoint,endPoint)/2.5
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'L_M6_TO_Md6O_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['L_M6_TO_Md6O_P2'];
+          const startPoint = markerPoints['L_M6'];
+          const endPoint = markerPoints['Md6O'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x - point2PointDistance(startPoint,endPoint)/3.5 ,
+            y: endPoint.y
+          }
+        }
+      } 
+    },
   ]
 }

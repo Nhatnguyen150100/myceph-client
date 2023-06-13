@@ -90,8 +90,8 @@ function RBCToolbar(props) {
 
     return (
       <div className="w-100 mb-1">
-        <div className="rbc-toolbar-item-2 w-100 d-flex flex-row align-items-center justify-content-between">
-          <span className="rbc-btn-group d-flex flex-row">
+        <div className="rbc-toolbar-item-2 w-100 d-flex flex-wrap flex-row align-items-center justify-content-between">
+          <div className="rbc-btn-group d-flex flex-row justify-content-center full-width-on-mobile">
             <button type="button" className="btn btn-primary py-1 px-2 rounded d-flex align-items-center" onClick={goToBack}>
               <span className="material-symbols-outlined me-2 text-white">
                 keyboard_double_arrow_left
@@ -116,9 +116,9 @@ function RBCToolbar(props) {
                 {t('next')}
               </span>
             </button>
-          </span>
-          <span className="text-uppercase fw-bold mc-color fs-3">{month()}</span>
-          <span className="rbc-btn-group d-flex flex-row">
+          </div>
+          <span className="text-uppercase fw-bold mc-color fs-3 text-center full-width-on-mobile">{month()}</span>
+          <div className="rbc-btn-group d-flex flex-wrap flex-row justify-content-center full-width-on-mobile">
             <button type="button" disabled={viewCalendar===Views.WEEK} className={`btn ${viewCalendar===Views.WEEK?'mc-pale-background border-0':'btn-primary'} py-1 px-2 rounded d-flex align-items-center mx-2`} onClick={goToWeekView}>
               <span className="material-symbols-outlined me-2 text-white">
                 date_range
@@ -135,7 +135,7 @@ function RBCToolbar(props) {
                 {t('view day')}
               </span>
             </button>
-          </span>
+          </div>
         </div>
       </div>
     );

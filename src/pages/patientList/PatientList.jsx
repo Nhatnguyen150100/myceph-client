@@ -110,7 +110,7 @@ export default function PatientList(props){
     <NavbarComponent />
     <div className="container">
       <div className="mt-3 mb-1">
-        <div className="d-flex align-items-center justify-content-lg-between justify-content-sm-center flex-grow-1 w-100 flex-wrap" style={{height:"70px"}}>
+        <div className="d-flex align-items-center justify-content-lg-between justify-content-sm-center flex-grow-1 w-100 flex-wrap menu-patient" style={{height:"70px"}}>
           <div className="flex-grow-1">
             {
               !(selectedTab===2 ||selectedTab===3 || selectedTab===4) && 
@@ -119,7 +119,7 @@ export default function PatientList(props){
               </button>
             }
           </div>
-          <div className="d-flex flex-row flex-wrap">
+          <div className="d-flex flex-row flex-wrap menu-patientList">
             <button type="button" className={`btn me-3 px-3 py-0 text-white-hover ${selectedTab===3 && 'mc-border-pale'} ${selectedTab===0 ?'mc-pale-background text-white':'hoverGreenLight'}`} onClick={e=>dispatch(setPatientListTab(0))}>
               <span className="text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('my patient')}</span>
             </button>
@@ -137,7 +137,7 @@ export default function PatientList(props){
       </div>
     </div>
     {
-      (selectedTab === 0 || (selectedTab === 1 && clinic.roleOfDoctor==='admin' )) && <div className="container w-100 mt-1">
+      (selectedTab === 0 || (selectedTab === 1 && clinic.roleOfDoctor==='admin' )) && <div className="container w-100 mt-3">
         <fieldset className="border rounded p-2 d-flex flex-row align-items-center flex-wrap justify-content-sm-center justify-content-center">
           <legend style={{fontSize:FONT_SIZE_HEAD}} className="mx-auto mb-0 float-none w-auto px-2 text-uppercase mc-color fw-bold">
             {t('create new patient')}

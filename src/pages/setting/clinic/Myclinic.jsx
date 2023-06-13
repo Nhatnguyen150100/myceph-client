@@ -244,11 +244,13 @@ export default function Myclinic(props){
       <div style={{width:"400px"}}>
         <SelectPatientComponent showSelectedPatient={false} condition={true}/>
       </div>
-      <div className="d-flex flex-row align-items-end">
+      <div className="d-flex flex-row align-items-end flex-wrap">
         <div style={{width:"400px"}}>
           <TextFieldInput className="p-1 me-2" legend={t('add new clinic')} placeholder={t('Name of new clinic')} value={newClinic} onChange={value=>setNewClinic(value)}/>
         </div>
-        <IconButtonComponent className="btn-outline-success" styleButton={{height:"50px",width:"50px"}} onClick={createClinic} icon="add" FONT_SIZE_ICON={"40px"} title={t("add clinic")}/>
+        <div className="full-width-on-mobile d-flex justify-content-center mt-3">
+          <IconButtonComponent className="btn-outline-success" styleButton={{height:"50px",width:"50px"}} onClick={createClinic} icon="add" FONT_SIZE_ICON={"40px"} title={t("add clinic")}/>
+        </div>
       </div>
     </div>
     {
@@ -272,15 +274,15 @@ export default function Myclinic(props){
             </div>
           }
         </div>
-        <div className="d-flex flex-row flex-grow-1 mt-3">
-          <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
+        <div className="d-flex flex-row flex-wrap flex-grow-1 mt-3">
+          <div className="border full-width-on-mobile mb-2 position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
             {
               editMode && <UploadImage icon={"photo_camera"} className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
             }
             <img alt="avatar" className="rounded" src={`${editMode?(newAvatarUrl?newAvatarUrl:avatarClinic):avatarClinic}`} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
           </div>
-          <div className="d-flex flex-column flex-grow-1 ms-5">
-            <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+          <div className="d-flex flex-column flex-wrap flex-grow-1 info-clinic" style={{marginLeft:"20px"}}>
+            <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('email of clinic')}:</label>
               {
                 editMode ? 
@@ -289,7 +291,7 @@ export default function Myclinic(props){
                 <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{emailClinic?emailClinic:'no data'}</span>
               }
             </div>
-            <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+            <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('name clinic')}:</label>
               {
                 editMode ? 
@@ -298,7 +300,7 @@ export default function Myclinic(props){
                 <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{nameClinic?nameClinic:'no data'}</span>
               }
             </div>
-            <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+            <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
               {
                 editMode ? 
@@ -307,7 +309,7 @@ export default function Myclinic(props){
                 <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumberClinic?phoneNumberClinic:'no data'}</span>
               }
             </div>
-            <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+            <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('address of clinic')}:</label>
               {
                 editMode ? 
@@ -316,7 +318,7 @@ export default function Myclinic(props){
                 <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{addressClinic?addressClinic:'no data'}</span>
               }
             </div>
-            <div className={`d-flex ${editMode?'border-bottom':''}`}>
+            <div className={`d-flex flex-wrap ${editMode?'border-bottom':''}`}>
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
               {
                 editMode ? 
@@ -337,7 +339,7 @@ export default function Myclinic(props){
     <div className="my-3 d-flex align-items-center justify-content-center w-100 flex-column">
       <div className="d-flex flex-row align-items-center justify-content-center">
         <hr style={{ width: '140px' }} />
-        <span className="mx-3 mc-color fw-bold text-uppercase text-center">{t('my clinic')}</span>
+        <span className="mx-3 text-nowrap mc-color fw-bold text-uppercase text-center">{t('my clinic')}</span>
         <hr style={{ width: '140px' }} />
       </div>
       {

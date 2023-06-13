@@ -141,7 +141,7 @@ export default function ServicesSetting(props){
       <thead className='mc-background text-white text-uppercase'>
         <tr>
           <th className='align-middle mc-heading-middle d-lg-table-cell d-none text-uppercase' style={{fontSize:FONT_SIZE}}>stt</th>
-          <th style={{minWidth:"350px",fontSize:FONT_SIZE}}>
+          <th className="name-width" style={{minWidth:"350px",fontSize:FONT_SIZE}}>
             <div className={`d-flex align-items-center justify-content-between border form-control w-100`} >
               <input 
                 type="text" 
@@ -156,19 +156,19 @@ export default function ServicesSetting(props){
               <span className="material-symbols-outlined mc-color fw-bolder" style={{fontSize:"30px"}}>support_agent</span>
             </div>
           </th>
-          <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE,minWidth:"100px"}}>
+          <th className='align-middle mc-heading-middle d-lg-table-cell submit-icon' style={{fontSize:FONT_SIZE,minWidth:"100px"}}>
             <div className={`d-flex flex-column align-items-center justify-content-center`} >
               <span className="text-white fw-bold" style={{fontSize:FONT_SIZE}}>{t("color")}</span>
               <input type="color" disabled={clinic.roleOfDoctor!=='admin'} className="border-0 p-0" style={{ outline: "none" }} value={colorService} onChange={e=>setColorService(e.target.value)}/>
             </div>
           </th>
-          <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE,minWidth:"100px"}}>
+          <th className='align-middle mc-heading-middle d-lg-table-cell submit-icon' style={{fontSize:FONT_SIZE,minWidth:"100px"}}>
             <div className={`d-flex flex-column align-items-center justify-content-center`} >
               <span className="text-white fw-bold" style={{fontSize:FONT_SIZE}}>{t("price")}</span>
               <input 
                 type="number" 
                 disabled={clinic.roleOfDoctor!=='admin'} 
-                className="border-0 px-2 py-1 rounded" 
+                className="border-0 px-2 py-1 rounded w-100" 
                 style={{ outline: "none" }} 
                 onKeyDown={e=>{if(e.key === "Enter") createService()}}  
                 value={priceService} 
@@ -176,7 +176,7 @@ export default function ServicesSetting(props){
               />
             </div>
           </th>
-          <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE, minWidth:"150px"}}>
+          <th className='align-middle mc-heading-middle d-lg-table-cell submit-icon' style={{fontSize:FONT_SIZE, minWidth:"150px"}}>
             <IconButtonComponent className={`btn-success h-100 ${clinic.roleOfDoctor==='admin' && 'standout'}`} onClick={createService} icon="add" FONT_SIZE_ICON={"25px"} title={t("add new service")} disabled={clinic.roleOfDoctor!=='admin'}/>
           </th>
         </tr>

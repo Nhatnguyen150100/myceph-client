@@ -175,7 +175,7 @@ export default function ClinicEncryptionManagement(props){
               <React.Fragment>
                 <button 
                   type="button" 
-                  className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
+                  className="btn btn-outline-secondary py-1 px-2 d-flex flex-wrap align-items-center justify-content-center"
                   style={{cursor:"pointer"}}
                   onClick={downLoadFileJson}
                 >
@@ -189,7 +189,7 @@ export default function ClinicEncryptionManagement(props){
                 </div>
                 <button 
                   type="button" 
-                  className="btn btn-outline-danger py-1 px-2 d-flex align-items-center justify-content-center"
+                  className="btn btn-outline-danger py-1 px-2 d-flex flex-wrap align-items-center justify-content-center"
                   onClick={()=>setOpenDeleteConfirm(true)}
                 >
                   <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
@@ -201,7 +201,7 @@ export default function ClinicEncryptionManagement(props){
               :
               <button 
                 type="button" 
-                className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
+                className="btn btn-outline-secondary py-1 px-2 d-flex flex-wrap align-items-center justify-content-center"
                 style={{cursor:"pointer"}}
               >
                 <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>
@@ -223,7 +223,7 @@ export default function ClinicEncryptionManagement(props){
           <div className="d-flex w-100 flex-row justify-content-center align-items-center my-3">
             {
               clinic.roleOfDoctor === 'admin' && <React.Fragment>
-                <button type="button" className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center" onClick={generateEncryptionKey}>
+                <button type="button" className="btn btn-outline-secondary py-1 px-2 d-flex flex-wrap align-items-center justify-content-center" onClick={generateEncryptionKey}>
                   <span className="material-symbols-outlined fw-bold" style={{fontSize:"30px"}}>
                     key
                   </span>
@@ -240,7 +240,7 @@ export default function ClinicEncryptionManagement(props){
             }
             <button 
               type="button" 
-              className="btn btn-outline-secondary py-1 px-2 d-flex align-items-center justify-content-center"
+              className="btn btn-outline-secondary py-1 px-2 d-flex flex-wrap align-items-center justify-content-center"
               style={{cursor:"pointer"}}
             >
               <span className="material-symbols-outlined fw-bold me-2" style={{fontSize:"30px"}}>

@@ -71,11 +71,11 @@ export default function SoftWareListComponent(props){
         }
         {
           softWareSelectedTab === SOFT_WARE_LIST.LATERALCEPH ? 
-          <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white p-1'>
+          <div className='rounded p-0 me-3 border mc-pale-color mc-background-color-white p-1 d-none d-lg-block'>
             <img src="/assets/images/LateralCeph_active.png" width="34" height="34" alt="MedicalRecord"/>
           </div>
           :
-          <Link onClick={e=>dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.LATERALCEPH))} to={`/lateralCeph`} title={t("LateralCeph")} className="btn btn-outline-info p-1 me-3 border-0">
+          <Link onClick={e=>dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.LATERALCEPH))} to={`/lateralCeph`} title={t("LateralCeph")} className="d-none d-lg-block btn btn-outline-info p-1 me-3 border-0">
             <img src="/assets/images/LateralCeph.png" width="34" height="34" alt="MedicalRecord"/>
           </Link>
         }

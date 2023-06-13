@@ -156,13 +156,13 @@ export default function Discussion(props){
   return <div className="h-100 w-100 d-flex flex-column align-items-start justify-content-start">
     <NavbarComponent />
     <div className="d-flex flex-column h-100 container my-1">
-      <div className="d-flex flex-row justify-content-between align-items-center w-100 mb-3" style={{minHeight:`${selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT?'100px':'0px'}`}}>
+      <div className="d-flex flex-wrap flex-row justify-content-between align-items-center w-100 mb-3" style={{minHeight:`${selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT?'100px':'0px'}`}}>
         <SelectPatientComponent condition={selectPatientOnMode === SELECT_PATIENT_MODE.CLINIC_PATIENT} showSelectedPatient={true}/>
         <SoftWareListComponent />
       </div>
       {
         currentPatient?
-        <div className="border flex-grow-1 rounded mb-5 d-flex flex-column">
+        <div className="border flex-grow-1 rounded mb-2 d-flex flex-column">
           <div className="flex-grow-1 d-flex flex-column" style={{overflowY:"auto",height:window.innerHeight-400}} ref={chatBoxRef} onScroll={handleScrollToLoadMessage}>
             {
               loadingMessage && <div className="spinner-grow"></div>

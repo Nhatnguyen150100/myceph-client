@@ -12,7 +12,7 @@ import { FONT_SIZE, getKeyByNameValue, IMAGE_TYPE_LIST, splitAvatar, upLoadImage
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { Slider } from "@mui/material";
 import { ANALYSIS, MARKER_LIST } from "./LateralCephalometricUtility.jsx";
-import { checkAllPointsExist, MANDIBULAR, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { checkAllPointsExist, LOWER_MOLAR, MANDIBULAR, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 
 const ICON_SIZE = '22px'
@@ -388,7 +388,20 @@ const ControlSection = React.memo((props) => {
                   }}
                 >
                   <img src={`${checkAllPointsExist(UPPER_MOLAR,markerPoints) ? '/assets/images/RANG_HAM_TREN_delete.jpg' : '/assets/images/RANG_HAM_TREN_create.jpg'}`} height={37} alt="mandibular"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_MOLAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('mandibular')}</span>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_MOLAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('upper molar')}</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(LOWER_MOLAR,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(LOWER_MOLAR.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(LOWER_MOLAR.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(LOWER_MOLAR,markerPoints) ? '/assets/images/RANG_HAM_DUOI_delete.jpg' : '/assets/images/RANG_HAM_DUOI_create.jpg'}`} height={37} alt="mandibular"/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(LOWER_MOLAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('lower molar')}</span>
                 </button>
               </ul>
             </div>
@@ -584,8 +597,14 @@ const ControlSection = React.memo((props) => {
               />
             </div>
             {
+              isLoadImage && <div className="d-flex flex-grow-1 justify-content-center align-items-center">
+                <div className="spinner-grow"></div>
+              </div>
+            }
+            {
               listImageFontSide?.map((image,_)=>{
-                return <button 
+                return <React.Fragment>
+                  <button 
                     key={image.id} 
                     type="button" 
                     className="btn btn-primary p-0 me-3 mb-3 transform-hover w-auto" 
@@ -602,6 +621,7 @@ const ControlSection = React.memo((props) => {
                       style={{maxHeight:"150px",cursor:"pointer"}}
                     />
                   </button>
+                </React.Fragment>
               })
             }
           </div>

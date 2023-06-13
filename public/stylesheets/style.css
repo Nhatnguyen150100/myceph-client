@@ -234,3 +234,53 @@
 .tableFixHead {
   overflow-y: auto; /* make the table scrollable if height is more than 200 px  */
 }
+
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+  .info-clinic {
+    margin-left: 0px !important;
+  }
+  .full-width-on-mobile {
+    width: 100% !important;
+    text-align: start !important;
+  }
+  .list-software {
+    flex-wrap: wrap !important;
+  }
+  .menu-patient {
+    height: 130px !important;
+  }
+  .name-width {
+    min-width: 140px !important;
+  }
+  .submit-icon {
+    min-width: 50px !important;
+  }
+  .name-col {
+    min-width: 320px !important;
+  }
+  .user-setting {
+    margin-left: 0px !important;
+  }
+}
+
+.menu-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.menu-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.menu-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.menu-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}

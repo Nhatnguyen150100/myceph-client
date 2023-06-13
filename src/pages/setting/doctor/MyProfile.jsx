@@ -162,8 +162,8 @@ export default function MyProfile(props){
         <IconButtonComponent className="btn-outline-warning" onClick={e=>setEditMode(true)} icon="edit" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("edit")}/>
       }
     </div>
-    <div className="d-flex flex-row flex-grow-1">
-      <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
+    <div className="d-flex flex-wrap flex-row flex-grow-1">
+      <div className="border full-width-on-mobile position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
         {
           editMode && <UploadImage icon={"photo_camera"}  className="position-absolute btn-primary" style={{height:FONT_SIZE_BUTTON_ICON,width:FONT_SIZE_BUTTON_ICON,top:"0px",right:"0px",fontSize:FONT_SIZE}} getUrlImage={value =>setNewAvatarUrl(value)} getImage={value=>setImage(value)}/>
         }
@@ -177,8 +177,8 @@ export default function MyProfile(props){
           </div>
         }
       </div>
-      <div className="d-flex flex-column flex-grow-1 ms-5">
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+      <div className="d-flex flex-wrap flex-column flex-grow-1 info-clinic mt-2" style={{marginLeft:"20px"}}>
+        <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
           <span className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('email')}:</span>
           <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{doctor?.email}</span>
           <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('full name')}:</label>
@@ -189,7 +189,7 @@ export default function MyProfile(props){
             <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{fullName?fullName:'no data'}</span>
           }
         </div>
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+        <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
           <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('gender')}:</label>
           {
             editMode ? 
@@ -213,7 +213,7 @@ export default function MyProfile(props){
             <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(birthday?birthday:new Date())))}</span>
           }
         </div>
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+        <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
           <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
           {
             editMode ? 
@@ -232,9 +232,9 @@ export default function MyProfile(props){
           }
           </div>
         </div>
-        <div className={`d-flex flex-row mb-3 ${editMode?'border-bottom':''}`}>
+        <div className={`d-flex flex-wrap flex-row mb-3 ${editMode?'border-bottom':''}`}>
           <span className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('clinics')}:</span>
-          <div className="d-flex flex-row flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
+          <div className="d-flex flex-wrap flex-row flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
             {
               clinic?.map(clinic => {
                 return <button key={clinic.id} type="button" className="btn btn-primary px-2 text-capitalize shadow me-3 mb-1" style={{fontSize:FONT_SIZE}} onClick={e=>onToClinic(clinic.id,clinic.roleOfDoctor)}>
@@ -247,7 +247,7 @@ export default function MyProfile(props){
             }
           </div>
         </div>
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+        <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
           <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('diploma')}:</label>
           {
             editMode ? 
@@ -256,7 +256,7 @@ export default function MyProfile(props){
             <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{diploma?diploma:'no data'}</span>
           }
         </div>
-        <div className={`d-flex mb-3 ${editMode?'border-bottom':''}`}>
+        <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
           <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('position')}:</label>
           {
             editMode ? 
@@ -265,7 +265,7 @@ export default function MyProfile(props){
             <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{position?position:'no data'}</span>
           }
         </div>
-        <div className={`d-flex ${editMode?'border-bottom':''}`}>
+        <div className={`d-flex flex-wrap ${editMode?'border-bottom':''}`}>
           <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
           {
             editMode ? 

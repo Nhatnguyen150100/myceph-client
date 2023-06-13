@@ -228,8 +228,8 @@ export default function RadiographyImages(props){
                 </fieldset>
               </div>
             </legend>
-            <div className="d-flex align-items-center mb-3 p-0 justify-content-start ps-4 flex-row w-100">
-                <div className="me-4" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
+            <div className="d-flex flex-wrap align-items-center mb-3 p-0 justify-content-start ps-4 flex-row w-100">
+                <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
                   <UploadImage 
                     imageIcon="/assets/images/1.png" 
                     styleImage={{height:"50px"}} 
@@ -240,7 +240,7 @@ export default function RadiographyImages(props){
                     getImage={value => uploadImageToCloudinary(value,1,false)}
                   />
                 </div>
-                <div className="me-4" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
+                <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
                   <UploadImage 
                     imageIcon="/assets/images/2.png" 
                     styleImage={{height:"50px"}} 
@@ -251,7 +251,7 @@ export default function RadiographyImages(props){
                     getImage={value => uploadImageToCloudinary(value,2,false)}
                   />
                 </div>
-                <div className="me-4" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
+                <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
                   <UploadImage 
                     imageIcon="/assets/images/3.png" 
                     styleImage={{height:"50px"}} 
@@ -262,7 +262,7 @@ export default function RadiographyImages(props){
                     getImage={value => uploadImageToCloudinary(value,3,false)}
                   />
                 </div>
-                <div className="me-4" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
+                <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
                   <UploadImage 
                     imageIcon="/assets/images/4.png" 
                     styleImage={{height:"50px"}} 

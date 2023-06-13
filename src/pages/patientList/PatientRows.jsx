@@ -192,7 +192,7 @@ export default function PatientRows(props){
       {props.patient.isEncrypted?onDecryptedDataPreview(props.selectPatientMode,props.patient.note,encryptKeyDoctor,encryptKeyClinic,props.encryptKeyObject):props.patient.note}
     </td>
     <td className={`d-lg-table-cell`}>
-      <div className="d-flex flex-row align-items-center justify-content-center">
+      <div className="d-flex flex-row align-items-center justify-content-center list-software" style={{flexWrap:"nowrap"}}>
         <Link 
           to={`${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic,props.encryptKeyObject)==='---' ? '' : '/medicalRecord'}`} 
           onClick={()=>{
@@ -224,7 +224,7 @@ export default function PatientRows(props){
         <Link 
           to={`${props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic,props.encryptKeyObject)==='---' ? '' : '/lateralCeph'}`} 
           title={t("LateralCeph")} 
-          className="btn btn-outline-info p-1 border-0 me-2 mb-2"
+          className="btn btn-outline-info p-1 border-0 me-2 mb-2 d-none d-lg-block"
           onClick={()=>{
             if(props.patient.isEncrypted && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic,props.encryptKeyObject)==='---'){
               ((props.selectPatientMode===SELECT_PATIENT_MODE.MY_PATIENT && !encryptKeyDoctor) || (props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && !encryptKeyClinic) || (props.selectPatientMode===SELECT_PATIENT_MODE.SHARE_PATIENT && !props.encryptKeyObject)) ? toast.error(t('You need an encryption key to decrypt patient data')) : toast.error(t('Your encryption key cannot decrypt this patient'))
@@ -292,7 +292,7 @@ export default function PatientRows(props){
     </td>
     {
       !props.shareByDoctor && <td className={`d-lg-table-cell`}>
-        <div className="d-flex flex-row align-items-center justify-content-center">
+        <div className="d-flex flex-row align-items-center justify-content-center flex-wrap">
           <div className="btn-group dropstart">
             <button 
               title={t("Doctors share patient")} 

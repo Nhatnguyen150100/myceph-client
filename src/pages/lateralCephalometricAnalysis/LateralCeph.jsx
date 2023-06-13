@@ -13,7 +13,7 @@ import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setAppName } from "../../redux/GeneralSlice.jsx";
 import { setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
-import { checkAllPointsExist, getModelCurve, MANDIBULAR, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { checkAllPointsExist, getModelCurve, LOWER_MOLAR, MANDIBULAR, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import ControlSection from "./ControlSection.jsx";
 import { ANALYSIS } from "./LateralCephalometricUtility.jsx";
 import ResultAnalysisTable from "./ResultAnalysisTable.jsx";
@@ -25,7 +25,7 @@ const filterMap = {
   brightness: Konva.Filters.Brighten
 }
 
-const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE,UPPER_INCISOR_CURVE,UNDER_INCISOR_CURVE,MANDIBULAR,UPPER_MOLAR]
+const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE,UPPER_INCISOR_CURVE,UNDER_INCISOR_CURVE,MANDIBULAR,UPPER_MOLAR,LOWER_MOLAR]
 
 export default function LateralCeph(props) {
   const dispatch = useDispatch();
