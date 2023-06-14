@@ -380,5 +380,20 @@
   "The 1st quarter": "Quý 1",
   "Second quarter": "Quý 2",
   "Third quarter": "Quý 3",
-  "Fourth quarter": "Quý 4"
+  "Fourth quarter": "Quý 4",
+  "Drawing curves on X-ray films of patients helps simulate bones and teeth, making it easy to see the correlation with soft tissues. Using the Bezier curve equation, the angle and edge can be flexibly adjusted to match the morphology of each patient": "Vẽ đường cong trên phim X-quang của bệnh nhân giúp mô phỏng xương và răng, dễ dàng nhìn thấy độ tương quan với mô mềm. Sử dụng phương trình đường cong Beizer có thể thay đổi góc và cạnh linh hoạt để phù hợp với hình thái mỗi bệnh nhân",
+  "Curve draw": "Vẽ đường cong",
+  "result analysis": "kết quả phân tích",
+  "norm set": "bộ giá trị tham khảo",
+  "analysis": "phân tích",
+  "indicator": "chỉ số",
+  "value": "giá trị",
+  "min": "nhỏ nhất",
+  "max": "lớn nhất",
+  "unit": "đơn vị",
+  "mode": "chế độ",
+  "line analysis": "đường phân tích",
+  "curve": "đường cong",
+  "Note for analysis": "Ghi chú cho phân tích",
+  "Enter note for analysis": "Nhập ghi chú cho phân tích"
 }

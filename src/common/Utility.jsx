@@ -39,6 +39,7 @@ export const SOFT_WARE_LIST = {
   MEDICAL_RECORD: 'Medical Record',
   IMAGE_LIBRARY: 'Image Library',
   LATERALCEPH: 'LateralCeph',
+  CURVE_ANALYSIS: 'Curve draw',
   CALENDAR: 'Calendar',
   DISCUSSION: 'Discussion',
   CALCULATOR_TOOTH_MOVEMENT:"Calculator tooth movement"

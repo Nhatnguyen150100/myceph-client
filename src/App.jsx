@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from "react";
 import { Routes, Route } from 'react-router-dom';
-import CalculatorToothMovement from "./pages/CalculatorToothMovement/CalculatorToothMovement.jsx";
 import Discussion from "./pages/discussion/Discussion.jsx";
 import LateralCeph from "./pages/lateralCephalometricAnalysis/LateralCeph.jsx";
 const ForgotPassword = lazy(() => import('./auth/ForgotPassword.jsx'));
@@ -34,8 +33,6 @@ function App() {
         <Route path="/schedule" element={<BigCalendar />}/>
         <Route path="/discussion" element={<Discussion />}/>
         <Route path="/lateralCeph" element={<LateralCeph />}/>
-        {/* chức năng chưa hoàn thiện <Route path="/calculatorTooth" element={<CalculatorToothMovement />} /> */}
-        <Route path="/calculatorTooth" element={<CalculatorToothMovement />} />
       </Routes>
     </Suspense>
   );

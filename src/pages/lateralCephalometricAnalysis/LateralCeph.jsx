@@ -697,7 +697,7 @@ export default function LateralCeph(props) {
                 </div>
                 <div className="text-white d-flex">
                   <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('mode')}:</span>
-                  <span className="text-white fw-bold text-capitalize ms-2" style={{fontSize:FONT_SIZE_HEAD}}>{stageMode === 0?'line analysis':'curve'}</span>
+                  <span className="text-white fw-bold text-capitalize ms-2" style={{fontSize:FONT_SIZE_HEAD}}>{stageMode === 0?t('line analysis'):t('curve')}</span>
                 </div>
               </div>
               <div className="d-flex flex-grow-1 flex-row">

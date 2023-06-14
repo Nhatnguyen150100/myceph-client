@@ -239,6 +239,25 @@
   .info-clinic {
     margin-left: 0px !important;
   }
+  .infor-mc {
+    margin-top: 4900px !important;
+  }
+  .footer-info {
+    margin-top: 2435px !important;
+  }
+  .mc-header {
+    font-size: 50px !important;
+  }
+  .mc-header2 {
+    font-size: 30px !important;
+  }
+  .info-header {
+    align-items: start !important;
+  }
+  .header-des {
+    width: 280px !important;
+    text-align: left !important;
+  }
   .full-width-on-mobile {
     width: 100% !important;
     text-align: start !important;

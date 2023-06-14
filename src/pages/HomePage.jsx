@@ -79,18 +79,18 @@ export default function HomePage(props) {
       <img className="position-absolute" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"3000px",left:"0px"}}/>
       <img className="position-absolute" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"1500px",left:"-140px"}}/>
       <div className="container h-100 position-relative">
-        <img className="position-absolute translate-middle" src="/assets/images/medical_technology.png" alt="img" height={550} style={{right:"-235px",top:"330px"}}/>
+        <img className="position-absolute translate-middle d-none d-lg-block" src="/assets/images/medical_technology.png" alt="img" height={550} style={{right:"-235px",top:"330px"}}/>
         <div className="d-flex flex-grow-1 justify-content-start">
-          <div className="d-flex flex-column align-items-end justify-content-center" style={{marginTop:"100px", marginLeft:"20px"}}>
+          <div className="d-flex flex-column justify-content-center info-header" style={{marginTop:"100px", marginLeft:"20px",alignItems:"end"}}>
             <img src="/assets/images/teeth.png" alt="teeth" height={80}/>
-            <strong className="text-white text-uppercase fw-bold" style={{fontSize:"100px"}}>
+            <strong className="text-white text-uppercase fw-bold mc-header" style={{fontSize:"100px"}}>
               myceph
             </strong>
-            <h5 className="mc-color text-uppercase fw-bold" style={{fontSize:"60px"}}>
+            <h5 className="mc-color text-uppercase fw-bold mc-header2" style={{fontSize:"60px"}}>
               cephalometric
             </h5>
             <img className="my-2" src="/assets/images/line_white.png" alt="img" width={200}/>
-            <p className="mc-color fw-bold mt-2" style={{fontSize:"24px",width:"520px",textAlign:"right"}}>
+            <p className="mc-color fw-bold mt-2 header-des" style={{fontSize:"24px",width:"520px",textAlign:"right"}}>
               {t('Software to support management combined with patient analysis for doctors and orthodontic clinics')}
             </p>
           </div>
@@ -232,10 +232,23 @@ export default function HomePage(props) {
                 </h3>
               </div>
             </div>
+            <div className="col-md-4 px-3 mt-5">
+              <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
+                <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
+                  <img src="/assets/images/curve.png" alt="img" height={80} style={{backgroundSize:"cover"}}/>
+                </div>
+                <h2 className="my-3 text-uppercase fw-bold text-center text-white">
+                  {t(SOFT_WARE_LIST.CURVE_ANALYSIS)}
+                </h2>
+                <h3 className="fst-italic mt-3 px-3 text-white" style={{fontSize:"16px",textAlign:"justify"}}>
+                  {t('Drawing curves on X-ray films of patients helps simulate bones and teeth, making it easy to see the correlation with soft tissues. Using the Bezier curve equation, the angle and edge can be flexibly adjusted to match the morphology of each patient')}
+                </h3>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div className="h-100" style={{
+      <div className="h-100 infor-mc" style={{
         marginTop:"1850px",
         backgroundImage: `url("/assets/images/intro_background.png")`,
         backgroundSize: 'cover',
@@ -262,7 +275,7 @@ export default function HomePage(props) {
                 </h4>
               </div>
             </div>
-            <div className="col-md-6 h-100">
+            <div className="col-md-6 h-100 d-none d-lg-block">
               <div className="d-flex flex-column h-100 justify-content-center align-items-center">
                 <div className="d-flex w-100">
                   <img className="my-2 me-4" src="/assets/images/image_intro3.jpeg" alt="img" width={350} />
@@ -313,7 +326,7 @@ export default function HomePage(props) {
             </div>
           </div>
         </div>
-        <div className="w-100 gradient_color_green" style={{marginTop:"1000px"}}>
+        <div className="w-100 gradient_color_green footer-info" style={{marginTop:"1000px"}}>
           <div className="container" style={{paddingTop:"30px",paddingBottom:"30px"}}>
             <div className="row">
               <div className="col-md-6">

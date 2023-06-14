@@ -380,5 +380,20 @@
   "The 1st quarter": "The 1st quarter",
   "Second quarter": "Second quarter",
   "Third quarter": "Third quarter",
-  "Fourth quarter": "Fourth quarter"
+  "Fourth quarter": "Fourth quarter",
+  "Drawing curves on X-ray films of patients helps simulate bones and teeth, making it easy to see the correlation with soft tissues. Using the Bezier curve equation, the angle and edge can be flexibly adjusted to match the morphology of each patient": "Drawing curves on X-ray films of patients helps simulate bones and teeth, making it easy to see the correlation with soft tissues. Using the Bezier curve equation, the angle and edge can be flexibly adjusted to match the morphology of each patient",
+  "Curve draw": "Curve draw",
+  "result analysis": "result analysis",
+  "norm set": "norm set",
+  "analysis": "analysis",
+  "indicator": "indicator",
+  "value": "value",
+  "min": "min",
+  "max": "max",
+  "unit": "unit",
+  "mode": "mode",
+  "line analysis": "line analysis",
+  "curve": "curve",
+  "Note for analysis": "Note for analysis",
+  "Enter note for analysis": "Enter note for analysis"
 }

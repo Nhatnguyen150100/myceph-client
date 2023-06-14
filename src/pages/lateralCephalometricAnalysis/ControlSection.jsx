@@ -224,7 +224,7 @@ const ControlSection = React.memo((props) => {
     }
   }
 
-  return <div className={`d-flex flex-column justify-content-between align-items-center px-1 border-end`}>
+  return <div className={`d-flex flex-column justify-content-between align-items-center px-1 border-end`} style={{overflowY:"auto"}}>
     <div className="d-flex flex-column">
       <button 
         type="button" 
