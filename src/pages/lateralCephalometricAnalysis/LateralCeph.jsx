@@ -829,7 +829,7 @@ export default function LateralCeph(props) {
                 </div>
               </div>
             </div>
-            <UtilitiesAnalysis col='col-md-3 ps-0' currentMarkerPoint={currentMarkerPoint}/>
+            <UtilitiesAnalysis col='col-md-3 ps-0' currentMarkerPoint={currentMarkerPoint} stageMode={stageMode}/>
           </div>
         </div>
       </div>

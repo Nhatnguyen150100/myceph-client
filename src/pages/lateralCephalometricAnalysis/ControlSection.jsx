@@ -224,7 +224,7 @@ const ControlSection = React.memo((props) => {
     }
   }
 
-  return <div className={`d-flex flex-column justify-content-between align-items-center px-1 border-end`} style={{overflowY:"auto"}}>
+  return <div className={`d-flex flex-column justify-content-between align-items-center px-1 border-end`}>
     <div className="d-flex flex-column">
       <button 
         type="button" 
@@ -567,16 +567,6 @@ const ControlSection = React.memo((props) => {
           delete
         </span>
       </button>
-      <div className="btn-group dropend">
-        <button type="button" className="btn btn-outline-info border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded" data-bs-toggle="dropdown" aria-expanded="false">
-          <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
-            info
-          </span>
-        </button>
-        <ul className="dropdown-menu ms-2">
-          
-        </ul>
-      </div>
     </div>
     <div className="modal fade" id="modalImageFontSide" ref={imageModalRef} data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="modalImageFontSide" aria-hidden="true">
       <div className="modal-dialog modal-dialog-centered modal-xl">
