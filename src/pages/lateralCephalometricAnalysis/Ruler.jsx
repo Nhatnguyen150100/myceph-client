@@ -2,7 +2,7 @@ import React from "react";
 import { Arrow, Group, Text } from "react-konva";
 
 const Ruler = React.memo((props) => {
-  return <Group>
+  return <Group key={props.key}>
     <Arrow
       points={[props.c1.x, props.c1.y, props.c2.x, props.c2.y + 3/props.scale]}
       stroke='green'
@@ -14,8 +14,8 @@ const Ruler = React.memo((props) => {
     <Text
       x={(props.c1.x + props.c2.x)/2}
       y={(props.c1.y + props.c2.y)/2}
-      fill="#54c0ff"
-      fontSize={11/props.scale}
+      fill="#0dcaf0"
+      fontSize={12/props.scale}
       fontStyle={'bold'}
       text={`${props.lengthOfRuler}mm`}
     />

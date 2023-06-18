@@ -7,23 +7,6 @@ export const midPointOfLineSegment = (startPoint, endPoint) =>{
   }
 }
 
-export const getMinPointFormShape = (shape,listPoint) => {
-  const listPointXTemp = [];
-  const listPointYTemp = [];
-  Object.keys(shape.markerPoints).forEach(point => {
-    listPointXTemp.push(listPoint[point].x)
-    listPointYTemp.push(listPoint[point].y)
-  })
-
-  const minX = Math.min(...listPointXTemp);
-  const minY = Math.min(...listPointYTemp);
-
-  return {
-    x: minX,
-    y: minY
-  }
-}
-
 export const getModelCurve = (name) => {
   let model;
   switch(name){
@@ -80,6 +63,7 @@ export const UPPER_JAW_BONE_CURVE = {
     }
   }, 
   lines: [],
+  isDrag: true,
   allPointsCurve: ['PNS','TNS','ANS','Pr','UNS','PNS_TO_TNS_P1','PNS_TO_TNS_P2','TNS_TO_ANS_P1','TNS_TO_ANS_P2','ANS_TO_Pr_P1','ANS_TO_Pr_P2','Pr_TO_UNS_P1','Pr_TO_UNS_P2','UNS_TO_PNS_P1','UNS_TO_PNS_P2'],
   // các điểm điều khiển sẽ được tạo mặc định và không chính xác dựa trên các điểm bắt đầu và kết thúc có sẵn
   controlPoints: [
@@ -233,7 +217,71 @@ export const UPPER_JAW_BONE_CURVE = {
         }
       } 
     }
-  ]
+  ],
+  heightOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(UPPER_JAW_BONE_CURVE.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point]?.x)
+    })
+    
+    let pointArrayY = []
+    Object.keys(UPPER_JAW_BONE_CURVE.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point]?.y)
+    })
+  
+    const minPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.min(...pointArrayY)
+    }
+    
+    const maxPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.max(...pointArrayY)
+    }
+
+    let nameStart = 'PNS';
+    Object.keys(UPPER_JAW_BONE_CURVE.markerPoints).forEach(point => {
+      if(markerPointList[point].y < markerPointList[nameStart].y) nameStart = point;
+    })
+
+    let nameEnd = 'PNS';
+    Object.keys(UPPER_JAW_BONE_CURVE.markerPoints).forEach(point => {
+      if(markerPointList[point].y > markerPointList[nameEnd].y) nameEnd = point;
+    })
+
+    return {
+      pointStart: minPointOfHeightShape,
+      pointEnd: maxPointOfHeightShape,
+      nameStart: nameStart,
+      nameEnd: nameEnd
+    }
+  },
+  widthOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(UPPER_JAW_BONE_CURVE.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point].x)
+    })
+  
+    let pointArrayY = []
+    Object.keys(UPPER_JAW_BONE_CURVE.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point].y)
+    })
+  
+    const minPointOfWidthShape = {
+      x: Math.min(...pointArrayX),
+      y: Math.min(...pointArrayY) - 5
+    }
+    
+    const maxPointOfWidthShape = {
+      x: Math.max(...pointArrayX),
+      y: Math.min(...pointArrayY) - 5
+    }
+
+    return {
+      pointStart: minPointOfWidthShape,
+      pointEnd: maxPointOfWidthShape
+    }
+  }
 }
 
 export const UPPER_INCISOR_CURVE = {
@@ -258,6 +306,21 @@ export const UPPER_INCISOR_CURVE = {
     }
   }, 
   lines: [],
+  isDrag: true,
+  allPointsCurve:[
+    'U1A',
+    'U1E',
+    'U1L',
+    'U1R',
+    'U1A_TO_U1R_P1',
+    'U1A_TO_U1R_P2',
+    'U1R_TO_U1E_P1',
+    'U1R_TO_U1E_P2',
+    'U1E_TO_U1L_P1',
+    'U1E_TO_U1L_P2',
+    'U1L_TO_U1A_P1',
+    'U1L_TO_U1A_P2'
+  ],
   // các điểm điều khiển sẽ được tạo mặc định và không chính xác dựa trên các điểm bắt đầu và kết thúc có sẵn
   controlPoints: [
     {
@@ -380,7 +443,59 @@ export const UPPER_INCISOR_CURVE = {
         }
       } 
     }
-  ]
+  ],
+  heightOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(UPPER_INCISOR_CURVE.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point]?.x)
+    })
+    
+    let pointArrayY = []
+    Object.keys(UPPER_INCISOR_CURVE.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point]?.y)
+    })
+  
+    const minPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.min(...pointArrayY)
+    }
+    
+    const maxPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.max(...pointArrayY)
+    }
+
+    return {
+      pointStart: minPointOfHeightShape,
+      pointEnd: maxPointOfHeightShape
+    }
+  },
+  widthOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(UPPER_INCISOR_CURVE.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point].x)
+    })
+  
+    let pointArrayY = []
+    Object.keys(UPPER_INCISOR_CURVE.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point].y)
+    })
+  
+    const minPointOfWidthShape = {
+      x: Math.min(...pointArrayX),
+      y: Math.min(...pointArrayY) - 5
+    }
+    
+    const maxPointOfWidthShape = {
+      x: Math.max(...pointArrayX),
+      y: Math.min(...pointArrayY) - 5
+    }
+
+    return {
+      pointStart: minPointOfWidthShape,
+      pointEnd: maxPointOfWidthShape
+    }
+  }
 }
 
 export const UNDER_INCISOR_CURVE = {
@@ -405,6 +520,21 @@ export const UNDER_INCISOR_CURVE = {
     }
   }, 
   lines: [],
+  isDrag: true,
+  allPointsCurve:[
+    'L1A',
+    'L1E',
+    'L1L',
+    'L1R',
+    'L1A_TO_L1R_P1',
+    'L1A_TO_L1R_P2',
+    'L1R_TO_L1E_P1',
+    'L1R_TO_L1E_P2',
+    'L1E_TO_L1L_P1',
+    'L1E_TO_L1L_P2',
+    'L1L_TO_L1A_P1',
+    'L1L_TO_L1A_P2'
+  ],
   // các điểm điều khiển sẽ được tạo mặc định và không chính xác dựa trên các điểm bắt đầu và kết thúc có sẵn
   controlPoints: [
     {
@@ -527,7 +657,59 @@ export const UNDER_INCISOR_CURVE = {
         }
       } 
     }
-  ] 
+  ],
+  heightOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(UNDER_INCISOR_CURVE.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point]?.x)
+    })
+    
+    let pointArrayY = []
+    Object.keys(UNDER_INCISOR_CURVE.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point]?.y)
+    })
+  
+    const minPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.min(...pointArrayY)
+    }
+    
+    const maxPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.max(...pointArrayY)
+    }
+
+    return {
+      pointStart: minPointOfHeightShape,
+      pointEnd: maxPointOfHeightShape
+    }
+  },
+  widthOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(UNDER_INCISOR_CURVE.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point].x)
+    })
+  
+    let pointArrayY = []
+    Object.keys(UNDER_INCISOR_CURVE.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point].y)
+    })
+  
+    const minPointOfWidthShape = {
+      x: Math.min(...pointArrayX),
+      y: Math.min(...pointArrayY) - 5
+    }
+    
+    const maxPointOfWidthShape = {
+      x: Math.max(...pointArrayX),
+      y: Math.min(...pointArrayY) - 5
+    }
+
+    return {
+      pointStart: minPointOfWidthShape,
+      pointEnd: maxPointOfWidthShape
+    }
+  }
 }
 
 export const MANDIBULAR = {
@@ -557,6 +739,21 @@ export const MANDIBULAR = {
       endPoint: 'Me',
       lineColor: '#ff8da1'
     }
+  ],
+  isDrag: true,
+  allPointsCurve:[
+    'IdL',
+    'Id',
+    'Pog',
+    'Me',
+    'IdL_TO_Id_P1',
+    'IdL_TO_Id_P2',
+    'Id_TO_Id_P1',
+    'Id_TO_Id_P2',
+    'Pog_TO_Me_P1',
+    'Pog_TO_Me_P2',
+    'Me_TO_IdL_P1',
+    'Me_TO_IdL_P2'
   ],
   controlPoints: [
     {
@@ -679,7 +876,59 @@ export const MANDIBULAR = {
         }
       } 
     }
-  ]
+  ],
+  heightOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(MANDIBULAR.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point]?.x)
+    })
+    
+    let pointArrayY = []
+    Object.keys(MANDIBULAR.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point]?.y)
+    })
+  
+    const minPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.min(...pointArrayY)
+    }
+    
+    const maxPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.max(...pointArrayY)
+    }
+    
+    return {
+      pointStart: minPointOfHeightShape,
+      pointEnd: maxPointOfHeightShape
+    }
+  },
+  widthOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(MANDIBULAR.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point].x)
+    })
+  
+    let pointArrayY = []
+    Object.keys(MANDIBULAR.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point].y)
+    })
+  
+    const minPointOfWidthShape = {
+      x: Math.min(...pointArrayX),
+      y: Math.max(...pointArrayY) + 5
+    }
+    
+    const maxPointOfWidthShape = {
+      x: Math.max(...pointArrayX),
+      y: Math.max(...pointArrayY) + 5
+    }
+
+    return {
+      pointStart: minPointOfWidthShape,
+      pointEnd: maxPointOfWidthShape
+    }
+  }
 }
 
 export const UPPER_MOLAR = {
@@ -728,6 +977,39 @@ export const UPPER_MOLAR = {
     }
   },
   lines: [],
+  isDrag: true,
+  allPointsCurve: [
+    'UP_M1',
+    'UP_M2',
+    'UMR',
+    'UP_M3',
+    'UP_M4',
+    'UO',
+    'UP_M5',
+    'UP_M6',
+    'Mx6D',
+    'UP_M7',
+    'UP_M1_TO_UP_M2_P1',
+    'UP_M1_TO_UP_M2_P2',
+    'UP_M2_TO_UMR_P1',
+    'UP_M2_TO_UMR_P2',
+    'UMR_TO_UP_M3_P1',
+    'UMR_TO_UP_M3_P2',
+    'UP_M3_TO_UP_M4_P1',
+    'UP_M3_TO_UP_M4_P2',
+    'UP_M4_TO_UO_P1',
+    'UP_M4_TO_UO_P2',
+    'UO_TO_UP_M5_P1',
+    'UO_TO_UP_M5_P2',
+    'UP_M5_TO_UP_M6_P1',
+    'UP_M5_TO_UP_M6_P2',
+    'UP_M6_TO_Mx6D_P1',
+    'UP_M6_TO_Mx6D_P2',
+    'Mx6D_TO_UP_M7_P1',
+    'Mx6D_TO_UP_M7_P2',
+    'UP_M7_TO_UP_M1_P1',
+    'UP_M7_TO_UP_M1_P2'
+  ],
   controlPoints: [
     {
       startPoint: 'UP_M1',
@@ -763,9 +1045,9 @@ export const UPPER_MOLAR = {
       startPoint: 'UP_M2',
       endPoint: 'UMR',
       controlPoint1: {
-        name: 'UP_M1_TO_UMR_P1',
+        name: 'UP_M2_TO_UMR_P1',
         positionDefault: (markerPoints) => {
-          const controlPoint = markerPoints['UP_M1_TO_UP_UMR_P1'];
+          const controlPoint = markerPoints['UP_M2_TO_UMR_P1'];
           const startPoint = markerPoints['UP_M2'];
           const endPoint = markerPoints['UMR'];
 
@@ -776,9 +1058,9 @@ export const UPPER_MOLAR = {
         }
       },
       controlPoint2: {
-        name: 'UP_M1_TO_UMR_P2',
+        name: 'UP_M2_TO_UMR_P2',
         positionDefault: (markerPoints) => {
-          const controlPoint = markerPoints['UP_M1_TO_UMR_P2'];
+          const controlPoint = markerPoints['UP_M2_TO_UMR_P2'];
           const startPoint = markerPoints['UP_M2'];
           const endPoint = markerPoints['UMR'];
 
@@ -1029,7 +1311,59 @@ export const UPPER_MOLAR = {
         }
       } 
     }
-  ]
+  ],
+  heightOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(UPPER_MOLAR.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point]?.x)
+    })
+    
+    let pointArrayY = []
+    Object.keys(UPPER_MOLAR.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point]?.y)
+    })
+  
+    const minPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.min(...pointArrayY)
+    }
+    
+    const maxPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.max(...pointArrayY)
+    }
+
+    return {
+      pointStart: minPointOfHeightShape,
+      pointEnd: maxPointOfHeightShape
+    }
+  },
+  widthOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(UPPER_MOLAR.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point].x)
+    })
+  
+    let pointArrayY = []
+    Object.keys(UPPER_MOLAR.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point].y)
+    })
+  
+    const minPointOfWidthShape = {
+      x: Math.min(...pointArrayX),
+      y: Math.min(...pointArrayY) - 5
+    }
+    
+    const maxPointOfWidthShape = {
+      x: Math.max(...pointArrayX),
+      y: Math.min(...pointArrayY) - 5
+    }
+
+    return {
+      pointStart: minPointOfWidthShape,
+      pointEnd: maxPointOfWidthShape
+    }
+  }
 }
 
 export const LOWER_MOLAR = {
@@ -1078,6 +1412,39 @@ export const LOWER_MOLAR = {
     }
   },
   lines: [],
+  isDrag: true,
+  allPointsCurve: [
+    'Md6O',
+    'L_M1',
+    'LO',
+    'Md6M',
+    'L_M2',
+    'LMR',
+    'L_M3',
+    'L_M4',
+    'L_M5',
+    'L_M6',
+    'Md6O_TO_L_M1_P1',
+    'Md6O_TO_L_M1_P2',
+    'L_M1_TO_LO_P1',
+    'L_M1_TO_LO_P2',
+    'LO_TO_Md6M_P1',
+    'LO_TO_Md6M_P2',
+    'Md6M_TO_L_M2_P1',
+    'Md6M_TO_L_M2_P2',
+    'L_M2_TO_LMR_P1',
+    'L_M2_TO_LMR_P2',
+    'LMR_TO_L_M3_P1',
+    'LMR_TO_L_M3_P2',
+    'L_M3_TO_L_M4_P1',
+    'L_M3_TO_L_M4_P2',
+    'L_M4_TO_L_M5_P1',
+    'L_M4_TO_L_M5_P2',
+    'L_M5_TO_L_M6_P1',
+    'L_M5_TO_L_M6_P2',
+    'L_M6_TO_Md6O_P1',
+    'L_M6_TO_Md6O_P2'
+  ],
   controlPoints: [
     {
       startPoint: 'Md6O',
@@ -1379,5 +1746,57 @@ export const LOWER_MOLAR = {
         }
       } 
     },
-  ]
+  ],
+  heightOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(LOWER_MOLAR.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point]?.x)
+    })
+    
+    let pointArrayY = []
+    Object.keys(LOWER_MOLAR.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point]?.y)
+    })
+  
+    const minPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.min(...pointArrayY)
+    }
+    
+    const maxPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.max(...pointArrayY)
+    }
+    
+    return {
+      pointStart: minPointOfHeightShape,
+      pointEnd: maxPointOfHeightShape
+    }
+  },
+  widthOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(LOWER_MOLAR.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point].x)
+    })
+  
+    let pointArrayY = []
+    Object.keys(LOWER_MOLAR.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point].y)
+    })
+  
+    const minPointOfWidthShape = {
+      x: Math.min(...pointArrayX),
+      y: Math.max(...pointArrayY) + 5
+    }
+    
+    const maxPointOfWidthShape = {
+      x: Math.max(...pointArrayX),
+      y: Math.max(...pointArrayY) + 5
+    }
+
+    return {
+      pointStart: minPointOfWidthShape,
+      pointEnd: maxPointOfWidthShape
+    }
+  }
 }

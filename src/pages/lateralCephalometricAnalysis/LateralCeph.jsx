@@ -13,9 +13,9 @@ import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setAppName } from "../../redux/GeneralSlice.jsx";
 import { setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
-import { checkAllPointsExist, getModelCurve, LOWER_MOLAR, MANDIBULAR, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { checkAllPointsExist, getHeightModelCurve, getModelCurve, getWidthModelCurve, LOWER_MOLAR, MANDIBULAR, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import ControlSection from "./ControlSection.jsx";
-import { ANALYSIS } from "./LateralCephalometricUtility.jsx";
+import { ANALYSIS, distanceFromTwoPoint } from "./LateralCephalometricUtility.jsx";
 import ResultAnalysisTable from "./ResultAnalysisTable.jsx";
 import Ruler from "./Ruler.jsx";
 import UtilitiesAnalysis from "./UtilitiesAnalysis.jsx";
@@ -65,6 +65,8 @@ export default function LateralCeph(props) {
   const [widthStage,setWidthStage] = useState(0);
   const [rotation,setRotation] = useState(0);
   const [scale,setScale] = useState(1);
+
+  const [informationShape,setInformationOfShape] = useState(false)
 
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [currentMarkerPoint, setCurrentMarkerPoint] = useState();
@@ -398,7 +400,7 @@ export default function LateralCeph(props) {
                 lineCap="round"
                 lineJoin="round"
                 visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
-                dash={[10/scale, 10/scale, 0.2/scale, 10/scale]}
+                dash={[5/scale, 5/scale, 0.2/scale, 5/scale]}
                 points={[
                   markerPointList[value.startPoint].x, 
                   markerPointList[value.startPoint].y, 
@@ -454,7 +456,7 @@ export default function LateralCeph(props) {
                     lineCap="round"
                     lineJoin="round"
                     visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList)}
-                    dash={[10/scale, 10/scale, 0.2/scale, 10/scale]}
+                    dash={[5/scale, 5/scale, 0.2/scale, 5/scale]}
                     points={[
                       markerPointList[value.endPoint].x, 
                       markerPointList[value.endPoint].y, 
@@ -558,6 +560,42 @@ export default function LateralCeph(props) {
     return allPointsAndLineFromModel
   },[markerPointList,selectedCurve,scale])
 
+  const drawHeightAndWidthCustomShape = useMemo(() => {
+    if(!selectedCurve) return null
+    let heightAndWidthShape = []
+    const curveModel = getModelCurve(selectedCurve)
+    if(checkAllPointsExist(curveModel,markerPointList) && markerPointList['C1'] && markerPointList['C2'] && selectedCurve){
+      const heightShape = <Ruler 
+        key={curveModel.heightOfShape(markerPointList).pointStart?.x + curveModel.heightOfShape(markerPointList).pointStart?.y + Math.random()}
+        c1={{
+          x: curveModel.heightOfShape(markerPointList).pointStart?.x,
+          y: curveModel.heightOfShape(markerPointList).pointStart?.y
+        }}
+        c2={{
+          x: curveModel.heightOfShape(markerPointList).pointEnd?.x,
+          y: curveModel.heightOfShape(markerPointList).pointEnd?.y
+        }}
+        scale={scale}
+        lengthOfRuler={distanceFromTwoPoint(curveModel.heightOfShape(markerPointList).pointStart,curveModel.heightOfShape(markerPointList).pointEnd,markerPointList['C1'],markerPointList['C2'],lengthOfRuler)}
+      />
+      const widthShape = <Ruler 
+        key={curveModel.widthOfShape(markerPointList).pointStart?.x - curveModel.widthOfShape(markerPointList).pointStart?.y + Math.random()}
+        c1={{
+          x: curveModel.widthOfShape(markerPointList).pointStart?.x,
+          y: curveModel.widthOfShape(markerPointList).pointStart?.y
+        }}
+        c2={{
+          x: curveModel.widthOfShape(markerPointList).pointEnd?.x,
+          y: curveModel.widthOfShape(markerPointList).pointEnd?.y
+        }}
+        scale={scale}
+        lengthOfRuler={distanceFromTwoPoint(curveModel.widthOfShape(markerPointList).pointStart,curveModel.widthOfShape(markerPointList).pointEnd,markerPointList['C1'],markerPointList['C2'],lengthOfRuler)}
+      />
+      heightAndWidthShape.push(heightShape,widthShape)
+    }
+    return heightAndWidthShape
+  },[markerPointList,scale,lengthOfRuler,selectedCurve])
+
   const drawCustomShape = useMemo(()=>{
     let allCustomShapeFromModel = [];
     for (const curveModel of ALL_MODEL_CURVES) {
@@ -609,14 +647,14 @@ export default function LateralCeph(props) {
       }
     }
     return allCustomShapeFromModel;
-  },[markerPointList,selectedCurve,scale])
+  },[markerPointList,scale])
 
   const drawCustomShapeHover = useMemo(()=>{
     let allCustomShapeFromModel = [];
     for (const curveModel of ALL_MODEL_CURVES) {
       if(checkAllPointsExist(curveModel,markerPointList)){
         const customShape =  <Shape
-          key={curveModel.id}
+          key={curveModel.id+markerPointList[curveModel.controlPoints[0].startPoint].x}
           x={0}
           y={0}
           strokeWidth={0}
@@ -627,25 +665,34 @@ export default function LateralCeph(props) {
               }else dispatch(setSelectedCurve(null)) 
             }
           }}
-          // draggable
-          // onDragStart={(event) => {
-          //   dispatch(setSelectedCurve(null))
-          //   const shape = event.target;
-          //   shape.fill('#0c1780');
-          // }}
-          // onDragEnd={e=>{
-          //   const pos = {
-          //     x: e.target.x(),
-          //     y: e.target.y()
-          //   }
-          //   console.log("🚀 ~ file: LateralCeph.jsx:616 ~ drawCustomShapeHover ~ pos:", pos)
-          // }}
+          draggable
+          onDragStart={(event) => {
+            dispatch(setSelectedCurve(null))
+            const shape = event.target;
+            shape.fill('#0c1780');
+          }}
+          onDragEnd={e=>{         
+            const newMarkerPoints = Object.assign({}, markerPointList);
+            for (const markerPoint of curveModel.allPointsCurve) {
+              if(newMarkerPoints[markerPoint]){
+                const prePos = newMarkerPoints[markerPoint]
+                newMarkerPoints[markerPoint] = {
+                  x: prePos.x + e.target.x(),
+                  y: prePos.y + e.target.y()
+                };
+              }
+            }
+            setMarkerPointList(newMarkerPoints);
+            dispatch(setMarkerPoints(newMarkerPoints))
+          }}
           onMouseOver={(event) => {
             const shape = event.target;
+            setInformationOfShape(curveModel.name);
             shape.fill('#0c1780');
           }}
           onMouseOut={event => {
             const shape = event.target;
+            setInformationOfShape(null)
             shape.fill(null)
           }}
           sceneFunc={(context,shape) => {
@@ -670,7 +717,7 @@ export default function LateralCeph(props) {
       }
     }
     return allCustomShapeFromModel;
-  },[markerPointList,selectedCurve,scale])
+  },[markerPointList,selectedCurve,scale,currentMarkerPoint,markerPoints])
 
   return <div className="d-flex flex-column justify-content-start align-items-center" style={{height:window.innerHeight}}>
     <NavbarComponent />
@@ -803,7 +850,7 @@ export default function LateralCeph(props) {
                         }
                         {
                           markerPoints['C1'] && markerPoints['C2'] && imageObject &&
-                          <Ruler c1={markerPoints['C1']} c2={markerPoints['C2']} scale={scale} lengthOfRuler={lengthOfRuler}/>
+                          <Ruler key={markerPoints['C1'].x + markerPoints['C2'].y} c1={markerPoints['C1']} c2={markerPoints['C2']} scale={scale} lengthOfRuler={lengthOfRuler}/>
                         }
                         {
                           markerPoints && imageObject && stageMode === 0 && drawLines
@@ -816,6 +863,9 @@ export default function LateralCeph(props) {
                         }
                         {
                           markerPoints && imageObject && stageMode === 1 && drawCustomShape
+                        }
+                        {
+                          markerPoints && imageObject && stageMode === 1 && drawHeightAndWidthCustomShape
                         }
                         {
                           markerPoints && imageObject && stageMode === 1 && drawCustomShapeHover

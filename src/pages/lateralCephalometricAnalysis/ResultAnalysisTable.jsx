@@ -156,7 +156,7 @@ export default function ResultAnalysisTable(props) {
                 </td>
                 <td className="text-gray" style={{fontSize:FONT_SIZE}}>
                   {
-                    value.unit
+                    t(value.unit)
                   }
                 </td>
               </tr>

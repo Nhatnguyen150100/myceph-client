@@ -1,5 +1,4 @@
 import crypto from 'crypto-browserify';
-import { toast } from 'react-toastify';
 
 const ENCRYPTION_ALGORITHM = 'aes-256-gcm';
 const HASH_ALGORITHM = 'md5';

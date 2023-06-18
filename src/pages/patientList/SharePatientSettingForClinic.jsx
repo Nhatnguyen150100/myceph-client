@@ -346,7 +346,7 @@ export default function SharePatientSettingForClinic(props){
               listSharePatient?.map((patient,index) => {
                 return <div key={patient.id} className={`d-flex flex-row align-items-center border rounded p-2 ${(index%2!==0) && 'mc-background-color-white'}`}>
                   <div className="h-auto" style={{width:WIDTH_HEAD}}>
-                    <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/frontFace.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
+                    <img alt="avatar" className={`${patient['LibraryImagePatients.linkImage'] ? 'p-0' : 'p-1'} rounded my-1 hoverGreenLight`} src={`${patient['LibraryImagePatients.linkImage'] ? splitAvatar(patient['LibraryImagePatients.linkImage']) : '/assets/images/frontFace.png'}`} style={{borderStyle:`${patient['LibraryImagePatients.linkImage'] ? 'none' : 'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",width:AVATAR_WIDTH,objectFit:"cover"}}/>
                   </div>
                   <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_NAME}}>
                     <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('full name')}</span>
