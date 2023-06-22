@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { deCryptData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
-import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_HEAD, splitAvatar, toISODateString, WIDTH_HEAD } from "../../common/Utility.jsx";
+import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_HEAD, onDecryptedDataPreview, SELECT_PATIENT_MODE, splitAvatar, toISODateString, WIDTH_HEAD } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
@@ -291,6 +291,8 @@ export default function SharePatientSettingForDoctor(props){
     setPagePatient(value);
   }
 
+  console.log("🚀 ~ file: SharePatientSettingForDoctor.jsx:461 ~ listSharePatient?.map ~ encryptKeyDoctor:", encryptKeyDoctor)
+
   return <div className="h-100 w-100 container">
     <fieldset className="border-top p-2 d-flex flex-row align-items-center h-100 pb-5">
       <legend style={{fontSize:FONT_SIZE_HEAD}} className="mx-auto mb-0 float-none w-auto px-2 text-uppercase mc-color fw-bold">
@@ -431,7 +433,7 @@ export default function SharePatientSettingForDoctor(props){
                     </div>
                     <div className="d-flex ms-3 flex-column justify-content-center align-items-center d-none" style={{width:WIDTH_ATTRIBUTES}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
-                      <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
+                      <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyDoctor?.key,encryptKeyDoctor?.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
                     </div>
                     <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>
@@ -453,7 +455,13 @@ export default function SharePatientSettingForDoctor(props){
               listSharePatient?.map((patient,index) => {
                 return <div key={patient.id} className={`d-flex flex-row align-items-center border rounded p-2 ${(index%2!==0) && 'mc-background-color-white'}`}>
                   <div className="h-auto" style={{width:WIDTH_HEAD}}>
-                    <img alt="avatar" className={`${patient['LibraryImagePatients.linkImage'] ? 'p-0' : 'p-1'} rounded my-1 hoverGreenLight`} src={`${patient['LibraryImagePatients.linkImage'] ? splitAvatar(patient['LibraryImagePatients.linkImage']) : '/assets/images/frontFace.png'}`} style={{borderStyle:`${patient['LibraryImagePatients.linkImage'] ? 'none' : 'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",width:AVATAR_WIDTH,objectFit:"cover"}}/>
+                    <img 
+                      alt="avatar" 
+                      className={`${patient['LibraryImagePatients.linkImage'] ? 'p-0' : 'p-1'} rounded my-1 hoverGreenLight`} 
+                      src={`${patient['LibraryImagePatients.linkImage'] ? (onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null) ? splitAvatar(patient['LibraryImagePatients.linkImage']) : '/assets/images/frontFace.png') : '/assets/images/frontFace.png'}`} 
+                      // style={{borderStyle:`${(props.patient.isEncrypted ? (props.patient['LibraryImagePatients.linkImage'] && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic,props.encryptKeyObject)!=='---'):props.patient['LibraryImagePatients.linkImage'])?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"contain"}}
+                      style={{borderStyle:`${patient['LibraryImagePatients.linkImage'] ? 'none' : 'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",width:AVATAR_WIDTH,objectFit:"cover"}}
+                    />
                   </div>
                   <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_NAME}}>
                     <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('full name')}</span>
@@ -461,7 +469,7 @@ export default function SharePatientSettingForDoctor(props){
                   </div>
                   <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
                     <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
-                    <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
+                    <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyDoctor?.key,encryptKeyDoctor?.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
                   </div>
                   <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
                     <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>

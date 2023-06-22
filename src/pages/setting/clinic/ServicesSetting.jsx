@@ -236,7 +236,8 @@ export default function ServicesSetting(props){
                     setEditColorService(service.colorService);
                     setEditPriceService(service.priceService)
                   }} 
-                  icon="edit" 
+                  icon="edit"
+                  disabled={clinic.roleOfDoctor!=='admin'}  
                   FONT_SIZE_ICON={"20px"} 
                   title={t("edit")}
                 />

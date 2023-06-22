@@ -25,20 +25,37 @@ export default function HomePage(props) {
     dispatch(setLoadingModal(true));
     return new Promise((resolve,reject) =>{
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor?.id}`).then(result => {
-        result.data.map(clinic => {
-          if(clinic.roleOfDoctor==='admin'){
-            !currentPatient?.id && getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{
-              dispatch(setArrayPatient(response.data));
-              dispatch(setCurrentPatient(response.data[0]))
-            })
-            dispatch(setIdClinicDefault(clinic.id));
-            getData(indexDB,clinic.id,DB_ENCRYPTION_CLINIC).then(encryptedData => {
-              encryptedData ? dispatch(setEncryptKeyClinic({key: encryptedData.key, iv: encryptedData.iv})) : dispatch(setEncryptKeyClinic(null))
-            })
-            dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
-          }
-        })
-        if(result.data.length > 0) dispatch(setIdClinicDefault(result.data[0]?.id));
+        // result.data.map(clinic => {
+        //   if(clinic.roleOfDoctor==='admin'){
+        //     if(!currentPatient?.id) getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{
+        //       dispatch(setArrayPatient(response.data));
+        //       dispatch(setCurrentPatient(response.data[0]))
+        //     })
+        //     dispatch(setIdClinicDefault(clinic.id));
+        //     getData(indexDB,clinic.id,DB_ENCRYPTION_CLINIC).then(encryptedData => {
+        //       encryptedData ? dispatch(setEncryptKeyClinic({key: encryptedData.key, iv: encryptedData.iv})) : dispatch(setEncryptKeyClinic(null))
+        //     })
+        //     dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
+        //   }
+        // })
+        const myClinic = result.data.filter(clinic => clinic.roleOfDoctor==='admin');
+        if(myClinic.length > 0){
+          !currentPatient?.id && getToServerWithToken(`/v1/patient/getPatientListForClinic/${myClinic[0].id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{
+            dispatch(setArrayPatient(response.data));
+            dispatch(setCurrentPatient(response.data[0]))
+          })
+          dispatch(setIdClinicDefault(myClinic[0].id));
+          getData(indexDB,myClinic[0].id,DB_ENCRYPTION_CLINIC).then(encryptedData => {
+            encryptedData ? dispatch(setEncryptKeyClinic({key: encryptedData.key, iv: encryptedData.iv})) : dispatch(setEncryptKeyClinic(null))
+          })
+          dispatch(setRoleOfDoctor(myClinic[0].roleOfDoctor))
+        }else{
+          dispatch(setIdClinicDefault(result.data[0]?.id));
+          getData(indexDB,result.data[0]?.id,DB_ENCRYPTION_CLINIC).then(encryptedData => {
+            encryptedData ? dispatch(setEncryptKeyClinic({key: encryptedData.key, iv: encryptedData.iv})) : dispatch(setEncryptKeyClinic(null))
+          })
+          dispatch(setRoleOfDoctor(result.data[0]?.roleOfDoctor))
+        }
         dispatch(setArrayClinic(result.data));
         resolve();
       }).catch((err) =>{
@@ -99,7 +116,7 @@ export default function HomePage(props) {
           <div className="col-md-6">
             <div className="m-2 p-4 shadow-lg rounded gradient-color">
               <p className="w-100 fst-italic text-white" style={{fontSize:"16px",textAlign:"justify"}}>
-                {t('Patient management and craniofacial analysis software is an important tool in the modern medical field. This software helps manage patient information accurately and conveniently, from storing medical information to tracking the patient\'s medical examination and treatment schedule. In addition, the software also provides craniofacial analysis features, helping to identify and measure craniofacial tilt, thereby assisting experts in the diagnosis and treatment of diseases related to the respiratory tract. respiratory, oral and ENT. With the aid of patient management software and craniofacial analysis, doctors, dentists and other health professionals can make accurate and effective decisions in their treatment and health care patient.')}
+                {t('Patient management and craniofacial analysis software is an important tool in the modern medical field. This software helps manage patient information accurately and conveniently, from storing medical information to tracking the patient\'s medical examination and treatment schedule. In addition, the software also provides craniofacial analysis features, helping to identify and measure craniofacial tilt, thereby assisting experts in the diagnosis and treatment of diseases related to the respiratory tract, oral and ENT. With the aid of patient management software and craniofacial analysis, doctors, dentists and other health professionals can make accurate and effective decisions in their treatment and health care patient.')}
               </p>
             </div>
           </div>

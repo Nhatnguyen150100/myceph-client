@@ -200,6 +200,7 @@ export default function RoomSetting(props){
                     setEditColorRoom(room.colorRoom);
                   }} 
                   icon="edit" 
+                  disabled={clinic.roleOfDoctor!=='admin'}
                   FONT_SIZE_ICON={"20px"} 
                   title={t("edit")}
                 />

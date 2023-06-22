@@ -197,7 +197,8 @@ export default function StatusSetting(props){
                     setEditNameStatus(status.nameStatus);
                     setEditColorStatus(status.colorStatus);
                   }} 
-                  icon="edit" 
+                  icon="edit"
+                  disabled={clinic.roleOfDoctor!=='admin'}  
                   FONT_SIZE_ICON={"20px"} 
                   title={t("edit")}
                 />

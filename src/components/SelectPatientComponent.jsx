@@ -57,7 +57,7 @@ const SelectPatientComponent = (props) => {
   const onNameSearchChange = e => {
     setNameSearch(e.target.value);
     if (nameSearchTimeout) clearTimeout(nameSearchTimeout);
-    nameSearchTimeout = setTimeout(getAllPatient(e.target.value),300);
+    nameSearchTimeout = setTimeout(getAllPatient,500,e.target.value);
   }
 
   /**
