@@ -83,7 +83,6 @@ export const deCryptData = (key,iv,tag,encryptedData) => {
   }
 }
 
-
 /**
  * todo: Mã hóa dữ liệu bệnh nhân bao gồm thông tin cá nhân, hồ sơ bệnh án
  * @param {*} key 

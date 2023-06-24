@@ -90,12 +90,16 @@ export default function Myclinic(props){
   }
 
   const onCancel = () => {
-    setNameClinic(clinic.arrayClinic.nameClinic);
-    setEmailClinic(clinic.arrayClinic.emailClinic);
-    setPhoneNumberClinic(clinic.arrayClinic.phoneNumberClinic);
-    setAddressClinic(clinic.arrayClinic.addressClinic);
-    setDescription(clinic.arrayClinic.description);
-    setDescription(clinic.arrayClinic.description);
+    for (const indexClinic of clinic.arrayClinic) {
+      if(indexClinic.id === clinic.idClinicDefault){
+        setNameClinic(indexClinic.nameClinic);
+        setEmailClinic(indexClinic.emailClinic);
+        setPhoneNumberClinic(indexClinic.phoneNumberClinic);
+        setAddressClinic(indexClinic.addressClinic);
+        setDescription(indexClinic.description);
+        setDescription(indexClinic.description);
+      }
+    }
     setImage('');
     setNewAvatarUrl('');
     setEditMode(false);
@@ -288,7 +292,7 @@ export default function Myclinic(props){
                 editMode ? 
                 <input className="text-gray border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={emailClinic} onChange={e=>setEmailClinic(e.target.value)}/>
                 :
-                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{emailClinic?emailClinic:'no data'}</span>
+                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{emailClinic?emailClinic:t('no data')}</span>
               }
             </div>
             <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
@@ -297,7 +301,7 @@ export default function Myclinic(props){
                 editMode ? 
                 <input className="text-gray border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={nameClinic} onChange={e=>setNameClinic(e.target.value)}/>
                 :
-                <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{nameClinic?nameClinic:'no data'}</span>
+                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{nameClinic?nameClinic:t('no data')}</span>
               }
             </div>
             <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
@@ -306,7 +310,7 @@ export default function Myclinic(props){
                 editMode ? 
                 <input className="text-gray border-0 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE,width:WIDTH_CHILD}} type="number" value={phoneNumberClinic} onChange={e=>setPhoneNumberClinic(e.target.value)}/>
                 :
-                <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumberClinic?phoneNumberClinic:'no data'}</span>
+                <span className="text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumberClinic?phoneNumberClinic:t('no data')}</span>
               }
             </div>
             <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
@@ -315,7 +319,7 @@ export default function Myclinic(props){
                 editMode ? 
                 <input className="text-gray border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={addressClinic} onChange={e=>setAddressClinic(e.target.value)}/>
                 :
-                <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{addressClinic?addressClinic:'no data'}</span>
+                <span className="text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{addressClinic?addressClinic:t('no data')}</span>
               }
             </div>
             <div className={`d-flex flex-wrap ${editMode?'border-bottom':''}`}>
@@ -324,7 +328,7 @@ export default function Myclinic(props){
                 editMode ? 
                 <textarea className="text-gray border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={description} onChange={e=>setDescription(e.target.value)}/>
                 :
-                <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{description?description:'no data'}</span>
+                <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{description?description:t('no data')}</span>
               }
             </div>
           </div>

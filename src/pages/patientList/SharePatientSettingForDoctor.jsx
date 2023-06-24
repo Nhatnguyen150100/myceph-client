@@ -425,7 +425,12 @@ export default function SharePatientSettingForDoctor(props){
                             onClick={e=>{e.preventDefault();onSetSearchPatient(patient)}}
                           >
                     <div className="h-auto ps-3">
-                      <img alt="avatar" className="rounded my-1 p-2 hoverGreenLight" src={'/assets/images/frontFace.png'} style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
+                      <img 
+                        alt="avatar" 
+                        className={`${patient['LibraryImagePatients.linkImage'] ? 'p-0' : 'p-1'} rounded my-1 hoverGreenLight`} 
+                        src={`${(patient.isEncrypted ? (patient['LibraryImagePatients.linkImage'] && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)!=='---'):patient['LibraryImagePatients.linkImage'])?splitAvatar(patient['LibraryImagePatients.linkImage']):'/assets/images/frontFace.png'}`} 
+                        style={{borderStyle:`${(patient.isEncrypted ? (patient['LibraryImagePatients.linkImage'] && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)!=='---'):patient['LibraryImagePatients.linkImage'])?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"contain"}}
+                      />
                     </div>
                     <div className="d-flex ms-3 flex-column justify-content-center align-items-center flex-grow-1" style={{width:WIDTH_NAME}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('full name')}</span>
@@ -458,22 +463,21 @@ export default function SharePatientSettingForDoctor(props){
                     <img 
                       alt="avatar" 
                       className={`${patient['LibraryImagePatients.linkImage'] ? 'p-0' : 'p-1'} rounded my-1 hoverGreenLight`} 
-                      src={`${patient['LibraryImagePatients.linkImage'] ? (onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null) ? splitAvatar(patient['LibraryImagePatients.linkImage']) : '/assets/images/frontFace.png') : '/assets/images/frontFace.png'}`} 
-                      // style={{borderStyle:`${(props.patient.isEncrypted ? (props.patient['LibraryImagePatients.linkImage'] && onDecryptedDataPreview(props.selectPatientMode,props.patient?.gender,encryptKeyDoctor,encryptKeyClinic,props.encryptKeyObject)!=='---'):props.patient['LibraryImagePatients.linkImage'])?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"contain"}}
-                      style={{borderStyle:`${patient['LibraryImagePatients.linkImage'] ? 'none' : 'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",width:AVATAR_WIDTH,objectFit:"cover"}}
+                      src={`${(patient.isEncrypted ? (patient['LibraryImagePatients.linkImage'] && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)!=='---'):patient['LibraryImagePatients.linkImage'])?splitAvatar(patient['LibraryImagePatients.linkImage']):'/assets/images/frontFace.png'}`} 
+                      style={{borderStyle:`${(patient.isEncrypted ? (patient['LibraryImagePatients.linkImage'] && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)!=='---'):patient['LibraryImagePatients.linkImage'])?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"contain"}}
                     />
                   </div>
-                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_NAME}}>
+                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{minWidth:WIDTH_NAME}}>
                     <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('full name')}</span>
-                    <span className="text-wrap" style={{fontSize:FONT_SIZE}}>{patient.fullName}</span>
+                    <span className={`text-wrap ${patient.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>{patient.fullName}</span>
                   </div>
-                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
+                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{minWidth:WIDTH_ATTRIBUTES}}>
                     <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
-                    <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyDoctor?.key,encryptKeyDoctor?.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
+                    <span className={`text-capitalize ${patient.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyDoctor?.key,encryptKeyDoctor?.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
                   </div>
-                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
+                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{minWidth:WIDTH_ATTRIBUTES}}>
                     <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>
-                    <span style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(patient.birthday)))}</span>
+                    <span className={`${patient.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>{(patient.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)==='---')?'---':convertISOToVNDateString(toISODateString(new Date(patient.birthday)))}</span>
                   </div>
                   <div className="border-start mx-2 d-flex flex-column align-items-center justify-content-center ps-3">
                     <span className="mc-color fw-bold text-capitalize" style={{fontSize:FONT_SIZE}}>{t(patient['SharePatients.roleOfOwnerDoctor'])}</span>

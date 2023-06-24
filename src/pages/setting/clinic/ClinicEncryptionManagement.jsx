@@ -80,7 +80,7 @@ export default function ClinicEncryptionManagement(props){
   const onSetEncryptionKeyForClinic = () => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      postToServerWithToken(`/v1/encryption/encryptionForClinic/${clinic.idClinicDefault}`,{
+      postToServerWithToken(`/v1/encryption/encryptionForClinic/${clinic.idClinicDefault}?idDoctor=${doctor.id}`,{
         idDoctor: doctor.id,
         nameDoctor: doctor.fullName,
         emailDoctor: doctor.email
@@ -105,7 +105,8 @@ export default function ClinicEncryptionManagement(props){
   const onDeleteEncryptionKeyFromClinic = () => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      deleteToServerWithToken(`/v1/encryption/encryptionForClinic/${clinic.idClinicDefault}`).then(result => {
+      setOpenDeleteConfirm(false);
+      deleteToServerWithToken(`/v1/encryption/encryptionForClinic/${clinic.idClinicDefault}?idDoctor=${doctor.id}`).then(result => {
         let arrayClinicIndex = [...clinic.arrayClinic];
         let objectIndex = arrayClinicIndex.findIndex(element => element.id === result.data.id);
         let updatedObject = Object.assign({}, arrayClinicIndex[objectIndex], {encryptedBy: result.data.encryptedBy});
@@ -120,7 +121,9 @@ export default function ClinicEncryptionManagement(props){
           toast.error(err.message);
         }
         reject();
-      }).finally(()=>dispatch(setLoadingModal(false)))
+      }).finally(()=>{
+        dispatch(setLoadingModal(false));
+      })
     })
   }
 

@@ -587,7 +587,7 @@ const ControlSection = React.memo((props) => {
               />
             </div>
             {
-              isLoadImage && <div className="d-flex flex-grow-1 justify-content-center align-items-center">
+              isLoadImage && listImageFontSide.length > 0 && <div className="d-flex flex-grow-1 justify-content-center align-items-center">
                 <div className="spinner-grow"></div>
               </div>
             }

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { encryptData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
 import SelectFieldInput from "../../common/SelectFieldInput.jsx";
 import TextFieldInput from "../../common/TextFieldInput.jsx";
@@ -46,24 +47,26 @@ export default function PatientList(props){
     if(!newPatientName) toast.error(t('Name of patient is required'))
     else if(new Date(newPatientBirthday)>=new Date()) toast.error(t('Date of birth cannot be greater than the current date'))
     else return new Promise((resolve, reject) => {
-      let patientObject = null;
+      let patientObject = {
+        fullName: newPatientName,
+        birthday: newPatientBirthday,
+        gender: newGenderPatient,
+        note: newNotePatient,
+        isEncrypted: isEncrypted
+      };
       if(selectedTab===0){
         patientObject = {
-          fullName: newPatientName,
-          birthday: newPatientBirthday,
-          gender: newGenderPatient,
-          note: newNotePatient,
-          idDoctor: doctor.id,
-          isEncrypted: isEncrypted
+          ...patientObject,
+          note: isEncrypted ? JSON.stringify(encryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,newNotePatient)) : newNotePatient,
+          gender: isEncrypted ? JSON.stringify(encryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,newGenderPatient)) : newGenderPatient,
+          idDoctor: doctor.id
         }
       }else{
         patientObject = {
-          fullName: newPatientName,
-          birthday: newPatientBirthday,
-          gender: newGenderPatient,
-          note: newNotePatient,
-          idClinic: clinic.idClinicDefault,
-          isEncrypted: isEncrypted
+          ...patientObject,
+          note: isEncrypted ? JSON.stringify(encryptData(encryptKeyClinic.key,encryptKeyClinic.iv,newNotePatient)) : newNotePatient,
+          gender: isEncrypted ? JSON.stringify(encryptData(encryptKeyClinic.key,encryptKeyClinic.iv,newGenderPatient)) : newGenderPatient,
+          idClinic: clinic.idClinicDefault
         }
       }
       dispatch(setLoadingModal(true));
@@ -196,11 +199,7 @@ export default function PatientList(props){
               title={t('Decryption patient')}
               onClick={()=>{
                 if((selectedTab === 0 && !encryptKeyDoctor) || (selectedTab === 1 && !encryptKeyClinic)) toast.error(t('You must have a encryption key to encrypt your patient'))
-                else{
-                  if(isEncrypted) setIsEncrypted(false)
-                  else setIsEncrypted(true)
-                }
-                
+                else setIsEncrypted(pre => !pre)
               }}
             >
               <span className={`material-symbols-outlined ${isEncrypted?'text-danger':'text-success'}`} style={{fontSize:"50px"}}>
