@@ -13,6 +13,7 @@ import RadiographyImages from "./RadiographyImages.jsx";
 
 export default function LibraryImages(props){
   const doctor = useSelector(state=>state.doctor);
+	const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const dispatch = useDispatch();
   const {t} = useTranslation();
@@ -22,14 +23,26 @@ export default function LibraryImages(props){
 
   const currentPatient = useSelector(state=>state.patient.currentPatient);
 
+	let checkRoleMode = null;
+
+  switch(selectPatientOnMode){
+    case SELECT_PATIENT_MODE.SHARE_PATIENT: checkRoleMode = 'checkRole';
+      break;
+    case SELECT_PATIENT_MODE.CLINIC_PATIENT: checkRoleMode = clinic.roleOfDoctor !== 'admin' ? 'checkRole' : 'unCheck';
+      break
+    default: checkRoleMode = 'unCheck';
+		break;
+  }
+	
+	console.log("🚀 ~ file: LibraryImages.jsx:34 ~ LibraryImages ~ checkRoleMode:", checkRoleMode)
   let currentTab = null;
 
   switch(selectedTab){
-    case IMAGE_TYPE_LIST.X_RAY.name: currentTab = <RadiographyImages patient={patient}/>
+    case IMAGE_TYPE_LIST.X_RAY.name: currentTab = <RadiographyImages checkRoleMode={checkRoleMode} patient={patient}/>
     	break;
-    case IMAGE_TYPE_LIST.FACE.name: currentTab = <ExtraOralImages patient={patient}/>
+    case IMAGE_TYPE_LIST.FACE.name: currentTab = <ExtraOralImages checkRoleMode={checkRoleMode} patient={patient}/>
     	break;
-    case IMAGE_TYPE_LIST.INTRA_ORAL.name: currentTab = <IntralOralImages patient={patient}/>
+    case IMAGE_TYPE_LIST.INTRA_ORAL.name: currentTab = <IntralOralImages checkRoleMode={checkRoleMode} patient={patient}/>
     	break;
     default: currentTab = <div className="h-100 w-100 d-flex justify-content-center align-items-center">
     <strong className="text-danger fw-bold">{t('page not found')}</strong>    

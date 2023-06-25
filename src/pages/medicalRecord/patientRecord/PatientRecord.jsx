@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FONT_SIZE, FONT_SIZE_ICON } from "../../../common/Utility.jsx";
-import Diagnsis from "./Diagnosis.jsx";
+import { FONT_SIZE } from "../../../common/Utility.jsx";
+import Diagnosis from "./Diagnosis.jsx";
 import ExtraOral from "./ExtraOral.jsx";
 import History from "./History.jsx";
 import IntraOral from "./IntraOral.jsx";
@@ -15,19 +15,19 @@ export default function PatientRecord(props){
 
   let currentTab = null;
   switch(selectedTab){
-    case 0: currentTab = <History />
+    case 0: currentTab = <History checkRoleMode={props.checkRoleMode}/>
       break;
-    case 1: currentTab = <ExtraOral />
+    case 1: currentTab = <ExtraOral checkRoleMode={props.checkRoleMode}/>
       break;
-    case 2: currentTab = <IntraOral />
+    case 2: currentTab = <IntraOral checkRoleMode={props.checkRoleMode}/>
       break;
-    case 3: currentTab = <Radiography />
+    case 3: currentTab = <Radiography checkRoleMode={props.checkRoleMode}/>
       break;
-    case 4: currentTab = <Diagnsis />
+    case 4: currentTab = <Diagnosis checkRoleMode={props.checkRoleMode}/>
       break;
-    case 5: currentTab = <Issue />
+    case 5: currentTab = <Issue checkRoleMode={props.checkRoleMode}/>
       break;
-    case 6: currentTab = <TreatmentPlan />
+    case 6: currentTab = <TreatmentPlan checkRoleMode={props.checkRoleMode}/>
       break;
     default: currentTab = <div className="h-100 w-100 d-flex justify-content-center align-items-center">
       <strong className="text-danger fw-bold">{t('page not found')}</strong>    

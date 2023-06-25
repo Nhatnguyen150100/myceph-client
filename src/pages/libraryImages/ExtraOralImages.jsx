@@ -18,15 +18,14 @@ const SIZE_UPLOAD_IMAGE = "80px";
 
 export default React.memo(function ExtraoralImages(props){
   const isRefresh = useSelector(state=>state.general.isRefresh);
-  const selectPatientOnMode = useSelector(state=>state.patient.selectPatientOnMode);
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const clinic = useSelector(state=>state.clinic);
   const doctor = useSelector(state=>state.doctor);
   const [hoverSettingId,setHoverSettingId] = useState();
   const [idImageDelete,setIdImageDelete] = useState();
   const [publicIdDelete,setPublicIdDelete] = useState();
+  const [roleOfDoctor,setRoleOfDoctor] = useState('edit');
 
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
@@ -40,8 +39,9 @@ export default React.memo(function ExtraoralImages(props){
   const getListImage = () => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      getToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?typeImages=extraoral`).then(result => {
+      getToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?typeImages=extraoral&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
         setListImage(result.data);
+        result.roleOfDoctor && setRoleOfDoctor(result.roleOfDoctor)
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -188,7 +188,7 @@ export default React.memo(function ExtraoralImages(props){
     setIdImageDelete('');
   }
 
-  const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || props.patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
+  const roleCheck = roleOfDoctor==='edit';
 
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1 mb-4">
     <ShowImageModal/>

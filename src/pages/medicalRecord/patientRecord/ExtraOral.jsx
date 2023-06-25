@@ -21,7 +21,6 @@ export default function ExtraOral(props){
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
   const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
@@ -53,6 +52,7 @@ export default function ExtraOral(props){
   const [frontalFaceImage,setFrontalFaceImage] = useState();
   const [obliqueFaceImage,setObliqueFaceImage] = useState();
   const [smileyFaceImage,setSmileyFaceImage] = useState();
+  const [roleOfDoctor,setRoleOfDoctor] = useState('edit');
 
   const [previousData,setPreviousData] = useState();
 
@@ -102,9 +102,10 @@ export default function ExtraOral(props){
   const getExtraOral = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/extraoral/${patient.currentPatient.id}`).then(result => {
+      getToServerWithToken(`/v1/extraoral/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
         setPreviousData(result.data);
         updateState(result.data);
+        result.roleOfDoctor && setRoleOfDoctor(result.roleOfDoctor)
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -185,6 +186,8 @@ export default function ExtraOral(props){
     })
   }
 
+  const roleCheck = roleOfDoctor==='edit';
+
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1">
     <div className="d-flex justify-content-end align-items-center mt-1 mb-2">
       {
@@ -196,7 +199,7 @@ export default function ExtraOral(props){
         :
         <div>
           {
-            ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit') &&
+            roleCheck &&
             <IconButtonComponent className="btn-outline-warning" onClick={e=>setEditMode(true)} icon="edit" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("edit")}/>
           }
         </div>

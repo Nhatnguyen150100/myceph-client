@@ -15,18 +15,30 @@ export default function MedicalRecord(props){
   const dispatch = useDispatch();
   const nav = useNavigate();
   const doctor = useSelector(state=>state.doctor);
+  const clinic = useSelector(state=>state.clinic);
   const selectedTab = useSelector(state=>state.general.medicalRecordTab);
   const selectPatientOnMode = useSelector(state=>state.patient.selectPatientOnMode);
   const currentPatient = useSelector(state=>state.patient.currentPatient);
 
+	let checkRoleMode = null;
+
+  switch(selectPatientOnMode){
+    case SELECT_PATIENT_MODE.SHARE_PATIENT: checkRoleMode = 'checkRole';
+      break;
+    case SELECT_PATIENT_MODE.CLINIC_PATIENT: checkRoleMode = clinic.roleOfDoctor !== 'admin' ? 'checkRole' : 'unCheck';
+      break
+    default: checkRoleMode = 'unCheck';
+		break;
+  }
+
   let currentTab = null;
 
   switch(selectedTab){
-    case MEDICAL_RECORD_TABS.INFORMATION: currentTab = <PatientInformation />
+    case MEDICAL_RECORD_TABS.INFORMATION: currentTab = <PatientInformation checkRoleMode={checkRoleMode} />
       break;
-    case MEDICAL_RECORD_TABS.RECORD: currentTab = <PatientRecord />
+    case MEDICAL_RECORD_TABS.RECORD: currentTab = <PatientRecord checkRoleMode={checkRoleMode}/>
       break;
-    case MEDICAL_RECORD_TABS.TREATMENT_HISTORY: currentTab = <PatientTreatmentHistory />
+    case MEDICAL_RECORD_TABS.TREATMENT_HISTORY: currentTab = <PatientTreatmentHistory checkRoleMode={checkRoleMode}/>
       break;
     default: currentTab = <div className="h-100 w-100 d-flex justify-content-center align-items-center">
       <strong className="text-danger fw-bold">{t('page not found')}</strong>    

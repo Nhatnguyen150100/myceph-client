@@ -192,13 +192,13 @@ export default function SharePatientSettingForClinic(props){
     }
   }
 
-  const onChangeRoleOfDoctor = (idSharedPatient,idOwnerDoctor,roleOfdoctor) => {
+  const onChangeRoleOfDoctor = (idSharedPatient,idOwnerDoctor,roleOfDoctor) => {
     return new Promise((resolve, reject) => {
       putToServerWithToken('/v1/sharePatient/updateRoleOfOwnerDoctor',{
         idSharedPatientOfClinic: clinic.idClinicDefault,
         idSharedPatient: idSharedPatient,
         idOwnerDoctor: idOwnerDoctor,
-        roleOfOwnerDoctor: roleOfdoctor
+        roleOfOwnerDoctor: roleOfDoctor
       }).then(result=>{
         onGetSharePatient({idDoctor:idOwnerDoctor}).then(()=>{
           toast.success(result.message);
@@ -206,7 +206,7 @@ export default function SharePatientSettingForClinic(props){
         })
       }).catch((err) =>{
         if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>onChangeRoleOfDoctor(idOwnerDoctor,idOwnerDoctor,roleOfdoctor));
+          refreshToken(nav,dispatch).then(()=>onChangeRoleOfDoctor(idSharedPatient,idOwnerDoctor,roleOfDoctor));
         }else{
           toast.error(err.message);
           reject(err);

@@ -20,7 +20,6 @@ const WIDTH_TITLE = "100px";
 export default function PatientInformation(props){
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const doctor = useSelector(state=>state.doctor.data);
-  const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const selectPatientOnMode = useSelector(state=>state.patient.selectPatientOnMode);
   const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
@@ -47,6 +46,7 @@ export default function PatientInformation(props){
   const [nameUpdateDoctor,setNameUpdateDoctor] = useState();
   const [updatedAt,setUpdatedAt] = useState();
   const [sideFaceImage,setSideFaceImage] = useState();
+  const [roleOfDoctor,setRoleOfDoctor] = useState('edit');
   const isEncrypted = patient.currentPatient.isEncrypted;
   const modeKey = useMemo(()=>{
     if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
@@ -111,9 +111,10 @@ export default function PatientInformation(props){
   const getPatient = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/patient/getPatient/${patient.currentPatient.id}?updateBydoctor=${updateByDoctor}`).then(result => {
+      getToServerWithToken(`/v1/patient/getPatient/${patient.currentPatient.id}?updateBydoctor=${updateByDoctor}&mode=${props.checkRoleMode}&idDoctor=${doctor?.id}`).then(result => {
         updatePatientState(result.data);
         setPreviousData(result.data);
+        result.roleOfDoctor && setRoleOfDoctor(result.roleOfDoctor)
         resolve();
       }).catch((err) =>{
         if(err.refreshToken && !isRefresh){
@@ -176,6 +177,8 @@ export default function PatientInformation(props){
     }
   }
 
+  const roleCheck = roleOfDoctor==='edit';
+
   return <div className="h-100 w-100">
     <div className="d-flex justify-content-end align-items-center mt-2">
       {
@@ -187,8 +190,7 @@ export default function PatientInformation(props){
         :
         <div>
           {
-            ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit') &&
-            <IconButtonComponent className="btn-outline-warning" onClick={e=>setEditMode(true)} icon="edit" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("edit")}/>
+            roleCheck && <IconButtonComponent className="btn-outline-warning" onClick={e=>setEditMode(true)} icon="edit" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("edit")}/>
           }
         </div>
       }

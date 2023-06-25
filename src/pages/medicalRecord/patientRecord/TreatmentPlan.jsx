@@ -34,6 +34,7 @@ export default function TreatmentPlan(props){
   const [editPlanId,setEditPlanId] = useState();
   const [planItem,setPlanItem] = useState();
   const [selectedItem,setSelectedItem] = useState();
+  const [roleOfDoctor,setRoleOfDoctor] = useState('edit');
   
   const [listOfPlan,setListOfPlan] = useState();
   
@@ -44,7 +45,6 @@ export default function TreatmentPlan(props){
     else return encryptKeySharePatient;
   },[selectPatientOnMode])
 
-  const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
 
   useEffect(()=>{
     if(patient.currentPatient) getListOfPlan();
@@ -64,8 +64,9 @@ export default function TreatmentPlan(props){
   const getListOfPlan = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      getToServerWithToken(`/v1/treatmentPlan/${patient.currentPatient.id}`).then(result => {
+      getToServerWithToken(`/v1/treatmentPlan/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
+        result.roleOfDoctor && setRoleOfDoctor(result.roleOfDoctor)
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -169,6 +170,8 @@ export default function TreatmentPlan(props){
     }
     setListOfPlan(isEncrypted?deCryptedListPlan(listPlanTemporary):listPlanTemporary);
   }
+
+  const roleCheck = roleOfDoctor==='edit';
 
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1">
       {

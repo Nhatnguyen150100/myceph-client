@@ -40,6 +40,7 @@ export default function History(props){
   const [compliance,setCompliance] = useState();
   const [editMode,setEditMode] = useState(false);
   const [previousData,setPreviousData] = useState();
+  const [roleOfDoctor,setRoleOfDoctor] = useState('edit');
   const isEncrypted = patient.currentPatient.isEncrypted;
   const modeKey = useMemo(()=>{
     if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
@@ -114,9 +115,10 @@ export default function History(props){
   const getHistory = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/history/${patient.currentPatient.id}`).then(result=>{
+      getToServerWithToken(`/v1/history/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result=>{
         updateState(result.data);
         setPreviousData(result.data);
+        result.roleOfDoctor && setRoleOfDoctor(result.roleOfDoctor)
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -129,6 +131,8 @@ export default function History(props){
     })
   }
 
+  const roleCheck = roleOfDoctor==='edit';
+
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-2">
     <div className="d-flex justify-content-end align-items-center mt-1 mb-3">
       {
@@ -140,7 +144,7 @@ export default function History(props){
         :
         <div>
           {
-            ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit') &&
+            roleCheck &&
             <IconButtonComponent className="btn-outline-warning" onClick={e=>setEditMode(true)} icon="edit" FONT_SIZE_ICON={FONT_SIZE_ICON} title={t("edit")}/>
           }
         </div>

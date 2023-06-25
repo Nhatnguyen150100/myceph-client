@@ -20,7 +20,6 @@ export default function Issue(props){
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const clinic = useSelector(state=>state.clinic);
   const patient = useSelector(state=>state.patient);
   const doctor = useSelector(state=>state.doctor);
   const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
@@ -31,6 +30,7 @@ export default function Issue(props){
   const [treatmentObject,setTreatmentObject] = useState();
   const [treatmentMethod,setTreatmentMethod] = useState();
   const [priotized,setPriotized] = useState(false);
+  const [roleOfDoctor,setRoleOfDoctor] = useState('edit');
 
 
   const [editIssueId,setEditIssueId] = useState();
@@ -48,8 +48,6 @@ export default function Issue(props){
     else if(selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT) return encryptKeyClinic;
     else return encryptKeySharePatient;
   },[selectPatientOnMode])
-
-  const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
 
   useEffect(()=>{
     if(patient.currentPatient) getListOfIssues();
@@ -71,8 +69,9 @@ export default function Issue(props){
   const getListOfIssues = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      getToServerWithToken(`/v1/listOfIssue/${patient.currentPatient.id}`).then(result => {
+      getToServerWithToken(`/v1/listOfIssue/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
         setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
+        result.roleOfDoctor && setRoleOfDoctor(result.roleOfDoctor)
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -175,6 +174,8 @@ export default function Issue(props){
       }).finally(()=>{dispatch(setLoadingModal(false));setEditIssueId('');setOpenDeleteConfirm(false)});
     })
   }
+
+  const roleCheck = roleOfDoctor==='edit';
 
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1">
     {
