@@ -289,7 +289,7 @@
   "feature": "feature",
   "shared by doctor": "shared by doctor",
   "agree": "agree",
-  "Software to support management combined with patient analysis for doctors and orthodontic clinics": "Software to support management combined with patient analysis for doctors and orthodontic clinics",
+  "The software for managing and supporting the analysis of dental X-ray films for doctors and dental clinics": "The software for managing and supporting the analysis of dental X-ray films for doctors and dental clinics",
   "myceph - comprehensive clinical support tool": "myceph - comprehensive clinical support tool",
   "Patient management and craniofacial analysis software is an important tool in the modern medical field. This software helps manage patient information accurately and conveniently, from storing medical information to tracking the patient's medical examination and treatment schedule. In addition, the software also provides craniofacial analysis features, helping to identify and measure craniofacial tilt, thereby assisting experts in the diagnosis and treatment of diseases related to the respiratory tract, oral and ENT. With the aid of patient management software and craniofacial analysis, doctors, dentists and other health professionals can make accurate and effective decisions in their treatment and health care patient.": "Patient management and craniofacial analysis software is an important tool in the modern medical field. This software helps manage patient information accurately and conveniently, from storing medical information to tracking the patient's medical examination and treatment schedule. In addition, the software also provides craniofacial analysis features, helping to identify and measure craniofacial tilt, thereby assisting experts in the diagnosis and treatment of diseases related to the respiratory tract, oral and ENT. With the aid of patient management software and craniofacial analysis, doctors, dentists and other health professionals can make accurate and effective decisions in their treatment and health care patient.",
   "Developed based on orthodontic research, combined with collected data.": "Developed based on orthodontic research, combined with collected data.",
@@ -398,5 +398,6 @@
   "Enter note for analysis": "Enter note for analysis",
   "Send message": "Send message",
   "deg": "deg",
-  "member of clinic can't available this page": "member of clinic can't available this page"
+  "member of clinic can't available this page": "member of clinic can't available this page",
+  "Image not yet analyzed": "Image not yet analyzed"
 }

@@ -295,7 +295,7 @@ export default React.memo(function ExtraoralImages(props){
             <div className="d-flex align-items-start mb-3 pb-2 justify-content-start px-4 flex-row w-100 flex-wrap">
               {
                 listImage[date]?.map((image,_) => {
-                  return <div onMouseEnter={e=>{if(roleCheck) setHoverSettingId(image.id)}} onMouseLeave={e=>{if(roleCheck) setHoverSettingId()}} className=" position-relative mt-3" key={image.id}>
+                  return <div onMouseEnter={()=>setHoverSettingId(image.id)} onMouseLeave={setHoverSettingId} className=" position-relative mt-3" key={image.id}>
                     <img 
                       className="me-4 transform-hover w-auto" 
                       src={splitAvatar(image.linkImage)} 
@@ -305,7 +305,7 @@ export default React.memo(function ExtraoralImages(props){
                       title={t('Click to see')}
                     />
                     {
-                      hoverSettingId === image.id &&
+                      hoverSettingId === image.id && roleCheck &&
                       <React.Fragment>
                         <div className="position-absolute top-0 start-0 p-0" style={{zIndex:"3"}}>
                           <input 

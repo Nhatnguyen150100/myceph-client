@@ -27,8 +27,11 @@ export default function PatientRows(props){
   const dispatch = useDispatch();
   const nav = useNavigate();
 
+  const [loadingSharePatient,setLoadingSharePatient] = useState(false);
+
   const getAllDoctorSharedPatient = (idPatient) => {
     return new Promise((resolve, reject) => {
+      setLoadingSharePatient(true)
       getToServerWithToken(`/v1/sharePatient/getDoctorSharedPatient/${idPatient}`).then(result => {
         setListOfDoctorSharedPatient(result.data);
         resolve();
@@ -39,7 +42,7 @@ export default function PatientRows(props){
           toast.error(err.message);
         }
         reject(err);
-      });
+      }).finally(()=>setLoadingSharePatient(false))
     });
   }
 
@@ -295,32 +298,41 @@ export default function PatientRows(props){
         <div className="d-flex flex-row align-items-center justify-content-center flex-wrap">
           <div className="btn-group dropstart">
             <button 
-              title={t("Doctors share patient")} 
-              onClick={e=>getAllDoctorSharedPatient(props.patient.id)} 
-              className="btn btn-outline-info p-1 border-0 me-2 mb-2 rounded d-none d-sm-block" 
-              disabled={props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor !=='admin'}
-              data-bs-toggle="dropdown" 
-              aria-expanded="false"
-            >
-              <img src="/assets/images/Share.png" width="34" height="34" alt="Discussion"/>
-            </button>
-            <ul className="dropdown-menu w-auto shadow ">
-              {
-                listOfDoctorSharedPatient.length>0?
-                <div className="d-flex flex-column justify-content-center align-items-center w-100 px-3">
-                  <span className="text-uppercase fw-bold mc-color border-bottom w-100 text-center mb-1" style={{fontSize:FONT_SIZE}}>{t('list doctors was shared')}</span>
-                  {
-                    listOfDoctorSharedPatient?.map((doctor, _) => {
-                      return <li onClick={e=>toOtherDoctorProfile(doctor.email)} className="btn w-100 d-flex flex-grow-1 flex-column justify-content-center align-items-center btn-primary border-0 px-3 py-1 text-nowrap rounded-pill mx-2 my-1" key={doctor.id}>
-                        <span className="text-capitalize"  style={{fontSize:FONT_SIZE}}>{doctor.fullName}</span>
-                        <span style={{fontSize:"12px"}}>{'('}{doctor.email}{')'}</span>
-                      </li>
-                    })
-                  }
-                </div>
-                :
-                <strong className="text-center text-capitalize mc-color fw-bold text-nowrap mx-3 my-1">{t('this patient is not shared')}</strong>
-              }
+                title={t("Doctors share patient")} 
+                onClick={e=>getAllDoctorSharedPatient(props.patient.id)} 
+                className="btn btn-outline-info p-1 border-0 me-2 mb-2 rounded d-none d-sm-block" 
+                disabled={props.selectPatientMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor !=='admin'}
+                data-bs-toggle="dropdown" 
+                aria-expanded="false"
+              >
+                <img src="/assets/images/Share.png" width="34" height="34" alt="Discussion"/>
+              </button>
+            <ul className="dropdown-menu w-auto shadow">
+            {
+              loadingSharePatient ?
+              <div className="d-flex flex-grow-1 align-items-center justify-content-center">
+                <div className="spinner-grow"></div>
+              </div>
+              :
+              <React.Fragment>
+                {
+                  listOfDoctorSharedPatient.length>0?
+                  <div className="d-flex flex-column justify-content-center align-items-center w-100 px-3">
+                    <span className="text-uppercase fw-bold mc-color border-bottom w-100 text-center mb-1" style={{fontSize:FONT_SIZE}}>{t('list doctors was shared')}</span>
+                    {
+                      listOfDoctorSharedPatient?.map((doctor, _) => {
+                        return <li onClick={e=>toOtherDoctorProfile(doctor.email)} className="btn w-100 d-flex flex-grow-1 flex-column justify-content-center align-items-center btn-primary border-0 px-3 py-1 text-nowrap rounded-pill mx-2 my-1" key={doctor.id}>
+                          <span className="text-capitalize"  style={{fontSize:FONT_SIZE}}>{doctor.fullName}</span>
+                          <span style={{fontSize:"12px"}}>{'('}{doctor.email}{')'}</span>
+                        </li>
+                      })
+                    }
+                  </div>
+                  :
+                  <strong className="text-center text-capitalize mc-color fw-bold text-nowrap mx-3 my-1">{t('this patient is not shared')}</strong>
+                }
+              </React.Fragment>
+            }
             </ul>
             <button 
               type="button" 

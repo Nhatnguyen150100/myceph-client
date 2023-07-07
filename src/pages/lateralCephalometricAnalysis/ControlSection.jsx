@@ -36,8 +36,6 @@ const ControlSection = React.memo((props) => {
   const nav = useNavigate();
   const imageModal = useRef();
   const imageModalRef = useRef();
-
-  const [isLoadImage,setIsLoadImage] = useState(true);
   
   useEffect(() => {
     imageModal.current = new bootstrap.Modal(imageModalRef.current, {});
@@ -51,14 +49,6 @@ const ControlSection = React.memo((props) => {
   useEffect(()=>{
     if(props.imageObject) imageModal.current.hide();
   },[props.imageObject])
-
-  const onLoad = () => {
-    setIsLoadImage(false);
-  }
-
-  const onError = () => {
-    setIsLoadImage(false);
-  }
 
   useEffect(()=>{
     dispatch(setNoteAnalysis(null));
@@ -171,26 +161,30 @@ const ControlSection = React.memo((props) => {
   }
 
   const setImageAnalysis = () => {
-    return new Promise((resolve, reject) =>{
-      dispatch(setLoadingModal(true));
-      postToServerWithToken(`/v1/lateralCeph/setImageAnalysis`,{
-        idImageAnalysis: currentImageAnalysis.id,
-        markerPoints: markerPoints,
-        scaleImage: scaleImage,
-        lengthOfRuler: lengthOfRuler,
-        noteAnalysis: noteAnalysis
-      }).then(result => {
-        toast.success(t(result.message));
-        resolve();
-      }).catch(err =>{
-        if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>setImageAnalysis());
-        }else{
-          toast.error(err.message);
-        }
-        reject();
-      }).finally(()=>dispatch(setLoadingModal(false)));
-    })
+    if(Object.keys(markerPoints).length===0){
+      toast.error(t('Image not yet analyzed'))
+    }else{
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        postToServerWithToken(`/v1/lateralCeph/setImageAnalysis`,{
+          idImageAnalysis: currentImageAnalysis.id,
+          markerPoints: markerPoints,
+          scaleImage: scaleImage,
+          lengthOfRuler: lengthOfRuler,
+          noteAnalysis: noteAnalysis
+        }).then(result => {
+          toast.success(t(result.message));
+          resolve();
+        }).catch(err =>{
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>setImageAnalysis());
+          }else{
+            toast.error(err.message);
+          }
+          reject();
+        }).finally(()=>dispatch(setLoadingModal(false)));
+      })
+    }
   }
 
   const deleteImageAnalysis = () => {
@@ -587,11 +581,6 @@ const ControlSection = React.memo((props) => {
               />
             </div>
             {
-              isLoadImage && listImageFontSide.length > 0 && <div className="d-flex flex-grow-1 justify-content-center align-items-center">
-                <div className="spinner-grow"></div>
-              </div>
-            }
-            {
               listImageFontSide?.map((image,_)=>{
                 return <React.Fragment>
                   <button 
@@ -604,9 +593,7 @@ const ControlSection = React.memo((props) => {
                     }}
                   >
                     <img 
-                      src={splitAvatar(image.linkImage)} 
-                      onLoad={onLoad}
-                      onError={onError} 
+                      src={splitAvatar(image.linkImage)}
                       alt={t('font side image')}
                       style={{maxHeight:"150px",cursor:"pointer"}}
                     />

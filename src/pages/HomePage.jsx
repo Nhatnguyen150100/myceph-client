@@ -25,19 +25,6 @@ export default function HomePage(props) {
     dispatch(setLoadingModal(true));
     return new Promise((resolve,reject) =>{
       getToServerWithToken(`/v1/doctor/getAllClinicFromDoctor/${doctor?.id}`).then(result => {
-        // result.data.map(clinic => {
-        //   if(clinic.roleOfDoctor==='admin'){
-        //     if(!currentPatient?.id) getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{
-        //       dispatch(setArrayPatient(response.data));
-        //       dispatch(setCurrentPatient(response.data[0]))
-        //     })
-        //     dispatch(setIdClinicDefault(clinic.id));
-        //     getData(indexDB,clinic.id,DB_ENCRYPTION_CLINIC).then(encryptedData => {
-        //       encryptedData ? dispatch(setEncryptKeyClinic({key: encryptedData.key, iv: encryptedData.iv})) : dispatch(setEncryptKeyClinic(null))
-        //     })
-        //     dispatch(setRoleOfDoctor(clinic.roleOfDoctor))
-        //   }
-        // })
         const myClinic = result.data.filter(clinic => clinic.roleOfDoctor==='admin');
         if(myClinic.length > 0){
           !currentPatient?.id && getToServerWithToken(`/v1/patient/getPatientListForClinic/${myClinic[0].id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{
@@ -90,11 +77,11 @@ export default function HomePage(props) {
       backgroundImage: `url("/assets/images/home-background-desktop.png")`,
       backgroundSize: 'cover',
     }}>
-      <img className="position-absolute start-0 " src="/assets/images/technology_place.png" alt="img" height={580}/>
-      <img className="position-absolute" src="/assets/images/background_technology.png" alt="img" width={700} style={{top:"450px",left:"-100px",opacity:"85%"}}/>
-      <img className="position-absolute" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"800px",right:"0px"}}/>
-      <img className="position-absolute" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"3000px",left:"0px"}}/>
-      <img className="position-absolute" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"1500px",left:"-140px"}}/>
+      <img className="position-absolute start-0 technology_place" src="/assets/images/technology_place.png" alt="img" height={580}/>
+      <img className="position-absolute background_technology" src="/assets/images/background_technology.png" alt="img" width={700} style={{top:"450px",left:"-100px",opacity:"85%"}}/>
+      <img className="position-absolute pattern1" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"800px",right:"0px"}}/>
+      <img className="position-absolute pattern2" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"3000px",left:"0px"}}/>
+      <img className="position-absolute pattern3" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"1500px",left:"-140px"}}/>
       <div className="container h-100 position-relative">
         <img className="position-absolute translate-middle d-none d-lg-block" src="/assets/images/medical_technology.png" alt="img" height={550} style={{right:"-235px",top:"330px"}}/>
         <div className="d-flex flex-grow-1 justify-content-start">
@@ -108,7 +95,7 @@ export default function HomePage(props) {
             </h5>
             <img className="my-2" src="/assets/images/line_white.png" alt="img" width={200}/>
             <p className="mc-color fw-bold mt-2 header-des" style={{fontSize:"24px",width:"520px",textAlign:"right"}}>
-              {t('Software to support management combined with patient analysis for doctors and orthodontic clinics')}
+              {t('The software for managing and supporting the analysis of dental X-ray films for doctors and dental clinics')}
             </p>
           </div>
         </div>

@@ -34,7 +34,6 @@ export default function LibraryImages(props){
 		break;
   }
 	
-	console.log("🚀 ~ file: LibraryImages.jsx:34 ~ LibraryImages ~ checkRoleMode:", checkRoleMode)
   let currentTab = null;
 
   switch(selectedTab){

@@ -328,7 +328,7 @@ export default function ShowImageModal(props) {
             onWheel={handleWheel} 
             height={window.innerHeight-50-(110*2)} 
             width={contentModelRef.current?.clientWidth-2} 
-            className={`${isGrab && 'cursor-grabbing'} border-start border-end m-0`} 
+            className={`${isGrab?'cursor-grabbing':''} border-start border-end m-0`} 
             x={0} 
             y={0} 
             offsetX={0} 
@@ -336,26 +336,26 @@ export default function ShowImageModal(props) {
           >
             <Layer>
               {imageObject &&
-               <Image
-                ref={imageRef} 
-                image={imageObject}
-                filters={filterFuncs}
-                {...filterVals}
-                offsetX={-((contentModelRef.current?.clientWidth-2)/2-imageObject.width/2)}
-                x={stateImage.x}
-                y={stateImage.y}
-                draggable={true}
-                onMouseDown={()=>setIsGrab(true)}
-                onDragStart={()=>setStateImage(true,stateImage.x,stateImage.y)}
-                onDragEnd={(e) => {
-                  setStateImage({
-                    isDragging: false,
-                    x: e.target.x(),
-                    y: e.target.y(),
-                  });
-                }}
-                onMouseUp={(e) =>setIsGrab(false)}
-              />
+                <Image
+                  ref={imageRef} 
+                  image={imageObject}
+                  filters={filterFuncs}
+                  {...filterVals}
+                  offsetX={-((contentModelRef.current?.clientWidth-2)/2-imageObject.width/2)}
+                  x={stateImage.x}
+                  y={stateImage.y}
+                  draggable={true}
+                  onMouseDown={()=>setIsGrab(true)}
+                  onDragStart={()=>setStateImage(true,stateImage.x,stateImage.y)}
+                  onDragEnd={(e) => {
+                    setStateImage({
+                      isDragging: false,
+                      x: e.target.x(),
+                      y: e.target.y(),
+                    });
+                  }}
+                  onMouseUp={(e) =>setIsGrab(false)}
+                />
               }
               {openGrid && gridComponents}
             </Layer>

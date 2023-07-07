@@ -281,7 +281,7 @@
   "feature": "tính năng",
   "shared by doctor": "được chia sẻ bởi bác sĩ",
   "agree": "đồng ý",
-  "Software to support management combined with patient analysis for doctors and orthodontic clinics": "Phần mềm hỗ trợ quản lý kết hợp phân tích bệnh nhân dành cho bác sĩ và phòng khám chỉnh nha",
+  "The software for managing and supporting the analysis of dental X-ray films for doctors and dental clinics": "Phần mềm quản lý và hỗ trợ phân tích phim X-quang bệnh nhân dành cho bác sĩ và phòng khám chỉnh nha",
   "myceph - comprehensive clinical support tool": "myceph - công cụ hỗ trợ lâm sàng toàn diện",
   "Patient management and craniofacial analysis software is an important tool in the modern medical field. This software helps manage patient information accurately and conveniently, from storing medical information to tracking the patient's medical examination and treatment schedule. In addition, the software also provides craniofacial analysis features, helping to identify and measure craniofacial tilt, thereby assisting experts in the diagnosis and treatment of diseases related to the respiratory tract, oral and ENT. With the aid of patient management software and craniofacial analysis, doctors, dentists and other health professionals can make accurate and effective decisions in their treatment and health care patient.": "Phần mềm quản lý bệnh nhân và phân tích sọ mặt là một công cụ quan trọng trong lĩnh vực y tế hiện đại. Phần mềm này giúp quản lý thông tin bệnh nhân một cách chính xác và thuận tiện, từ việc lưu trữ thông tin bệnh án đến theo dõi lịch khám chữa bệnh của bệnh nhân. Ngoài ra, phần mềm còn cung cấp tính năng phân tích sọ mặt, giúp xác định và đo độ nghiêng sọ mặt, từ đó hỗ trợ các chuyên gia trong việc chẩn đoán và điều trị các bệnh lý liên quan đến đường hô hấp, miệng và tai mũi họng. Với sự hỗ trợ của phần mềm quản lý bệnh nhân và phân tích sọ mặt, bác sĩ, nha sĩ và các chuyên gia y tế khác có thể đưa ra quyết định chính xác và hiệu quả trong việc điều trị và chăm sóc sức khỏe cho bệnh nhân.",
   "Developed based on orthodontic research, combined with collected data.": "Được phát triển dựa trên nghiên cứu chỉnh nha, kết hợp với dữ liệu thu thập được.",
@@ -398,5 +398,6 @@
   "Enter note for analysis": "Nhập ghi chú cho phân tích",
   "Send message": "Gửi tin nhắn",
   "deg": "độ",
-  "member of clinic can't available this page": "thành viên của phòng khám không thể sử dụng trang này"
+  "member of clinic can't available this page": "thành viên của phòng khám không thể sử dụng trang này",
+  "Image not yet analyzed": "Ảnh chưa thực hiện phân tích"
 }

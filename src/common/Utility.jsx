@@ -520,5 +520,3 @@ export const findNextObject = (currentKey,keyArray,checkObject) => {
   }
   return null;
 }
-
-
