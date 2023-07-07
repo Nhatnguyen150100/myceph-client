@@ -249,7 +249,7 @@ export default function Myclinic(props){
         <SelectPatientComponent showSelectedPatient={false} condition={true}/>
       </div>
       <div className="d-flex flex-row align-items-end flex-wrap">
-        <div style={{width:"400px"}}>
+        <div className="add-clinic" style={{width:"400px"}}>
           <TextFieldInput className="p-1 me-2" legend={t('add new clinic')} placeholder={t('Name of new clinic')} value={newClinic} onChange={value=>setNewClinic(value)}/>
         </div>
         <div className="full-width-on-mobile d-flex justify-content-center mt-3">
@@ -342,9 +342,9 @@ export default function Myclinic(props){
     }
     <div className="my-3 d-flex align-items-center justify-content-center w-100 flex-column">
       <div className="d-flex flex-row align-items-center justify-content-center">
-        <hr style={{ width: '140px' }} />
+        <hr className="hr-line" style={{ width: '140px' }} />
         <span className="mx-3 text-nowrap mc-color fw-bold text-uppercase text-center">{t('my clinic')}</span>
-        <hr style={{ width: '140px' }} />
+        <hr className="hr-line" style={{ width: '140px' }} />
       </div>
       {
         editMode && clinic.roleOfDoctor==='admin' && <button type="button" className="btn btn-outline-danger mt-2 d-flex flex-row align-items-center justify-content-center" onClick={onDeleteHandle}>

@@ -277,9 +277,9 @@ export default function MyProfile(props){
       </div>
     </div>
     <div className="my-3 d-flex align-items-center justify-content-center w-100">
-      <hr style={{ width: '140px' }} />
-      <span className="mx-3 mc-color fw-bold text-uppercase text-center">{t('my profile')}</span>
-      <hr style={{ width: '140px' }} />
+      <hr className="hr-line" style={{ width: '140px' }} />
+      <span className="mx-3 mc-color fw-bold text-uppercase text-center text-nowrap">{t('my profile')}</span>
+      <hr className="hr-line" style={{ width: '140px' }} />
     </div>
   </div>
 }

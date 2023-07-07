@@ -96,7 +96,7 @@ const SelectPatientComponent = (props) => {
 
   return <div className="d-flex flex-wrap flex-row justify-content-between align-items-center">
     {
-      props.showSelectedPatient && <fieldset className="border rounded px-2 d-flex flex-column align-items-center flex-wrap justify-content-sm-center justify-content-center pt-0 pb-1 me-3 mb-2" style={{minWidth:"385px"}}>
+      props.showSelectedPatient && <fieldset className="border rounded px-2 d-flex flex-column align-items-center flex-wrap justify-content-sm-center justify-content-center pt-0 pb-1 me-3 mb-2 select-patient" style={{minWidth:"385px"}}>
         <legend style={{fontSize:FONT_SIZE}} className="mx-auto mb-0 float-none w-auto px-2 text-uppercase mc-color fw-bold">
           {t('select patient')}
         </legend>

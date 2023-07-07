@@ -188,9 +188,9 @@ export default function OtherProfile(props){
     }
     <div className="my-3 d-flex align-items-end justify-content-center w- h-100">
       <div className="d-flex flex-row align-items-center justify-content-center">
-        <hr style={{ width: '140px' }} />
-        <span className="mx-3 mc-color fw-bold text-uppercase text-center">{t('other doctor profile')}</span>
-        <hr style={{ width: '140px' }} />
+        <hr className="hr-line" style={{ width: '140px' }} />
+        <span className="mx-3 mc-color fw-bold text-uppercase text-center text-nowrap">{t('other doctor profile')}</span>
+        <hr className="hr-line" style={{ width: '140px' }} />
       </div>
     </div>
   </div>

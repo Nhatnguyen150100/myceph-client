@@ -301,7 +301,7 @@ export default function RadiographyImages(props){
                 listImage[date]?.map((image,_) => {
                   return <div onMouseEnter={e=>{if(roleCheck) setHoverSettingId(image.id)}} onMouseLeave={e=>{if(roleCheck) setHoverSettingId()}} className=" position-relative mt-3" key={image.id}>
                     <img 
-                      className="me-4 transform-hover w-auto" 
+                      className="me-4 transform-hover w-auto img-info" 
                       src={splitAvatar(image.linkImage)} 
                       onLoad={onLoad}
                       onError={onError}

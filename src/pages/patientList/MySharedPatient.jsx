@@ -144,7 +144,7 @@ export default function MySharedPatient(props){
           <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{maxWidth:"80px",fontSize:FONT_SIZE}}>{t("gender")}</th>
           <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{minWidth:"150px",fontSize:FONT_SIZE}}>{t("note")}</th>
           <th className='align-middle mc-heading-middle d-lg-table-cell d-none' style={{fontSize:FONT_SIZE}}>{t("feature")}</th>
-          <th className='align-middle mc-heading-middle d-lg-table-cell' style={{fontSize:FONT_SIZE}}>{t("shared by doctor")}</th>
+          <th className='align-middle mc-heading-middle d-lg-table-cell action-col' style={{fontSize:FONT_SIZE}}>{t("shared by doctor")}</th>
         </tr>
       </thead>
       {

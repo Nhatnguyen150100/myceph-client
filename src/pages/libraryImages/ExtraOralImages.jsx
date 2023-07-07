@@ -297,7 +297,7 @@ export default React.memo(function ExtraoralImages(props){
                 listImage[date]?.map((image,_) => {
                   return <div onMouseEnter={()=>setHoverSettingId(image.id)} onMouseLeave={setHoverSettingId} className=" position-relative mt-3" key={image.id}>
                     <img 
-                      className="me-4 transform-hover w-auto" 
+                      className="me-4 transform-hover w-auto img-info" 
                       src={splitAvatar(image.linkImage)} 
                       style={{maxHeight:"250px",cursor:"pointer"}}
                       alt={t(IMAGE_TYPE_LIST.FACE.name)} 

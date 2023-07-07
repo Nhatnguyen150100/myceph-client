@@ -269,8 +269,17 @@
   .info-header {
     align-items: start !important;
   }
+  .img-info{
+    max-width: 325px !important;
+  }
+  .hr-line{
+    width: 40px !important;
+  }
+  .add-clinic{
+    max-width: 370px !important;
+  }
   .header-des {
-    width: 280px !important;
+    width: 315px !important;
     text-align: left !important;
   }
   .full-width-on-mobile {
@@ -283,6 +292,9 @@
   .menu-patient {
     height: 130px !important;
   }
+  .select-patient{
+    min-width: 360px !important;
+  }
   .name-width {
     min-width: 140px !important;
   }
@@ -290,7 +302,10 @@
     min-width: 50px !important;
   }
   .name-col {
-    min-width: 320px !important;
+    min-width: 260px !important;
+  }
+  .action-col{
+    min-width: 60px !important;
   }
   .user-setting {
     margin-left: 0px !important;
