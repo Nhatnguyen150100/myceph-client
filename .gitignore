@@ -11,6 +11,10 @@
 # production
 /build
 
+/src/config
+
+/src/pages/lateralCephalometricAnalysis
+
 # misc
 .DS_Store
 .env

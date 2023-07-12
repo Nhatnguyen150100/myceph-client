@@ -214,11 +214,11 @@ export default React.memo(function ExtraoralImages(props){
             </legend>
             <div className="d-flex flex-wrap align-items-center mb-3 p-0 justify-content-start ps-4 flex-row w-100">
                 <div className="me-4 mb-2" style={{borderStyle:"dashed",borderWidth:"2px",borderColor:"#043d5d",height:SIZE_UPLOAD_IMAGE}}>
-                  <UploadImage 
+                  <UploadImage
                     imageIcon="/assets/images/5.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.FACE.imageList.SIDE.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,5,false)}
@@ -229,7 +229,7 @@ export default React.memo(function ExtraoralImages(props){
                     imageIcon="/assets/images/6.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.FACE.imageList.FRONTAL.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,6,false)}
@@ -240,7 +240,7 @@ export default React.memo(function ExtraoralImages(props){
                     imageIcon="/assets/images/7.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.FACE.imageList.OBLIQUE.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,7,false)}
@@ -251,7 +251,7 @@ export default React.memo(function ExtraoralImages(props){
                     imageIcon="/assets/images/8.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.FACE.imageList.SMILEY.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,8,false)}
@@ -262,7 +262,7 @@ export default React.memo(function ExtraoralImages(props){
                     imageIcon="/assets/images/9.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.FACE.imageList.OTHER.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,9,false)}

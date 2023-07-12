@@ -218,7 +218,7 @@ export default function IntraoralImages(props){
                     imageIcon="/assets/images/10.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.RIGHT_BUCCAL.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,10,false)}
@@ -229,7 +229,7 @@ export default function IntraoralImages(props){
                     imageIcon="/assets/images/11.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.LEFT_BUCCAL.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,11,false)}
@@ -240,7 +240,7 @@ export default function IntraoralImages(props){
                     imageIcon="/assets/images/12.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.ANTERIOR.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,12,false)}
@@ -251,7 +251,7 @@ export default function IntraoralImages(props){
                     imageIcon="/assets/images/13.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MAXILLARY_OCCLUSAL.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,13,false)}
@@ -262,7 +262,7 @@ export default function IntraoralImages(props){
                     imageIcon="/assets/images/14.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MANDIBULAR_OCCLUSAL.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,14,false)}
@@ -273,7 +273,7 @@ export default function IntraoralImages(props){
                     imageIcon="/assets/images/15.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.OTHER.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,15,false)}

@@ -99,7 +99,21 @@ export default function ResultAnalysisTable(props) {
             ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.arrayListValue.map((value,index) => {
               return  <tr className="align-middle" key={index+Math.random(1,1000)}
               > 
-                <td className="text-gray" style={{fontSize:FONT_SIZE}}>
+                <td              
+                  onMouseEnter={()=>{
+                    if(value.valueFn && markerPoints){
+                      props.onSetHighLightIndicator(
+                        value.highLightFn(...value.markerArray?.map(element => {
+                          return markerPoints[element] ? markerPoints[element] : null;
+                        }))
+                      )
+                    }
+                  }}
+                  onMouseLeave={()=>props.onSetHighLightIndicator([])}
+                  onMouseOut={()=>props.onSetHighLightIndicator([])} 
+                  className="text-gray hover-table" 
+                  style={{fontSize:FONT_SIZE,cursor:"pointer"}}
+                >
                   {
                     value.indicator
                   }
@@ -127,16 +141,6 @@ export default function ResultAnalysisTable(props) {
                       ''
                     )
                   }`}
-                  onMouseEnter={()=>{
-                    if(value.valueFn && markerPoints){
-                      props.onSetHighLightIndicator(
-                        value.highLightFn(...value.markerArray?.map(element => {
-                          return markerPoints[element] ? markerPoints[element] : null;
-                        }))
-                      )
-                    }
-                  }}
-                  onMouseOut={()=>props.onSetHighLightIndicator([])}
                 >
                   {
                      value.valueFn && markerPoints && value.valueFn(...value.markerArray?.map(element => {

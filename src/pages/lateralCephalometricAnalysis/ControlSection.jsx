@@ -574,7 +574,7 @@ const ControlSection = React.memo((props) => {
                 imageIcon="/assets/images/1.png" 
                 styleImage={{height:"100px"}} 
                 alt={t(IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.name)} 
-                className="border-0 hoverGreenLight h-100" 
+                className="border-0 hoverGreenLight h-100 upload-hover" 
                 style={{fontSize:FONT_SIZE,width:"150px"}}
                 getUrlImage={value=>{}}
                 getImage={value => uploadImageToCloudinary(value,1,false)}

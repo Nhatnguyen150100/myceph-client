@@ -233,7 +233,7 @@ export default function RadiographyImages(props){
                     imageIcon="/assets/images/1.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,1,false)}
@@ -244,7 +244,7 @@ export default function RadiographyImages(props){
                     imageIcon="/assets/images/2.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,2,false)}
@@ -255,7 +255,7 @@ export default function RadiographyImages(props){
                     imageIcon="/assets/images/3.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,3,false)}
@@ -266,7 +266,7 @@ export default function RadiographyImages(props){
                     imageIcon="/assets/images/4.png" 
                     styleImage={{height:"50px"}} 
                     alt={t(IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.name)} 
-                    className="border-0 hoverGreenLight h-100" 
+                    className="border-0 hoverGreenLight h-100 upload-hover" 
                     style={{fontSize:FONT_SIZE,width:SIZE_UPLOAD_IMAGE}}
                     getUrlImage={value=>{}}
                     getImage={value => uploadImageToCloudinary(value,4,false)}

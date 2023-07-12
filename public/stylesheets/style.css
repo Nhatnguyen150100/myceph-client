@@ -14,6 +14,11 @@
   color: #40bab5 !important;
 }
 
+.upload-hover:hover img{
+  content: url("/public/assets/gif/upload.gif");
+  height: 70px !important;
+}
+
 .text-gray {
   color: #4e4e4e;
 }
@@ -24,6 +29,10 @@
 
 .mc-color-hover:hover {
   color: #40bab5 !important;
+}
+
+.hover-table:hover{
+  background-color: rgb(181, 239, 253) !important;
 }
 
 .mc-border-pale {
