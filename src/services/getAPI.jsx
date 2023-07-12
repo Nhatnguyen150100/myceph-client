@@ -46,9 +46,6 @@ export function getToServer(url) {
 export function postToServerWithToken(url, bodyObject) {
 	return new Promise(async (resolve, reject) => {
     const token = await cookies.get('accessToken');
-		// const privateKey = await readPEMFile(__dirname, 'rsaPrivateKey.pem');
-		// console.log("🚀 ~ file: getAPI.jsx:31 ~ returnnewPromise ~ privateKey:", privateKey)
-		// const keyPrivateToken = new NodeRSA(privateKey);
     fetch(baseURL + url, {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json', token: `Bearer ${token}`},
@@ -74,8 +71,6 @@ export function postToServerWithToken(url, bodyObject) {
 export function putToServerWithToken(url, bodyObject) {
 	return new Promise(async (resolve, reject) => {
     const token = await cookies.get('accessToken');
-		// const privateKey = await readPEMFile(__dirname, 'rsaPrivateKey.pem');
-		// const keyPrivateToken = new NodeRSA(privateKey);
     fetch(baseURL + url, {
 			method: 'put',
 			headers: { 'Content-Type': 'application/json', token: `Bearer ${token}`},
@@ -99,8 +94,6 @@ export function putToServerWithToken(url, bodyObject) {
 export function getToServerWithToken(url) {
 	return new Promise(async (resolve, reject) => {
     const token = await cookies.get('accessToken');
-		// const privateKey = await readPEMFile(__dirname, 'rsaPrivateKey.pem');
-		// const keyPrivateToken = new NodeRSA(privateKey);
     fetch(baseURL + url, {
 			method: 'get',
 			headers: { 'Content-Type': 'application/json', token: `Bearer ${token}`},
