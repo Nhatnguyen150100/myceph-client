@@ -213,8 +213,10 @@ export default function PatientInformation(props){
                             doctor.id === updateByDoctor ? <span className="fw-bold text-capitalize">{t('you')}</span>
                             :
                             <React.Fragment>
-                              <span className="fw-bold" style={{fontSize:FONT_SIZE}}>{emailUpdateDoctor}</span>
-                              <span className="text-capitalize" style={{fontSize:"13px"}}>{'('}{nameUpdateDoctor}{')'}</span>
+                              <span className="fw-bold" style={{fontSize:FONT_SIZE}}>{nameUpdateDoctor}</span>
+                              {
+                                emailUpdateDoctor ? <span className="text-capitalize" style={{fontSize:"13px"}}>{'('}{emailUpdateDoctor}{')'}</span> : ''
+                              }
                             </React.Fragment>
                           }
                         </button>

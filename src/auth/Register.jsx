@@ -25,11 +25,12 @@ function RegisterPage(props) {
   const { t } = useTranslation();
   const { executeRecaptcha } = useGoogleReCaptcha();
 
+  const isDevelopment = process.env.NODE_ENV==='development';
+
   useEffect(()=>{
     dispatch(setAppName(`Myceph - ${t('sign up')}`));
   },[])
   
-  console.log("🚀 ~ file: Register.jsx:43 ~ postToServer ~ process.env.NODE_ENV:", process.env.NODE_ENV)
   const onRegistration = (e) => {
     if (!email) setEmailError(t('email is required'));
     else if (!isValidEmail(email)) setEmailError(t("email is incorrect format"));
@@ -39,7 +40,7 @@ function RegisterPage(props) {
     else {
       setLoading(true);
       executeRecaptcha('register').then(token => 
-        postToServer(`/v1/doctor/${process.env.NODE_ENV==='development'?'registerDev':'register'}`, { email: email, password: password, tokenRecaptcha: token }).then((result) => {
+        postToServer(`/v1/doctor/${isDevelopment?'registerDev':'register'}`, { email: email, password: password, tokenRecaptcha: token }).then((result) => {
           toast.success(result.message);
           setEmail('');
           setPassword('');

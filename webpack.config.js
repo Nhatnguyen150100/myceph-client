@@ -6,9 +6,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const Dotenv = require('dotenv-webpack');
-const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const Dotenv = require("dotenv-webpack");
+const webpack = require("webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -17,16 +17,16 @@ const stylesHandler = MiniCssExtractPlugin.loader;
 const config = {
   entry: "./src/index.jsx",
   output: {
-    path: path.resolve(__dirname, "build")
+    path: path.resolve(__dirname, "build"),
   },
   devServer: {
     historyApiFallback: true,
     open: true,
     host: "localhost",
-    port: 8001
+    port: 8001,
   },
   watchOptions: {
-    ignored: '**/node_modules',
+    ignored: "**/node_modules",
   },
   plugins: [
     new Dotenv(),
@@ -36,29 +36,27 @@ const config = {
     new MiniCssExtractPlugin(),
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(true),
-      VERSION: JSON.stringify('0.0.1'),
+      VERSION: JSON.stringify("0.0.1"),
       BROWSER_SUPPORTS_HTML5: true,
-      TWO: '1+1',
-      'typeof window': JSON.stringify('object')
+      TWO: "1+1",
+      "typeof window": JSON.stringify("object"),
     }),
     new CopyWebpackPlugin({
-      patterns: [
-        { from: 'public/assets', to: 'assets' }
-      ]
-    })
+      patterns: [{ from: "public/assets", to: "assets" }],
+    }),
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
   ],
   resolve: {
     fallback: {
-      "crypto": require.resolve("crypto-browserify"),
-      "buffer": require.resolve("buffer"),
-      "constants": require.resolve("constants-browserify"),
-      "assert": false,
-      "stream":require.resolve("stream-browserify"),
-      "fs": false,
-      "path": false,
-    }
+      crypto: require.resolve("crypto-browserify"),
+      buffer: require.resolve("buffer"),
+      constants: require.resolve("constants-browserify"),
+      assert: false,
+      stream: require.resolve("stream-browserify"),
+      fs: false,
+      path: false,
+    },
   },
   module: {
     rules: [
@@ -84,14 +82,14 @@ const config = {
         test: /\.pem$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              name: '[name].[ext]',
-              outputPath: './src/certs/'
+              name: "[name].[ext]",
+              outputPath: "./src/certs/",
             },
           },
           {
-            loader: 'raw-loader',
+            loader: "raw-loader",
           },
         ],
       },
@@ -101,10 +99,7 @@ const config = {
   },
   optimization: {
     minimize: true,
-    minimizer: [
-      new TerserPlugin(),
-      new CssMinimizerPlugin()
-    ],
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   performance: {
     maxAssetSize: 1000000, // in bytes

@@ -186,7 +186,7 @@ export default function MyProfile(props){
             editMode ? 
             <input className="text-gray border-0 flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={fullName} onChange={e=>setFullName(e.target.value)}/>
             :
-            <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{fullName?fullName:'no data'}</span>
+            <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{fullName?fullName:t('no data')}</span>
           }
         </div>
         <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
@@ -203,7 +203,7 @@ export default function MyProfile(props){
               </option>
             </select>
             :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{gender?gender:'no data'}</span>
+            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{gender?t(gender):t('no data')}</span>
           }
           <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('date of birth')}:</label>
           {
@@ -219,7 +219,7 @@ export default function MyProfile(props){
             editMode ? 
             <input className="text-gray border-0" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE,width:WIDTH_CHILD}} type="number" value={phoneNumber} onChange={e=>setPhoneNumber(e.target.value)}/>
             :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumber?phoneNumber:'no data'}</span>
+            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumber?phoneNumber:t('no data')}</span>
           }
           
           <div className="d-flex flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
@@ -228,7 +228,7 @@ export default function MyProfile(props){
             editMode ? 
             <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={specialty} onChange={e=>setSpecialty(e.target.value)}/>
             :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{specialty?specialty:'no data'}</span>
+            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{specialty?specialty:t('no data')}</span>
           }
           </div>
         </div>
@@ -253,7 +253,7 @@ export default function MyProfile(props){
             editMode ? 
             <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={diploma} onChange={e=>setDiploma(e.target.value)}/>
             :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{diploma?diploma:'no data'}</span>
+            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{diploma?diploma:t('no data')}</span>
           }
         </div>
         <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
@@ -262,7 +262,7 @@ export default function MyProfile(props){
             editMode ? 
             <input className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={position} onChange={e=>setPosition(e.target.value)}/>
             :
-            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{position?position:'no data'}</span>
+            <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{position?position:t('no data')}</span>
           }
         </div>
         <div className={`d-flex flex-wrap ${editMode?'border-bottom':''}`}>
@@ -271,7 +271,7 @@ export default function MyProfile(props){
             editMode ? 
             <textarea className="text-gray border-0 d-flex flex-grow-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={description} onChange={e=>setDescription(e.target.value)}/>
             :
-            <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{description?description:'no data'}</span>
+            <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{description?description:t('no data')}</span>
           }
         </div>
       </div>
