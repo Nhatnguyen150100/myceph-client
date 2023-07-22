@@ -81,7 +81,7 @@ export default function RadiographyImages(props){
           consultationDate: consultationDate
         }).then(result => {
           setListImage(result.data);
-          toast.success(t(result.message));
+          toast.success(t(t(result.message)));
         }).catch(err => {
           toast.error(t(err.message));
         }).finally(()=>dispatch(setLoadingModal(false)));
@@ -96,7 +96,7 @@ export default function RadiographyImages(props){
             consultationDate: consultationDate
           }).then(result => {
             setListImage(result.data);
-            toast.success(t(result.message));
+            toast.success(t(t(result.message)));
             resolve();
           }).catch(err =>{
             if(err.refreshToken && !isRefresh){
@@ -121,7 +121,7 @@ export default function RadiographyImages(props){
         oldDate: oldDate
       }).then(result => {
         setListImage(result.data);
-        toast.success(result.message);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -136,7 +136,7 @@ export default function RadiographyImages(props){
 
   const updateImage = (idImage,consultationDate,typeImage,newUrl) => {
     return new Promise((resolve,reject) => {
-      dispatch(setLoadingModal(false));
+      dispatch(setLoadingModal(true));
       putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [1, 2, 3, 4],
@@ -146,7 +146,7 @@ export default function RadiographyImages(props){
         linkImage: newUrl
       }).then(result => {
         setListImage(result.data);
-        toast.success(result.message);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -169,7 +169,7 @@ export default function RadiographyImages(props){
           setOpenDeleteConfirm(false);
           setIdImageDelete('');
           setPublicIdDelete('');
-          toast.warning(result.message);
+          toast.warning(t(result.message));
           resolve();
         }).catch(err => {
           toast.error(t(err.message));
@@ -182,7 +182,7 @@ export default function RadiographyImages(props){
               setOpenDeleteConfirm(false);
               setIdImageDelete('');
               setPublicIdDelete('');
-              toast.warning(result.message);
+              toast.warning(t(result.message));
               resolve();
             }).catch(err =>{
               if(err.refreshToken && !isRefresh){
@@ -300,7 +300,7 @@ export default function RadiographyImages(props){
               {
                 listImage[date]?.map((image,_) => {
                   return <div onMouseEnter={e=>{if(roleCheck) setHoverSettingId(image.id)}} onMouseLeave={e=>{if(roleCheck) setHoverSettingId()}} className=" position-relative mt-3" key={image.id}>
-                    <img 
+                    <img loading="lazy" 
                       className="me-4 transform-hover w-auto img-info" 
                       src={splitAvatar(image.linkImage)} 
                       onLoad={onLoad}
@@ -366,7 +366,7 @@ export default function RadiographyImages(props){
                         </div>
                         <div className="position-absolute bottom-0 end-0 dropup">
                           <button className="btn mc-pale-background me-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src={`/assets/images/${image.typeImage}.png`} height="35px" alt={t('image x-ray')}/>
+                            <img loading="lazy" src={`/assets/images/${image.typeImage}.png`} height="35px" alt={t('image x-ray')}/>
                           </button>
                           <ul className="dropdown-menu">
                             <li>
@@ -375,8 +375,8 @@ export default function RadiographyImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.id}
                               >
-                                <img src='/assets/images/1.png' height="35px" alt={t('image x-ray')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.name}</span>
+                                <img loading="lazy" src='/assets/images/1.png' height="35px" alt={t('image x-ray')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.X_RAY.imageList.LATERAL.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -385,8 +385,8 @@ export default function RadiographyImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.X_RAY.imageList.PA.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.X_RAY.imageList.PA.id}
                               >
-                                <img src='/assets/images/2.png' height="35px" alt={t('image x-ray')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.X_RAY.imageList.PA.name}</span>
+                                <img loading="lazy" src='/assets/images/2.png' height="35px" alt={t('image x-ray')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.X_RAY.imageList.PA.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -395,8 +395,8 @@ export default function RadiographyImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.X_RAY.imageList.PANORAMA.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.X_RAY.imageList.PANORAMA.id}
                               >
-                                <img src='/assets/images/3.png' height="35px" alt={t('image x-ray')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.X_RAY.imageList.PANORAMA.name}</span>
+                                <img loading="lazy" src='/assets/images/3.png' height="35px" alt={t('image x-ray')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.X_RAY.imageList.PANORAMA.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -405,8 +405,8 @@ export default function RadiographyImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.X_RAY.imageList.OTHER.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.X_RAY.imageList.OTHER.id}
                               >
-                                <img src='/assets/images/4.png' height="35px" alt={t('image x-ray')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.X_RAY.imageList.OTHER.name}</span>
+                                <img loading="lazy" src='/assets/images/4.png' height="35px" alt={t('image x-ray')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.X_RAY.imageList.OTHER.name)}</span>
                               </button>
                             </li>
                           </ul>

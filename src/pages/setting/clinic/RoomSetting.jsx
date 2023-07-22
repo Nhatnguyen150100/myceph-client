@@ -76,28 +76,31 @@ export default function RoomSetting(props){
   }
 
   const updateRoom = () =>{
-    return new Promise((resolve, reject) =>{
-      dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/roomOfClinic/${clinic.idClinicDefault}`,{
-        idRoom: editRoomId,
-        nameRoom: editNameRoom,
-        colorRoom: editColorRoom
-      }).then(result => {
-        setArrayRoom(result.data);
-        setEditColorRoom('');
-        setEditNameRoom('');
-        setEditRoomId('');
-        toast.success(t(result.message));
-        resolve();
-      }).catch((err) => {
-        if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>updateRoom());
-        }else{
-          toast.error(t(err.message));
-        }
-        reject(err.message);
-      }).finally(() => dispatch(setLoadingModal(false)));
-    })
+    if(!editNameRoom) toast.error(t('Name of room is required'));
+    else{
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        putToServerWithToken(`/v1/roomOfClinic/${clinic.idClinicDefault}`,{
+          idRoom: editRoomId,
+          nameRoom: editNameRoom,
+          colorRoom: editColorRoom
+        }).then(result => {
+          setArrayRoom(result.data);
+          setEditColorRoom('');
+          setEditNameRoom('');
+          setEditRoomId('');
+          toast.success(t(result.message));
+          resolve();
+        }).catch((err) => {
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>updateRoom());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject(err.message);
+        }).finally(() => dispatch(setLoadingModal(false)));
+      })
+    }
   }
 
   const deleteRoom = () =>{
@@ -168,7 +171,7 @@ export default function RoomSetting(props){
               <td className="d-lg-table-cell d-none" style={{fontSize:FONT_SIZE}}>
                 {index+1}
               </td>
-              <td className="d-lg-table-cell d-none" style={{fontSize:FONT_SIZE}}>
+              <td className="d-lg-table-cell" style={{fontSize:FONT_SIZE}}>
                 <input 
                   type="text" 
                   className="border-0 flex-grow-1 w-100 py-2 ps-2 rounded" 
@@ -180,10 +183,10 @@ export default function RoomSetting(props){
                   onChange={e=>setEditNameRoom(e.target.value)}
                 />
               </td>
-              <td className="d-lg-table-cell d-none">
+              <td className="d-lg-table-cell">
                 <input type="color" disabled={editRoomId!==room.id} className="border-0" style={{ outline: "none" }} value={editRoomId!==room.id?room.colorRoom:editColorRoom} onChange={e=>setEditColorRoom(e.target.value)}/>
               </td>
-              <td className="d-lg-table-cell d-none align-middle" style={{fontSize:FONT_SIZE}}>
+              <td className="d-lg-table-cell align-middle" style={{fontSize:FONT_SIZE}}>
                 {
                   editRoomId===room.id ?
                   <div className="d-flex flex-row justify-content-center align-items-center">

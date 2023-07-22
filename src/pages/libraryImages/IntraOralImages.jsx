@@ -66,7 +66,7 @@ export default function IntraoralImages(props){
           consultationDate: consultationDate
         }).then(result => {
           setListImage(result.data);
-          toast.success(t(result.message));
+          toast.success(t(t(result.message)));
         }).catch(err => {
           toast.error(t(err.message));
         }).finally(()=>dispatch(setLoadingModal(false)));
@@ -81,7 +81,7 @@ export default function IntraoralImages(props){
             consultationDate: consultationDate
           }).then(result => {
             setListImage(result.data);
-            toast.success(t(result.message));
+            toast.success(t(t(result.message)));
             resolve();
           }).catch(err =>{
             if(err.refreshToken && !isRefresh){
@@ -106,7 +106,7 @@ export default function IntraoralImages(props){
         oldDate: oldDate
       }).then(result => {
         setListImage(result.data);
-        toast.success(result.message);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -121,7 +121,7 @@ export default function IntraoralImages(props){
 
   const updateImage = (idImage,consultationDate,typeImage,newUrl) => {
     return new Promise((resolve,reject) => {
-      dispatch(setLoadingModal(false));
+      dispatch(setLoadingModal(true));
       putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [10,11,12,13,14,15],
@@ -131,7 +131,7 @@ export default function IntraoralImages(props){
         linkImage: newUrl
       }).then(result => {
         setListImage(result.data);
-        toast.success(result.message);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -154,7 +154,7 @@ export default function IntraoralImages(props){
           setOpenDeleteConfirm(false);
           setIdImageDelete('');
           setPublicIdDelete('');
-          toast.warning(result.message);
+          toast.warning(t(result.message));
           resolve();
         }).catch(err => {
           toast.error(t(err.message));
@@ -167,7 +167,7 @@ export default function IntraoralImages(props){
               setOpenDeleteConfirm(false);
               setIdImageDelete('');
               setPublicIdDelete('');
-              toast.warning(result.message);
+              toast.warning(t(result.message));
               resolve();
             }).catch(err =>{
               if(err.refreshToken && !isRefresh){
@@ -307,7 +307,7 @@ export default function IntraoralImages(props){
               {
                 listImage[date]?.map((image,_) => {
                   return <div onMouseEnter={e=>{if(roleCheck) setHoverSettingId(image.id)}} onMouseLeave={e=>{if(roleCheck) setHoverSettingId()}} className=" position-relative mt-3" key={image.id}>
-                    <img 
+                    <img loading="lazy" 
                       className="me-4 transform-hover w-auto img-info" 
                       src={splitAvatar(image.linkImage)} 
                       style={{maxHeight:"250px",cursor:"pointer"}}
@@ -371,7 +371,7 @@ export default function IntraoralImages(props){
                         </div>
                         <div className="position-absolute bottom-0 end-0 dropup">
                           <button className="btn mc-pale-background me-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src={`/assets/images/${image.typeImage}.png`} height="35px" alt={t('image extra-oral')}/>
+                            <img loading="lazy" src={`/assets/images/${image.typeImage}.png`} height="35px" alt={t('image extra-oral')}/>
                           </button>
                           <ul className="dropdown-menu">
                             <li>
@@ -380,8 +380,8 @@ export default function IntraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.INTRA_ORAL.imageList.RIGHT_BUCCAL.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.INTRA_ORAL.imageList.RIGHT_BUCCAL.id}
                               >
-                                <img src='/assets/images/10.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.INTRA_ORAL.imageList.RIGHT_BUCCAL.name}</span>
+                                <img loading="lazy" src='/assets/images/10.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.RIGHT_BUCCAL.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -390,8 +390,8 @@ export default function IntraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.INTRA_ORAL.imageList.LEFT_BUCCAL.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.INTRA_ORAL.imageList.LEFT_BUCCAL.id}
                               >
-                                <img src='/assets/images/11.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.INTRA_ORAL.imageList.LEFT_BUCCAL.name}</span>
+                                <img loading="lazy" src='/assets/images/11.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.LEFT_BUCCAL.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -400,8 +400,8 @@ export default function IntraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.INTRA_ORAL.imageList.ANTERIOR.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.INTRA_ORAL.imageList.ANTERIOR.id}
                               >
-                                <img src='/assets/images/12.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.INTRA_ORAL.imageList.ANTERIOR.name}</span>
+                                <img loading="lazy" src='/assets/images/12.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.ANTERIOR.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -410,8 +410,8 @@ export default function IntraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MAXILLARY_OCCLUSAL.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MAXILLARY_OCCLUSAL.id}
                               >
-                                <img src='/assets/images/13.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MAXILLARY_OCCLUSAL.name}</span>
+                                <img loading="lazy" src='/assets/images/13.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MAXILLARY_OCCLUSAL.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -420,8 +420,8 @@ export default function IntraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MANDIBULAR_OCCLUSAL.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MANDIBULAR_OCCLUSAL.id}
                               >
-                                <img src='/assets/images/14.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MANDIBULAR_OCCLUSAL.name}</span>
+                                <img loading="lazy" src='/assets/images/14.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.MANDIBULAR_OCCLUSAL.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -430,8 +430,8 @@ export default function IntraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.INTRA_ORAL.imageList.OTHER.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.INTRA_ORAL.imageList.OTHER.id}
                               >
-                                <img src='/assets/images/15.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.INTRA_ORAL.imageList.OTHER.name}</span>
+                                <img loading="lazy" src='/assets/images/15.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.INTRA_ORAL.imageList.OTHER.name)}</span>
                               </button>
                             </li>
                           </ul>

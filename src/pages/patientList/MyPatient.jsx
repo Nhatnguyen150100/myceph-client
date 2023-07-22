@@ -68,7 +68,7 @@ export default function MyPatient(props){
         deleteToServerWithToken(`/v1/patient/deletePatient/${idPatient}`).then(result=>{
           if(idPatient === currentPatient.id) dispatch(setCurrentPatient(null))
           getAllPatientForDoctor().then(()=>{
-            toast.success(result.message);
+            toast.warn(t(result.message));
             resolve();
           });
         }).catch((err) =>{

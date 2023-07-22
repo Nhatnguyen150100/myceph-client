@@ -66,7 +66,7 @@ export default React.memo(function ExtraoralImages(props){
           consultationDate: consultationDate
         }).then(result => {
           setListImage(result.data);
-          toast.success(t(result.message));
+          toast.success(t(t(result.message)));
         }).catch(err => {
           toast.error(t(err.message));
         }).finally(()=>dispatch(setLoadingModal(false)));
@@ -81,7 +81,7 @@ export default React.memo(function ExtraoralImages(props){
             consultationDate: consultationDate
           }).then(result => {
             setListImage(result.data);
-            toast.success(t(result.message));
+            toast.success(t(t(result.message)));
             resolve();
           }).catch(err =>{
             if(err.refreshToken && !isRefresh){
@@ -106,7 +106,7 @@ export default React.memo(function ExtraoralImages(props){
         oldDate: oldDate
       }).then(result => {
         setListImage(result.data);
-        toast.success(result.message);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -121,7 +121,7 @@ export default React.memo(function ExtraoralImages(props){
 
   const updateImage = (idImage,consultationDate,typeImage,newUrl) => {
     return new Promise((resolve,reject) => {
-      dispatch(setLoadingModal(false));
+      dispatch(setLoadingModal(true));
       putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [5,6,7,8,9],
@@ -131,7 +131,7 @@ export default React.memo(function ExtraoralImages(props){
         linkImage: newUrl
       }).then(result => {
         setListImage(result.data);
-        toast.success(result.message);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -154,7 +154,7 @@ export default React.memo(function ExtraoralImages(props){
           setOpenDeleteConfirm(false);
           setIdImageDelete('');
           setPublicIdDelete('');
-          toast.warning(result.message);
+          toast.warning(t(result.message));
           resolve();
         }).catch(err => {
           toast.error(t(err.message));
@@ -167,7 +167,7 @@ export default React.memo(function ExtraoralImages(props){
               setOpenDeleteConfirm(false);
               setIdImageDelete('');
               setPublicIdDelete('');
-              toast.warning(result.message);
+              toast.warning(t(result.message));
               resolve();
             }).catch(err =>{
               if(err.refreshToken && !isRefresh){
@@ -296,7 +296,7 @@ export default React.memo(function ExtraoralImages(props){
               {
                 listImage[date]?.map((image,_) => {
                   return <div onMouseEnter={()=>setHoverSettingId(image.id)} onMouseLeave={setHoverSettingId} className=" position-relative mt-3" key={image.id}>
-                    <img 
+                    <img loading="lazy" 
                       className="me-4 transform-hover w-auto img-info" 
                       src={splitAvatar(image.linkImage)} 
                       style={{maxHeight:"250px",cursor:"pointer"}}
@@ -360,7 +360,7 @@ export default React.memo(function ExtraoralImages(props){
                         </div>
                         <div className="position-absolute bottom-0 end-0 dropup">
                           <button className="btn mc-pale-background me-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src={`/assets/images/${image.typeImage}.png`} height="35px" alt={t('image extra-oral')}/>
+                            <img loading="lazy" src={`/assets/images/${image.typeImage}.png`} height="35px" alt={t('image extra-oral')}/>
                           </button>
                           <ul className="dropdown-menu">
                             <li>
@@ -369,8 +369,8 @@ export default React.memo(function ExtraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.FACE.imageList.SIDE.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.FACE.imageList.SIDE.id}
                               >
-                                <img src='/assets/images/5.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.FACE.imageList.SIDE.name}</span>
+                                <img loading="lazy" src='/assets/images/5.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.FACE.imageList.SIDE.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -379,8 +379,8 @@ export default React.memo(function ExtraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.FACE.imageList.FRONTAL.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.FACE.imageList.FRONTAL.id}
                               >
-                                <img src='/assets/images/6.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.FACE.imageList.FRONTAL.name}</span>
+                                <img loading="lazy" src='/assets/images/6.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.FACE.imageList.FRONTAL.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -389,8 +389,8 @@ export default React.memo(function ExtraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.FACE.imageList.OBLIQUE.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.FACE.imageList.OBLIQUE.id}
                               >
-                                <img src='/assets/images/7.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.FACE.imageList.OBLIQUE.name}</span>
+                                <img loading="lazy" src='/assets/images/7.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.FACE.imageList.OBLIQUE.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -399,8 +399,8 @@ export default React.memo(function ExtraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.FACE.imageList.SMILEY.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.FACE.imageList.SMILEY.id}
                               >
-                                <img src='/assets/images/8.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.FACE.imageList.SMILEY.name}</span>
+                                <img loading="lazy" src='/assets/images/8.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.FACE.imageList.SMILEY.name)}</span>
                               </button>
                             </li>
                             <li>
@@ -409,8 +409,8 @@ export default React.memo(function ExtraoralImages(props){
                                 onClick={e=>updateImage(image.id,image.consultationDate,IMAGE_TYPE_LIST.FACE.imageList.OTHER.id,image.linkImage)}
                                 disabled={image.typeImage===IMAGE_TYPE_LIST.FACE.imageList.OTHER.id}
                               >
-                                <img src='/assets/images/9.png' height="35px" alt={t('image extra-oral')}/>
-                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{IMAGE_TYPE_LIST.FACE.imageList.OTHER.name}</span>
+                                <img loading="lazy" src='/assets/images/9.png' height="35px" alt={t('image extra-oral')}/>
+                                <span className="text-capitalize text-gray ms-2" style={{fontSize:FONT_SIZE}}>{t(IMAGE_TYPE_LIST.FACE.imageList.OTHER.name)}</span>
                               </button>
                             </li>
                           </ul>

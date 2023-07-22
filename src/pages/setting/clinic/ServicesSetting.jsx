@@ -80,30 +80,33 @@ export default function ServicesSetting(props){
   }
 
   const updateService = () =>{
-    return new Promise((resolve, reject) =>{
-      dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/servicesOfClinic/${clinic.idClinicDefault}`,{
-        idService: editServiceId,
-        nameService: editNameService,
-        colorService: editColorService,
-        priceService: editPriceService
-      }).then(result => {
-        setArrayServices(result.data);
-        setEditColorService('');
-        setEditNameService('');
-        setEditServiceId('');
-        setEditPriceService();
-        toast.success(t(result.message));
-        resolve();
-      }).catch((err) => {
-        if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>updateService());
-        }else{
-          toast.error(t(err.message));
-        }
-        reject(err.message);
-      }).finally(() => dispatch(setLoadingModal(false)));
-    })
+    if(!editNameService) toast.error(t('Name of service is required'));
+    else{
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        putToServerWithToken(`/v1/servicesOfClinic/${clinic.idClinicDefault}`,{
+          idService: editServiceId,
+          nameService: editNameService,
+          colorService: editColorService,
+          priceService: editPriceService
+        }).then(result => {
+          setArrayServices(result.data);
+          setEditColorService('');
+          setEditNameService('');
+          setEditServiceId('');
+          setEditPriceService();
+          toast.success(t(result.message));
+          resolve();
+        }).catch((err) => {
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>updateService());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject(err.message);
+        }).finally(() => dispatch(setLoadingModal(false)));
+      })
+    }
   }
 
   const deleteService = () =>{
@@ -188,7 +191,7 @@ export default function ServicesSetting(props){
               <td className="d-lg-table-cell d-none" style={{fontSize:FONT_SIZE}}>
                 {index+1}
               </td>
-              <td className="d-lg-table-cell d-none" style={{fontSize:FONT_SIZE}}>
+              <td className="d-lg-table-cell submit-icon" style={{fontSize:FONT_SIZE}}>
                 <input 
                   type="text" 
                   className="border-0 flex-grow-1 w-100 py-2 ps-2 rounded" 
@@ -200,18 +203,18 @@ export default function ServicesSetting(props){
                   onChange={e=>setEditNameService(e.target.value)}
                 />
               </td>
-              <td className="d-lg-table-cell d-none">
+              <td className="d-lg-table-cell">
                 <input type="color" disabled={editServiceId!==service.id} className="border-0" style={{ outline: "none" }} value={editServiceId!==service.id?service.colorService:editColorService} onChange={e=>setEditColorService(e.target.value)}/>
               </td>
-              <td className="d-lg-table-cell d-none">
+              <td className="d-lg-table-cell">
                 {
                   editServiceId!==service.id
                   ?
-                  <span className="d-flex justify-content-center text-secondary">{forMatMoneyVND(service.priceService)}</span>
+                  <span className="d-flex justify-content-center text-secondary">{service.priceService?forMatMoneyVND(service.priceService):t('no data')}</span>
                   :
                   <input 
                     type="number" 
-                    className="border-0 px-2 py-1 rounded" 
+                    className="border-0 px-2 py-1 rounded " 
                     style={{ outline: "none" }}
                     onKeyDown={e=>{if(e.key === "Enter") updateService()}}  
                     value={editPriceService} 
@@ -219,7 +222,7 @@ export default function ServicesSetting(props){
                   />
                 }
               </td>
-              <td className="d-lg-table-cell d-none align-middle" style={{fontSize:FONT_SIZE}}>
+              <td className="d-lg-table-cell align-middle" style={{fontSize:FONT_SIZE}}>
                 {
                   editServiceId===service.id ?
                   <div className="d-flex flex-row justify-content-center align-items-center">

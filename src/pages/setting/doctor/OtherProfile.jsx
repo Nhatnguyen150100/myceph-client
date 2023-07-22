@@ -116,7 +116,7 @@ export default function OtherProfile(props){
               <img alt="avatar" className="rounded" src={splitAvatar(doctor.avatar,'/assets/images/doctor.png')} style={{height:"50px",width:"40px",objectFit:"cover"}}/>
               <div className="d-flex ms-3 flex-column justify-content-center align-items-center flex-grow-1">
                 <span className="mc-color" style={{fontSize:FONT_SIZE}}>{doctor.email}</span>
-                <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{'('}{doctor.fullName?doctor.fullName:t('no data')}{')'}</span>
+                <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{'('}{doctor.fullName?doctor.fullName:t(t('no data'))}{')'}</span>
               </div>
             </button>
           })
@@ -140,42 +140,42 @@ export default function OtherProfile(props){
           title={t("close")}
         />
         </div>
-        <div className="d-flex flex-row flex-grow-1 mt-2">
-          <div className="border position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
+        <div className="d-flex flex-wrap flex-row flex-grow-1 mt-2">
+          <div className="border full-width-on-mobile position-relative d-flex justify-content-center align-items-center rounded mc-background-color-white rounded" style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH}}>
             <img alt="avatar" className="rounded" src={`${avatar}`} style={{height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"cover"}}/>
           </div>
-          <div className="d-flex flex-column flex-grow-1 ms-5">
-            <div className={`d-flex mb-3`}>
-              <span className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('email')}:</span>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{email}</span>
-              <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('full name')}:</label>    
-              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{fullName?fullName:'no data'}</span>
+          <div className="d-flex flex-column flex-wrap flex-grow-1 label-width-setting" style={{marginLeft:"150px"}}>
+            <div className={`d-flex flex-wrap mb-3`}>
+              <span className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD,marginLeft:"5px"}}>{t('email')}:</span>
+              <span className="text-gray mc-background-color-white px-2 py-1 rounded span-value-setting-other-doctor" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{email}</span>
+              <label className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD,marginLeft:"5px"}}>{t('full name')}:</label>    
+              <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded span-value-setting-other-doctor" style={{fontSize:FONT_SIZE}}>{fullName?fullName:t('no data')}</span>
             </div>
-            <div className={`d-flex mb-3 `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('gender')}:</label>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{gender?gender:'no data'}</span>
-              <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('date of birth')}:</label>   
-              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(birthday?birthday:new Date())))}</span>
+            <div className={`d-flex flex-wrap mb-3`}>
+              <label className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD,marginLeft:"5px"}}>{t('gender')}:</label>
+              <span className="text-gray mc-background-color-white px-2 py-1 rounded span-value-setting-other-doctor" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{gender?gender:t('no data')}</span>
+              <label className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD,marginLeft:"5px"}}>{t('date of birth')}:</label>   
+              <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded span-value-setting-other-doctor" style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(birthday?birthday:new Date())))}</span>
             </div>
-            <div className={`d-flex mb-3 `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumber?phoneNumber:'no data'}</span>
+            <div className={`d-flex flex-wrap mb-3`}>
+              <label className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD,marginLeft:"5px"}}>{t('phone number')}:</label>
+              <span className="text-gray mc-background-color-white px-2 py-1 rounded span-value-setting-other-doctor" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumber?phoneNumber:t('no data')}</span>
               <div className="d-flex flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
-                <label className="text-capitalize mc-color fw-bold ms-2" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('specialty')}:</label>
-                <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{speciality?speciality:'no data'}</span>
+                <label className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD,marginLeft:"5px"}}>{t('specialty')}:</label>
+                <span className="text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1 span-value-setting-other-doctor" style={{fontSize:FONT_SIZE}}>{speciality?speciality:t('no data')}</span>
               </div>
             </div>
-            <div className={`d-flex mb-3 `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('diploma')}:</label>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{diploma?diploma:'no data'}</span>
+            <div className={`d-flex flex-wrap mb-3`}>
+              <label className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD,marginLeft:"5px"}}>{t('diploma')}:</label>
+              <span className="text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1 span-value-setting-other-doctor" style={{fontSize:FONT_SIZE}}>{diploma?diploma:t('no data')}</span>
             </div>
-            <div className={`d-flex mb-3 `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('position')}:</label>
-              <span className="text-capitalize text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{position?position:'no data'}</span>    
+            <div className={`d-flex flex-wrap mb-3`}>
+              <label className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD,marginLeft:"5px"}}>{t('position')}:</label>
+              <span className="text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1 span-value-setting-other-doctor" style={{fontSize:FONT_SIZE}}>{position?position:t('no data')}</span>    
             </div>
-            <div className={`d-flex `}>
-              <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
-              <span className="text-capitalize text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{description?description:'no data'}</span>
+            <div className={`d-flex flex-wrap`}>
+              <label className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD,marginLeft:"5px"}}>{t('description')}:</label>
+              <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded span-value-setting-other-doctor" style={{fontSize:FONT_SIZE}}>{description?description:t('no data')}</span>
             </div>
           </div>
         </div>

@@ -77,23 +77,23 @@ export default function HomePage(props) {
       backgroundImage: `url("/assets/images/home-background-desktop.png")`,
       backgroundSize: 'cover',
     }}>
-      <img className="position-absolute start-0 technology_place" src="/assets/images/technology_place.png" alt="img" height={580}/>
-      <img className="position-absolute background_technology" src="/assets/images/background_technology.png" alt="img" width={700} style={{top:"450px",left:"-100px",opacity:"85%"}}/>
-      <img className="position-absolute pattern1" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"800px",right:"0px"}}/>
-      <img className="position-absolute pattern2" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"3000px",left:"0px"}}/>
-      <img className="position-absolute pattern3" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"1500px",left:"-140px"}}/>
+      <img loading="lazy" className="position-absolute start-0 technology_place" src="/assets/images/technology_place.png" alt="img" height={580}/>
+      <img loading="lazy" className="position-absolute background_technology" src="/assets/images/background_technology.png" alt="img" width={700} style={{top:"450px",left:"-100px",opacity:"85%"}}/>
+      <img loading="lazy" className="position-absolute pattern1" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"800px",right:"0px"}}/>
+      <img loading="lazy" className="position-absolute pattern2" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"3000px",left:"0px"}}/>
+      <img loading="lazy" className="position-absolute pattern3" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"1500px",left:"-140px"}}/>
       <div className="container h-100 position-relative">
-        <img className="position-absolute translate-middle d-none d-lg-block" src="/assets/images/medical_technology.png" alt="img" height={550} style={{right:"-235px",top:"330px"}}/>
+        <img loading="lazy" className="position-absolute translate-middle d-none d-lg-block" src="/assets/images/medical_technology.png" alt="img" height={550} style={{right:"-235px",top:"330px"}}/>
         <div className="d-flex flex-grow-1 justify-content-start">
           <div className="d-flex flex-column justify-content-center info-header" style={{marginTop:"100px", marginLeft:"20px",alignItems:"end"}}>
-            <img src="/assets/images/teeth.png" alt="teeth" height={80}/>
+            <img loading="lazy" src="/assets/images/teeth.png" alt="teeth" height={80}/>
             <strong className="text-white text-uppercase fw-bold mc-header" style={{fontSize:"100px"}}>
               myceph
             </strong>
             <h5 className="mc-color text-uppercase fw-bold mc-header2" style={{fontSize:"60px"}}>
               cephalometric
             </h5>
-            <img className="my-2" src="/assets/images/line_white.png" alt="img" width={200}/>
+            <img loading="lazy" className="my-2" src="/assets/images/line_white.png" alt="img" width={200}/>
             <p className="mc-color fw-bold mt-2 header-des" style={{fontSize:"24px",width:"520px",textAlign:"right"}}>
               {t('The software for managing and supporting the analysis of dental X-ray films for doctors and dental clinics')}
             </p>
@@ -112,7 +112,7 @@ export default function HomePage(props) {
               <h1 className="mc-color text-uppercase fw-bold">
                 {t('myceph - comprehensive clinical support tool')}
               </h1>
-              <img className="my-2" src="/assets/images/line_green.png" alt="img" width={200}/>
+              <img loading="lazy" className="my-2" src="/assets/images/line_green.png" alt="img" width={200}/>
               <h4 className="mt-1 fst-italic" style={{fontSize:"18px",textAlign:"justify",color:"#53575d"}}>
                 {t('Developed based on orthodontic research, combined with collected data.')}
               </h4>
@@ -127,13 +127,13 @@ export default function HomePage(props) {
             {t('the main features in the software')}
           </h1>
           <div className="w-100 d-flex justify-content-center align-items-center my-2">
-            <img className="text-center" src="/assets/images/line_center.png" alt="img" width={300}/>
+            <img loading="lazy" className="text-center" src="/assets/images/line_center.png" alt="img" width={300}/>
           </div>
           <div className="row">
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
-                  <img src="/assets/images/lateral_cephalometric.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
+                  <img loading="lazy" src="/assets/images/lateral_cephalometric.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
                   {t(SOFT_WARE_LIST.LATERALCEPH)}
@@ -146,7 +146,7 @@ export default function HomePage(props) {
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
-                  <img src="/assets/images/photo_library.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
+                  <img loading="lazy" src="/assets/images/photo_library.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
                   {t(SOFT_WARE_LIST.IMAGE_LIBRARY)}
@@ -159,7 +159,7 @@ export default function HomePage(props) {
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
-                  <img className="ms-1" src="/assets/images/encryption_icon.png" alt="img" height={60} style={{backgroundSize:"cover"}}/>
+                  <img loading="lazy" className="ms-1" src="/assets/images/encryption_icon.png" alt="img" height={60} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
                   {t('encryption')}
@@ -174,7 +174,7 @@ export default function HomePage(props) {
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
-                  <img src="/assets/images/private_discussion.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
+                  <img loading="lazy" src="/assets/images/private_discussion.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
                   {t(SOFT_WARE_LIST.DISCUSSION)}
@@ -187,7 +187,7 @@ export default function HomePage(props) {
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
-                  <img src="/assets/images/medical_record.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
+                  <img loading="lazy" src="/assets/images/medical_record.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
                   {t(SOFT_WARE_LIST.MEDICAL_RECORD)}
@@ -200,7 +200,7 @@ export default function HomePage(props) {
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
-                  <img src="/assets/images/doctor_homepage.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
+                  <img loading="lazy" src="/assets/images/doctor_homepage.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
                   {t(SOFT_WARE_LIST.DOCTOR_MANAGEMENT)}
@@ -213,7 +213,7 @@ export default function HomePage(props) {
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
-                  <img src="/assets/images/patient-100.png" alt="img" height={90} style={{backgroundSize:"cover"}}/>
+                  <img loading="lazy" src="/assets/images/patient-100.png" alt="img" height={90} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
                   {t(SOFT_WARE_LIST.SHARE_PATIENT)}
@@ -226,7 +226,7 @@ export default function HomePage(props) {
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
-                  <img src="/assets/images/calendar_homepage.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
+                  <img loading="lazy" src="/assets/images/calendar_homepage.png" alt="img" height={100} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
                   {t(SOFT_WARE_LIST.CALENDAR)}
@@ -239,7 +239,7 @@ export default function HomePage(props) {
             <div className="col-md-4 px-3 mt-5">
               <div className="d-flex flex-column shadow-lg align-items-center justify-content-start p-4 rounded gradient_color_green" style={{height:"400px"}}>
                 <div className="my-3 rounded-circle shadow-lg p-3 bg-white d-flex justify-content-center align-items-center" style={{border:"dotted",borderColor:"#40bab5",height:"130px",width:"130px"}}>
-                  <img src="/assets/images/curve.png" alt="img" height={80} style={{backgroundSize:"cover"}}/>
+                  <img loading="lazy" src="/assets/images/curve.png" alt="img" height={80} style={{backgroundSize:"cover"}}/>
                 </div>
                 <h2 className="my-3 text-uppercase fw-bold text-center text-white">
                   {t(SOFT_WARE_LIST.CURVE_ANALYSIS)}
@@ -264,7 +264,7 @@ export default function HomePage(props) {
                 <h1 className="mc-color text-uppercase fw-bold">
                   {t('Why choose Myceph - cephalometric?')} 
                 </h1>
-                <img className="my-2" src="/assets/images/line_green.png" alt="img" width={200}/>
+                <img loading="lazy" className="my-2" src="/assets/images/line_green.png" alt="img" width={200}/>
                 <h4 className="mt-1 fst-italic" style={{fontSize:"18px",textAlign:"justify",color:"#53575d"}}>
                   {t('Myceph - cephalometric software uses advanced image analysis technology to measure and analyze inclined film. This ensures that the analysis results provided are accurate and reliable.')}
                 </h4>
@@ -282,12 +282,12 @@ export default function HomePage(props) {
             <div className="col-md-6 h-100 d-none d-lg-block">
               <div className="d-flex flex-column h-100 justify-content-center align-items-center">
                 <div className="d-flex w-100">
-                  <img className="my-2 me-4" src="/assets/images/image_intro3.jpeg" alt="img" width={350} />
-                  <img className="my-2" src="/assets/images/image_intro1.jpeg" alt="img" width={280} />
+                  <img loading="lazy" className="my-2 me-4" src="/assets/images/image_intro3.jpeg" alt="img" width={350} />
+                  <img loading="lazy" className="my-2" src="/assets/images/image_intro1.jpeg" alt="img" width={280} />
                 </div>
                 <div className="d-flex w-100">
-                  <img className="my-2 me-4" src="/assets/images/image_intro4.jpeg" alt="img" width={280} />
-                  <img className="my-2" src="/assets/images/image_intro2.jpeg" alt="img" width={350} />
+                  <img loading="lazy" className="my-2 me-4" src="/assets/images/image_intro4.jpeg" alt="img" width={280} />
+                  <img loading="lazy" className="my-2" src="/assets/images/image_intro2.jpeg" alt="img" width={350} />
                 </div>
               </div>
             </div>
@@ -297,11 +297,11 @@ export default function HomePage(props) {
               {t('the features being developed')}
             </h1>
             <div className="w-100 d-flex flex-column justify-content-center align-items-center my-2">
-              <img src="/assets/images/line_center.png" alt="img" width={300}/>
+              <img loading="lazy" src="/assets/images/line_center.png" alt="img" width={300}/>
             </div>
             <div className="row mt-4">
               <div className="col-md-4 px-4">
-                <img src="/assets/images/so_thang.png" alt="img" width={"100%"}/>
+                <img loading="lazy" src="/assets/images/so_thang.png" alt="img" width={"100%"}/>
                 <h2 className="mc-color text-uppercase fw-bold my-4 text-center">
                   {t('posterior-anterior cephalometric analysis')} 
                 </h2>
@@ -310,7 +310,7 @@ export default function HomePage(props) {
                 </h4>
               </div>
               <div className="col-md-4 px-4" style={{paddingTop:"100px"}}>
-                <img src="/assets/images/vto_image.jpg" alt="img" width={"100%"}/>
+                <img loading="lazy" src="/assets/images/vto_image.jpg" alt="img" width={"100%"}/>
                 <h2 className="mc-color text-uppercase fw-bold my-4 text-center">
                   {t('facial treatment simulation')} 
                 </h2>
@@ -319,7 +319,7 @@ export default function HomePage(props) {
                 </h4>
               </div>
               <div className="col-md-4 px-4">
-                <img src="/assets/images/AI_image.jpg" alt="img" width={"100%"}/>
+                <img loading="lazy" src="/assets/images/AI_image.jpg" alt="img" width={"100%"}/>
                 <h2 className="mc-color text-uppercase fw-bold my-4 text-center">
                   {t('automatically detect clinical landmark')} 
                 </h2>

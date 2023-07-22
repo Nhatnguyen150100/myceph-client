@@ -14,7 +14,7 @@
   color: #40bab5 !important;
 }
 
-.upload-hover:hover img{
+.upload-hover:hover img {
   content: url("/public/assets/gif/upload.gif");
   height: 70px !important;
 }
@@ -31,7 +31,7 @@
   color: #40bab5 !important;
 }
 
-.hover-table:hover{
+.hover-table:hover {
   background-color: rgb(181, 239, 253) !important;
 }
 
@@ -245,19 +245,33 @@
 }
 
 @media only screen and (min-width: 320px) and (max-width: 480px) {
-  .technology_place{
+  .label-width-setting {
+    width: 60px !important;
+    margin-left: 0px !important;
+    margin-top: 5px !important;
+  }
+  .span-value-setting {
+    width: 330px !important;
+    margin-top: 5px !important;
+  }
+  .span-value-setting-other-doctor {
+    width: 300px !important;
+    margin-top: 5px !important;
+    margin-left: 10px !important;
+  }
+  .technology_place {
     height: 370px;
   }
-  .background_technology{
+  .background_technology {
     width: 490px;
   }
-  .pattern2{
+  .pattern2 {
     left: -325px !important;
   }
-  .pattern1{
+  .pattern1 {
     top: 1000px;
   }
-  .pattern3{
+  .pattern3 {
     left: -325px !important;
   }
   .info-clinic {
@@ -278,13 +292,13 @@
   .info-header {
     align-items: start !important;
   }
-  .img-info{
+  .img-info {
     max-width: 325px !important;
   }
-  .hr-line{
+  .hr-line {
     width: 40px !important;
   }
-  .add-clinic{
+  .add-clinic {
     max-width: 370px !important;
   }
   .header-des {
@@ -301,7 +315,7 @@
   .menu-patient {
     height: 130px !important;
   }
-  .select-patient{
+  .select-patient {
     min-width: 360px !important;
   }
   .name-width {
@@ -313,7 +327,7 @@
   .name-col {
     min-width: 260px !important;
   }
-  .action-col{
+  .action-col {
     min-width: 60px !important;
   }
   .user-setting {

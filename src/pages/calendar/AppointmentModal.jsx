@@ -127,8 +127,8 @@ const AppointmentModal = (props) => {
     else if(!serviceSelected) toast.error(t('Service not selected'));
     else if(!timeStart) toast.error(t('Time start is not available'));
     else if(!timeEnd) toast.error(t('Time end is not available'));
-    else if(timeStart<='08:00') toast.error(t('Time start must be greater 08:00 AM'));
-    else if(timeEnd>='18:00') toast.error(t('Time end cannot be greater 06:00 PM'));
+    else if(timeStart<'08:00') toast.error(t('Time start must be greater 08:00 AM'));
+    else if(timeEnd>'18:00') toast.error(t('Time end cannot be greater 06:00 PM'));
     else if(timeStart>=timeEnd) toast.error(t('Time end must be greater to timeStart'));
     else{
       return new Promise((resolve, reject) =>{
@@ -362,7 +362,7 @@ const AppointmentModal = (props) => {
                   <span className="material-symbols-outlined me-2" style={{fontSize:"25px"}}>
                     delete
                   </span>
-                  <span className="text-capitalize">delete</span>
+                  <span className="text-capitalize">{t('delete')}</span>
                 </button>
               }
               <div className="d-flex align-items-center">
@@ -397,7 +397,7 @@ const AppointmentModal = (props) => {
       title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this appointment')}</span>} 
       content={
         <div>
-          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this this appointment, enter the agree button')}</span>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this appointment, enter the agree button')}</span>
         </div>
       }
       handleClose={e=>handleClose()} 

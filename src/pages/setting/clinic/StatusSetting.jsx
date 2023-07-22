@@ -75,28 +75,31 @@ export default function StatusSetting(props){
   }
 
   const updateStatus = () =>{
-    return new Promise((resolve, reject) =>{
-      dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/statusOfClinic/${clinic.idClinicDefault}`,{
-        idStatus: editStatusId,
-        nameStatus: editNameStatus,
-        colorStatus: editColorStatus
-      }).then(result => {
-        setArrayStatus(result.data);
-        setEditColorStatus('');
-        setEditNameStatus('');
-        setEditStatusId('');
-        toast.success(t(result.message));
-        resolve();
-      }).catch((err) => {
-        if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>updateStatus());
-        }else{
-          toast.error(t(err.message));
-        }
-        reject(err.message);
-      }).finally(() => dispatch(setLoadingModal(false)));
-    })
+    if(!editNameStatus) toast.error(t('Name of status is required'));
+    else{
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        putToServerWithToken(`/v1/statusOfClinic/${clinic.idClinicDefault}`,{
+          idStatus: editStatusId,
+          nameStatus: editNameStatus,
+          colorStatus: editColorStatus
+        }).then(result => {
+          setArrayStatus(result.data);
+          setEditColorStatus('');
+          setEditNameStatus('');
+          setEditStatusId('');
+          toast.success(t(result.message));
+          resolve();
+        }).catch((err) => {
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>updateStatus());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject(err.message);
+        }).finally(() => dispatch(setLoadingModal(false)));
+      })
+    }
   }
 
   const deleteStatus = () =>{
@@ -166,7 +169,7 @@ export default function StatusSetting(props){
               <td className="d-lg-table-cell d-none" style={{fontSize:FONT_SIZE}}>
                 {index+1}
               </td>
-              <td className="d-lg-table-cell d-none" style={{fontSize:FONT_SIZE}}>
+              <td className="d-lg-table-cell" style={{fontSize:FONT_SIZE}}>
                 <input 
                   type="text" 
                   className="border-0 flex-grow-1 w-100 py-2 ps-2 rounded" 
@@ -178,10 +181,10 @@ export default function StatusSetting(props){
                   onChange={e=>setEditNameStatus(e.target.value)}
                 />
               </td>
-              <td className="d-lg-table-cell d-none">
+              <td className="d-lg-table-cell">
                 <input type="color" disabled={editStatusId!==status.id} className="border-0" style={{ outline: "none" }} value={editStatusId!==status.id?status.colorStatus:editColorStatus} onChange={e=>setEditColorStatus(e.target.value)}/>
               </td>
-              <td className="d-lg-table-cell d-none align-middle" style={{fontSize:FONT_SIZE}}>
+              <td className="d-lg-table-cell align-middle" style={{fontSize:FONT_SIZE}}>
                 {
                   editStatusId===status.id ?
                   <div className="d-flex flex-row justify-content-center align-items-center">

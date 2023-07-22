@@ -283,7 +283,7 @@ export default function BigCalendar(props){
                 {t('doctor')}
               </th>
               <th>
-                {t('service')}
+                {t('service of clinic')}
               </th>
             </tr>
           </thead>

@@ -178,7 +178,7 @@ function LoginPage(props){
             style={{height:"50px"}}
             onClick={loginSubmitByGoogle}
           >
-            <img src="/assets/icons/icon-google.png" style={{height:"30px"}} alt='google'/>
+            <img loading="lazy" src="/assets/icons/icon-google.png" style={{height:"30px"}} alt='google'/>
             <span className="ms-2 fw-bold text-uppercase" style={{fontSize:FONT_SIZE}}>{t('login by google')}</span>
           </button>
         }

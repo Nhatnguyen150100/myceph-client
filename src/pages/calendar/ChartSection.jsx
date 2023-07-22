@@ -35,22 +35,22 @@ export default function ChartSection(props){
     if(1 <= currentMonth <= 3) setQuarter({
       key: 'quarter1',
       name: 'The 1st quarter',
-      value: ['January', 'February', 'March']
+      value: [t('January'), t('February'), t('March')]
     })
     else if(4 <= currentMonth <= 6) setQuarter({
       key: 'quarter2',
       name: 'Second quarter',
-      value: ['April','May','June']
+      value: [t('April'),t('May'),t('June')]
     })
     else if(7 <= currentMonth <=9) setQuarter({
       key: 'quarter3',
-      nam: 'Third quarter',
-      value: ['July','August','September']
+      name: 'Third quarter',
+      value: [t('July'),t('August'),t('September')]
     })
     else setQuarter({
       key: 'quarter4',
-      nam: 'Fourth quarter',
-      value: ['October','November','December']
+      name: 'Fourth quarter',
+      value: [t('October'),t('November'),t('December')]
     })
   },[props.currentDay])
 
@@ -104,22 +104,22 @@ export default function ChartSection(props){
         if(value === 'quarter1') setQuarter({
           key: 'quarter1',
           name: 'The 1st quarter',
-          value: ['January', 'February', 'March']
+          value: [t('January'), t('February'), t('March')]
         })
         else if(value === 'quarter2') setQuarter({
           key: 'quarter2',
           name: 'Second quarter',
-          value: ['April','May','June']
+          value: [t('April'),t('May'),t('June')]
         })
         else if(value === 'quarter3') setQuarter({
           key: 'quarter3',
-          nam: 'Third quarter',
-          value: ['July','August','September']
+          name: 'Third quarter',
+          value: [t('July'),t('August'),t('September')]
         })
         else setQuarter({
           key: 'quarter4',
-          nam: 'Fourth quarter',
-          value: ['October','November','December']
+          name: 'Fourth quarter',
+          value: [t('October'),t('November'),t('December')]
         })
       }}>
         <option value={'quarter1'}>

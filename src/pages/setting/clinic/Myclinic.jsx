@@ -7,7 +7,7 @@ import ConfirmComponent from "../../../common/ConfirmComponent.jsx";
 import IconButtonComponent from "../../../common/IconButtonComponent.jsx";
 import TextFieldInput from "../../../common/TextFieldInput.jsx";
 import UploadImage from "../../../common/UploadImage.jsx";
-import { AVATAR_HEIGHT, AVATAR_WIDTH, convertISOToVNDateString, deleteImage, findObjectFromArray, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, isValidEmail, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_CHILD, WIDTH_HEAD } from "../../../common/Utility.jsx";
+import { AVATAR_HEIGHT, AVATAR_WIDTH, convertISOToVNDateString, deleteImage, findObjectFromArray, FONT_SIZE, FONT_SIZE_BUTTON_ICON, FONT_SIZE_ICON, isValidEmail, splitAvatar, splitPublic_id, toISODateString, upLoadImage, WIDTH_HEAD } from "../../../common/Utility.jsx";
 import SelectPatientComponent from "../../../components/SelectPatientComponent.jsx";
 import { setArrayClinic, setIdClinicDefault, setRoleOfDoctor } from "../../../redux/ClinicSlice.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
@@ -43,8 +43,6 @@ export default function Myclinic(props){
     else getAllClinicAndSetDefault(true)
   },[clinic.idClinicDefault]);
 
-  console.info();
-
   const getInformation = () =>{
     return new Promise((resolve, reject) =>{
       dispatch(setLoadingModal(true));
@@ -69,24 +67,28 @@ export default function Myclinic(props){
   }
 
   const createClinic = () =>{
-    return new Promise((resolve, reject) =>{
-      dispatch(setLoadingModal(true));
-      postToServerWithToken(`/v1/clinic/createClinic/${doctor.id}`,{
-        nameClinic: newClinic
-      }).then(result => {
-        dispatch(setIdClinicDefault(result.idClinic));
-        dispatch(setRoleOfDoctor('admin'));
-        setNewClinic('');
-        getAllClinicAndSetDefault(false).then(()=>resolve());
-      }).catch((err) => {
-        if(err.refreshToken){
-          refreshToken(nav,dispatch).then(()=>createClinic());
-        }else{
-          toast.error(t(err.message));
-        }
-        reject(err.message);
-      }).finally(() => dispatch(setLoadingModal(false)))
-    });
+    if(!newClinic){
+      toast.error(t('Name of clinic is required'));
+    }else{
+      return new Promise((resolve, reject) =>{
+        dispatch(setLoadingModal(true));
+        postToServerWithToken(`/v1/clinic/createClinic/${doctor.id}`,{
+          nameClinic: newClinic
+        }).then(result => {
+          dispatch(setIdClinicDefault(result.idClinic));
+          dispatch(setRoleOfDoctor('admin'));
+          setNewClinic('');
+          getAllClinicAndSetDefault(false).then(()=>resolve());
+        }).catch((err) => {
+          if(err.refreshToken){
+            refreshToken(nav,dispatch).then(()=>createClinic());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject(err.message);
+        }).finally(() => dispatch(setLoadingModal(false)))
+      });
+    }
   }
 
   const onCancel = () => {
@@ -174,6 +176,9 @@ export default function Myclinic(props){
 
   const onUpdate = async () => {
     if(!isValidEmail(emailClinic) && emailClinic) toast.error(t("email is incorrect format"))
+    else if(!nameClinic){
+      toast.error(t('Name of clinic is required'));
+    }
     else{
       dispatch(setLoadingModal(true));
       if(image){
@@ -290,7 +295,7 @@ export default function Myclinic(props){
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('email of clinic')}:</label>
               {
                 editMode ? 
-                <input className="text-gray border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={emailClinic} onChange={e=>setEmailClinic(e.target.value)}/>
+                <input className="text-gray btn-hover-bg rounded border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={emailClinic} onChange={e=>setEmailClinic(e.target.value)}/>
                 :
                 <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{emailClinic?emailClinic:t('no data')}</span>
               }
@@ -299,7 +304,7 @@ export default function Myclinic(props){
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('name clinic')}:</label>
               {
                 editMode ? 
-                <input className="text-gray border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={nameClinic} onChange={e=>setNameClinic(e.target.value)}/>
+                <input className="text-gray btn-hover-bg rounded border-0 flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={nameClinic} onChange={e=>setNameClinic(e.target.value)}/>
                 :
                 <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{nameClinic?nameClinic:t('no data')}</span>
               }
@@ -308,16 +313,16 @@ export default function Myclinic(props){
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('phone number')}:</label>
               {
                 editMode ? 
-                <input className="text-gray border-0 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE,width:WIDTH_CHILD}} type="number" value={phoneNumberClinic} onChange={e=>setPhoneNumberClinic(e.target.value)}/>
+                <input className="text-gray btn-hover-bg rounded border-0 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE,width:'150px'}} type="number" value={phoneNumberClinic} onChange={e=>setPhoneNumberClinic(e.target.value)}/>
                 :
-                <span className="text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE,width:WIDTH_CHILD}}>{phoneNumberClinic?phoneNumberClinic:t('no data')}</span>
+                <span className="text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE,width:'150px'}}>{phoneNumberClinic?phoneNumberClinic:t('no data')}</span>
               }
             </div>
             <div className={`d-flex flex-wrap mb-3 ${editMode?'border-bottom':''}`}>
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('address of clinic')}:</label>
               {
                 editMode ? 
-                <input className="text-gray border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={addressClinic} onChange={e=>setAddressClinic(e.target.value)}/>
+                <input className="text-gray btn-hover-bg rounded border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={addressClinic} onChange={e=>setAddressClinic(e.target.value)}/>
                 :
                 <span className="text-gray mc-background-color-white px-2 py-1 rounded flex-grow-1" style={{fontSize:FONT_SIZE}}>{addressClinic?addressClinic:t('no data')}</span>
               }
@@ -326,7 +331,7 @@ export default function Myclinic(props){
               <label className="text-capitalize mc-color fw-bold" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('description')}:</label>
               {
                 editMode ? 
-                <textarea className="text-gray border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={description} onChange={e=>setDescription(e.target.value)}/>
+                <textarea className="text-gray btn-hover-bg rounded border-0 d-flex flex-grow-1 px-2 py-1" onKeyDown={e=>{if(e.key === "Enter") onUpdate(e); if(e.key === "Escape") onCancel()}} style={{outline:"none",fontSize:FONT_SIZE}} value={description} onChange={e=>setDescription(e.target.value)}/>
                 :
                 <span className="text-gray flex-grow-1 mc-background-color-white px-2 py-1 rounded" style={{fontSize:FONT_SIZE}}>{description?description:t('no data')}</span>
               }

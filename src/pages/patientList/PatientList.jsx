@@ -78,7 +78,7 @@ export default function PatientList(props){
         if(selectedTab===0) dispatch(setGetAllPatientDoctor(true));
         else dispatch(setGetAllPatientClinic(true)); 
         dispatch(setCurrentPatient(result.data));
-        toast.success(result.message)
+        toast.success(t(result.message))
         resolve();
         }).catch((err) =>{
           if(err.refreshToken && !isRefresh){
@@ -196,7 +196,7 @@ export default function PatientList(props){
             <button 
               type="button" 
               className={`btn btn-outline-info rounded border-0 p-0 mx-1 h-100`} 
-              title={t('Decryption patient')}
+              title={isEncrypted?t('encryption'):t('decryption')}
               onClick={()=>{
                 if((selectedTab === 0 && !encryptKeyDoctor) || (selectedTab === 1 && !encryptKeyClinic)) toast.error(t('You must have a encryption key to encrypt your patient'))
                 else setIsEncrypted(pre => !pre)

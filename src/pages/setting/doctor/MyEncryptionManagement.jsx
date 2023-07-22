@@ -53,7 +53,7 @@ export default function MyEncryptionManagement(props){
     deleteEncryptionKey();
     if(indexDB) addData(indexDB,encryptionKey,DB_ENCRYPTION_DOCTOR).then(() => {
       getEncryptionKeyInIndexDB();
-      onSetEncryptionKeyForDoctor();
+      onSetEncryptionKeyForDoctor(true);
     }).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to the indexDB'));
   }
@@ -74,15 +74,16 @@ export default function MyEncryptionManagement(props){
     })
   }
 
-  const onSetEncryptionKeyForDoctor = () => {
+  const onSetEncryptionKeyForDoctor = (isShowToast) => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
       postToServerWithToken(`/v1/encryption/encryptionForDoctor/${doctor.id}`).then(result => {
+        if(isShowToast) toast.success(t(result.message))
         dispatch(setDataDoctor(result.data));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>onSetEncryptionKeyForDoctor());
+          refreshToken(nav,dispatch).then(()=>onSetEncryptionKeyForDoctor(isShowToast));
         }else{
           toast.error(err.message);
         }
@@ -96,9 +97,9 @@ export default function MyEncryptionManagement(props){
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = e => {
       const data = JSON.parse(e.target.result);
-      addData(indexDB,data,DB_ENCRYPTION_DOCTOR).then(message => {
+      addData(indexDB,data,DB_ENCRYPTION_DOCTOR).then(() => {
         dispatch(setEncryptKeyDoctor({key: data.key, iv: data.iv}));
-        onSetEncryptionKeyForDoctor().then(()=> toast.success(t(message)));
+        onSetEncryptionKeyForDoctor(false).then(()=> toast.success(t('upload encryption key successfully')));
       }).catch(error => toast.error(t(error)));
     };
   }
@@ -119,6 +120,7 @@ export default function MyEncryptionManagement(props){
       dispatch(setLoadingModal(true));
       deleteToServerWithToken(`/v1/encryption/encryptionForDoctor/${doctor.id}`).then(result => {
         dispatch(setDataDoctor(result.data));
+        toast.warn(t(result.message))
         deleteEncryptionKey();
         resolve();
       }).catch(err =>{
@@ -136,7 +138,6 @@ export default function MyEncryptionManagement(props){
     if(indexDB) deleteData(indexDB,doctor.id,DB_ENCRYPTION_DOCTOR).then(message => {
       setOpenDeleteConfirm(false);
       dispatch(setEncryptKeyDoctor(null));
-      toast.success(t(message));
     }).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to the indexDB'));
   }

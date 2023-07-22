@@ -1,3 +1,4 @@
+import { LinearProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -68,9 +69,7 @@ export default function Discussion(props){
           email: doctor.email
         }
       });
-  
       window.addEventListener("unload", disconnectToSocket);
-  
       return () => {
         window.removeEventListener("unload", disconnectToSocket);
         disconnectToSocket();
@@ -88,7 +87,9 @@ export default function Discussion(props){
         } 
       })
 
+      if(skip===0) setLoadingMessage(true);
       socket.on("load_message", data => {
+        if(skip===0 && data.length === 0) setLoadingMessage(false);
         setMessages((messages) => [...messages,...data]);
         setSkip((skip) => skip + data.length);
       })
@@ -112,6 +113,7 @@ export default function Discussion(props){
   
   useEffect(()=>{
     if(shouldScroll) scrollToBottom();
+    if(messages.length > 0) setLoadingMessage(false);
   },[messages])
 
   const disconnectToSocket = () => {
@@ -141,7 +143,6 @@ export default function Discussion(props){
       toast.error(t('Oops! something wrong happened. Please reload your window'));
     }else{
       setNewMessage('');
-      setLoadingMessage(true);
       const messageData = {
         idRoom: patient.currentPatient?.id,
         idDoctor: doctor.id,
@@ -149,7 +150,6 @@ export default function Discussion(props){
       }
 
       await socket.emit('send_message', messageData);
-      setLoadingMessage(false);
     }
   }
 
@@ -165,50 +165,49 @@ export default function Discussion(props){
         <div className="border flex-grow-1 rounded mb-2 d-flex flex-column">
           <div className="flex-grow-1 d-flex flex-column" style={{overflowY:"auto",height:window.innerHeight-400}} ref={chatBoxRef} onScroll={handleScrollToLoadMessage}>
             {
-              loadingMessage && <div className="spinner-grow"></div>
-            }
-            {
-              [...messages].reverse().map((value,index) => {
-                return <div key={value.id+index} className={`my-2 px-1 w-100 d-flex ${value.idDoctorSendMessage!==doctor.id?'justify-content-start':'justify-content-end'} align-items-center`}>         
-                  <div className="d-flex align-items-start justify-content-start">
-                    {
-                      value.idDoctorSendMessage!==doctor.id && 
-                      <div className="p-2 rounded-circle border m-1 shadow">
-                        <img src="/assets/icons/user.png" style={{height:"20px",width:"20px",background:"transparent"}} alt=""/> 
-                      </div>
-                    }
-                    <div className="d-flex flex-column px-2 ">
-                      <span className="text-capitalize fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{value['Doctor.fullName']} {' ( '}{value['Doctor.email']}{' ) '}</span>
-                      <span className="p-2 mc-font rounded shadow" style={{backgroundColor:`${value.idDoctorSendMessage!==doctor.id?'#A8DDFD':'#f8e896'}`}}>{value.message}</span>
-                      <div className={`d-flex flex-row w-100 mt-1 ${value.idDoctorSendMessage!==doctor.id?'justify-content-end':'justify-content-start'}`}>
-                        <span className="me-1 fst-italic" style={{fontSize:FONT_SIZE}}>{getHoursMinutesSeconds(new Date(value.createdAt))}</span>
+              loadingMessage ? <div className="h-100 w-100">
+                <LinearProgress />
+              </div>
+              :
+              <React.Fragment>
+                {
+                  [...messages].reverse().map((value,index) => {
+                    return <div key={value.id+index} className={`my-2 px-1 w-100 d-flex ${value.idDoctorSendMessage!==doctor.id?'justify-content-start':'justify-content-end'} align-items-center`}>         
+                      <div className="d-flex align-items-start justify-content-start">
                         {
-                          convertISOToVNDateString(toISODateString(new Date(value.createdAt))) !== convertISOToVNDateString(toISODateString(new Date())) && 
-                          <React.Fragment>
-                            <span className="ms-1 vr"></span>
-                            <span className="ms-1 fst-italic" style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(value.createdAt)))}</span>
-                          </React.Fragment>
+                          value.idDoctorSendMessage!==doctor.id && 
+                          <div className="p-2 rounded-circle border m-1 shadow">
+                            <img src="/assets/icons/user.png" style={{height:"20px",width:"20px",background:"transparent"}} alt=""/> 
+                          </div>
                         }
-                      </div>  
-                    </div>
-                    {
-                      value.idDoctorSendMessage===doctor.id && 
-                      <div className="p-2 rounded-circle border m-1 shadow">
-                        <img src="/assets/icons/user.png" style={{height:"20px",width:"20px",background:"transparent"}} alt=""/> 
+                        <div className="d-flex flex-column px-2 ">
+                          <span className="text-capitalize fw-bold mc-color" style={{fontSize:FONT_SIZE}}>{value['Doctor.fullName']} {' ( '}{value['Doctor.email']}{' ) '}</span>
+                          <span className="p-2 mc-font rounded shadow" style={{backgroundColor:`${value.idDoctorSendMessage!==doctor.id?'#A8DDFD':'#f8e896'}`}}>{value.message}</span>
+                          <div className={`d-flex flex-row w-100 mt-1 ${value.idDoctorSendMessage!==doctor.id?'justify-content-end':'justify-content-start'}`}>
+                            <span className="me-1 fst-italic" style={{fontSize:FONT_SIZE}}>{getHoursMinutesSeconds(new Date(value.createdAt))}</span>
+                            {
+                              convertISOToVNDateString(toISODateString(new Date(value.createdAt))) !== convertISOToVNDateString(toISODateString(new Date())) && 
+                              <React.Fragment>
+                                <span className="ms-1 vr"></span>
+                                <span className="ms-1 fst-italic" style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(value.createdAt)))}</span>
+                              </React.Fragment>
+                            }
+                          </div>  
+                        </div>
+                        {
+                          value.idDoctorSendMessage===doctor.id && 
+                          <div className="p-2 rounded-circle border m-1 shadow">
+                            <img src="/assets/icons/user.png" style={{height:"20px",width:"20px",background:"transparent"}} alt=""/> 
+                          </div>
+                        }
                       </div>
-                    }
-                  </div>
-                </div> 
-              })
+                    </div> 
+                  })
+                }
+              </React.Fragment>
             }
           </div>
           <div className="w-100 d-flex align-items-center border-top input-group p-0">
-            {/* <IconButtonComponent 
-              className="btn-primary border-0 px-2" 
-              icon="add_photo_alternate" 
-              FONT_SIZE_ICON={"30px"}
-              title={t("add image")}
-            /> */}
             <input 
               className="form-input px-2 h-100 flex-grow-1 border-0" 
               style={{fontSize:FONT_SIZE,outline:"none"}} 
@@ -231,7 +230,6 @@ export default function Discussion(props){
           <h3 className="text-danger text-capitalize fw-bold">{t("can't found information of patient")}</h3>
         </div>
       }
-      
     </div>
   </div>
 }

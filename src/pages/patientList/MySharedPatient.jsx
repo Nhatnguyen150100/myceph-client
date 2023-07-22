@@ -183,6 +183,11 @@ export default function MySharedPatient(props){
       }
     </table>
     {
+      loadingSearch && <div className="d-flex flex-grow-1 justify-content-center w-100">
+        <div className="spinner-grow"></div>
+      </div>
+    }
+    {
       listSharedPatient.length===0 && !loadingSearch && <div className="d-flex justify-content-center flex-column align-items-center mt-5">
         <img className="text-capitalize" src="/assets/images/notFound.png" height={"150px"} alt={t("can't found your patient")} />
         <span className="text-danger text-capitalize mt-2">{t("can't found your patient")}</span>
