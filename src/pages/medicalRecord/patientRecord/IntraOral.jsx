@@ -10,6 +10,7 @@ import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
 import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE, splitAvatar } from "../../../common/Utility.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
+import { setCurrentImage } from "../../../redux/LibraryImageSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
 
@@ -212,7 +213,6 @@ export default function IntraOral(props){
         updateState(result.data);
         setPreviousData(result.data);
         setEditMode(false);
-        toast.success(result.message);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -364,16 +364,24 @@ export default function IntraOral(props){
       </div>
       <div className="col-sm-3 d-flex flex-column align-items-center justify-content-center">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${maxillaryImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="maxillaryImage" 
+          className={`rounded mt-5 ${maxillaryImage?'p-0 transform-hover':'p-3'}`} 
           src={`${maxillaryImage?splitAvatar(maxillaryImage):'/assets/images/13.png'}`} 
-          style={{borderStyle:`${maxillaryImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${maxillaryImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${maxillaryImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(maxillaryImage) dispatch(setCurrentImage(splitAvatar(maxillaryImage)))
+          }}
+          title={maxillaryImage?t('Click to see'):''}
         />
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${mandibularImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="mandibularImage" 
+          className={`rounded mt-5 ${mandibularImage?'p-0 transform-hover':'p-3'}`} 
           src={`${mandibularImage?splitAvatar(mandibularImage):'/assets/images/14.png'}`} 
-          style={{borderStyle:`${mandibularImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${mandibularImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${mandibularImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(mandibularImage) dispatch(setCurrentImage(splitAvatar(mandibularImage)))
+          }}
+          title={mandibularImage?t('Click to see'):''}
         />
       </div>
     </div>
@@ -502,16 +510,24 @@ export default function IntraOral(props){
       </div>
       <div className="col-sm-3 d-flex flex-column align-items-center justify-content-center">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${leftBuccalImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="leftBuccalImage" 
+          className={`rounded mt-5 ${leftBuccalImage?'p-0 transform-hover':'p-3'}`} 
           src={`${leftBuccalImage?splitAvatar(leftBuccalImage):'/assets/images/11.png'}`} 
-          style={{borderStyle:`${leftBuccalImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${leftBuccalImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${leftBuccalImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(leftBuccalImage) dispatch(setCurrentImage(splitAvatar(leftBuccalImage)))
+          }}
+          title={leftBuccalImage?t('Click to see'):''}
         />
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${rightBuccalImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="rightBuccalImage" 
+          className={`rounded mt-5 ${rightBuccalImage?'p-0 transform-hover':'p-3'}`} 
           src={`${rightBuccalImage?splitAvatar(rightBuccalImage):'/assets/images/10.png'}`} 
-          style={{borderStyle:`${rightBuccalImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${rightBuccalImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${rightBuccalImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(rightBuccalImage) dispatch(setCurrentImage(splitAvatar(rightBuccalImage)))
+          }}
+          title={rightBuccalImage?t('Click to see'):''}
         />
       </div>
     </div>
@@ -593,10 +609,14 @@ export default function IntraOral(props){
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center my-4">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${anteriorImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="anteriorImage" 
+          className={`rounded mt-5 ${anteriorImage?'p-0 transform-hover':'p-3'}`} 
           src={`${anteriorImage?splitAvatar(anteriorImage):'/assets/images/12.png'}`} 
-          style={{borderStyle:`${anteriorImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${anteriorImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${anteriorImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(anteriorImage) dispatch(setCurrentImage(splitAvatar(anteriorImage)))
+          }}
+          title={anteriorImage?t('Click to see'):''}
         />
       </div>
     </div>
@@ -728,10 +748,14 @@ export default function IntraOral(props){
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${smileyFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="smileyFaceImage" 
+          className={`rounded mt-5 ${smileyFaceImage?'p-0 transform-hover':'p-3'}`} 
           src={`${smileyFaceImage?splitAvatar(smileyFaceImage):'/assets/images/8.png'}`} 
-          style={{borderStyle:`${smileyFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${smileyFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${smileyFaceImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(smileyFaceImage) dispatch(setCurrentImage(splitAvatar(smileyFaceImage)))
+          }}
+          title={smileyFaceImage?t('Click to see'):''}
         />
       </div>
     </div>

@@ -11,6 +11,7 @@ import SelectWithLabel from "../../common/SelectWithLabel.jsx";
 import { convertISOToVNDateString, FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE, SIZE_IMAGE_IN_RECORD, splitAvatar, toISODateString, toTimeString } from "../../common/Utility.jsx";
 import { setOtherEmailDoctor } from "../../redux/DoctorSlice.jsx";
 import { setDoctorSettingTab, setLoadingModal, setSettingTab } from "../../redux/GeneralSlice.jsx";
+import { setCurrentImage } from "../../redux/LibraryImageSlice.jsx";
 import { setCurrentPatient } from "../../redux/PatientSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
@@ -46,6 +47,7 @@ export default function PatientInformation(props){
   const [nameUpdateDoctor,setNameUpdateDoctor] = useState();
   const [updatedAt,setUpdatedAt] = useState();
   const [sideFaceImage,setSideFaceImage] = useState();
+  const [hoverSettingId,setHoverSettingId] = useState();
   const [roleOfDoctor,setRoleOfDoctor] = useState('edit');
   const isEncrypted = patient.currentPatient.isEncrypted;
   const modeKey = useMemo(()=>{
@@ -228,12 +230,19 @@ export default function PatientInformation(props){
                   </React.Fragment>
                 }
               </div>
-              <div className="d-flex flex-grow-1 align-items-center justify-content-center">
+              <div 
+                className="d-flex flex-grow-1 align-items-center justify-content-center" 
+              >
                 <img 
-                  alt="avatar" 
-                  className={`rounded mt-5 ${sideFaceImage?'p-0':'p-3'} hoverGreenLight ${!updateByDoctor && 'ms-5'}`} 
+                  loading="lazy"
+                  alt="sideFaceImage" 
+                  className={`rounded mt-5 ${sideFaceImage?'p-0 transform-hover':'p-3'} ${!updateByDoctor && 'ms-5'}`} 
                   src={`${sideFaceImage?splitAvatar(sideFaceImage):'/assets/images/5.png'}`} 
-                  style={{borderStyle:`${sideFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:SIZE_IMAGE_IN_RECORD,objectFit:"cover"}}
+                  style={{borderStyle:`${sideFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:SIZE_IMAGE_IN_RECORD,objectFit:"cover",cursor:`${sideFaceImage?"pointer":"default"}`}}
+                  onClick={()=>{ 
+                    if(sideFaceImage) dispatch(setCurrentImage(splitAvatar(sideFaceImage)))
+                  }}
+                  title={sideFaceImage?t('Click to see'):''}
                 />
               </div>
             </div>

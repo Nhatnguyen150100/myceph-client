@@ -9,6 +9,8 @@ import { Slider } from "@mui/material";
 import { toast } from "react-toastify";
 import IconButtonComponent from "../common/IconButtonComponent.jsx";
 import { FONT_SIZE, settingForImage } from "../common/Utility.jsx";
+import { useMemo } from "react";
+import { useLayoutEffect } from "react";
 
 const filterMap = {
   contrast: Konva.Filters.Contrast,
@@ -96,6 +98,7 @@ export default function ShowImageModal(props) {
     imageModal.current = new bootstrap.Modal(imageModalRef.current, {});
   }, [])
 
+
   useEffect(() => {
     if (currentImage){
       const stage = stageRef.current;
@@ -118,10 +121,17 @@ export default function ShowImageModal(props) {
     }else imageModal.current.hide();
   }, [currentImage])
 
+  const widthStage = useMemo(()=>{
+    if(window.innerWidth < 992) return 800
+    else if(window.innerWidth < 576) return 300
+    else return 1140
+  },[window.innerWidth])
+
   useEffect(()=>{
     if(imageObject){
       applyCache();
       imageModal.current.show();
+      contentModelRef.current?.focus();
     } 
   },[imageObject])
 
@@ -210,7 +220,7 @@ export default function ShowImageModal(props) {
               <span className="text-uppercase" style={{fontSize:FONT_SIZE}}>{t('guide')}</span>
             </button>
             <ul className="dropdown-menu" style={{minWidth:"250px"}}>
-              <span className="fw-bold mc-color text-uppercase fs-6 text-center d-flex justify-content-center">{t('Shortcut list')}</span>
+              <span className="fw-bold mc-color text-uppercase fs-6 text-center d-flex justify-content-center">{t('shortcut list')}</span>
               <table className="table table-sm mb-0">
                 <tbody>
                   <tr>
@@ -231,7 +241,7 @@ export default function ShowImageModal(props) {
                   </tr>
                   <tr>
                     <td className="fw-bold text-danger">
-                      {t('Grid status')}
+                      {t('Grid mode')}
                     </td>
                     <td>
                       {t('can not drag image while grid is open')}
@@ -327,8 +337,8 @@ export default function ShowImageModal(props) {
             ref={stageRef} 
             onWheel={handleWheel} 
             height={window.innerHeight-50-(110*2)} 
-            width={contentModelRef.current?.clientWidth-2} 
-            className={`${isGrab?'cursor-grabbing':''} border-start border-end m-0`} 
+            width={widthStage-2} 
+            className={`${isGrab?'cursor-grabbing':''} border-0 m-0`} 
             x={0} 
             y={0} 
             offsetX={0} 
@@ -341,7 +351,7 @@ export default function ShowImageModal(props) {
                   image={imageObject}
                   filters={filterFuncs}
                   {...filterVals}
-                  offsetX={-((contentModelRef.current?.clientWidth-2)/2-imageObject.width/2)}
+                  offsetX={-((widthStage-2)/2-imageObject.width/2)}
                   x={stateImage.x}
                   y={stateImage.y}
                   draggable={true}
@@ -362,7 +372,7 @@ export default function ShowImageModal(props) {
           </Stage>
         </div>
         <div className="modal-footer">
-          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={e=>dispatch(setCurrentImage(null))}>Close</button>
+          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={e=>{dispatch(setCurrentImage(null));setImageObject(null)}}>Close</button>
         </div>
       </div>
     </div>

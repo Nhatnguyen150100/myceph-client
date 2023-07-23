@@ -98,7 +98,6 @@ export default function TreatmentPlan(props){
         setPlan('');
         setSelected(false);
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
-        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -129,7 +128,6 @@ export default function TreatmentPlan(props){
       }
       putToServerWithToken(`/v1/treatmentPlan/updatePlan/${patient.currentPatient.id}?idPlan=${editPlanId}`,infoUpdate).then(result => {
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
-        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -147,7 +145,6 @@ export default function TreatmentPlan(props){
     return new Promise((resolve, reject) =>{
       deleteToServerWithToken(`/v1/treatmentPlan/deletePlan/${patient.currentPatient.id}?idPlan=${editPlanId}`).then(result => {
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
-        toast.success(result.message);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){

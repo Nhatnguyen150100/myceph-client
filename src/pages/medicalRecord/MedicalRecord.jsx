@@ -5,6 +5,7 @@ import { redirect, useNavigate } from "react-router-dom";
 import { FONT_TAB, MEDICAL_RECORD_TABS, SELECT_PATIENT_MODE, SOFT_WARE_LIST } from "../../common/Utility.jsx";
 import NavbarComponent from "../../components/NavbarComponent.jsx";
 import SelectPatientComponent from "../../components/SelectPatientComponent.jsx";
+import ShowImageModal from "../../components/ShowImageModal.jsx";
 import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import { setAppName, setMedicalRecordTab } from "../../redux/GeneralSlice.jsx";
 import PatientInformation from "./PatientInformation.jsx";
@@ -54,6 +55,7 @@ export default function MedicalRecord(props){
   },[])
 
   return <div className="d-flex flex-column justify-content-start align-items-center">
+    <ShowImageModal/>
     <NavbarComponent />
     <div className="d-flex flex-column h-100 container my-1">
       <div className="d-flex flex-wrap flex-row justify-content-between align-items-center w-100 mb-3" style={{minHeight:`${selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT?'100px':'0px'}`}}>

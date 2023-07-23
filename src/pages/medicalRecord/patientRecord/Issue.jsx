@@ -109,7 +109,6 @@ export default function Issue(props){
         setTreatmentObject('');
         setPriotized(false);
         setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
-        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -144,7 +143,6 @@ export default function Issue(props){
       }
       putToServerWithToken(`/v1/listOfIssue/updateIssue/${patient.currentPatient.id}?idIssue=${editIssueId}`,infoUpdate).then(result => {
         setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
-        toast.success(result.message);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -162,7 +160,6 @@ export default function Issue(props){
     return new Promise((resolve, reject) =>{
       deleteToServerWithToken(`/v1/listOfIssue/deleteIssue/${patient.currentPatient.id}?idIssue=${editIssueId}`).then(result => {
         setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
-        toast.success(result.message);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){

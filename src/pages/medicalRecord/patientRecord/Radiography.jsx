@@ -10,6 +10,7 @@ import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
 import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE, splitAvatar } from "../../../common/Utility.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
+import { setCurrentImage } from "../../../redux/LibraryImageSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
 
@@ -120,7 +121,6 @@ export default function Radiography(props){
       putToServerWithToken(`/v1/radiography/updateRadiography/${patient.currentPatient.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
-        toast.success(result.message);
         setEditMode(false);
         resolve();
       }).catch(err =>{
@@ -254,10 +254,14 @@ export default function Radiography(props){
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${panoramaImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="panoramaImage" 
+          className={`rounded mt-5 ${panoramaImage?'p-0 transform-hover':'p-3'}`} 
           src={`${panoramaImage?splitAvatar(panoramaImage):'/assets/images/3.png'}`} 
-          style={{borderStyle:`${panoramaImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"130px",objectFit:"contain"}}
+          style={{borderStyle:`${panoramaImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"130px",objectFit:"contain",cursor:`${panoramaImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(panoramaImage) dispatch(setCurrentImage(splitAvatar(panoramaImage)))
+          }}
+          title={panoramaImage?t('Click to see'):''}
         />
       </div>
     </div>
@@ -285,10 +289,14 @@ export default function Radiography(props){
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${lateralImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="lateralImage" 
+          className={`rounded mt-5 ${lateralImage?'p-0 transform-hover':'p-3'}`} 
           src={`${lateralImage?splitAvatar(lateralImage):'/assets/images/1.png'}`} 
-          style={{borderStyle:`${lateralImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"130px",objectFit:"contain"}}
+          style={{borderStyle:`${lateralImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"130px",objectFit:"contain",cursor:`${lateralImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(lateralImage) dispatch(setCurrentImage(splitAvatar(lateralImage)))
+          }}
+          title={lateralImage?t('Click to see'):''}
         />
       </div>
     </div>

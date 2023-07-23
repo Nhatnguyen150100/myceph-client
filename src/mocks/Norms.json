@@ -226,8 +226,8 @@
       },
       "MOLAR_REL": {
         "data": {
-          "F": { "MIN": "No data", "MAX": "No data" },
-          "M": { "MIN": "No data", "MAX": "No data" }
+          "F": { "MIN": "no data", "MAX": "no data" },
+          "M": { "MIN": "no data", "MAX": "no data" }
         }
       },
       "U1APOG": {
@@ -477,8 +477,8 @@
       },
       "MOLAR_REL": {
         "data": {
-          "F": { "MIN": "No data", "MAX": "No data" },
-          "M": { "MIN": "No data", "MAX": "No data" }
+          "F": { "MIN": "no data", "MAX": "no data" },
+          "M": { "MIN": "no data", "MAX": "no data" }
         }
       },
       "U1APOG": {
@@ -746,8 +746,8 @@
       },
       "MOLAR_REL": {
         "data": {
-          "F": { "MIN": "No data", "MAX": "No data" },
-          "M": { "MIN": "No data", "MAX": "No data" }
+          "F": { "MIN": "no data", "MAX": "no data" },
+          "M": { "MIN": "no data", "MAX": "no data" }
         }
       },
       "U1APOG": {

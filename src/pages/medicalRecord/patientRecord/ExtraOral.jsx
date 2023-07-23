@@ -10,6 +10,7 @@ import InputWithLabel from "../../../common/InputWithLabel.jsx";
 import RadioWithLabel from "../../../common/RadioWithLabel.jsx";
 import { FONT_SIZE, FONT_SIZE_ICON, SELECT_PATIENT_MODE, splitAvatar } from "../../../common/Utility.jsx";
 import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
+import { setCurrentImage } from "../../../redux/LibraryImageSlice.jsx";
 import { getToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
 
@@ -172,7 +173,6 @@ export default function ExtraOral(props){
       putToServerWithToken(`/v1/extraoral/updateExtraoral/${patient.currentPatient.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
-        toast.success(result.message);
         setEditMode(false);
         resolve();
       }).catch(err =>{
@@ -319,10 +319,14 @@ export default function ExtraOral(props){
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${frontalFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="frontalFaceImage" 
+          className={`rounded mt-5 ${frontalFaceImage?'p-0 transform-hover':'p-3'}`} 
           src={`${frontalFaceImage?splitAvatar(frontalFaceImage):'/assets/images/frontFace.png'}`} 
-          style={{borderStyle:`${frontalFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${frontalFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${frontalFaceImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(frontalFaceImage) dispatch(setCurrentImage(splitAvatar(frontalFaceImage)))
+          }}
+          title={frontalFaceImage?t('Click to see'):''}
         />
       </div>
     </div>
@@ -396,10 +400,14 @@ export default function ExtraOral(props){
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${sideFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="sideFaceImage" 
+          className={`rounded mt-5 ${sideFaceImage?'p-0 transform-hover':'p-3'}`} 
           src={`${sideFaceImage?splitAvatar(sideFaceImage):'/assets/images/5.png'}`} 
-          style={{borderStyle:`${sideFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${sideFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${sideFaceImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(sideFaceImage) dispatch(setCurrentImage(splitAvatar(sideFaceImage)))
+          }}
+          title={sideFaceImage?t('Click to see'):''}
         />
       </div>
     </div>
@@ -428,10 +436,14 @@ export default function ExtraOral(props){
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center my-4">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${obliqueFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="obliqueFaceImage" 
+          className={`rounded mt-5 ${obliqueFaceImage?'p-0 transform-hover':'p-3'}`} 
           src={`${obliqueFaceImage?splitAvatar(obliqueFaceImage):'/assets/images/7.png'}`} 
-          style={{borderStyle:`${obliqueFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${obliqueFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${obliqueFaceImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(obliqueFaceImage) dispatch(setCurrentImage(splitAvatar(obliqueFaceImage)))
+          }}
+          title={obliqueFaceImage?t('Click to see'):''}
         />
       </div>
     </div>
@@ -525,10 +537,14 @@ export default function ExtraOral(props){
       </div>
       <div className="col-sm-3 d-flex align-items-center justify-content-center">
         <img 
-          alt="avatar" 
-          className={`rounded my-1 ${smileyFaceImage?'p-0':'p-2'} hoverGreenLight`} 
+          alt="smileyFaceImage" 
+          className={`rounded mt-5 ${smileyFaceImage?'p-0 transform-hover':'p-3'}`} 
           src={`${smileyFaceImage?splitAvatar(smileyFaceImage):'/assets/images/8.png'}`} 
-          style={{borderStyle:`${smileyFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain"}}
+          style={{borderStyle:`${smileyFaceImage?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:"160px",width:"150px",objectFit:"contain",cursor:`${smileyFaceImage?"pointer":"default"}`}}
+          onClick={()=>{ 
+            if(smileyFaceImage) dispatch(setCurrentImage(splitAvatar(smileyFaceImage)))
+          }}
+          title={smileyFaceImage?t('Click to see'):''}
         />
       </div>
     </div>
