@@ -1,17 +1,20 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { SELECT_PATIENT_MODE, SOFT_WARE_LIST, VIEW_CALENDAR } from "../common/Utility.jsx";
 import { setListAppointmentDate, setPropertiesClinic, setViewCalendar } from "../redux/CalendarSlice.jsx";
 import { setSoftWareSelectedTab } from "../redux/GeneralSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
+import { refreshToken } from "../services/refreshToken.jsx";
 
 export default function SoftWareListComponent(props){
   const softWareSelectedTab = useSelector(state=>state.general.softWareSelectedTab);
   const {t} = useTranslation();
   const dispatch = useDispatch();
+  const nav = useNavigate();
+  const isRefresh = useSelector(state=>state.general.isRefresh);
   const clinic = useSelector(state=>state.clinic);
   const doctor = useSelector(state=>state.doctor.data);
   const currentPatient = useSelector(state=>state.patient.currentPatient);
@@ -24,7 +27,9 @@ export default function SoftWareListComponent(props){
         dispatch(setPropertiesClinic(result.data));
         resolve();
       }).catch(err =>{
-        if(!err.refreshToken){
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>getPropertiesClinic());
+        }else{
           toast.error(t(err.message));
         }
         reject();
@@ -38,7 +43,9 @@ export default function SoftWareListComponent(props){
         dispatch(setListAppointmentDate(result.data));
         resolve();
       }).catch(err =>{
-        if(!err.refreshToken){
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>getListAppointmentDate(idPatient=''));
+        }else{
           toast.error(t(err.message));
         }
         reject();
