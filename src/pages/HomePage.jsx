@@ -49,7 +49,7 @@ export default function HomePage(props) {
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getAllClinicAndSetDefault(indexDB));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       }).finally(()=>dispatch(setLoadingModal(false)))

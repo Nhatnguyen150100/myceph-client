@@ -73,7 +73,7 @@ export default function PatientTreatmentHistory(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getTreatmentHistory());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -108,7 +108,7 @@ export default function PatientTreatmentHistory(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>createHistory());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -141,7 +141,7 @@ export default function PatientTreatmentHistory(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>updateHistory(idHistory));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -159,7 +159,7 @@ export default function PatientTreatmentHistory(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>deleteHistory());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>{dispatch(setLoadingModal(false));setEditHistoryId('');setOpenDeleteConfirm(false)});

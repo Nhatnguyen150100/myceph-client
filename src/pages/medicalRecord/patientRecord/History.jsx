@@ -104,7 +104,7 @@ export default function History(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onUpdateHistory());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -123,7 +123,7 @@ export default function History(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getHistory());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));

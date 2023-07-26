@@ -51,7 +51,7 @@ export default function MyPatient(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getAllPatientForDoctor(name));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       }).finally(() =>{
@@ -75,7 +75,7 @@ export default function MyPatient(props){
           if(err.refreshToken){
             refreshToken(nav,dispatch).then(()=>deletePatient(idPatient));
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
           }
           reject(err);
         }).finally(() =>{

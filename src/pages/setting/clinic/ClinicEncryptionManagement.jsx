@@ -48,7 +48,7 @@ export default function ClinicEncryptionManagement(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getAllClinic());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       })
@@ -72,12 +72,12 @@ export default function ClinicEncryptionManagement(props){
     deleteEncryptionKey();
     if(indexDB) addData(indexDB,encryptionKey,DB_ENCRYPTION_CLINIC).then(() => {
       getEncryptionKeyInIndexDB();
-      onSetEncryptionKeyForClinic();
+      onSetEncryptionKeyForClinic(true);
     }).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to the database'));
   }
 
-  const onSetEncryptionKeyForClinic = () => {
+  const onSetEncryptionKeyForClinic = (isShowToast) => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
       postToServerWithToken(`/v1/encryption/encryptionForClinic/${clinic.idClinicDefault}?idDoctor=${doctor.id}`,{
@@ -89,13 +89,14 @@ export default function ClinicEncryptionManagement(props){
         let objectIndex = arrayClinicIndex.findIndex(element => element.id === result.data.id);
         let updatedObject = Object.assign({}, arrayClinicIndex[objectIndex], {encryptedBy: result.data.encryptedBy});
         arrayClinicIndex[objectIndex] = updatedObject;
+        if(isShowToast) toast.success(t(result.message))
         dispatch(setArrayClinic(arrayClinicIndex));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>onSetEncryptionKeyForClinic());
+          refreshToken(nav,dispatch).then(()=>onSetEncryptionKeyForClinic(isShowToast));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)))
@@ -112,13 +113,14 @@ export default function ClinicEncryptionManagement(props){
         let updatedObject = Object.assign({}, arrayClinicIndex[objectIndex], {encryptedBy: result.data.encryptedBy});
         arrayClinicIndex[objectIndex] = updatedObject;
         dispatch(setArrayClinic(arrayClinicIndex));
+        toast.warn(t(result.message))
         deleteEncryptionKey();
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onDeleteEncryptionKeyFromClinic());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>{
@@ -135,8 +137,9 @@ export default function ClinicEncryptionManagement(props){
       if(data.id === clinic.idClinicDefault) addData(indexDB,data,DB_ENCRYPTION_CLINIC).then(message => {
         dispatch(setEncryptKeyClinic({key: data.key, iv: data.iv}));
         if(clinic.roleOfDoctor === 'admin'){
-          onSetEncryptionKeyForClinic().then(()=>toast.success(t(message)));
-        }else toast.success(t(message));
+          onSetEncryptionKeyForClinic(false)
+        }
+        toast.success(t('upload encryption key for clinic successfully'))
       }).catch(error => toast.error(t(error)));
       else toast.warning(t('Oops! it seems that this encryption key does not belong to the current clinic. Please double-check your encryption key'));
     };
@@ -148,7 +151,7 @@ export default function ClinicEncryptionManagement(props){
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
-    link.download = "crypto_Key_For_Clinic.json";
+    link.download = `crypto_Key_For_${findObjectFromArray(clinic.arrayClinic,clinic.idClinicDefault).nameClinic}.json`;
     link.click();
   };
 
@@ -156,7 +159,6 @@ export default function ClinicEncryptionManagement(props){
     if(indexDB) deleteData(indexDB,clinic.idClinicDefault,DB_ENCRYPTION_CLINIC).then(message => {
       dispatch(setEncryptKeyClinic(null));
       setOpenDeleteConfirm(false);
-      toast.success(t(message));
     }).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to the database'));
   }

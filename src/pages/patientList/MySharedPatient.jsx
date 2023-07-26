@@ -82,7 +82,7 @@ export default function MySharedPatient(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getListSharePatientOfCurrentDoctor(name));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       }).finally(() =>{

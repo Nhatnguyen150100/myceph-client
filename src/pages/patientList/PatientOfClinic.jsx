@@ -68,7 +68,7 @@ export default function PatientOfClinic(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getAllPatientForClinic(name));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       }).finally(() =>{
@@ -90,7 +90,7 @@ export default function PatientOfClinic(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getSharedPatientOfDoctorInClinic(name));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       }).finally(() =>{
@@ -107,14 +107,14 @@ export default function PatientOfClinic(props){
         deleteToServerWithToken(`/v1/patient/deletePatient/${idPatient}`).then(result=>{
           if(idPatient === currentPatient.id) dispatch(setCurrentPatient(null));
           getAllPatientForClinic().then(()=>{
-            toast.success(result.message);
+            toast.warn(t(result.message));
             resolve();
           });
         }).catch((err) =>{
           if(err.refreshToken && !isRefresh){
             refreshToken(nav,dispatch).then(()=>deletePatient(idPatient));
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
           }
           reject(err);
         }).finally(() =>{

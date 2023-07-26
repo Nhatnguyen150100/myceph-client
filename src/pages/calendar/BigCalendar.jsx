@@ -106,7 +106,7 @@ export default function BigCalendar(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getPropertiesClinic());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       })
@@ -121,7 +121,7 @@ export default function BigCalendar(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getAllPatientForClinic());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       })
@@ -138,7 +138,7 @@ export default function BigCalendar(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getListAppointmentDateByMode(idPatient));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       }).finally(()=>dispatch(setLoadingModal(false)));

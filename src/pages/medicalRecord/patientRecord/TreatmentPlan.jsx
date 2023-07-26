@@ -72,7 +72,7 @@ export default function TreatmentPlan(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getListOfPlan());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -103,7 +103,7 @@ export default function TreatmentPlan(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>createPlan());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -133,7 +133,7 @@ export default function TreatmentPlan(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>updatePlan());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>{dispatch(setLoadingModal(false));setEditPlanId()});
@@ -150,7 +150,7 @@ export default function TreatmentPlan(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>deletePlan());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>{dispatch(setLoadingModal(false));setEditPlanId('');setOpenDeleteConfirm(false)});

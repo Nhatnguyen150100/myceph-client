@@ -59,14 +59,16 @@ export default function PatientList(props){
           ...patientObject,
           note: isEncrypted ? JSON.stringify(encryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,newNotePatient)) : newNotePatient,
           gender: isEncrypted ? JSON.stringify(encryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,newGenderPatient)) : newGenderPatient,
-          idDoctor: doctor.id
+          idDoctor: doctor.id,
+          updateByDoctor: doctor.id
         }
       }else{
         patientObject = {
           ...patientObject,
           note: isEncrypted ? JSON.stringify(encryptData(encryptKeyClinic.key,encryptKeyClinic.iv,newNotePatient)) : newNotePatient,
           gender: isEncrypted ? JSON.stringify(encryptData(encryptKeyClinic.key,encryptKeyClinic.iv,newGenderPatient)) : newGenderPatient,
-          idClinic: clinic.idClinicDefault
+          idClinic: clinic.idClinicDefault,
+          updateByDoctor: doctor.id
         }
       }
       dispatch(setLoadingModal(true));
@@ -84,7 +86,7 @@ export default function PatientList(props){
           if(err.refreshToken && !isRefresh){
             refreshToken(nav,dispatch).then(()=>addNewPatient());
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
           }
           reject(err);
       }).finally(()=>dispatch(setLoadingModal(false)));

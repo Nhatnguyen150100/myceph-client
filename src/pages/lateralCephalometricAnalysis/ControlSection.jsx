@@ -147,7 +147,7 @@ const ControlSection = React.memo((props) => {
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getImageAnalysis(image));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>{
@@ -179,7 +179,7 @@ const ControlSection = React.memo((props) => {
           if(err.refreshToken){
             refreshToken(nav,dispatch).then(()=>setImageAnalysis());
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
           }
           reject();
         }).finally(()=>dispatch(setLoadingModal(false)));

@@ -77,7 +77,7 @@ export default function SharePatientSettingForDoctor(props){
           if(err.refreshToken){
             refreshToken(nav,dispatch).then(()=>getAllPatientForDoctor(name));
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
             reject(err);
           }
         })
@@ -97,7 +97,7 @@ export default function SharePatientSettingForDoctor(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getAllEmailSearch(email));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
       });
     }
@@ -114,7 +114,7 @@ export default function SharePatientSettingForDoctor(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getAllDoctorSharePatient());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
           reject(err)
         }
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -143,7 +143,7 @@ export default function SharePatientSettingForDoctor(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>onSharePatient(idOwnerDoctor));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
           reject(err);
         }
       });
@@ -163,7 +163,7 @@ export default function SharePatientSettingForDoctor(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>onGetSharePatient(ownerDoctor));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
           reject(err);
         }
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -221,7 +221,7 @@ export default function SharePatientSettingForDoctor(props){
           if(err.refreshToken){
             refreshToken(nav,dispatch).then(()=>deleteShareDoctor(idOwnerDoctor));
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
             reject(err);
           }
         });
@@ -252,7 +252,7 @@ export default function SharePatientSettingForDoctor(props){
           if(err.refreshToken){
             refreshToken(nav,dispatch).then(()=>removeSharePatient(idSharedPatient));
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
             reject(err);
           }
         });
@@ -276,7 +276,7 @@ export default function SharePatientSettingForDoctor(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>onChangeRoleOfDoctor(idSharedPatient,idOwnerDoctor,roleOfDoctor));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
           reject(err);
         }
       });

@@ -67,7 +67,7 @@ export default function MyEncryptionManagement(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onGetInformationDoctor());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       })
@@ -85,7 +85,7 @@ export default function MyEncryptionManagement(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onSetEncryptionKeyForDoctor(isShowToast));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)))
@@ -127,7 +127,7 @@ export default function MyEncryptionManagement(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onDeleteEncryptionKeyFromDoctor());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)))

@@ -133,7 +133,7 @@ export default function IntraOral(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getIntraOral());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -218,7 +218,7 @@ export default function IntraOral(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onUpdateIntraOral());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));

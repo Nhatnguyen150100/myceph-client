@@ -97,7 +97,7 @@ export default function MyProfile(props){
       if(err.refreshToken){
         refreshToken(nav,dispatch).then(()=>pushDataToServer(avatar));
       }else{
-        toast.error(err.message);
+        toast.error(t(err.message));
       }
     })
     .finally(() => dispatch(setLoadingModal(false)));

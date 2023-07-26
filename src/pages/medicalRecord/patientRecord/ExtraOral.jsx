@@ -112,7 +112,7 @@ export default function ExtraOral(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getExtraOral());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -179,7 +179,7 @@ export default function ExtraOral(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onUpdateExtraOral());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));

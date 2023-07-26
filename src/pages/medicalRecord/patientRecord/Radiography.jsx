@@ -84,7 +84,7 @@ export default function Radiography(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getRadiography());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -127,7 +127,7 @@ export default function Radiography(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onUpdateRadiography());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));

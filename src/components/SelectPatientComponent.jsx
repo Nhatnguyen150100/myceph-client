@@ -87,7 +87,7 @@ const SelectPatientComponent = (props) => {
           reject();
           refreshToken(nav,dispatch).then(()=>getAllPatient(name));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       }).finally(()=>setLoading(false))

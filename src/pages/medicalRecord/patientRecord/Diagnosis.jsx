@@ -65,7 +65,7 @@ export default function Diagnosis(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getDiagnosis());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -96,7 +96,7 @@ export default function Diagnosis(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onUpdateRadiography());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));

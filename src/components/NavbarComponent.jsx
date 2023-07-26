@@ -48,7 +48,7 @@ export default function NavbarComponent(props) {
       if(err.refreshToken && !isRefresh){
         refreshToken(nav,dispatch).then(()=>logout());
       }else{
-        toast.error(err.message);
+        toast.error(t(err.message));
       }
     }).finally(()=>dispatch(setLoadingModal(false)));
   }

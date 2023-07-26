@@ -81,7 +81,7 @@ export default function SharePatientSettingForClinic(props){
           if(err.refreshToken){
             refreshToken(nav,dispatch).then(()=>getAllPaitentForClinic(name));
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
           }
           reject(err);
         })
@@ -125,7 +125,7 @@ export default function SharePatientSettingForClinic(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>onSharePatient(idOwnerDoctor));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
           reject(err);
         }
       });
@@ -145,7 +145,7 @@ export default function SharePatientSettingForClinic(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>onGetSharePatient(ownerDoctor));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
           reject(err);
         }
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -184,7 +184,7 @@ export default function SharePatientSettingForClinic(props){
           if(err.refreshToken){
             refreshToken(nav,dispatch).then(()=>removeSharePatient(idSharedPatient));
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
             reject(err);
           }
         });
@@ -208,7 +208,7 @@ export default function SharePatientSettingForClinic(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>onChangeRoleOfDoctor(idSharedPatient,idOwnerDoctor,roleOfDoctor));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
           reject(err);
         }
       });

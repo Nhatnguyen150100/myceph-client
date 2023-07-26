@@ -103,7 +103,7 @@ export default function PatientInformation(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>onUpdateInformation());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -113,7 +113,7 @@ export default function PatientInformation(props){
   const getPatient = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/patient/getPatient/${patient.currentPatient.id}?updateBydoctor=${updateByDoctor}&mode=${props.checkRoleMode}&idDoctor=${doctor?.id}`).then(result => {
+      getToServerWithToken(`/v1/patient/getPatient/${patient.currentPatient.id}?updateBydoctor=${updateByDoctor?updateByDoctor:doctor.id}&mode=${props.checkRoleMode}&idDoctor=${doctor?.id}`).then(result => {
         updatePatientState(result.data);
         setPreviousData(result.data);
         result.roleOfDoctor && setRoleOfDoctor(result.roleOfDoctor)
@@ -122,7 +122,7 @@ export default function PatientInformation(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getPatient());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       }).finally(()=>dispatch(setLoadingModal(false)));

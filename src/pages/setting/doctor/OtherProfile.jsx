@@ -86,7 +86,7 @@ export default function OtherProfile(props){
         if(err.refreshToken){
           refreshToken(nav,dispatch).then(()=>getAllEmailSearch(email));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
       })
     }

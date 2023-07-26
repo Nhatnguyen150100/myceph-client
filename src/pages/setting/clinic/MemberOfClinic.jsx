@@ -68,7 +68,7 @@ export default function MemberOfClinic(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getAllEmailSearch(email));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
       })
     }

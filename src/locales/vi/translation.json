@@ -513,5 +513,10 @@
   "Soft Tissue": "Tương quan mô mềm",
   "Face Typology": "Kiểu hình mặt",
   "Mandible Growth Direction": "Hướng phát triển hàm dưới",
-  "Mandible Shape": "Dạng hàm dưới"
+  "Mandible Shape": "Dạng hàm dưới",
+  "Can not connect to the database": "không thể kết nối tới cơ sở dữ liệu",
+  "upload encryption key for clinic successfully": "tải lên khóa mã hóa cho phòng khám thành công",
+  "Oops! it seems that this encryption key does not belong to the current clinic. Please double-check your encryption key": "Ối! có vẻ như khóa mã hóa này không thuộc về phòng khám hiện tại. Vui lòng kiểm tra kỹ khóa mã hóa của bạn",
+  "Set encryption key for clinic successfully": "Tạo khóa mã hóa cho phòng khám thành công",
+  "Delete encryption key for clinic successfully": "Xóa khóa mã hóa cho phòng khám thành công"
 }

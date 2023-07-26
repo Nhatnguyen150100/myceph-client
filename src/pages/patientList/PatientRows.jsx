@@ -39,7 +39,7 @@ export default function PatientRows(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getAllDoctorSharedPatient(idPatient));
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject(err);
       }).finally(()=>setLoadingSharePatient(false))
@@ -122,7 +122,7 @@ export default function PatientRows(props){
           if(err.refreshToken && !isRefresh){
             refreshToken(nav,dispatch).then(()=>onEncryptInformationPatient());
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
           }
           reject();
         }).finally(()=>dispatch(setLoadingModal(false)));
@@ -153,7 +153,7 @@ export default function PatientRows(props){
           if(err.refreshToken && !isRefresh){
             refreshToken(nav,dispatch).then(()=>onDecryptInformationPatient());
           }else{
-            toast.error(err.message);
+            toast.error(t(err.message));
           }
           reject();
         }).finally(()=>dispatch(setLoadingModal(false)));

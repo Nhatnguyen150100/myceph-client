@@ -513,5 +513,10 @@
   "Soft Tissue": "Soft Tissue",
   "Face Typology": "Face Typology",
   "Mandible Growth Direction": "Mandible Growth Direction",
-  "Mandible Shape": "Mandible Shape"
+  "Mandible Shape": "Mandible Shape",
+  "Can not connect to the database": "Can not connect to the database",
+  "upload encryption key for clinic successfully": "upload encryption key for clinic successfully",
+  "Oops! it seems that this encryption key does not belong to the current clinic. Please double-check your encryption key": "Oops! it seems that this encryption key does not belong to the current clinic. Please double-check your encryption key",
+  "Set encryption key for clinic successfully": "Set encryption key for clinic successfully",
+  "Delete encryption key for clinic successfully": "Delete encryption key for clinic successfully"
 }

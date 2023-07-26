@@ -77,7 +77,7 @@ export default function Issue(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>getListOfIssues());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -114,7 +114,7 @@ export default function Issue(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>createIssue());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>dispatch(setLoadingModal(false)));
@@ -148,7 +148,7 @@ export default function Issue(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>updateIssue());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>{setEditIssueId('');dispatch(setLoadingModal(false))});
@@ -165,7 +165,7 @@ export default function Issue(props){
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>deleteIssue());
         }else{
-          toast.error(err.message);
+          toast.error(t(err.message));
         }
         reject();
       }).finally(()=>{dispatch(setLoadingModal(false));setEditIssueId('');setOpenDeleteConfirm(false)});
