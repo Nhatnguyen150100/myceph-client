@@ -33,7 +33,7 @@ function ForgotPasswordPage(props){
     else if (!isValidEmail(email)) setEmailError(t("email is incorrect format"));
 		else {
 			setLoading(true);
-      executeRecaptcha('login').then(token => 
+      executeRecaptcha('findMail').then(token => 
         postToServer(`/v1/doctor/findDoctorEmail/${email}`, { tokenRecaptcha: token }).then((result) => {
           setEmail(result.email);
           setSelectedTab(1);
@@ -49,7 +49,7 @@ function ForgotPasswordPage(props){
     else if (password !== confirmPassword) setConfirmPasswordError(t('password mismatch'));
     else{
       setLoading(true);
-      executeRecaptcha('login').then(token => 
+      executeRecaptcha('reset').then(token => 
         postToServer(`/v1/doctor/resetPassword`, { email: email, password: password}).then((result) => {
           toast.success(result.message);
           setSelectedTab(2);
