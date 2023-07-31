@@ -50,7 +50,7 @@ function ForgotPasswordPage(props){
     else{
       setLoading(true);
       executeRecaptcha('reset').then(token => 
-        postToServer(`/v1/doctor/resetPassword`, { email: email, password: password}).then((result) => {
+        postToServer(`/v1/doctor/resetPassword`, { email: email, password: password, tokenRecaptcha: token}).then((result) => {
           toast.success(result.message);
           setSelectedTab(2);
         })
@@ -159,7 +159,7 @@ function ForgotPasswordPage(props){
     </div>
     break;
     case 2: currentTab = <div className="d-flex flex-column justify-content-center container align-items-center" style={{width:"60em"}}>
-      <span className="mc-color text-center text-capitalize" style={{fontSize:"35px"}}>{t('Reset password for account ')}{email} {t('successfully')}</span>
+      <span className="mc-color text-center text-capitalize" style={{fontSize:"35px"}}>{t('Reset password for account')} {email} {t('successfully')}</span>
       <span className="mc-color text-center text-capitalize fw-bold" style={{fontSize:"70px"}}>MyCeph - Cephalometric</span>
       <div className="d-flex justify-content-center" style={{width:"40em"}}>
         <span className="text-center text-gray my-2" style={{fontSize:"20px"}}>{t("You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!")}</span>

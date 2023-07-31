@@ -518,5 +518,14 @@
   "upload encryption key for clinic successfully": "tải lên khóa mã hóa cho phòng khám thành công",
   "Oops! it seems that this encryption key does not belong to the current clinic. Please double-check your encryption key": "Ối! có vẻ như khóa mã hóa này không thuộc về phòng khám hiện tại. Vui lòng kiểm tra kỹ khóa mã hóa của bạn",
   "Set encryption key for clinic successfully": "Tạo khóa mã hóa cho phòng khám thành công",
-  "Delete encryption key for clinic successfully": "Xóa khóa mã hóa cho phòng khám thành công"
+  "Delete encryption key for clinic successfully": "Xóa khóa mã hóa cho phòng khám thành công",
+  "thank you for registering for": "cảm ơn bạn đã đăng kí",
+  "You're all set. You'll receive an email with details to confirm your email address. We look forward to confirm it and join with us.": "Bạn đã sẵn sàng. Bạn sẽ nhận được một email với chi tiết để xác nhận địa chỉ email của bạn. Chúng tôi rất mong chờ xác nhận từ bạn và kết nối với chúng tôi.",
+  "going to email": "đi tới email",
+  "Looking for your account": "tìm tài khoản của bạn",
+  "reset your password": "đặt lại mật khẩu của bạn",
+  "welcome to": "chào mừng",
+  "Reset password for account": "Đặt lại mật khẩu cho tài khoản",
+  "successfully": "thành công",
+  "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!": "Bạn sẽ nhận được một email có thông tin chi tiết để xác nhận địa chỉ email của bạn nhằm đặt lại mật khẩu. Vui lòng kiểm tra email của bạn trong vòng 3 phút!"
 }

@@ -518,5 +518,14 @@
   "upload encryption key for clinic successfully": "upload encryption key for clinic successfully",
   "Oops! it seems that this encryption key does not belong to the current clinic. Please double-check your encryption key": "Oops! it seems that this encryption key does not belong to the current clinic. Please double-check your encryption key",
   "Set encryption key for clinic successfully": "Set encryption key for clinic successfully",
-  "Delete encryption key for clinic successfully": "Delete encryption key for clinic successfully"
+  "Delete encryption key for clinic successfully": "Delete encryption key for clinic successfully",
+  "thank you for registering for": "thank you for registering for",
+  "You're all set. You'll receive an email with details to confirm your email address. We look forward to confirm it and join with us.": "You're all set. You'll receive an email with details to confirm your email address. We look forward to confirm it and join with us.",
+  "going to email": "going to email",
+  "Looking for your account": "Looking for your account",
+  "reset your password": "reset your password",
+  "welcome to": "welcome to",
+  "Reset password for account": "Reset password for account",
+  "successfully": "successfully",
+  "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!": "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!"
 }
