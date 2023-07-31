@@ -527,5 +527,8 @@
   "welcome to": "chào mừng",
   "Reset password for account": "Đặt lại mật khẩu cho tài khoản",
   "successfully": "thành công",
-  "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!": "Bạn sẽ nhận được một email có thông tin chi tiết để xác nhận địa chỉ email của bạn nhằm đặt lại mật khẩu. Vui lòng kiểm tra email của bạn trong vòng 3 phút!"
+  "find your email": "tìm email của bạn",
+  "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!": "Bạn sẽ nhận được một email có thông tin chi tiết để xác nhận địa chỉ email của bạn nhằm đặt lại mật khẩu. Vui lòng kiểm tra email của bạn trong vòng 3 phút!",
+  "We couldn't find your email address": "Chúng tôi không thể tìm thấy email của bạn",
+  "password wrong": "mật khẩu không chính xác"
 }

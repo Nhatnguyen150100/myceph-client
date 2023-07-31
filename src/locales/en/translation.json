@@ -527,5 +527,8 @@
   "welcome to": "welcome to",
   "Reset password for account": "Reset password for account",
   "successfully": "successfully",
-  "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!": "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!"
+  "find your email": "find your email",
+  "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!": "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!",
+  "We couldn't find your email address": "We couldn't find your email address",
+  "password wrong": "password wrong"
 }
