@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { deCryptData } from "../common/Crypto.jsx";
-import { computeAge, onDecryptedDataPreview, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE, SOFT_WARE_LIST, splitAvatar } from "../common/Utility.jsx";
+import { computeAge, onDecryptedDataPreview, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE, SOFT_WARE_LIST, splitAvatar, onDecryptedDataPreviewInArray } from "../common/Utility.jsx";
 import { setArrayPatient, setCurrentPatient } from "../redux/PatientSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
@@ -78,7 +78,11 @@ const SelectPatientComponent = (props) => {
           // chuyển bệnh nhân trong cùng 1 phòng khám thì không bị reset lại currentPatient
           if(clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)){
             setPreviousClinicId(clinic.idClinicDefault);
-            if(previousClinicId!==clinic.idClinicDefault) dispatch(setCurrentPatient(result.data[0]));
+            if(previousClinicId!==clinic.idClinicDefault){
+              const currentPatientCheckEncrypt = onDecryptedDataPreviewInArray(result.data,encryptKeyClinic)
+              if(currentPatientCheckEncrypt) dispatch(setCurrentPatient(currentPatientCheckEncrypt))
+              else toast.error(t('You need an encryption key to decrypt patient data'))
+            }
           }
         }
         resolve();

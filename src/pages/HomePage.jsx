@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { DB_ENCRYPTION_CLINIC, DB_ENCRYPTION_DOCTOR, disConnectIndexDB, getData, onOpenIndexDB } from "../common/ConnectIndexDB.jsx";
-import { cookies, SOFT_WARE_LIST } from "../common/Utility.jsx";
+import { cookies, onDecryptedDataPreviewInArray, SOFT_WARE_LIST } from "../common/Utility.jsx";
 import NavbarComponent from "../components/NavbarComponent.jsx";
 import { setArrayClinic, setEncryptKeyClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
 import { setEncryptKeyDoctor } from "../redux/DoctorSlice.jsx";
@@ -18,6 +18,7 @@ export default function HomePage(props) {
   const {t} = useTranslation();
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const currentPatient = useSelector(state=>state.patient.currentPatient);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const doctor = useSelector(state=>state.doctor.data);
   const nav = useNavigate();
 
@@ -29,7 +30,8 @@ export default function HomePage(props) {
         if(myClinic.length > 0){
           !currentPatient?.id && getToServerWithToken(`/v1/patient/getPatientListForClinic/${myClinic[0].id}?page=${1}&pageSize=${10}&nameSearch=${''}`).then(response=>{
             dispatch(setArrayPatient(response.data));
-            dispatch(setCurrentPatient(response.data[0]))
+            const currentPatientCheckEncrypt = onDecryptedDataPreviewInArray(result.data,encryptKeyClinic)
+            dispatch(setCurrentPatient(currentPatientCheckEncrypt))
           })
           dispatch(setIdClinicDefault(myClinic[0].id));
           getData(indexDB,myClinic[0].id,DB_ENCRYPTION_CLINIC).then(encryptedData => {

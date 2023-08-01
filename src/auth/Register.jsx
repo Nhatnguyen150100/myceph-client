@@ -74,7 +74,7 @@ function RegisterPage(props) {
           <ButtonComponent label={t("going to email")} onClick={e=>window.open("https://mail.google.com")}/>
         </div>
         <div className="mt-3 d-flex flex-row justify-content-end">
-          <span className="me-1">{t('Back to login:')}</span>
+          <span className="me-1">{t('Back to:')}</span>
           <Link className="text-capitalize mc-color mc-color-hover" style={{textDecoration:"none"}} to={'/login'}>{t('login')}</Link>
         </div>
       </div>
