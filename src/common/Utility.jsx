@@ -146,11 +146,12 @@ export function getHoursMinutesSeconds(date){
  * @returns dữ liệu sau giải mã
  */
 export const onDecryptedDataPreview = (mode,data,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient) => {
-  if(mode===SELECT_PATIENT_MODE.MY_PATIENT && encryptKeyDoctor && data){
+  if(!data) return ''
+  else if(mode===SELECT_PATIENT_MODE.MY_PATIENT && encryptKeyDoctor){
     return deCryptData(encryptKeyDoctor.key,encryptKeyDoctor.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
-  }else if(mode===SELECT_PATIENT_MODE.CLINIC_PATIENT && encryptKeyClinic && data){
+  }else if(mode===SELECT_PATIENT_MODE.CLINIC_PATIENT && encryptKeyClinic){
     return deCryptData(encryptKeyClinic.key,encryptKeyClinic.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
-  }else if(mode===SELECT_PATIENT_MODE.SHARE_PATIENT && encryptKeySharePatient && data){
+  }else if(mode===SELECT_PATIENT_MODE.SHARE_PATIENT && encryptKeySharePatient){
     return deCryptData(encryptKeySharePatient.key,encryptKeySharePatient.iv,JSON.parse(data).tag,JSON.parse(data).encrypted);
   }else{
     return '---'
