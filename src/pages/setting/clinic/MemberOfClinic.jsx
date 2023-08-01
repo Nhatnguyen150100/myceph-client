@@ -301,9 +301,9 @@ export default function MemberOfClinic(props){
         content={
           <div>
             <span style={{fontSize:FONT_SIZE}}>{t('Do you want to switch role of doctor from')}</span>
-            <span className={`fw-bold text-uppercase ms-1 ${roleDoctorUpdate==='admin'?'text-warning':'text-success'}`} style={{fontSize:FONT_SIZE}}>{roleDoctorUpdate==='admin'?'member':'admin'}</span>
+            <span className={`fw-bold text-uppercase ms-1 ${roleDoctorUpdate==='admin'?'text-warning':'text-success'}`} style={{fontSize:FONT_SIZE}}>{roleDoctorUpdate==='admin'?t('member'):t('admin')}</span>
             <span className="mx-1">{t('to')}</span>
-            <span className={`fw-bold text-uppercase ${roleDoctorUpdate==='admin'?'text-success':'text-danger'}`} style={{fontSize:FONT_SIZE}}>{roleDoctorUpdate==='admin'?'admin':'member'}</span>
+            <span className={`fw-bold text-uppercase ${roleDoctorUpdate==='admin'?'text-success':'text-warning'}`} style={{fontSize:FONT_SIZE}}>{roleDoctorUpdate==='admin'?t('admin'):t('member')}</span>
           </div>
         }
         handleClose={handleClose} 

@@ -5,7 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import NavbarComponent from "../../components/NavbarComponent.jsx";
 import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import SelectPatientComponent from "../../components/SelectPatientComponent.jsx";
-import { convertAppointmentDateToEvent, convertAppointmentDateToEvents, convertISOToVNDateString, FONT_SIZE, SOFT_WARE_LIST, timeString12hr, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
+import { convertAppointmentDateToEvent, convertAppointmentDateToEvents, convertISOToVNDateString, FONT_SIZE, onDecryptedDataPreviewInArray, SOFT_WARE_LIST, timeString12hr, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { useTranslation } from "react-i18next";
 import RBCToolbar from "./RBCToolbar.jsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +33,7 @@ export default function BigCalendar(props){
   const selectedTab = useSelector(state => state.calendar.viewCalendar);
   const listAppointmentDate = useSelector(state => state.calendar.listAppointmentDate);
   const roomsOfClinic = useSelector(state => state.calendar.propertiesClinic?.roomOfClinic);
+  const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const clinic = useSelector(state=>state.clinic);
   const doctor = useSelector(state=>state.doctor.data);
   const isRefresh = useSelector(state=>state.general.isRefresh);
@@ -115,16 +116,29 @@ export default function BigCalendar(props){
   
   const getAllPatientForClinic = () => {
     return new Promise((resolve, reject) => {
-      getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.idClinicDefault}?page=${1}&pageSize=${4}&nameSearch=`).then(result=>{
-        resolve(result.data);
-      }).catch((err) =>{
-        if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>getAllPatientForClinic());
-        }else{
-          toast.error(t(err.message));
-        }
-        reject(err);
-      })
+      if(clinic.roleOfDoctor === 'admin'){
+        getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.idClinicDefault}?page=${1}&pageSize=${4}&nameSearch=`).then(result=>{
+          resolve(result.data);
+        }).catch((err) =>{
+          if(err.refreshToken && !isRefresh){
+            refreshToken(nav,dispatch).then(()=>getAllPatientForClinic());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject(err);
+        })
+      }else{
+        getToServerWithToken(`/v1/patient/getSharedPatientOfDoctorInClinic/${doctor.id}?idClinic=${clinic.idClinicDefault}&page=${1}&pageSize=${1000}&nameSearch=`).then(result=>{
+          resolve(result.data);
+        }).catch((err) =>{
+          if(err.refreshToken && !isRefresh){
+            refreshToken(nav,dispatch).then(()=>getAllPatientForClinic());
+          }else{
+            toast.error(t(err.message));
+          }
+          reject(err);
+        })
+      }
     })
   }
 
@@ -320,7 +334,15 @@ export default function BigCalendar(props){
   }
 
   return <div className="h-100">
-    <AppointmentModal getListAppointmentDateByMode={()=>getListAppointmentDateByMode(true)} slotInfo={slotInfo} showAppointmentModal={showAppointmentModal} closeModal={()=>{setShowAppointmentModal(false);setIsCreateAppointment(true)}} createAppointment={isCreateAppointment}/>
+    <AppointmentModal 
+      patientSelected={selectedTab === VIEW_CALENDAR.BY_PATIENT ? patient.currentPatient?.id : null}
+      namePatientSelected={selectedTab === VIEW_CALENDAR.BY_PATIENT ? patient.currentPatient?.fullName : null}
+      getListAppointmentDateByMode={()=>getListAppointmentDateByMode(true)} 
+      slotInfo={slotInfo} 
+      showAppointmentModal={showAppointmentModal} 
+      closeModal={()=>{setShowAppointmentModal(false);setIsCreateAppointment(true)}} 
+      createAppointment={isCreateAppointment}
+    />
     <div ref={headerRef}>
       <NavbarComponent />
       <ul className="nav nav-tabs">
@@ -345,10 +367,13 @@ export default function BigCalendar(props){
             style={{fontSize:FONT_SIZE}}
             onClick={()=>{
               getAllPatientForClinic().then(data => {
-                if(data.length > 0){
-                  dispatch(setCurrentPatient(data[0]));
+                const currentPatient = onDecryptedDataPreviewInArray(data,encryptKeyClinic)
+                if(data.length > 0 && currentPatient){
+                  dispatch(setCurrentPatient(currentPatient));
                   dispatch(setViewCalendar(VIEW_CALENDAR.BY_PATIENT));
                   getListAppointmentDateByMode(true)
+                }else if(data.length > 0 && !currentPatient){
+                  toast.error(t('You need an encryption key to decrypt patient data'))
                 }else toast.error(t('This clinic has no patient'))
               })
             }}

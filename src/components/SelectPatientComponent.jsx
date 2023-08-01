@@ -170,7 +170,7 @@ const SelectPatientComponent = (props) => {
                               }
                               <span className={`${patient.isEncrypted && onDecryptedDataPreview(selectPatientOnMode,patient?.gender,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient)==='---' && 'text-danger'} fw-bold`} style={{fontSize:FONT_TEXT}}>{')'}</span>
                             </div>
-                            <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(patient.birthday).age} {t('age')}{computeAge(patient.birthday).month>0 && (' - '+computeAge(patient.birthday).month+t(' month'))}{' )'}</span>
+                            <span className="text-capitalize fw-bold" style={{fontSize:FONT_TEXT}}>{'( '}{computeAge(patient.birthday).age} {t('age')}{computeAge(patient.birthday).month>0 && (' - '+computeAge(patient.birthday).month+' '+t('month'))}{' )'}</span>
                           </div>
                         </button>
                       })

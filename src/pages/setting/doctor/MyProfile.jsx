@@ -234,7 +234,7 @@ export default function MyProfile(props){
         </div>
         <div className={`d-flex flex-wrap flex-row mb-3 ${editMode?'border-bottom':''}`}>
           <label className="text-capitalize mc-color fw-bold label-width-setting" style={{fontSize:FONT_SIZE,width:WIDTH_HEAD}}>{t('clinics')}:</label>
-          <div className="d-flex flex-wrap flex-row flex-wrap flex-grow-1" style={{width:WIDTH_CHILD}}>
+          <div className="d-flex flex-wrap flex-row flex-wrap flex-grow-1 list-clinic-parent">
             {
               clinic?.map(clinic => {
                 return <button key={clinic.id} type="button" className="btn btn-primary px-2 text-capitalize btn-hover-bg rounded shadow me-3 mb-1 span-value-setting" style={{fontSize:FONT_SIZE}} onClick={e=>onToClinic(clinic.id,clinic.roleOfDoctor)}>

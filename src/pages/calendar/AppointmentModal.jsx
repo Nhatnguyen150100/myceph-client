@@ -5,11 +5,12 @@ import * as bootstrap from 'bootstrap';
 import { findObjectFromArray, FONT_SIZE, forMatMoneyVND, getHoursMinutesSeconds, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { toast } from "react-toastify";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
-import { deleteToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
+import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import { useNavigate } from "react-router-dom";
 import { setListAppointmentDate } from "../../redux/CalendarSlice.jsx";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
+import { LinearProgress } from "@mui/material";
 
 
 const AppointmentModal = (props) => {
@@ -28,7 +29,8 @@ const AppointmentModal = (props) => {
   const selectedTabCalendar = useSelector(state => state.calendar.viewCalendar);
 
   const [doctorSelected,setDoctorSelected] = useState();
-  const [patientSelected,setPatientSelected] = useState();
+  const [listOfDoctorSharedPatient,setListOfDoctorSharedPatient] = useState([]);
+  const [patientSelected,setPatientSelected] = useState(props.patientSelected);
   const [serviceSelected,setServiceSelected] = useState();
   const [priceService,setPriceService] = useState();
   const [roomSelected,setRoomSelected] = useState();
@@ -39,6 +41,8 @@ const AppointmentModal = (props) => {
   const [note,setNote] = useState('');
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
+  const [loadingListDoctor,setLoadingListDoctor] = useState(false);
+
   useEffect(()=>{
     if(props.slotInfo){
       setRoomSelected(props.slotInfo.resourceId);
@@ -47,8 +51,7 @@ const AppointmentModal = (props) => {
       setTimeEnd(getHoursMinutesSeconds(props.slotInfo.end));
     }
     if(!props.createAppointment && props.slotInfo){
-      console.log("🚀 ~ file: AppointmentModal.jsx:50 ~ useEffect ~ props.slotInfo:", props.slotInfo)
-      setDoctorSelected(props.slotInfo.doctor.idDoctor);
+      setDoctorSelected(props.slotInfo.doctor.id);
       setPatientSelected(props.slotInfo.idPatient);
       setServiceSelected(props.slotInfo.service.idService);
       setStatusSelected(props.slotInfo.status.idStatus);
@@ -67,7 +70,7 @@ const AppointmentModal = (props) => {
     else{
       appointmentModal.current.hide();
       setDoctorSelected();
-      setPatientSelected();
+      setPatientSelected(props.patientSelected);
       setServiceSelected();
       setRoomSelected();
       setAppointmentDate(toISODateString(new Date()));
@@ -76,6 +79,15 @@ const AppointmentModal = (props) => {
       setNote('');
     } 
   },[props.showAppointmentModal])
+
+  useEffect(()=>{
+    if(props.patientSelected && (props.patientSelected !== patientSelected)){
+      getAllDoctorSharedPatient(props.patientSelected)
+    } 
+    else if(patientSelected && props.showAppointmentModal){
+      getAllDoctorSharedPatient(patientSelected)
+    }
+  },[patientSelected,props.showAppointmentModal,props.patientSelected])
 
   const createAppointment = () => {
     if(!patientSelected) toast.error(t('Patient not selected'));
@@ -186,6 +198,23 @@ const AppointmentModal = (props) => {
     setOpenDeleteConfirm(false);
     appointmentModal.current.show();
   }
+  
+  const getAllDoctorSharedPatient = (idPatient) => {
+    return new Promise((resolve, reject) => {
+      setLoadingListDoctor(true);
+      getToServerWithToken(`/v1/sharePatient/getDoctorSharedPatient/${idPatient}`).then(result => {
+        setListOfDoctorSharedPatient([...result.data,...listDoctors]);
+        resolve();
+      }).catch((err) =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>getAllDoctorSharedPatient(idPatient));
+        }else{
+          toast.error(t(err.message));
+        }
+        reject(err);
+      }).finally(()=>setLoadingListDoctor(false))
+    });
+  }
 
   return <div className="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={'-1'} aria-labelledby="staticBackdropLabel" aria-hidden="true" ref={appointmentModelRef}>
     <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -205,27 +234,38 @@ const AppointmentModal = (props) => {
                 disabled={clinic.roleOfDoctor==='member'}
               >
                 {
-                  !patientSelected && <option selected disabled>
-                    {t('Choose a patient')}
+                  props.patientSelected ? <option selected disabled>
+                    {props.namePatientSelected}
                   </option>
+                  :
+                  <React.Fragment>
+                  {
+                    !patientSelected && <option selected disabled>
+                      {t('Choose a patient')}
+                    </option>
+                  }
+                  {
+                    listPatients?.map((value,_)=>{
+                      return <option key={value.id} value={value.id}>
+                        {value.fullName}
+                      </option>
+                    })
+                  }
+                  </React.Fragment>
                 }
-                {
-                listPatients?.map((value,_)=>{
-                  return <option key={value.id} value={value.id}>
-                    {value.fullName}
-                  </option>
-                })
-              }
               </select>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
               <span className="mc-heading text-capitalize">{t("doctor")}:</span>
+              {
+                loadingListDoctor && <LinearProgress />
+              }
               <select 
                 className="form-select w-100 text-gray" 
                 style={{fontSize:FONT_SIZE}} 
                 value={doctorSelected} 
                 onChange={e=>setDoctorSelected(e.target.value)}
-                disabled={clinic.roleOfDoctor==='member'}
+                disabled={clinic.roleOfDoctor==='member' || !patientSelected}
               >
                 {
                   !doctorSelected && <option selected disabled>
@@ -233,9 +273,9 @@ const AppointmentModal = (props) => {
                   </option>
                 }
                 {
-                listDoctors?.map((value,_)=>{
-                  return <option key={value.idDoctor} value={value.idDoctor}>
-                    {value.fullName} (Email: {value.email})
+                listOfDoctorSharedPatient?.map((value,_)=>{
+                  return <option key={value.id} value={value.id}>
+                    {value.fullName} {value.fullName?'(':''}Email: {value.email}{value.fullName?')':''}
                   </option>
                 })
               }

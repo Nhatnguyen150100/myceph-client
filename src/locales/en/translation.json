@@ -530,5 +530,11 @@
   "find your email": "find your email",
   "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!": "You'll receive an email with details to confirm your email address to reset your password. Please check your email within 3 minutes!",
   "We couldn't find your email address": "We couldn't find your email address",
-  "password wrong": "password wrong"
+  "password wrong": "password wrong",
+  "Your clinic must have a encryption key to encrypt your patient": "Your clinic must have a encryption key to encrypt your patient",
+  "change to admin": "change to admin",
+  "Do you want to switch role of doctor from": "Do you want to switch role of doctor from",
+  "confirm change role of doctor": "confirm change role of doctor",
+  "to": "to",
+  "Name of status is required": "Name of status is required"
 }

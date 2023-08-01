@@ -157,6 +157,13 @@ export const onDecryptedDataPreview = (mode,data,encryptKeyDoctor,encryptKeyClin
   }
 }
 
+export const onDecryptedDataPreviewInArray = (array, encryptKeyClinic) => {
+  for (const iterator of array) {
+    if((iterator.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.CLINIC_PATIENT,iterator.gender,null,encryptKeyClinic,null) !== '---') || !iterator.isEncrypted) return iterator
+  }
+  return null
+}
+
 
 /**
  * todo: Tìm 1 Object trong 1 array

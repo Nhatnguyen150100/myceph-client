@@ -62,7 +62,7 @@ export default function DoctorRows(props){
       </div>
     </td>
     <td className={`d-lg-table-cell d-none ${props.doctor.roleOfDoctor==='admin'?'text-white':'text-gray'}`} style={{fontSize:FONT_SIZE}}>
-      {props.doctor.speciality?props.doctor.speciality:t('no data')}
+      {props.doctor.specialty?props.doctor.specialty:t('no data')}
     </td>
      <td className="d-lg-table-cell">
       <IconButtonComponent className="btn-outline-info border-0 p-0" icon="info" FONT_SIZE_ICON={"25px"} title={t("information doctor from clinic")} onClick={e=>toProfile(props.doctor.email)}/>
