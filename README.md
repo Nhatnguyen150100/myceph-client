@@ -38,7 +38,7 @@ Toàn bộ source code sẽ nằm trong thư mục **src** của dự án. Cụ 
   - medicalRecord: lưu trữ hồ sơ bệnh án của bệnh nhân bao gồm thông tin bệnh nhân, bệnh sử, vấn đề gặp phải, lịch sử điều trị
   - patientList: Phần này để quản lý bệnh nhân của mỗi tài khoản bác sĩ bao gồm bệnh nhân cá nhân, bệnh nhân phòng khám, bệnh nhân được chia sẻ.
   - setting: phần này nhằm thiết lập các thuộc tính của thông tin bác sĩ hay phòng khám cũng như cài đặt các khóa mã hóa dữ liệu
-  - HomePage.jsx: Component trang chủ của ứng dụng
+  - HomePage.jsx: Component hiển thị trang chủ của ứng dụng
   - NotFoundPage.jsx: Nếu đường dẫn không đúng sẽ đi đến component này
 - **redux**: Lưu trữ store của toàn ứng dụng. Ở đây sử dụng redux là **[Redux-toolkit](https://redux-toolkit.js.org/)**
 - **services**: Lưu trữ các hàm để gọi API cũng như refresh lại token
