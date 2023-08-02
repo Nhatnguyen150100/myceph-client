@@ -13,6 +13,8 @@
 
 src/config/
 
+src/mocks/
+
 src/pages/lateralCephalometricAnalysis/
 
 src/pages/CalculatorToothMovement/
