@@ -11,9 +11,9 @@
 # production
 /build
 
-# src/config/
+src/config/
 
-# src/pages/lateralCephalometricAnalysis/
+src/pages/lateralCephalometricAnalysis/
 
 # misc
 .DS_Store
