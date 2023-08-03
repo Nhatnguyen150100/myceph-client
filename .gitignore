@@ -11,13 +11,13 @@
 # production
 /build
 
-src/config/
+# src/config/
 
-src/mocks/
+# src/mocks/
 
-src/pages/lateralCephalometricAnalysis/
+# src/pages/lateralCephalometricAnalysis/
 
-src/pages/CalculatorToothMovement/
+# src/pages/CalculatorToothMovement/
 
 # misc
 .DS_Store
