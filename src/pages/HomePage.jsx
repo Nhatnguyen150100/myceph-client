@@ -85,7 +85,7 @@ export default function HomePage(props) {
       <img loading="lazy" className="position-absolute pattern2" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"3000px",left:"0px"}}/>
       <img loading="lazy" className="position-absolute pattern3" src="/assets/images/pattern.svg" alt="img" width={700} style={{top:"1500px",left:"-140px"}}/>
       <div className="container h-100 position-relative">
-        <img loading="lazy" className="position-absolute translate-middle d-none d-lg-block" src="/assets/images/medical_technology.png" alt="img" height={550} style={{right:"-235px",top:"330px"}}/>
+        <img loading="lazy" className="position-absolute translate-middle d-none d-lg-block" src="/assets/images/medical_technology.png" alt="img" height={580} width={580} style={{right:"-235px",top:"330px"}}/>
         <div className="d-flex flex-grow-1 justify-content-start">
           <div className="d-flex flex-column justify-content-center info-header" style={{marginTop:"100px", marginLeft:"20px",alignItems:"end"}}>
             <img loading="lazy" src="/assets/images/teeth.png" alt="teeth" height={80}/>
