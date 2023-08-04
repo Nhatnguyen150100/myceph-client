@@ -87,7 +87,7 @@ export default function Diagnosis(props){
         diagnose: diagnose,
         prognosisAndNotes: prognosisAndNotes
       }
-      putToServerWithToken(`/v1/diagnosis/updateDiagnosisAndTreatment/${patient.currentPatient.id}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/diagnosis/updateDiagnosisAndTreatment/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         setEditMode(false);

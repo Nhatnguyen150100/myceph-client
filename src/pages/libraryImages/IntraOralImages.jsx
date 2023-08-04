@@ -58,7 +58,7 @@ export default function IntraoralImages(props){
     return new Promise((resolve, reject) =>{
       dispatch(setLoadingModal(true));
       if(linkImage){
-        postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
+        postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
           idDoctor: doctor.data.id,
           typeImages: [10,11,12,13,14,15],
           linkImage: linkImage,
@@ -99,7 +99,7 @@ export default function IntraoralImages(props){
   const updateArrayPatient = (newDate,oldDate) => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [10,11,12,13,14,15],
         newDate: newDate,
@@ -122,7 +122,7 @@ export default function IntraoralImages(props){
   const updateImage = (idImage,consultationDate,typeImage,newUrl) => {
     return new Promise((resolve,reject) => {
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [10,11,12,13,14,15],
         idImage: idImage,
@@ -149,7 +149,7 @@ export default function IntraoralImages(props){
     dispatch(setLoadingModal(true));
     return new Promise((resolve,reject) => {
       if(isDelete){
-        deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=intraloral`).then(result => {
+        deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=intraloral&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
           setListImage(result.data);
           setOpenDeleteConfirm(false);
           setIdImageDelete('');
@@ -162,7 +162,7 @@ export default function IntraoralImages(props){
       }else{
         deleteImage(publicIdDelete).then(async (response) => {
           if(response.data.result==="ok"){
-            deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=intraloral`).then(result => {
+            deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=intraloral&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
               setListImage(result.data);
               setOpenDeleteConfirm(false);
               setIdImageDelete('');

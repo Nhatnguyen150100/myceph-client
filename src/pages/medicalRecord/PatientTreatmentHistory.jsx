@@ -97,7 +97,7 @@ export default function PatientTreatmentHistory(props){
         consultationDate: consultationDate
       }
       dispatch(setLoadingModal(true));
-      postToServerWithToken(`/v1/treatmentHistory/createHistory/${patient.currentPatient.id}`,infoHistory).then(result => {
+      postToServerWithToken(`/v1/treatmentHistory/createHistory/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor?.data.id}`,infoHistory).then(result => {
         setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
         setCurrentStatus('');
         setPerformedProcedures('');
@@ -132,7 +132,7 @@ export default function PatientTreatmentHistory(props){
         consultationDate: consultationDateItem
       }
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/treatmentHistory/updateHistory/${patient.currentPatient.id}?idHistory=${idHistory}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/treatmentHistory/updateHistory/${patient.currentPatient.id}?idHistory=${idHistory}&mode=${props.checkRoleMode}&idDoctor=${doctor?.data.id}`,infoUpdate).then(result => {
         setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
         setEditHistoryId('');
         toast.success(result.message);
@@ -151,7 +151,7 @@ export default function PatientTreatmentHistory(props){
   const deleteHistory = () => {
     return new Promise((resolve,reject) =>{
       dispatch(setLoadingModal(true));
-      deleteToServerWithToken(`/v1/treatmentHistory/deleteHistory/${patient.currentPatient.id}?idHistory=${editHistoryId}&idDoctor=${doctor.data.id}`).then(result => {
+      deleteToServerWithToken(`/v1/treatmentHistory/deleteHistory/${patient.currentPatient.id}?idHistory=${editHistoryId}&mode=${props.checkRoleMode}&idDoctor=${doctor.data.id}`).then(result => {
         setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
         toast.success(result.message);
         resolve();

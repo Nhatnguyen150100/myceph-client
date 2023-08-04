@@ -537,5 +537,7 @@
   "confirm change role of doctor": "Xác nhận thay đổi quyền của bác sĩ",
   "to": "thành",
   "Name of status is required": "Tên của trạng thái không được để trống",
-  "Back to": "Quay lại"
+  "Back to": "Quay lại",
+  "You do not have permission to edit this patient": "Bạn không có quyền chỉnh sửa bệnh nhân này",
+  "List of lateral X-ray images": "Danh sách ảnh sọ mặt nghiêng"
 }

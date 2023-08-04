@@ -537,5 +537,7 @@
   "confirm change role of doctor": "confirm change role of doctor",
   "to": "to",
   "Name of status is required": "Name of status is required",
-  "Back to":"Back to"
+  "Back to": "Back to",
+  "You do not have permission to edit this patient": "You do not have permission to edit this patient",
+  "List of lateral X-ray images": "List of lateral X-ray images"
 }

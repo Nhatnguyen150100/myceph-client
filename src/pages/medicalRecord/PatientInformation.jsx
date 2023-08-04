@@ -47,7 +47,6 @@ export default function PatientInformation(props){
   const [nameUpdateDoctor,setNameUpdateDoctor] = useState();
   const [updatedAt,setUpdatedAt] = useState();
   const [sideFaceImage,setSideFaceImage] = useState();
-  const [hoverSettingId,setHoverSettingId] = useState();
   const [roleOfDoctor,setRoleOfDoctor] = useState('edit');
   const isEncrypted = patient.currentPatient.isEncrypted;
   const modeKey = useMemo(()=>{
@@ -95,7 +94,7 @@ export default function PatientInformation(props){
         diagnose: diagnose,
         selectedPlan: selectedPlan,
       }
-      putToServerWithToken(`/v1/patient/updateInformationPatient/${patient.currentPatient.id}?`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/patient/updateInformationPatient/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor?.id}`,infoUpdate).then(result => {
         setPreviousData(result.data);
         updatePatientState(result.data);
         resolve();

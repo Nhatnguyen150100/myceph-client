@@ -118,7 +118,7 @@ export default function Radiography(props){
         lateralCephalometricRadiography: lateralCephalometricRadiography,
         otherRadiography: otherRadiography
       }
-      putToServerWithToken(`/v1/radiography/updateRadiography/${patient.currentPatient.id}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/radiography/updateRadiography/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         setEditMode(false);

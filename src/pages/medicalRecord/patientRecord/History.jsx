@@ -96,7 +96,7 @@ export default function History(props){
         compliance: compliance,
         idDoctor: doctor.data.id
       }
-      putToServerWithToken(`/v1/history/updateHistory/${patient.currentPatient.id}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/history/updateHistory/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         resolve();

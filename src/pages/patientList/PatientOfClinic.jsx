@@ -104,7 +104,7 @@ export default function PatientOfClinic(props){
       setOpenDeleteConfirm(false);
       return new Promise((resolve, reject) => {
         dispatch(setLoadingModal(true));
-        deleteToServerWithToken(`/v1/patient/deletePatient/${idPatient}`).then(result=>{
+        deleteToServerWithToken(`/v1/patient/deletePatient/${idPatient}?mode=checkRole&idDoctor=${doctor?.id}`).then(result=>{
           if(idPatient === currentPatient.id) dispatch(setCurrentPatient(null));
           getAllPatientForClinic().then(()=>{
             toast.warn(t(result.message));

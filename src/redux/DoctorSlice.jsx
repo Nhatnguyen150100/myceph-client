@@ -7,7 +7,8 @@ export const DoctorSlice = createSlice({
   initialState:{
     data: null,
     otherEmailDoctor: null,
-    encryptKeyDoctor: null
+    encryptKeyDoctor: null,
+    roleOfDoctorOnPatient: 'edit'
   },
   reducers:{
     setDataDoctor: (state,action) => {
@@ -16,6 +17,9 @@ export const DoctorSlice = createSlice({
     setEncryptKeyDoctor: (state,action) => {
       state.encryptKeyDoctor = action.payload;
     },
+    setRoleOfDoctorOnPatient: (state,action) => {
+      state.roleOfDoctorOnPatient = action.payload;
+    },
     logOutDoctor: (state) => {
       storage.removeItem('persist:root');
       cookies.remove('accessToken', {path: '/'});
@@ -23,6 +27,7 @@ export const DoctorSlice = createSlice({
       state.data = null;
       state.otherEmailDoctor = null;
       state.encryptKeyDoctor = null;
+      state.roleOfDoctorOnPatient = 'edit';
     },
     setOtherEmailDoctor: (state,action) => {
       state.otherEmailDoctor = action.payload
@@ -31,7 +36,7 @@ export const DoctorSlice = createSlice({
 })
 
 export const {
-  setDataDoctor,logOutDoctor,setOtherEmailDoctor,setEncryptKeyDoctor
+  setDataDoctor,logOutDoctor,setOtherEmailDoctor,setEncryptKeyDoctor,setRoleOfDoctorOnPatient
 } = DoctorSlice.actions;
 
 export default DoctorSlice.reducer;

@@ -58,7 +58,7 @@ export default React.memo(function ExtraoralImages(props){
     return new Promise((resolve, reject) =>{
       dispatch(setLoadingModal(true));
       if(linkImage){
-        postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
+        postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
           idDoctor: doctor.data.id,
           typeImages: [5,6,7,8,9],
           linkImage: linkImage,
@@ -73,7 +73,7 @@ export default React.memo(function ExtraoralImages(props){
       }else{
         upLoadImageLibrary(image).then(responseData=>{
           const linkImage = responseData.data.secure_url + '|' + responseData.data.public_id;
-          postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
+          postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
             idDoctor: doctor.data.id,
             typeImages: [5,6,7,8,9],
             linkImage: linkImage,
@@ -99,7 +99,7 @@ export default React.memo(function ExtraoralImages(props){
   const updateArrayPatient = (newDate,oldDate) => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [5,6,7,8,9],
         newDate: newDate,
@@ -122,7 +122,7 @@ export default React.memo(function ExtraoralImages(props){
   const updateImage = (idImage,consultationDate,typeImage,newUrl) => {
     return new Promise((resolve,reject) => {
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [5,6,7,8,9],
         idImage: idImage,
@@ -149,7 +149,7 @@ export default React.memo(function ExtraoralImages(props){
     dispatch(setLoadingModal(true));
     return new Promise((resolve,reject) => {
       if(isDelete){
-        deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=extraoral`).then(result => {
+        deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=extraoral&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
           setListImage(result.data);
           setOpenDeleteConfirm(false);
           setIdImageDelete('');
@@ -162,7 +162,7 @@ export default React.memo(function ExtraoralImages(props){
       }else{
         deleteImage(publicIdDelete).then(async (response) => {
           if(response.data.result==="ok"){
-            deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=extraoral`).then(result => {
+            deleteToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?idImage=${idImageDelete}&typeImages=extraoral&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
               setListImage(result.data);
               setOpenDeleteConfirm(false);
               setIdImageDelete('');
@@ -193,7 +193,7 @@ export default React.memo(function ExtraoralImages(props){
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1 mb-4">
     <ShowImageModal/>
     {
-      roleCheck && 
+      !roleCheck && 
       <React.Fragment>
         <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
           <span className="text-uppercase">

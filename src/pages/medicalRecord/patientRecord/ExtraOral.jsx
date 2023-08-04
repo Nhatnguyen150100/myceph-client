@@ -170,7 +170,7 @@ export default function ExtraOral(props){
         smileArc: smileArc,
         restPositionIncisalDisplay: restPositionIncisalDisplay
       }
-      putToServerWithToken(`/v1/extraoral/updateExtraoral/${patient.currentPatient.id}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/extraoral/updateExtraoral/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         setEditMode(false);

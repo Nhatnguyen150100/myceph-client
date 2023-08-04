@@ -209,7 +209,7 @@ export default function IntraOral(props){
         swallowingPattern: swallowingPattern,
         historyOfTMD: historyOfTMD
       }
-      putToServerWithToken(`/v1/intraoral/updateIntraoral/${patient.currentPatient.id}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/intraoral/updateIntraoral/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoUpdate).then(result => {
         updateState(result.data);
         setPreviousData(result.data);
         setEditMode(false);

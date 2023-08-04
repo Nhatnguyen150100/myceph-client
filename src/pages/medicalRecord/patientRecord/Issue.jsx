@@ -103,7 +103,7 @@ export default function Issue(props){
         treatmentMethod: treatmentMethod,
         priotized: priotized
       }
-      postToServerWithToken(`/v1/listOfIssue/createIssue/${patient.currentPatient.id}`,infoIssue).then(result => {
+      postToServerWithToken(`/v1/listOfIssue/createIssue/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoIssue).then(result => {
         setIssue('');
         setTreatmentMethod('');
         setTreatmentObject('');
@@ -141,7 +141,7 @@ export default function Issue(props){
         treatmentMethod: treatmentMethodItem,
         priotized: priotizedItem
       }
-      putToServerWithToken(`/v1/listOfIssue/updateIssue/${patient.currentPatient.id}?idIssue=${editIssueId}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/listOfIssue/updateIssue/${patient.currentPatient.id}?idIssue=${editIssueId}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoUpdate).then(result => {
         setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
         resolve();
       }).catch(err =>{
@@ -158,7 +158,7 @@ export default function Issue(props){
   const deleteIssue = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      deleteToServerWithToken(`/v1/listOfIssue/deleteIssue/${patient.currentPatient.id}?idIssue=${editIssueId}`).then(result => {
+      deleteToServerWithToken(`/v1/listOfIssue/deleteIssue/${patient.currentPatient.id}?idIssue=${editIssueId}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
         setListOfIssue(isEncrypted?deCryptedListIssue(result.data):result.data);
         resolve();
       }).catch(err =>{

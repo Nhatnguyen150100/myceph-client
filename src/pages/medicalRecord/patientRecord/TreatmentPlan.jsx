@@ -94,7 +94,7 @@ export default function TreatmentPlan(props){
         plan: plan,
         selected: selected
       }
-      postToServerWithToken(`/v1/treatmentPlan/createPlan/${patient.currentPatient.id}`,infoPlan).then(result => {
+      postToServerWithToken(`/v1/treatmentPlan/createPlan/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoPlan).then(result => {
         setPlan('');
         setSelected(false);
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
@@ -126,7 +126,7 @@ export default function TreatmentPlan(props){
         plan: planItem,
         selected: selectedItem
       }
-      putToServerWithToken(`/v1/treatmentPlan/updatePlan/${patient.currentPatient.id}?idPlan=${editPlanId}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/treatmentPlan/updatePlan/${patient.currentPatient.id}?idPlan=${editPlanId}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoUpdate).then(result => {
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
         resolve();
       }).catch(err =>{
@@ -143,7 +143,7 @@ export default function TreatmentPlan(props){
   const deletePlan = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      deleteToServerWithToken(`/v1/treatmentPlan/deletePlan/${patient.currentPatient.id}?idPlan=${editPlanId}`).then(result => {
+      deleteToServerWithToken(`/v1/treatmentPlan/deletePlan/${patient.currentPatient.id}?idPlan=${editPlanId}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
         resolve();
       }).catch(err =>{

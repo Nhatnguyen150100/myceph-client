@@ -522,9 +522,7 @@ export const findNextObject = (currentKey,keyArray,checkObject) => {
 
     if(currentIndexObject === nextIndexObject) break;
     
-    if(nextIndexObject === keyArray.length - 1){
-      nextIndexObject = 0;
-    }
+
   }
   return null;
 }
