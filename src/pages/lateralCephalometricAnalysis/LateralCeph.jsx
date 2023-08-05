@@ -13,7 +13,8 @@ import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setAppName, setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { setCurrentImageAnalysis, setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
-import { checkAllPointsExist, getHeightModelCurve, getModelCurve, getWidthModelCurve, LOWER_MOLAR, MANDIBULAR, MANDIBULAR4, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { checkAllPointsExist, getHeightModelCurve, getModelCurve, getWidthModelCurve, LOWER_MOLAR, MANDIBULAR, MANDIBULAR4, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR, XUONG_CHINH_MUI } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { CRANIAL_BASE, LOWER_SOFT_TISSUE, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "../CalculatorToothMovement/MultiModelCurve.jsx";
 import ControlSection from "./ControlSection.jsx";
 import { ANALYSIS, distanceFromTwoPoint } from "./LateralCephalometricUtility.jsx";
 import ResultAnalysisTable from "./ResultAnalysisTable.jsx";
@@ -25,7 +26,9 @@ const filterMap = {
   brightness: Konva.Filters.Brighten
 }
 
-const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE,UPPER_INCISOR_CURVE,UNDER_INCISOR_CURVE,MANDIBULAR,MANDIBULAR4,UPPER_MOLAR,LOWER_MOLAR]
+const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE,UPPER_INCISOR_CURVE,UNDER_INCISOR_CURVE,XUONG_CHINH_MUI,MANDIBULAR,MANDIBULAR4,UPPER_MOLAR,LOWER_MOLAR]
+
+const ALL_MODEL_MULTI_CURVES = [ORBITAL_CURVE,CRANIAL_BASE,UPPER_SOFT_TISSUE,LOWER_SOFT_TISSUE]
 
 export default function LateralCeph(props) {
   const dispatch = useDispatch();
@@ -70,7 +73,7 @@ export default function LateralCeph(props) {
   const [scale,setScale] = useState(1);
   const [isMobile,setIsMobile] = useState(false)
 
-  const [informationShape,setInformationOfShape] = useState(false)
+  const [hoverLine,setHoverLine] = useState(null)
 
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [currentMarkerPoint, setCurrentMarkerPoint] = useState();
@@ -325,7 +328,7 @@ export default function LateralCeph(props) {
               y={0}
               points={[lines.line[0].x, lines.line[0].y, lines.line[1].x, lines.line[1].y]}
               stroke={lines.color}
-              strokeWidth={2/scale}
+              strokeWidth={2.3/scale}
               opacity={1}
             />
           )
@@ -711,12 +714,10 @@ export default function LateralCeph(props) {
           }}
           onMouseOver={(event) => {
             const shape = event.target;
-            setInformationOfShape(curveModel.name);
             shape.fill('#0c1780');
           }}
           onMouseOut={event => {
             const shape = event.target;
-            setInformationOfShape(null)
             shape.fill(null)
           }}
           sceneFunc={(context,shape) => {
@@ -742,6 +743,356 @@ export default function LateralCeph(props) {
     }
     return allCustomShapeFromModel;
   },[markerPointList,selectedCurve,scale,currentMarkerPoint,markerPoints])
+
+  const drawMarkerPointsMultiCurve = useMemo(()=>{
+    let allPointsAndLineFromModel = [];
+    for (const curveModel of ALL_MODEL_MULTI_CURVES) {
+      curveModel.multiCurves.map((subCurve,index) => {
+        if(markerPointList[subCurve.controlPoints.startPoint]){
+          allPointsAndLineFromModel.push(
+            <React.Fragment key={subCurve.controlPoints.startPoint}>
+              <Line 
+                x={0}
+                y={0}
+                lineCap="round"
+                lineJoin="round"
+                visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList) && !subCurve.controlPoints.controlPoint1?.hide}
+                dash={[5/scale, 5/scale, 0.2/scale, 5/scale]}
+                points={[
+                  markerPointList[subCurve.controlPoints.startPoint].x, 
+                  markerPointList[subCurve.controlPoints.startPoint].y, 
+                  subCurve.controlPoints.controlPoint1.positionDefault(markerPointList).x,
+                  subCurve.controlPoints.controlPoint1.positionDefault(markerPointList).y
+                ]}
+                stroke="#FF1493"
+                strokeWidth={2/scale}
+                opacity={1}
+              />
+              <Circle 
+                x={subCurve.controlPoints.controlPoint1.positionDefault(markerPointList).x}
+                y={subCurve.controlPoints.controlPoint1.positionDefault(markerPointList).y}
+                radius={4/scale}
+                fill="blue" 
+                onMouseOver={(event) => {
+                  const circle = event.target;
+                  circle.fill('#ffad00')
+                }}
+                onMouseLeave={event => {
+                  const circle = event.target;
+                  circle.fill('blue')
+                }}
+                visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList) && !subCurve.controlPoints.controlPoint1?.hide}
+                draggable={roleDoctor}
+                onDragEnd={(e) =>{
+                  const newMarkerPoints = Object.assign({}, markerPointList);
+                  newMarkerPoints[subCurve.controlPoints.controlPoint1.name] = {
+                    name: subCurve.controlPoints.controlPoint1.name,
+                    x: e.target.x(),
+                    y: e.target.y()
+                  };
+                  dispatch(setMarkerPoints(newMarkerPoints))
+                  setMarkerPointList(newMarkerPoints);
+                }}
+                onDragMove={(e) =>{
+                  const newMarkerPoints = Object.assign({}, markerPointList);
+                  newMarkerPoints[subCurve.controlPoints.controlPoint1.name] = {
+                    name: subCurve.controlPoints.controlPoint1.name,
+                    x: e.target.x(),
+                    y: e.target.y()
+                  };
+                  dispatch(setMarkerPoints(newMarkerPoints))
+                  setMarkerPointList(newMarkerPoints);
+                }}
+              />
+              {
+                markerPointList[subCurve.controlPoints.endPoint] && 
+                <React.Fragment>
+                  <Line 
+                    x={0}
+                    y={0}
+                    lineCap="round"
+                    lineJoin="round"
+                    visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList) && !subCurve.controlPoints.controlPoint2?.hide}
+                    dash={[5/scale, 5/scale, 0.2/scale, 5/scale]}
+                    points={[
+                      markerPointList[subCurve.controlPoints.endPoint].x, 
+                      markerPointList[subCurve.controlPoints.endPoint].y, 
+                      subCurve.controlPoints.controlPoint2.positionDefault(markerPointList).x,
+                      subCurve.controlPoints.controlPoint2.positionDefault(markerPointList).y
+                    ]}
+                    stroke="#FF1493"
+                    strokeWidth={2/scale}
+                    opacity={1}
+                  />
+                  <Circle 
+                    x={subCurve.controlPoints.controlPoint2.positionDefault(markerPointList).x}
+                    y={subCurve.controlPoints.controlPoint2.positionDefault(markerPointList).y}
+                    radius={4/scale}
+                    fill="blue" 
+                    onMouseOver={(event) => {
+                      const circle = event.target;
+                      circle.fill('#ffad00')
+                    }}
+                    onMouseLeave={event => {
+                      const circle = event.target;
+                      circle.fill('blue')
+                    }}
+                    visible={selectedCurve === curveModel.name && checkAllPointsExist(curveModel,markerPointList) && !subCurve.controlPoints.controlPoint2?.hide}
+                    draggable={roleDoctor}
+                    onDragEnd={(e) =>{
+                      const newMarkerPoints = Object.assign({}, markerPointList);
+                      newMarkerPoints[subCurve.controlPoints.controlPoint2.name] = {
+                        name: subCurve.controlPoints.controlPoint2.name,
+                        x: e.target.x(),
+                        y: e.target.y()
+                      };
+                      dispatch(setMarkerPoints(newMarkerPoints))
+                      setMarkerPointList(newMarkerPoints);
+                    }}
+                    onDragMove={(e) =>{
+                      const newMarkerPoints = Object.assign({}, markerPointList);
+                      newMarkerPoints[subCurve.controlPoints.controlPoint2.name] = {
+                        name: subCurve.controlPoints.controlPoint2.name,
+                        x: e.target.x(),
+                        y: e.target.y()
+                      };
+                      dispatch(setMarkerPoints(newMarkerPoints))
+                      setMarkerPointList(newMarkerPoints);
+                    }}
+                  />
+                </React.Fragment>
+              }
+              <Group visible={selectedCurve === curveModel.name}>
+                <RegularPolygon
+                  sides={4}
+                  radius={6/scale}
+                  x={markerPointList[subCurve.controlPoints.startPoint].x}
+                  y={markerPointList[subCurve.controlPoints.startPoint].y}
+                  fill="red" 
+                  draggable={roleDoctor}
+                  onMouseOver={(event) => {
+                    const regularPolygon = event.target;
+                    regularPolygon.fill('#ffad00')
+                  }}
+                  onMouseLeave={event => {
+                    const regularPolygon = event.target;
+                    regularPolygon.fill('red')
+                  }}
+                  onDragEnd={(e) =>{
+                    const newMarkerPoints = Object.assign({}, markerPointList);
+                    newMarkerPoints[subCurve.controlPoints.startPoint] = {
+                      x: e.target.x(),
+                      y: e.target.y()
+                    };
+                    dispatch(setMarkerPoints(newMarkerPoints))
+                    setMarkerPointList(newMarkerPoints);
+                  }}
+                  onDragMove={(e) =>{
+                    const newMarkerPoints = Object.assign({}, markerPointList);
+                    newMarkerPoints[subCurve.controlPoints.startPoint] = {
+                      x: e.target.x(),
+                      y: e.target.y()
+                    };
+                    dispatch(setMarkerPoints(newMarkerPoints))
+                    setMarkerPointList(newMarkerPoints);
+                  }}
+                />
+                <Text 
+                  visible={curveModel.markerPoints[subCurve.controlPoints.startPoint]?.isShow}
+                  x={markerPointList[subCurve.controlPoints.startPoint].x + 7/scale}
+                  y={markerPointList[subCurve.controlPoints.startPoint].y + 7/scale}
+                  draggable={false}
+                  scaleX={scale.x}
+                  scaleY={scale.y}
+                  text={subCurve.controlPoints.startPoint}
+                  fill="#EEB422"
+                  fontSize={13/scale}
+                />
+              </Group> 
+            </React.Fragment>
+          )
+        }
+        if((index === curveModel.multiCurves.length - 1) && markerPointList[subCurve.controlPoints.endPoint]){
+          allPointsAndLineFromModel.push(
+            <Group visible={selectedCurve === curveModel.name} key={subCurve.controlPoints.endPoint+'lastPoint'}>
+              <RegularPolygon
+                sides={4}
+                radius={6/scale}
+                x={markerPointList[subCurve.controlPoints.endPoint].x}
+                y={markerPointList[subCurve.controlPoints.endPoint].y}
+                fill="red" 
+                draggable={roleDoctor}
+                onMouseOver={(event) => {
+                  const regularPolygon = event.target;
+                  regularPolygon.fill('#ffad00')
+                }}
+                onMouseLeave={event => {
+                  const regularPolygon = event.target;
+                  regularPolygon.fill('red')
+                }}
+                onDragEnd={(e) =>{
+                  const newMarkerPoints = Object.assign({}, markerPointList);
+                  newMarkerPoints[subCurve.controlPoints.endPoint] = {
+                    x: e.target.x(),
+                    y: e.target.y()
+                  };
+                  dispatch(setMarkerPoints(newMarkerPoints))
+                  setMarkerPointList(newMarkerPoints);
+                }}
+                onDragMove={(e) =>{
+                  const newMarkerPoints = Object.assign({}, markerPointList);
+                  newMarkerPoints[subCurve.controlPoints.endPoint] = {
+                    x: e.target.x(),
+                    y: e.target.y()
+                  };
+                  dispatch(setMarkerPoints(newMarkerPoints))
+                  setMarkerPointList(newMarkerPoints);
+                }}
+              />
+              <Text 
+                visible={curveModel.markerPoints[subCurve.controlPoints.endPoint]?.isShow}
+                x={markerPointList[subCurve.controlPoints.endPoint].x + 7/scale}
+                y={markerPointList[subCurve.controlPoints.endPoint].y + 7/scale}
+                draggable={false}
+                scaleX={scale.x}
+                scaleY={scale.y}
+                text={subCurve.controlPoints.endPoint}
+                fill="#EEB422"
+                fontSize={13/scale}
+              />
+            </Group>
+          )
+        }
+      })
+    }
+    return allPointsAndLineFromModel
+  },[markerPointList,selectedCurve,scale])
+
+  const drawMultiCurves = useMemo(()=>{
+    const allCurveFromMultiModel = [];
+    for(const multiModalCurve of ALL_MODEL_MULTI_CURVES){
+      if(checkAllPointsExist(multiModalCurve,markerPointList)){
+        for(const subCurve of multiModalCurve.multiCurves){
+          const customLine = <Line 
+            key={subCurve.key}
+            x={0}
+            y={0}
+            bezier
+            points={[
+              markerPointList[subCurve.controlPoints.startPoint].x,
+              markerPointList[subCurve.controlPoints.startPoint].y,
+              subCurve.controlPoints.controlPoint1.positionDefault(markerPointList).x,
+              subCurve.controlPoints.controlPoint1.positionDefault(markerPointList).y,
+              subCurve.controlPoints.controlPoint2.positionDefault(markerPointList).x,
+              subCurve.controlPoints.controlPoint2.positionDefault(markerPointList).y,
+              markerPointList[subCurve.controlPoints.endPoint].x,
+              markerPointList[subCurve.controlPoints.endPoint].y
+            ]}
+            stroke={hoverLine===subCurve.key ? "#54c0ff" : "#99f6a3"}
+            strokeWidth={1.5/scale}
+            opacity={1}
+          />
+          allCurveFromMultiModel.push(customLine);
+        }
+        if(multiModalCurve.lines.length > 0){
+          for (const line of multiModalCurve.lines) {
+            const lineShape = <Line
+            key={line.key}
+            x={0}
+            y={0}
+            stroke={hoverLine===line.key ? "#54c0ff" : "#99f6a3"}
+            points={[
+              markerPointList[line.startPoint].x, 
+              markerPointList[line.startPoint].y, 
+              markerPointList[line.endPoint].x,
+              markerPointList[line.endPoint].y
+            ]}
+            strokeWidth={1.5/scale}
+            opacity={1}
+            />
+            allCurveFromMultiModel.push(lineShape)
+          }
+        }
+      }
+    }
+    return allCurveFromMultiModel;
+  },[markerPointList,scale,hoverLine])
+
+  const drawMultiCurvesHover = useMemo(()=>{
+    const allCurveFromMultiModel = [];
+    for(const multiModalCurve of ALL_MODEL_MULTI_CURVES){
+      if(checkAllPointsExist(multiModalCurve,markerPointList)){
+        for(const subCurve of multiModalCurve.multiCurves){
+          const customLine = <Line 
+            key={subCurve.key+'highlight'}
+            x={0}
+            y={0}
+            bezier
+            onMouseDown={() => {
+              if(!currentMarkerPoint){
+                if(selectedCurve !== multiModalCurve.name){
+                  dispatch(setSelectedCurve(multiModalCurve.name))
+                }else dispatch(setSelectedCurve(null)) 
+              }
+            }}
+            onMouseOver={()=>{
+              setHoverLine(subCurve.key)
+            }}
+            onMouseLeave={()=>{
+              setHoverLine(null)
+            }}
+            points={[
+              markerPointList[subCurve.controlPoints.startPoint].x,
+              markerPointList[subCurve.controlPoints.startPoint].y,
+              subCurve.controlPoints.controlPoint1.positionDefault(markerPointList).x,
+              subCurve.controlPoints.controlPoint1.positionDefault(markerPointList).y,
+              subCurve.controlPoints.controlPoint2.positionDefault(markerPointList).x,
+              subCurve.controlPoints.controlPoint2.positionDefault(markerPointList).y,
+              markerPointList[subCurve.controlPoints.endPoint].x,
+              markerPointList[subCurve.controlPoints.endPoint].y
+            ]}
+            stroke={"#54c0ff"}
+            strokeWidth={13/scale}
+            opacity={0}
+          />
+          allCurveFromMultiModel.push(customLine);
+        }
+        if(multiModalCurve.lines.length > 0){
+          for (const line of multiModalCurve.lines) {
+            const lineShape = <Line
+            key={line.key}
+            x={0}
+            y={0}
+            onMouseDown={() => {
+              if(!currentMarkerPoint){
+                if(selectedCurve !== multiModalCurve.name){
+                  dispatch(setSelectedCurve(multiModalCurve.name))
+                }else dispatch(setSelectedCurve(null)) 
+              }
+            }}
+            onMouseOver={()=>{
+              setHoverLine(line.key)
+            }}
+            onMouseLeave={()=>{
+              setHoverLine(null)
+            }}
+            stroke={"#54c0ff"}
+            points={[
+              markerPointList[line.startPoint].x, 
+              markerPointList[line.startPoint].y, 
+              markerPointList[line.endPoint].x,
+              markerPointList[line.endPoint].y
+            ]}
+            strokeWidth={13/scale}
+            opacity={0}
+            />
+            allCurveFromMultiModel.push(lineShape)
+          }
+        }
+      }
+    }
+    return allCurveFromMultiModel;
+  },[markerPointList,scale,selectedCurve,currentMarkerPoint])
 
   return <div className="d-flex flex-column justify-content-start align-items-center" style={{height:window.innerHeight}}>
     <NavbarComponent />
@@ -896,6 +1247,9 @@ export default function LateralCeph(props) {
                               markerPoints && imageObject && drawCustomShape
                             }
                             {
+                              markerPoints && imageObject && drawMultiCurves
+                            }
+                            {
                               markerPoints && imageObject && stageMode === 0 && drawLines
                             }
                             {
@@ -908,10 +1262,16 @@ export default function LateralCeph(props) {
                               markerPoints && imageObject && stageMode === 1 && drawHeightAndWidthCustomShape
                             }
                             {
+                              markerPoints && imageObject && stageMode === 1 && drawMarkerPointsCurve
+                            }
+                            {
                               markerPoints && imageObject && stageMode === 1 && drawCustomShapeHover
                             }
                             {
-                              markerPoints && imageObject && stageMode === 1 && drawMarkerPointsCurve
+                              markerPoints && imageObject && stageMode === 1 && drawMultiCurvesHover
+                            }
+                            {
+                              markerPoints && imageObject && stageMode === 1 && drawMarkerPointsMultiCurve
                             }
                           </Layer>
                         </Stage>

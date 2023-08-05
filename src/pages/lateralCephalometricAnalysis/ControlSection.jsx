@@ -12,9 +12,10 @@ import { FONT_SIZE, FONT_SIZE_HEAD, getKeyByNameValue, IMAGE_TYPE_LIST, SELECT_P
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { Slider } from "@mui/material";
 import { ANALYSIS, MARKER_LIST } from "./LateralCephalometricUtility.jsx";
-import { checkAllPointsExist, LOWER_MOLAR, MANDIBULAR, MANDIBULAR4, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
+import { checkAllPointsExist, LOWER_MOLAR, MANDIBULAR, MANDIBULAR4, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR, XUONG_CHINH_MUI } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setRoleOfDoctorOnPatient } from "../../redux/DoctorSlice.jsx";
+import { CRANIAL_BASE, LOWER_SOFT_TISSUE, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "../CalculatorToothMovement/MultiModelCurve.jsx";
 
 const ICON_SIZE = '22px'
 
@@ -347,8 +348,8 @@ const ControlSection = React.memo((props) => {
                     props.onSetCurrentMarkerPoint(currentMarker)
                   }}
                 >
-                  <img src={`${checkAllPointsExist(UPPER_JAW_BONE_CURVE,markerPoints) ? '/assets/images/MAXILLARY_delete.jpg' : '/assets/images/MAXILLARY_create.jpg'}`} alt="maxillary"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_JAW_BONE_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('maxillary')}</span>
+                  <img src={`${checkAllPointsExist(UPPER_JAW_BONE_CURVE,markerPoints) ? '/assets/images/MAXILLARY_delete.jpg' : '/assets/images/MAXILLARY_create.jpg'}`} alt={t(UPPER_JAW_BONE_CURVE.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_JAW_BONE_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(UPPER_JAW_BONE_CURVE.name)}</span>
                 </button>
                 <button 
                   type="button" 
@@ -360,8 +361,8 @@ const ControlSection = React.memo((props) => {
                     props.onSetCurrentMarkerPoint(currentMarker)
                   }}
                 >
-                  <img src={`${checkAllPointsExist(UPPER_INCISOR_CURVE,markerPoints) ? '/assets/images/UPPER_INCISOR_delete.jpg' : '/assets/images/UPPER_INCISOR_create.jpg'}`} alt="maxillary"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_INCISOR_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('upper incisor')}</span>
+                  <img src={`${checkAllPointsExist(UPPER_INCISOR_CURVE,markerPoints) ? '/assets/images/UPPER_INCISOR_delete.jpg' : '/assets/images/UPPER_INCISOR_create.jpg'}`} alt={t(UPPER_INCISOR_CURVE.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_INCISOR_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(UPPER_INCISOR_CURVE.name)}</span>
                 </button>
                 <button 
                   type="button" 
@@ -373,8 +374,8 @@ const ControlSection = React.memo((props) => {
                     props.onSetCurrentMarkerPoint(currentMarker)
                   }}
                 >
-                  <img src={`${checkAllPointsExist(UNDER_INCISOR_CURVE,markerPoints) ? '/assets/images/UNDER_INCISOR_delete.jpg' : '/assets/images/UNDER_INCISOR_create.jpg'}`} alt="maxillary"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UNDER_INCISOR_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('under incisor')}</span>
+                  <img src={`${checkAllPointsExist(UNDER_INCISOR_CURVE,markerPoints) ? '/assets/images/UNDER_INCISOR_delete.jpg' : '/assets/images/UNDER_INCISOR_create.jpg'}`} alt={t(UNDER_INCISOR_CURVE.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UNDER_INCISOR_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(UNDER_INCISOR_CURVE.name)}</span>
                 </button>
                 <button 
                   type="button" 
@@ -386,8 +387,8 @@ const ControlSection = React.memo((props) => {
                     props.onSetCurrentMarkerPoint(currentMarker)
                   }}
                 >
-                  <img src={`${checkAllPointsExist(MANDIBULAR,markerPoints) ? '/assets/images/MANDIBULAR1_DELETE.jpg' : '/assets/images/MANDIBULAR1_CREATE.jpg'}`} height={37} alt="mandibular"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(MANDIBULAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('mandibular')}</span>
+                  <img src={`${checkAllPointsExist(MANDIBULAR,markerPoints) ? '/assets/images/MANDIBULAR1_DELETE.jpg' : '/assets/images/MANDIBULAR1_CREATE.jpg'}`} height={37} alt={t(MANDIBULAR.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(MANDIBULAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(MANDIBULAR.name)}</span>
                 </button>
                 <button 
                   type="button" 
@@ -399,8 +400,73 @@ const ControlSection = React.memo((props) => {
                     props.onSetCurrentMarkerPoint(currentMarker)
                   }}
                 >
-                  <img src={`${checkAllPointsExist(MANDIBULAR4,markerPoints) ? '/assets/images/MANDIBULAR4_DELETE.jpg' : '/assets/images/MANDIBULAR4_CREATE.jpg'}`} height={37} alt="mandibular"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(MANDIBULAR4,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('mandibular4')}</span>
+                  <img src={`${checkAllPointsExist(MANDIBULAR4,markerPoints) ? '/assets/images/MANDIBULAR4_DELETE.jpg' : '/assets/images/MANDIBULAR4_CREATE.jpg'}`} height={37} alt={t(MANDIBULAR4.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(MANDIBULAR4,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(MANDIBULAR4.name)}</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(XUONG_CHINH_MUI,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(XUONG_CHINH_MUI.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(XUONG_CHINH_MUI.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(XUONG_CHINH_MUI,markerPoints) ? '/assets/images/XUONG_CHINH_MUI_DELETE.jpg' : '/assets/images/XUONG_CHINH_MUI_CREATE.jpg'}`} height={37} alt={t(XUONG_CHINH_MUI.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(XUONG_CHINH_MUI,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(XUONG_CHINH_MUI.name)}</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(ORBITAL_CURVE,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(ORBITAL_CURVE.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(ORBITAL_CURVE.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(ORBITAL_CURVE,markerPoints) ? '/assets/images/XUONG_O_MAT_DELETE.jpg' : '/assets/images/XUONG_O_MAT_CREATE.jpg'}`} height={37} alt={t(ORBITAL_CURVE.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(ORBITAL_CURVE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(ORBITAL_CURVE.name)}</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(CRANIAL_BASE,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(CRANIAL_BASE.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(CRANIAL_BASE.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(CRANIAL_BASE,markerPoints) ? '/assets/images/NEN_SO_DELETE.jpg' : '/assets/images/NEN_SO_CREATE.jpg'}`} height={37} alt={t(CRANIAL_BASE.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(CRANIAL_BASE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(CRANIAL_BASE.name)}</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(UPPER_SOFT_TISSUE,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(UPPER_SOFT_TISSUE.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(UPPER_SOFT_TISSUE.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(UPPER_SOFT_TISSUE,markerPoints) ? '/assets/images/MO_MEM_HAM_TREN_DELETE.jpg' : '/assets/images/MO_MEM_HAM_TREN_CREATE.jpg'}`} height={37} alt={t(UPPER_SOFT_TISSUE.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_SOFT_TISSUE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(UPPER_SOFT_TISSUE.name)}</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(LOWER_SOFT_TISSUE,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(LOWER_SOFT_TISSUE.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(LOWER_SOFT_TISSUE.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(LOWER_SOFT_TISSUE,markerPoints) ? '/assets/images/MO_MEM_HAM_DUOI_DELETE.jpg' : '/assets/images/MO_MEM_HAM_DUOI_CREATE.jpg'}`} height={37} alt={t(LOWER_SOFT_TISSUE.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(LOWER_SOFT_TISSUE,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(LOWER_SOFT_TISSUE.name)}</span>
                 </button>
                 <button 
                   type="button" 
@@ -412,8 +478,8 @@ const ControlSection = React.memo((props) => {
                     props.onSetCurrentMarkerPoint(currentMarker)
                   }}
                 >
-                  <img src={`${checkAllPointsExist(UPPER_MOLAR,markerPoints) ? '/assets/images/RANG_HAM_TREN_delete.jpg' : '/assets/images/RANG_HAM_TREN_create.jpg'}`} height={37} alt="mandibular"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_MOLAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('upper molar')}</span>
+                  <img src={`${checkAllPointsExist(UPPER_MOLAR,markerPoints) ? '/assets/images/RANG_HAM_TREN_delete.jpg' : '/assets/images/RANG_HAM_TREN_create.jpg'}`} height={37} alt={t(UPPER_MOLAR.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(UPPER_MOLAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(UPPER_MOLAR.name)}</span>
                 </button>
                 <button 
                   type="button" 
@@ -425,8 +491,8 @@ const ControlSection = React.memo((props) => {
                     props.onSetCurrentMarkerPoint(currentMarker)
                   }}
                 >
-                  <img src={`${checkAllPointsExist(LOWER_MOLAR,markerPoints) ? '/assets/images/RANG_HAM_DUOI_delete.jpg' : '/assets/images/RANG_HAM_DUOI_create.jpg'}`} height={37} alt="mandibular"/>
-                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(LOWER_MOLAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t('lower molar')}</span>
+                  <img src={`${checkAllPointsExist(LOWER_MOLAR,markerPoints) ? '/assets/images/RANG_HAM_DUOI_delete.jpg' : '/assets/images/RANG_HAM_DUOI_create.jpg'}`} height={37} alt={t(LOWER_MOLAR.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(LOWER_MOLAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(LOWER_MOLAR.name)}</span>
                 </button>
               </ul>
             </div>

@@ -9,10 +9,7 @@ import { setNoteAnalysis } from "../../redux/LateralCephSlice.jsx";
 import { getModelCurve } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 
 const MARKER_POINT_LIST = {
-  Co:{
-    x: 10,
-    y: 15
-  },
+  Co:{x: 80, y: 130},
   A:{
     x: 245,
     y: 191.5
@@ -257,26 +254,27 @@ const MARKER_POINT_LIST = {
     x: 168,
     y: 231
   },
-  sCo:{
-    x: 168,
-    y: 231
-  },
-  Pcc:{
-    x: 168,
-    y: 231
-  },
-  Ar:{
-    x: 168,
-    y: 231
-  },
-  Sg:{
-    x: 168,
-    y: 231
-  },
-  mGo:{
-    x: 168,
-    y: 231
-  }
+  sCo:{x: 91, y: 132},
+  Pcc:{x: 73, y: 137},
+  Ar:{x: 77, y: 159},
+  Sg:{x: 82, y: 192},
+  mGo:{x: 120, y: 268},
+  pN: {x: 227, y: 87},
+  Rhi: {x: 264, y: 110},
+  sOr: {x: 264, y: 110},
+  OrR: {x: 227, y: 110},
+  aC: {x: 227, y: 110},
+  aS: {x: 227, y: 110},
+  pS: {x: 227, y: 110},
+  O: {x: 227, y: 110},
+  "G'": {x: 227, y: 110},
+  "N'": {x: 227, y: 110},
+  Sn: {x: 227, y: 110},
+  Stms: {x: 227, y: 110},
+  Stmi: {x: 227, y: 110},
+  Sm: {x: 227, y: 110},
+  "Me'": {x: 227, y: 110},
+  C: {x: 227, y: 110}
 }
 
 export default function UtilitiesAnalysis(props){
@@ -345,6 +343,17 @@ export default function UtilitiesAnalysis(props){
   const imageHelper = new window.Image();
   imageHelper.src = '/assets/images/lateral_ceph_example.jpg'
 
+  const handleClickStage = (event) => {
+    const stage = stageRef.current;
+    const oldScale = stage.scaleX();
+    const pointer = stage.getPointerPosition();
+    const mousePointTo = {
+      x: (pointer.x - stage.x()) / oldScale,
+      y: (pointer.y - stage.y()) / oldScale,
+    };
+    console.log("🚀 ~ file: UtilitiesAnalysis.jsx:364 ~ handleClickStage ~ mousePointTo:", mousePointTo)
+  }
+
   return <div className={`${props.col} border-start d-flex flex-column justify-content-start`}>
     <div className="py-1 px-3 mc-pale-background" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
       <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('Note for analysis')}</span>
@@ -363,7 +372,7 @@ export default function UtilitiesAnalysis(props){
     </div>
    
     {
-      props.currentMarkerPoint && props.currentMarkerPoint!=='C1' && props.currentMarkerPoint!=='C2' && isVisitableHelper && 
+      // props.currentMarkerPoint && props.currentMarkerPoint!=='C1' && props.currentMarkerPoint!=='C2' && isVisitableHelper && 
       <div className="d-flex flex-grow-1 flex-column justify-content-start position-absolute end-0 bottom-0 mb-1 border me-1 bg-white">
         <Stage
           x={0}
@@ -373,6 +382,7 @@ export default function UtilitiesAnalysis(props){
           width={360}
           offsetX={0}
           offsetY={0}
+          onClick={handleClickStage}
         >
           <Layer>
             <Image
@@ -389,7 +399,7 @@ export default function UtilitiesAnalysis(props){
                 <Text
                   x={MARKER_POINT_LIST[props.currentMarkerPoint].x + 5}
                   y={MARKER_POINT_LIST[props.currentMarkerPoint].y + 5}
-                  visible={props.stageMode === 1 && getModelCurve(selectedCurve)?.markerPoints[props.currentMarkerPoint].isShow}
+                  visible={props.stageMode === 1 && getModelCurve(selectedCurve)?.markerPoints[props.currentMarkerPoint]?.isShow}
                   fill="red"
                   text={props.currentMarkerPoint}
                   fontSize={10}

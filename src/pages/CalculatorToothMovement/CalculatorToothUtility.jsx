@@ -1,4 +1,5 @@
 import { point2PointDistance } from "../lateralCephalometricAnalysis/LateralCephalometricUtility.jsx";
+import { CRANIAL_BASE, LOWER_SOFT_TISSUE, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "./MultiModelCurve.jsx";
 
 export const midPointOfLineSegment = (startPoint, endPoint) =>{
   return {
@@ -14,7 +15,17 @@ export const getModelCurve = (name) => {
       break;
     case 'upper incisor': model = UPPER_INCISOR_CURVE;
       break;
+    case 'Orbital Curve': model = ORBITAL_CURVE;
+      break;
+    case 'Upper soft tissue': model = UPPER_SOFT_TISSUE;
+      break;
+    case 'Lower soft tissue': model = LOWER_SOFT_TISSUE;
+      break;
+    case 'Cranial Base': model = CRANIAL_BASE;
+      break;
     case 'under incisor': model = UNDER_INCISOR_CURVE;
+      break;
+    case 'Nasal bone': model = XUONG_CHINH_MUI;
       break;
     case 'mandibular': model = MANDIBULAR;
       break;
@@ -27,7 +38,6 @@ export const getModelCurve = (name) => {
     default: model = null
       break;
   }
-
   return model
 }
 
@@ -2153,6 +2163,182 @@ export const MANDIBULAR4 = {
   
     let pointArrayY = []
     Object.keys(MANDIBULAR4.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point].y)
+    })
+  
+    const minPointOfWidthShape = {
+      x: Math.min(...pointArrayX),
+      y: Math.max(...pointArrayY) + 5
+    }
+    
+    const maxPointOfWidthShape = {
+      x: Math.max(...pointArrayX),
+      y: Math.max(...pointArrayY) + 5
+    }
+
+    return {
+      pointStart: minPointOfWidthShape,
+      pointEnd: maxPointOfWidthShape
+    }
+  }
+}
+
+export const XUONG_CHINH_MUI = {
+  id: 8,
+  name: 'Nasal bone',
+  markerPoints: {
+    N: {
+      name: 'Nasion',
+      isShow: true
+    },
+    pN: {
+      name: 'Posterior Nasal',
+      isShow: true
+    },
+    Rhi: {
+      name: 'Rhinion',
+      isShow: true
+    }
+  }, 
+  lines: [],
+  isDrag: true,
+  allPointsCurve:[
+    'N',
+    'pN',
+    'Rhi',
+    'N_TO_pN_P1',
+    'N_TO_pN_P2',
+    'pN_TO_Rhi_P1',
+    'pN_TO_Rhi_P2',
+    'Rhi_TO_N_P1',
+    'Rhi_TO_N_P2'
+  ],
+  controlPoints: [
+    {
+      startPoint: 'N',
+      endPoint: 'pN',
+      controlPoint1: {
+        name: 'N_TO_pN_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['N_TO_pN_P1'];
+          const startPoint = markerPoints['N'];
+          const endPoint = markerPoints['pN'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x - point2PointDistance(startPoint,endPoint)/3,
+            y: startPoint.y + point2PointDistance(startPoint,endPoint)/3
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'N_TO_pN_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['N_TO_pN_P2'];
+          const startPoint = markerPoints['N'];
+          const endPoint = markerPoints['pN'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x + point2PointDistance(startPoint,endPoint)/2.5,
+            y: endPoint.y - point2PointDistance(startPoint,endPoint)/8
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'pN',
+      endPoint: 'Rhi',
+      controlPoint1: {
+        name: 'pN_TO_Rhi_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['pN_TO_Rhi_P1'];
+          const startPoint = markerPoints['pN'];
+          const endPoint = markerPoints['Rhi'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x + point2PointDistance(startPoint,endPoint)/3.5,
+            y: startPoint.y + point2PointDistance(startPoint,endPoint)/8
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'pN_TO_Rhi_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['pN_TO_Rhi_P2'];
+          const startPoint = markerPoints['pN'];
+          const endPoint = markerPoints['Rhi'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x - point2PointDistance(startPoint,endPoint)/1.9,
+            y: endPoint.y - point2PointDistance(startPoint,endPoint)/5
+          }
+        }
+      } 
+    },
+    {
+      startPoint: 'Rhi',
+      endPoint: 'N',
+      controlPoint1: {
+        name: 'Rhi_TO_N_P1',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['Rhi_TO_N_P1'];
+          const startPoint = markerPoints['Rhi'];
+          const endPoint = markerPoints['N'];
+
+          return controlPoint? controlPoint : {
+            x: startPoint.x - point2PointDistance(startPoint,endPoint)/8,
+            y: startPoint.y - point2PointDistance(startPoint,endPoint)/3
+          }
+        }
+      },
+      controlPoint2: {
+        name: 'Rhi_TO_N_P2',
+        positionDefault: (markerPoints) => {
+          const controlPoint = markerPoints['Rhi_TO_N_P2'];
+          const startPoint = markerPoints['Rhi'];
+          const endPoint = markerPoints['N'];
+
+          return controlPoint? controlPoint : {
+            x: endPoint.x + point2PointDistance(startPoint,endPoint)/8.5,
+            y: endPoint.y + point2PointDistance(startPoint,endPoint)/1.3
+          }
+        }
+      } 
+    }
+  ],
+  heightOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(XUONG_CHINH_MUI.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point]?.x)
+    })
+    
+    let pointArrayY = []
+    Object.keys(XUONG_CHINH_MUI.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point]?.y)
+    })
+  
+    const minPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.min(...pointArrayY)
+    }
+    
+    const maxPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.max(...pointArrayY)
+    }
+    
+    return {
+      pointStart: minPointOfHeightShape,
+      pointEnd: maxPointOfHeightShape
+    }
+  },
+  widthOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(XUONG_CHINH_MUI.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point].x)
+    })
+  
+    let pointArrayY = []
+    Object.keys(XUONG_CHINH_MUI.markerPoints).forEach(point => {
       pointArrayY.push(markerPointList[point].y)
     })
   
