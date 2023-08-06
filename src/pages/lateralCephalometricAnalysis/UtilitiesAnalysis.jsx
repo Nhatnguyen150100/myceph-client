@@ -261,20 +261,22 @@ const MARKER_POINT_LIST = {
   mGo:{x: 120, y: 268},
   pN: {x: 227, y: 87},
   Rhi: {x: 264, y: 110},
-  sOr: {x: 264, y: 110},
-  OrR: {x: 227, y: 110},
-  aC: {x: 227, y: 110},
-  aS: {x: 227, y: 110},
-  pS: {x: 227, y: 110},
-  O: {x: 227, y: 110},
-  "G'": {x: 227, y: 110},
-  "N'": {x: 227, y: 110},
-  Sn: {x: 227, y: 110},
-  Stms: {x: 227, y: 110},
-  Stmi: {x: 227, y: 110},
-  Sm: {x: 227, y: 110},
-  "Me'": {x: 227, y: 110},
-  C: {x: 227, y: 110}
+  sOr: {x: 207, y: 89},
+  OrR: {x: 223, y: 133},
+  aC: {x: 221, y: 18},
+  aS: {x: 108, y: 86},
+  pS: {x: 92, y: 85},
+  O: {x: 248, y: 13},
+  "G'": {x: 258, y: 47},
+  "N'": {x: 256, y: 77},
+  Sn: {x: 274, y: 195},
+  Stms: {x: 261, y: 243},
+  Stmi: {x: 261, y: 243},
+  Sm: {x: 252, y: 273},
+  "Me'": {x: 239, y: 332},
+  C: {x: 145, y: 339},
+  Cp: {x: 153, y: 154},
+  GoN: {x: 120, y: 266}
 }
 
 export default function UtilitiesAnalysis(props){
@@ -343,16 +345,16 @@ export default function UtilitiesAnalysis(props){
   const imageHelper = new window.Image();
   imageHelper.src = '/assets/images/lateral_ceph_example.jpg'
 
-  const handleClickStage = (event) => {
-    const stage = stageRef.current;
-    const oldScale = stage.scaleX();
-    const pointer = stage.getPointerPosition();
-    const mousePointTo = {
-      x: (pointer.x - stage.x()) / oldScale,
-      y: (pointer.y - stage.y()) / oldScale,
-    };
-    console.log("🚀 ~ file: UtilitiesAnalysis.jsx:364 ~ handleClickStage ~ mousePointTo:", mousePointTo)
-  }
+  // const handleClickStage = (event) => {
+  //   const stage = stageRef.current;
+  //   const oldScale = stage.scaleX();
+  //   const pointer = stage.getPointerPosition();
+  //   const mousePointTo = {
+  //     x: (pointer.x - stage.x()) / oldScale,
+  //     y: (pointer.y - stage.y()) / oldScale,
+  //   };
+  //   console.log("🚀 ~ file: UtilitiesAnalysis.jsx:364 ~ handleClickStage ~ mousePointTo:", mousePointTo)
+  // }
 
   return <div className={`${props.col} border-start d-flex flex-column justify-content-start`}>
     <div className="py-1 px-3 mc-pale-background" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
@@ -372,7 +374,7 @@ export default function UtilitiesAnalysis(props){
     </div>
    
     {
-      // props.currentMarkerPoint && props.currentMarkerPoint!=='C1' && props.currentMarkerPoint!=='C2' && isVisitableHelper && 
+      props.currentMarkerPoint && props.currentMarkerPoint!=='C1' && props.currentMarkerPoint!=='C2' && isVisitableHelper && 
       <div className="d-flex flex-grow-1 flex-column justify-content-start position-absolute end-0 bottom-0 mb-1 border me-1 bg-white">
         <Stage
           x={0}
@@ -382,7 +384,7 @@ export default function UtilitiesAnalysis(props){
           width={360}
           offsetX={0}
           offsetY={0}
-          onClick={handleClickStage}
+          // onClick={handleClickStage}
         >
           <Layer>
             <Image

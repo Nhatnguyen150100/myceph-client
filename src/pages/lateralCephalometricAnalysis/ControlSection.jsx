@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
-import { setCurrentImageAnalysis, setIsVisitableHelper, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setNoteAnalysis, setScaleImage, setVisitableAnalysisLines, setVisitableMarkerPoints } from "../../redux/LateralCephSlice.jsx";
+import { setCurrentImageAnalysis, setIsVisitableHelper, setIsVisitableImageAnalysis, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setNoteAnalysis, setScaleImage, setVisitableAnalysisLines, setVisitableMarkerPoints } from "../../redux/LateralCephSlice.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -15,7 +15,8 @@ import { ANALYSIS, MARKER_LIST } from "./LateralCephalometricUtility.jsx";
 import { checkAllPointsExist, LOWER_MOLAR, MANDIBULAR, MANDIBULAR4, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR, XUONG_CHINH_MUI } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setRoleOfDoctorOnPatient } from "../../redux/DoctorSlice.jsx";
-import { CRANIAL_BASE, LOWER_SOFT_TISSUE, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "../CalculatorToothMovement/MultiModelCurve.jsx";
+import { CRANIAL_BASE, LOWER_SOFT_TISSUE, MANDIBULAR3, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "../CalculatorToothMovement/MultiModelCurve.jsx";
+import ConfirmComponent from "../../common/ConfirmComponent.jsx";
 
 const ICON_SIZE = '22px'
 
@@ -35,12 +36,15 @@ const ControlSection = React.memo((props) => {
   const isVisitableMarkerPoints = useSelector(state=>state.lateralCeph.isVisitableMarkerPoints);
   const isVisitableAnalysisLines = useSelector(state=>state.lateralCeph.isVisitableAnalysisLines);
   const isVisitableHelper = useSelector(state=>state.lateralCeph.isVisitableHelper);
+  const isVisitableImageAnalysis = useSelector(state=>state.lateralCeph.isVisitableImageAnalysis);
 
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const nav = useNavigate();
   const imageModal = useRef();
   const imageModalRef = useRef();
+
+  const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
   let checkRoleMode = null;
 
@@ -208,6 +212,7 @@ const ControlSection = React.memo((props) => {
 
   const deleteImageAnalysis = () => {
     return new Promise((resolve,reject) =>{
+      setOpenDeleteConfirm(false)
       dispatch(setLoadingModal(true));
       deleteToServerWithToken(`/v1/lateralCeph/deleteImageAnalysis/${currentImageAnalysis.id}?idDoctor=${doctor.data.id}&mode=${checkRoleMode}`).then(result => {
         dispatch(setMarkerPoints({}));
@@ -235,6 +240,10 @@ const ControlSection = React.memo((props) => {
         return point
       }
     }
+  }
+
+  const handleClose = () => {
+    setOpenDeleteConfirm(false);
   }
 
   return <div className={`d-flex flex-column justify-content-between align-items-center px-1 border-end`}>
@@ -389,6 +398,19 @@ const ControlSection = React.memo((props) => {
                 >
                   <img src={`${checkAllPointsExist(MANDIBULAR,markerPoints) ? '/assets/images/MANDIBULAR1_DELETE.jpg' : '/assets/images/MANDIBULAR1_CREATE.jpg'}`} height={37} alt={t(MANDIBULAR.name)}/>
                   <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(MANDIBULAR,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(MANDIBULAR.name)}</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-hover-bg p-1 m-0 d-flex justify-content-start align-items-center border-bottom flex-grow-1 w-100 border-0"
+                  disabled={checkAllPointsExist(MANDIBULAR3,markerPoints)}
+                  onClick={()=>{
+                    const currentMarker = findCurrentMarkerPoint(MANDIBULAR3.markerPoints,markerPoints)
+                    dispatch(setSelectedCurve(MANDIBULAR3.name))
+                    props.onSetCurrentMarkerPoint(currentMarker)
+                  }}
+                >
+                  <img src={`${checkAllPointsExist(MANDIBULAR3,markerPoints) ? '/assets/images/MANDIBULAR3_DELETE.jpg' : '/assets/images/MANDIBULAR3_CREATE.jpg'}`} height={37} alt={t(MANDIBULAR3.name)}/>
+                  <span className={`text-uppercase fw-bold mx-2 text-nowrap ${checkAllPointsExist(MANDIBULAR3,markerPoints) && 'text-danger text-decoration-line-through'}`} style={{fontSize:FONT_SIZE}}>{t(MANDIBULAR3.name)}</span>
                 </button>
                 <button 
                   type="button" 
@@ -600,30 +622,44 @@ const ControlSection = React.memo((props) => {
           </span>
         </button>
         <ul className="dropdown-menu ms-2 p-0">
-          <button 
-            type="button" 
-            className="w-100 btn btn-outline-secondary border-0 d-flex flex-grow-1 align-items-center justify-content-center"
-            onClick={()=>dispatch(setVisitableMarkerPoints(isVisitableMarkerPoints?false:true))}
-          >
-            <span className="material-symbols-outlined mt-1" style={{fontSize:ICON_SIZE}}>
-              {isVisitableMarkerPoints?'visibility':'visibility_off'}
-            </span>
-            <span className="mc-color text-capitalize mx-1" style={{fontSize:FONT_SIZE}}>
-              {t('marker points')}
-            </span>
-          </button>
-          <button 
-            type="button" 
-            className="w-100 btn btn-outline-secondary border-0 d-flex flex-grow-1 align-items-center justify-content-center"
-            onClick={()=>dispatch(setVisitableAnalysisLines(isVisitableAnalysisLines?false:true))}
-          >
-            <span className="material-symbols-outlined mt-1" style={{fontSize:ICON_SIZE}}>
-              {isVisitableAnalysisLines?'visibility':'visibility_off'}
-            </span>
-            <span className="mc-color text-capitalize mx-1" style={{fontSize:FONT_SIZE}}>
-              {t('analysis lines')}
-            </span>
-          </button>
+          <div className="d-flex flex-column w-auto justify-content-center align-items-start" style={{minWidth:"180px"}}>
+            <button 
+              type="button" 
+              className="w-100 btn btn-outline-secondary border-0 d-flex flex-grow-1 align-items-center justify-content-start"
+              onClick={()=>dispatch(setVisitableMarkerPoints(isVisitableMarkerPoints?false:true))}
+            >
+              <span className="material-symbols-outlined mt-1" style={{fontSize:ICON_SIZE}}>
+                {isVisitableMarkerPoints?'visibility':'visibility_off'}
+              </span>
+              <span className="mc-color text-capitalize mx-1" style={{fontSize:FONT_SIZE}}>
+                {t('marker points')}
+              </span>
+            </button>
+            <button 
+              type="button" 
+              className="w-100 btn btn-outline-secondary border-0 d-flex flex-grow-1 align-items-center justify-content-start"
+              onClick={()=>dispatch(setVisitableAnalysisLines(isVisitableAnalysisLines?false:true))}
+            >
+              <span className="material-symbols-outlined mt-1" style={{fontSize:ICON_SIZE}}>
+                {isVisitableAnalysisLines?'visibility':'visibility_off'}
+              </span>
+              <span className="mc-color text-capitalize mx-1" style={{fontSize:FONT_SIZE}}>
+                {t('analysis lines')}
+              </span>
+            </button>
+            <button 
+              type="button" 
+              className="w-100 btn btn-outline-secondary border-0 d-flex flex-grow-1 align-items-center justify-content-start"
+              onClick={()=>dispatch(setIsVisitableImageAnalysis(isVisitableImageAnalysis?false:true))}
+            >
+              <span className="material-symbols-outlined mt-1" style={{fontSize:ICON_SIZE}}>
+                {isVisitableImageAnalysis?'visibility':'visibility_off'}
+              </span>
+              <span className="mc-color text-capitalize mx-1" style={{fontSize:FONT_SIZE}}>
+                {t('image analysis')}
+              </span>
+            </button>
+          </div>
         </ul>
       </div>
       <button 
@@ -654,7 +690,7 @@ const ControlSection = React.memo((props) => {
       <button 
         type="button" 
         className="btn btn-outline-danger border-0 p-0 m-2 d-flex flex-row justify-content-center align-items-center rounded"
-        onClick={deleteImageAnalysis}
+        onClick={()=>setOpenDeleteConfirm(true)}
         disabled={!roleDoctor}
       >
         <span className="material-symbols-outlined" style={{fontSize:ICON_SIZE}}>
@@ -716,6 +752,18 @@ const ControlSection = React.memo((props) => {
         </div>
       </div>
     </div>
+    <ConfirmComponent 
+      FONT_SIZE={FONT_SIZE}
+      open={openDeleteConfirm} 
+      title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this analysis')}</span>} 
+      content={
+        <div>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('Do you want delete this analysis? (include result analysis and curves)')}</span>
+        </div>
+      }
+      handleClose={e=>handleClose()} 
+      handleSubmit={e=>deleteImageAnalysis()}
+    />
   </div>
 })
 

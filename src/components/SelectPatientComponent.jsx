@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { deCryptData } from "../common/Crypto.jsx";
 import { computeAge, onDecryptedDataPreview, FONT_SIZE, FONT_SIZE_HEADER, SELECT_PATIENT_MODE, SOFT_WARE_LIST, splitAvatar, onDecryptedDataPreviewInArray } from "../common/Utility.jsx";
+import { setLoadingModal } from "../redux/GeneralSlice.jsx";
 import { setArrayPatient, setCurrentPatient } from "../redux/PatientSlice.jsx";
 import { getToServerWithToken } from "../services/getAPI.jsx";
 import { refreshToken } from "../services/refreshToken.jsx";
@@ -28,6 +29,7 @@ const SelectPatientComponent = (props) => {
   const encryptKeyClinic = useSelector(state=>state.clinic.encryptKeyClinic);
   const encryptKeyDoctor = useSelector(state=>state.doctor.encryptKeyDoctor);
   const encryptKeySharePatient = useSelector(state=>state.patient.encryptKeySharePatient);
+  const loadingModal = useSelector(state => state.general.loading);
   const nav = useNavigate();
   const dispatch = useDispatch();
 
@@ -52,8 +54,8 @@ const SelectPatientComponent = (props) => {
   }
 
   useEffect(()=>{
-    if(clinic.idClinicDefault && previousClinicId!==clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)) getAllPatient();
-  },[clinic.idClinicDefault])    
+    if(!loadingModal && clinic.idClinicDefault && previousClinicId!==clinic.idClinicDefault && (selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT || SOFT_WARE_LIST.CALENDAR===softWareSelectedTab)) getAllPatient();
+  },[clinic.idClinicDefault,loadingModal])    
   
   const onNameSearchChange = e => {
     setNameSearch(e.target.value);
@@ -94,7 +96,7 @@ const SelectPatientComponent = (props) => {
           toast.error(t(err.message));
         }
         reject(err);
-      }).finally(()=>setLoading(false))
+      }).finally(()=>{setLoading(false);dispatch(setLoadingModal(false))})
     })
   }
 

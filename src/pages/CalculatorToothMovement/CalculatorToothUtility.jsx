@@ -1,11 +1,25 @@
 import { point2PointDistance } from "../lateralCephalometricAnalysis/LateralCephalometricUtility.jsx";
-import { CRANIAL_BASE, LOWER_SOFT_TISSUE, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "./MultiModelCurve.jsx";
+import { CRANIAL_BASE, LOWER_SOFT_TISSUE, MANDIBULAR3, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "./MultiModelCurve.jsx";
 
 export const midPointOfLineSegment = (startPoint, endPoint) =>{
-  return {
-    x: (startPoint.x + endPoint.x) / 2,
-    y: (startPoint.y + endPoint.y) / 2
+  let midPoint = null;
+  if(startPoint && endPoint){
+    midPoint = {
+      x: (startPoint.x + endPoint.x) / 2,
+      y: (startPoint.y + endPoint.y) / 2
+    }
+  }else if(startPoint && !endPoint){
+    midPoint = {
+      x: startPoint.x,
+      y: startPoint.y
+    }
+  }else if(!startPoint && endPoint){
+    midPoint = {
+      x: endPoint.x,
+      y: endPoint.y
+    }
   }
+  return midPoint
 }
 
 export const getModelCurve = (name) => {
@@ -20,6 +34,8 @@ export const getModelCurve = (name) => {
     case 'Upper soft tissue': model = UPPER_SOFT_TISSUE;
       break;
     case 'Lower soft tissue': model = LOWER_SOFT_TISSUE;
+      break;
+    case 'mandibular 3': model = MANDIBULAR3;
       break;
     case 'Cranial Base': model = CRANIAL_BASE;
       break;

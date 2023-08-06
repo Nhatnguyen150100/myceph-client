@@ -6,6 +6,7 @@ import { DB_ENCRYPTION_CLINIC, disConnectIndexDB, getData, onOpenIndexDB } from 
 import SelectFieldInput from "../common/SelectFieldInput.jsx";
 import { FONT_SIZE, splitFirst, splitLast } from "../common/Utility.jsx";
 import { setEncryptKeyClinic, setIdClinicDefault, setRoleOfDoctor } from "../redux/ClinicSlice.jsx";
+import { setLoadingModal } from "../redux/GeneralSlice.jsx";
 
 export default function SelectClinicComponent(props) {
   const clinic = useSelector(state=>state.clinic);
@@ -23,9 +24,12 @@ export default function SelectClinicComponent(props) {
   },[])
 
   const getEncryptionKeyInIndexDB = (clinicId) => {
-    if(indexDB) getData(indexDB,clinicId,DB_ENCRYPTION_CLINIC).then(data => {
-      data ? dispatch(setEncryptKeyClinic({key: data.key, iv: data.iv})) : dispatch(setEncryptKeyClinic(null)) 
-    })
+    if(indexDB){
+      dispatch(setLoadingModal(true));
+      getData(indexDB,clinicId,DB_ENCRYPTION_CLINIC).then(data => {
+        data ? dispatch(setEncryptKeyClinic({key: data.key, iv: data.iv})) : dispatch(setEncryptKeyClinic(null))
+      }).finally(()=>dispatch(setLoadingModal(false)))
+    } 
   }
 
   return <>

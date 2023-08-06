@@ -1,8 +1,9 @@
+import { Tooltip } from "@mui/material";
 import Konva from "konva";
 import React, { useEffect, useRef, useState } from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Circle, Group, Image, Layer, Line, RegularPolygon, Shape, Stage, Text } from "react-konva";
+import { Circle, Group, Image, Layer, Line, Rect, RegularPolygon, Shape, Stage, Text } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -14,9 +15,9 @@ import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setAppName, setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { setCurrentImageAnalysis, setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
 import { checkAllPointsExist, getHeightModelCurve, getModelCurve, getWidthModelCurve, LOWER_MOLAR, MANDIBULAR, MANDIBULAR4, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR, XUONG_CHINH_MUI } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
-import { CRANIAL_BASE, LOWER_SOFT_TISSUE, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "../CalculatorToothMovement/MultiModelCurve.jsx";
+import { CRANIAL_BASE, LOWER_SOFT_TISSUE, MANDIBULAR3, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "../CalculatorToothMovement/MultiModelCurve.jsx";
 import ControlSection from "./ControlSection.jsx";
-import { ANALYSIS, distanceFromTwoPoint } from "./LateralCephalometricUtility.jsx";
+import { ANALYSIS, distanceFromTwoPoint, MARKER_LIST } from "./LateralCephalometricUtility.jsx";
 import ResultAnalysisTable from "./ResultAnalysisTable.jsx";
 import Ruler from "./Ruler.jsx";
 import UtilitiesAnalysis from "./UtilitiesAnalysis.jsx";
@@ -28,7 +29,7 @@ const filterMap = {
 
 const ALL_MODEL_CURVES = [UPPER_JAW_BONE_CURVE,UPPER_INCISOR_CURVE,UNDER_INCISOR_CURVE,XUONG_CHINH_MUI,MANDIBULAR,MANDIBULAR4,UPPER_MOLAR,LOWER_MOLAR]
 
-const ALL_MODEL_MULTI_CURVES = [ORBITAL_CURVE,CRANIAL_BASE,UPPER_SOFT_TISSUE,LOWER_SOFT_TISSUE]
+const ALL_MODEL_MULTI_CURVES = [ORBITAL_CURVE,CRANIAL_BASE,UPPER_SOFT_TISSUE,LOWER_SOFT_TISSUE,MANDIBULAR3]
 
 export default function LateralCeph(props) {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ export default function LateralCeph(props) {
   const lengthOfRuler = useSelector(state=>state.lateralCeph.lengthOfRuler);
   const isVisitableMarkerPoints = useSelector(state=>state.lateralCeph.isVisitableMarkerPoints);
   const isVisitableAnalysisLines = useSelector(state=>state.lateralCeph.isVisitableAnalysisLines);
+  const isVisitableImageAnalysis = useSelector(state=>state.lateralCeph.isVisitableImageAnalysis);
   const roleOfDoctorOnPatient = useSelector(state=>state.doctor.roleOfDoctorOnPatient);
 
   let roleDoctor = roleOfDoctorOnPatient === 'edit' ? true : false;
@@ -74,6 +76,7 @@ export default function LateralCeph(props) {
   const [isMobile,setIsMobile] = useState(false)
 
   const [hoverLine,setHoverLine] = useState(null)
+  const [hoverNameCircle,setHoverNameCircle] = useState(null)
 
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [currentMarkerPoint, setCurrentMarkerPoint] = useState();
@@ -295,6 +298,47 @@ export default function LateralCeph(props) {
     }
   };
 
+  const markerPointToolTip = useMemo(()=>{
+    let reactToolTip = null;
+    if(hoverNameCircle && !isDragImage){
+      if(stageMode===1 && !getModelCurve(selectedCurve).markerPoints[hoverNameCircle].isShow) return null;
+      const markerPointName = stageMode === 0 ? MARKER_LIST[hoverNameCircle] : getModelCurve(selectedCurve).markerPoints[hoverNameCircle].name
+      let widthRect = null;
+      if(markerPointName.length<=6){
+        widthRect = 11*markerPointName.length
+      }else if(markerPointName.length<=13){
+        widthRect = 8*markerPointName.length
+      }else{
+        widthRect = 6*markerPointName.length
+      }
+      reactToolTip = <Group key={"hover_text_marker_point"}>
+        <Rect 
+          x={crosshairPos.x + 10/scale}
+          y={crosshairPos.y - 10/scale}
+          scaleX={scale.x}
+          scaleY={scale.y}
+          width={widthRect/scale}
+          height={20/scale}
+          scale={scale}
+          shadowBlur={10}
+          cornerRadius={10}
+          fill="#F9E29C"
+        />
+        <Text 
+          x={crosshairPos.x + 20/scale}
+          y={crosshairPos.y - 5/scale}
+          text={markerPointName}
+          fill="black"
+          fontStyle="bold"
+          scaleX={scale.x}
+          scaleY={scale.y}
+          fontSize={10/scale}
+        />
+      </Group>
+    }
+    return reactToolTip
+  },[hoverNameCircle,scale,isDragImage,stageMode,crosshairPos,selectedCurve])
+
   const drawLines = useMemo(()=>{
     let linesArray = [];
     for (const lines of ANALYSIS[getKeyByNameValue(ANALYSIS,currentAnalysis)]?.linesArray(markerPoints)) {
@@ -307,7 +351,7 @@ export default function LateralCeph(props) {
             y={0}
             points={[lines[0].x, lines[0].y, lines[1].x,lines[1].y]}
             stroke="#8B008B"
-            strokeWidth={1.5/scale}
+            strokeWidth={2/scale}
             opacity={0.8}
           />
         )
@@ -328,7 +372,7 @@ export default function LateralCeph(props) {
               y={0}
               points={[lines.line[0].x, lines.line[0].y, lines.line[1].x, lines.line[1].y]}
               stroke={lines.color}
-              strokeWidth={2.3/scale}
+              strokeWidth={2.5/scale}
               opacity={1}
             />
           )
@@ -359,10 +403,12 @@ export default function LateralCeph(props) {
                 circle.fill('#27a9f1');
               }}
               onMouseOver={(event) => {
+                setHoverNameCircle(key)
                 const circle = event.target;
                 circle.fill('#27a9f1');
               }}
               onMouseLeave={(event) => {
+                setHoverNameCircle(null)
                 const circle = event.target;
                 circle.fill('red');
               }}
@@ -541,10 +587,12 @@ export default function LateralCeph(props) {
                   fill="red" 
                   draggable={roleDoctor}
                   onMouseOver={(event) => {
+                    setHoverNameCircle(value.startPoint)
                     const regularPolygon = event.target;
                     regularPolygon.fill('#ffad00')
                   }}
                   onMouseLeave={event => {
+                    setHoverNameCircle(null)
                     const regularPolygon = event.target;
                     regularPolygon.fill('red')
                   }}
@@ -631,7 +679,7 @@ export default function LateralCeph(props) {
           key={curveModel.id+markerPointList[curveModel.controlPoints[0].startPoint].x+markerPointList[curveModel.controlPoints[0].startPoint].y}
           x={0}
           y={0}
-          strokeWidth={1.5/scale}
+          strokeWidth={2/scale}
           sceneFunc={(context,shape) => {
             context.beginPath();
             context.moveTo(markerPointList[curveModel.controlPoints[0].startPoint].x, markerPointList[curveModel.controlPoints[0].startPoint].y);
@@ -664,7 +712,7 @@ export default function LateralCeph(props) {
               markerPointList[line.endPoint].x,
               markerPointList[line.endPoint].y
             ]}
-            strokeWidth={1.5/scale}
+            strokeWidth={2/scale}
             opacity={1}
             />
             allCustomShapeFromModel.push(lineShape)
@@ -871,10 +919,12 @@ export default function LateralCeph(props) {
                   fill="red" 
                   draggable={roleDoctor}
                   onMouseOver={(event) => {
+                    setHoverNameCircle(subCurve.controlPoints.startPoint)
                     const regularPolygon = event.target;
                     regularPolygon.fill('#ffad00')
                   }}
                   onMouseLeave={event => {
+                    setHoverNameCircle(null)
                     const regularPolygon = event.target;
                     regularPolygon.fill('red')
                   }}
@@ -923,10 +973,12 @@ export default function LateralCeph(props) {
                 fill="red" 
                 draggable={roleDoctor}
                 onMouseOver={(event) => {
+                  setHoverNameCircle(subCurve.controlPoints.endPoint)
                   const regularPolygon = event.target;
                   regularPolygon.fill('#ffad00')
                 }}
                 onMouseLeave={event => {
+                  setHoverNameCircle(null)
                   const regularPolygon = event.target;
                   regularPolygon.fill('red')
                 }}
@@ -989,7 +1041,7 @@ export default function LateralCeph(props) {
               markerPointList[subCurve.controlPoints.endPoint].y
             ]}
             stroke={hoverLine===subCurve.key ? "#54c0ff" : "#99f6a3"}
-            strokeWidth={1.5/scale}
+            strokeWidth={2/scale}
             opacity={1}
           />
           allCurveFromMultiModel.push(customLine);
@@ -1007,7 +1059,7 @@ export default function LateralCeph(props) {
               markerPointList[line.endPoint].x,
               markerPointList[line.endPoint].y
             ]}
-            strokeWidth={1.5/scale}
+            strokeWidth={2/scale}
             opacity={1}
             />
             allCurveFromMultiModel.push(lineShape)
@@ -1181,7 +1233,7 @@ export default function LateralCeph(props) {
                           onWheel={handleWheel} 
                           height={heightStage} 
                           width={widthStage} 
-                          className={`${(isDragImage && isGrab) ? 'cursor-grabbing' : (isDragImage && 'cursor-grab')} ${currentMarkerPoint && 'cursor-crosshair'} border-start border-end m-0 position-relative`} 
+                          className={`${isVisitableImageAnalysis?'':'bg-secondary'} ${(isDragImage && isGrab) ? 'cursor-grabbing' : (isDragImage && 'cursor-grab')} ${currentMarkerPoint && 'cursor-crosshair'} border-start border-end m-0 position-relative`} 
                           x={0} 
                           y={0} 
                           offsetX={0} 
@@ -1201,6 +1253,7 @@ export default function LateralCeph(props) {
                                 ref={imageRef} 
                                 image={imageObject}
                                 filters={filterFuncs}
+                                visible={isVisitableImageAnalysis}
                                 {...filterVals}
                                 offsetX={0}
                                 offsetY={0}
@@ -1226,18 +1279,15 @@ export default function LateralCeph(props) {
                                   stroke="red"
                                   strokeWidth={1.1/scale}
                                 />
+                                <Text 
+                                  x={crosshairPos.x + 10}
+                                  y={crosshairPos.y + 10}
+                                  text={currentMarkerPoint}
+                                  fill="#AAFF00"
+                                  fontSize={15/scale}
+                                  fontStyle={'bold'}
+                                />
                               </React.Fragment>
-                            }
-                            {
-                              currentMarkerPoint && !isDragImage &&
-                              <Text 
-                                x={crosshairPos.x + 10}
-                                y={crosshairPos.y + 10}
-                                text={currentMarkerPoint}
-                                fill="#AAFF00"
-                                fontSize={15/scale}
-                                fontStyle={'bold'}
-                              />
                             }
                             {
                               markerPoints['C1'] && markerPoints['C2'] && imageObject &&
@@ -1268,10 +1318,13 @@ export default function LateralCeph(props) {
                               markerPoints && imageObject && stageMode === 1 && drawCustomShapeHover
                             }
                             {
+                              markerPoints && imageObject && stageMode === 1 && drawMarkerPointsMultiCurve
+                            }
+                            {
                               markerPoints && imageObject && stageMode === 1 && drawMultiCurvesHover
                             }
                             {
-                              markerPoints && imageObject && stageMode === 1 && drawMarkerPointsMultiCurve
+                              markerPointToolTip 
                             }
                           </Layer>
                         </Stage>

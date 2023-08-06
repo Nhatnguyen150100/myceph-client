@@ -1,4 +1,5 @@
 import { point2PointDistance } from "../lateralCephalometricAnalysis/LateralCephalometricUtility.jsx";
+import { midPointOfLineSegment } from "./CalculatorToothUtility.jsx";
 
 export const ORBITAL_CURVE = {
   id: 1,
@@ -626,7 +627,7 @@ export const UPPER_SOFT_TISSUE = {
 }
 
 export const LOWER_SOFT_TISSUE = {
-  id: 3,
+  id: 4,
   name: 'Lower soft tissue',
   markerPoints: {
     Stmi: {
@@ -864,6 +865,267 @@ export const LOWER_SOFT_TISSUE = {
   
     let pointArrayY = []
     Object.keys(LOWER_SOFT_TISSUE.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point].y)
+    })
+  
+    const minPointOfWidthShape = {
+      x: Math.min(...pointArrayX),
+      y: Math.max(...pointArrayY) + 5
+    }
+    
+    const maxPointOfWidthShape = {
+      x: Math.max(...pointArrayX),
+      y: Math.max(...pointArrayY) + 5
+    }
+
+    return {
+      pointStart: minPointOfWidthShape,
+      pointEnd: maxPointOfWidthShape
+    }
+  }
+}
+
+export const MANDIBULAR3 = {
+  id: 5,
+  name: 'mandibular 3',
+  markerPoints: {
+    R1: {
+      name: 'R1 point',
+      isShow: true
+    },
+    Cp: {
+      name: 'Coronoid precess',
+      isShow: true
+    },
+    R3: { 
+      name: 'R3 point',
+      isShow: true
+    },
+    mGo: {
+      name: 'Mid-Notch Gonion',
+      isShow: true
+    },
+    GoN: {
+      name: 'Gonial Notch',
+      isShow: true
+    },
+    Me: {
+      name: 'Menton',
+      isShow: true
+    }
+  },
+  allPointsCurve: [
+    'R1',
+    'Cp',
+    'R3',
+    "mGo",
+    "GoN",
+    'Me'
+  ],
+  lines: [],
+  multiCurves: [
+    {
+      key: 'MANDIBULAR_3_SUB_CURVE_1',
+      controlPoints: {
+        startPoint: 'R1',
+        endPoint: "Cp",
+        controlPoint1: {
+          name: 'R1_TO_Cp_P1',
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['R1_TO_Cp_P1'];
+            const startPoint = markerPoints['R1'];
+            const endPoint = markerPoints["Cp"];
+  
+            return controlPoint? controlPoint : {
+              x: startPoint.x - point2PointDistance(startPoint,endPoint)/10,
+              y: startPoint.y - point2PointDistance(startPoint,endPoint)/4
+            }
+          }
+        },
+        controlPoint2: {
+          name: 'R1_TO_Cp_P2',
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['R1_TO_Cp_P2'];
+            const startPoint = markerPoints['R1'];
+            const endPoint = markerPoints["Cp"];
+  
+            return controlPoint? controlPoint : {
+              x: endPoint.x + point2PointDistance(startPoint,endPoint)/4,
+              y: endPoint.y + point2PointDistance(startPoint,endPoint)/10
+            }
+          }
+        } 
+      }
+    },
+    {
+      key: 'MANDIBULAR_3_SUB_CURVE_2',
+      controlPoints: {
+        startPoint: 'Cp',
+        endPoint: "R3",
+        controlPoint1: {
+          name: 'Cp_TO_R3_P1',
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['Cp_TO_R3_P1'];
+            const startPoint = markerPoints["Cp"];
+            const endPoint = markerPoints["R3"];
+  
+            return controlPoint? controlPoint : {
+              x: startPoint.x - point2PointDistance(startPoint,endPoint)/3.7,
+              y: startPoint.y + point2PointDistance(startPoint,endPoint)/20
+            }
+          }
+        },
+        controlPoint2: {
+          name: 'Cp_TO_R3_P2',
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['Cp_TO_R3_P2'];
+            const startPoint = markerPoints["Cp"];
+            const endPoint = markerPoints["R3"];
+  
+            return controlPoint? controlPoint : {
+              x: endPoint.x + point2PointDistance(startPoint,endPoint)/1.4,
+              y: endPoint.y - point2PointDistance(startPoint,endPoint)/6
+            }
+          }
+        } 
+      }
+    },
+    {
+      key: 'MANDIBULAR_3_SUB_CURVE_3',
+      controlPoints: {
+        startPoint: "R3",
+        endPoint: "mGo",
+        controlPoint1: {
+          name: 'R3_TO_mGo_P1',
+          hide: true,
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['R3_TO_mGo_P1'];
+            const startPoint = markerPoints["R3"];
+            const endPoint = markerPoints["mGo"];
+  
+            return controlPoint? controlPoint : {
+              x: midPointOfLineSegment(startPoint, endPoint).x,
+              y: midPointOfLineSegment(startPoint, endPoint).y
+            }
+          }
+        },
+        controlPoint2: {
+          name: 'R3_TO_mGo_P2',
+          hide: true,
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['R3_TO_mGo_P2'];
+            const startPoint = markerPoints["R3"];
+            const endPoint = markerPoints["mGo"];
+  
+            return controlPoint? controlPoint : {
+              x: midPointOfLineSegment(startPoint, endPoint).x,
+              y: midPointOfLineSegment(startPoint, endPoint).y
+            }
+          }
+        } 
+      }
+    },
+    {
+      key: 'MANDIBULAR_3_SUB_CURVE_4',
+      controlPoints: {
+        startPoint: "mGo",
+        endPoint: "GoN",
+        controlPoint1: {
+          name: 'mGo_TO_GoN_P1',
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['mGo_TO_GoN_P1'];
+            const startPoint = markerPoints["mGo"];
+            const endPoint = markerPoints["GoN"];
+  
+            return controlPoint? controlPoint : {
+              x: startPoint.x + point2PointDistance(startPoint,endPoint)/3,
+              y: startPoint.y 
+            }
+          }
+        },
+        controlPoint2: {
+          name: 'mGo_TO_GoN_P2',
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['mGo_TO_GoN_P2'];
+            const startPoint = markerPoints["mGo"];
+            const endPoint = markerPoints["GoN"];
+  
+            return controlPoint? controlPoint : {
+              x: endPoint.x - point2PointDistance(startPoint,endPoint)/3,
+              y: endPoint.y - point2PointDistance(startPoint,endPoint)/4
+            }
+          }
+        } 
+      }
+    },
+    {
+      key: 'MANDIBULAR_3_SUB_CURVE_5',
+      controlPoints: {
+        startPoint: "GoN",
+        endPoint: 'Me',
+        controlPoint1: {
+          name: 'GoN_TO_Me_P1',
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['GoN_TO_Me_P1'];
+            const startPoint = markerPoints["GoN"];
+            const endPoint = markerPoints['Me'];
+  
+            return controlPoint? controlPoint : {
+              x: startPoint.x + point2PointDistance(startPoint,endPoint)/6,
+              y: startPoint.y + point2PointDistance(startPoint,endPoint)/15
+            }
+          }
+        },
+        controlPoint2: {
+          name: 'GoN_TO_Me_P2',
+          positionDefault: (markerPoints) => {
+            const controlPoint = markerPoints['GoN_TO_Me_P2'];
+            const startPoint = markerPoints["GoN"];
+            const endPoint = markerPoints['Me'];
+  
+            return controlPoint? controlPoint : {
+              x: endPoint.x - point2PointDistance(startPoint,endPoint)/1.5,
+              y: endPoint.y - point2PointDistance(startPoint,endPoint)/16
+            }
+          }
+        } 
+      }
+    }
+  ],
+  heightOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(MANDIBULAR3.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point]?.x)
+    })
+    
+    let pointArrayY = []
+    Object.keys(MANDIBULAR3.markerPoints).forEach(point => {
+      pointArrayY.push(markerPointList[point]?.y)
+    })
+  
+    const minPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.min(...pointArrayY)
+    }
+    
+    const maxPointOfHeightShape = {
+      x: Math.min(...pointArrayX) - 5,
+      y: Math.max(...pointArrayY)
+    }
+    
+    return {
+      pointStart: minPointOfHeightShape,
+      pointEnd: maxPointOfHeightShape
+    }
+  },
+  widthOfShape: (markerPointList) => {
+    let pointArrayX = []
+    Object.keys(MANDIBULAR3.markerPoints).forEach(point => {
+      pointArrayX.push(markerPointList[point].x)
+    })
+  
+    let pointArrayY = []
+    Object.keys(MANDIBULAR3.markerPoints).forEach(point => {
       pointArrayY.push(markerPointList[point].y)
     })
   

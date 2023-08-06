@@ -29,15 +29,26 @@ export default function ResultAnalysisTable(props) {
     setHeightTable(resultRef.current?.clientHeight - partOneElementRef.current?.clientHeight);
   }, [])
 
-  const isEncrypted = currentPatient?.isEncrypted;
+  const isEncrypted = useMemo(()=>{
+    return currentPatient?.isEncrypted;
+  },[currentPatient])
+
   const modeKey = useMemo(()=>{
     if(selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT) return encryptKeyDoctor;
     else if(selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT) return encryptKeyClinic;
     else return encryptKeySharePatient;
-  },[selectPatientOnMode])
+  },[selectPatientOnMode,encryptKeyDoctor,encryptKeyClinic,encryptKeySharePatient])
 
 
-  const genderPatient = isEncrypted ? deCryptData(modeKey.key,modeKey.iv,JSON.parse(currentPatient.gender).tag,JSON.parse(currentPatient.gender).encrypted):currentPatient?.gender;
+  const genderPatient = useMemo(()=>{
+    let gender = null;
+    if(isEncrypted){
+      gender = deCryptData(modeKey?.key,modeKey?.iv,JSON.parse(currentPatient.gender)?.tag,JSON.parse(currentPatient?.gender).encrypted)
+    }else{
+      gender = currentPatient?.gender
+    }
+    return gender
+  },[isEncrypted,modeKey,currentPatient])
 
   return <div className="m-0 p-0 h-100" ref={resultRef}>
     <div ref={partOneElementRef}>

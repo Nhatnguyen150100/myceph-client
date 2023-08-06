@@ -9,7 +9,7 @@ import { clearAllSlice, cookies, SELECT_PATIENT_MODE, SOFT_WARE_LIST, splitEmail
 import { postToServerWithToken } from "../services/getAPI.jsx";
 import { toast } from "react-toastify";
 import { refreshToken } from "../services/refreshToken.jsx";
-import { setSelectPatientOnMode } from "../redux/PatientSlice.jsx";
+import { setCurrentPatient, setSelectPatientOnMode } from "../redux/PatientSlice.jsx";
 import { setViewCalendar } from "../redux/CalendarSlice.jsx";
 import { CSSTransition } from 'react-transition-group';
 
@@ -181,11 +181,21 @@ export default function NavbarComponent(props) {
             <span className="ms-2 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('homepage')}</span>
           </Link>
           {
-            clinic.idClinicDefault && <Link className="mt-1 w-100" to={"/schedule"} style={{textDecoration:"none"}} onClick={()=>{dispatch(setSelectPatientOnMode(SELECT_PATIENT_MODE.CLINIC_PATIENT));dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR))}}>
+            clinic.idClinicDefault && 
+            <Link 
+              className="mt-1 w-100" 
+              to={"/schedule"} 
+              style={{textDecoration:"none"}} 
+              onClick={()=>{
+                dispatch(setSelectPatientOnMode(SELECT_PATIENT_MODE.CLINIC_PATIENT));
+                dispatch(setViewCalendar(VIEW_CALENDAR.BY_DATE));
+                dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.CALENDAR))
+              }}
+            >
               <span className="ms-2 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('schedule')}</span>
             </Link>
           }
-          <Link className="mt-1 w-100" to={"/patientListManagement"} style={{textDecoration:"none"}}>
+          <Link className="mt-1 w-100" to={"/patientListManagement"} style={{textDecoration:"none"}} onClick={()=>dispatch(setCurrentPatient(null))}>
             <span className="ms-2 text-capitalize text-gray mc-color-hover" style={{fontSize:FONT_SIZE,cursor:"pointer"}}>{t('patient list')}</span>
           </Link>
           {
