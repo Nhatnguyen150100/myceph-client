@@ -129,7 +129,7 @@ export default function SharePatientSettingForDoctor(props){
         idOwnerDoctor: idOwnerDoctor
       }).then(result => {
         onGetSharePatient({id:idOwnerDoctor}).then(()=>{
-          toast.success(result.message);
+          toast.success(t(result.message));
           if(newDoctor){
             getAllDoctorSharePatient().then(()=>{
               setNewDoctor();
@@ -173,7 +173,7 @@ export default function SharePatientSettingForDoctor(props){
   const onSetNewDoctor = (newDoctor) => {
     if(listDoctor){
       const checkIsDoctor = listDoctor.filter(doctor => doctor.id===newDoctor.id);
-      if(checkIsDoctor.length>0) toast.error(t('this doctor is already to share patient'));
+      if(checkIsDoctor.length>0) toast.error(t('This doctor is already to share patient'));
       else{
         setListEmailSearch([]);
         setEmailSearch('');
@@ -192,7 +192,7 @@ export default function SharePatientSettingForDoctor(props){
     if(listSharePatient){
       const checkIsPatient = listSharePatient.filter(patient => patient.id===newPatient.id);
       console.log(checkIsPatient);
-      if(checkIsPatient.length>0) toast.error(t('this patient already exists'));
+      if(checkIsPatient.length>0) toast.error(t('This patient already exists'));
       else{
         setNameSearch('');
         setSelectedPatient(newPatient);
@@ -214,7 +214,7 @@ export default function SharePatientSettingForDoctor(props){
             setListSharePatient([]);
             setCountPatient(0);
             setPagePatient(1);
-            toast.success(result.message);
+            toast.warning(t(result.message));
             resolve();
           });
         }).catch((err) =>{
@@ -240,11 +240,11 @@ export default function SharePatientSettingForDoctor(props){
           onGetSharePatient(selectedDoctor).then(count=>{
             if(count===0){
               getAllDoctorSharePatient().then(()=>{
-                toast.success(result.message);
+                toast.warning(t(result.message));
                 resolve();
               })
             }else{
-              toast.success(result.message);
+              toast.warning(t(result.message));
               resolve();
             }
           })
@@ -269,7 +269,7 @@ export default function SharePatientSettingForDoctor(props){
         roleOfOwnerDoctor: roleOfDoctor
       }).then(result=>{
         onGetSharePatient({id:idOwnerDoctor}).then(()=>{
-          toast.success(result.message);
+          toast.success(t(result.message));
           resolve();
         })
       }).catch((err) =>{
@@ -290,8 +290,6 @@ export default function SharePatientSettingForDoctor(props){
   const onChangePagePatient = (event,value) => {
     setPagePatient(value);
   }
-
-  console.log("🚀 ~ file: SharePatientSettingForDoctor.jsx:461 ~ listSharePatient?.map ~ encryptKeyDoctor:", encryptKeyDoctor)
 
   return <div className="h-100 w-100 container">
     <fieldset className="border-top p-2 d-flex flex-row align-items-center h-100 pb-5">

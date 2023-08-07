@@ -102,7 +102,7 @@ export default function MySharedPatient(props){
           dispatch(setArrayEncryptKeySharePatient(data))
         ).catch(error => toast.error(t(error)));
         keyManagementModal.current.hide();
-        toast.success(t(message))
+        toast.success(t('upload encryption key successfully'))
       }).catch(error => toast.error(t(error)));
     };
   }
@@ -118,12 +118,12 @@ export default function MySharedPatient(props){
   };
 
   const deleteEncryptionKey = () => {
-    if(indexDB && window.confirm(t('Are you want to remove this encryption key from device?'))) deleteData(indexDB,encryptKeySelectedPatient.id,DB_ENCRYPTION_SHAREPATIENT).then(message => {
+    if(indexDB && window.confirm(t('Do you want remove this encryption key from device?'))) deleteData(indexDB,encryptKeySelectedPatient.id,DB_ENCRYPTION_SHAREPATIENT).then(message => {
       getAllData(indexDB,DB_ENCRYPTION_SHAREPATIENT).then(data => 
         dispatch(setArrayEncryptKeySharePatient(data))
       ).catch(error => toast.error(t(error)));
       setEncryptKeySelectedPatient(null);
-      toast.success(t(message));
+      toast.warn(t(message));
       keyManagementModal.current.hide();
     }).catch(error => toast.error(t(error)));
     else toast.error(t('Can not connect to the database'));

@@ -193,7 +193,7 @@ export default React.memo(function ExtraoralImages(props){
   return <div className="h-100 w-100 d-flex flex-column justify-content-start mt-1 mb-4">
     <ShowImageModal/>
     {
-      !roleCheck && 
+      roleCheck && 
       <React.Fragment>
         <div className="d-flex justify-content-center align-items-center rounded border-bottom mc-background-light py-2 fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
           <span className="text-uppercase">

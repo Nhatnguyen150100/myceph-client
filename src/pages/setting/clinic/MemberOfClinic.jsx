@@ -138,7 +138,7 @@ export default function MemberOfClinic(props){
         deleteToServerWithToken(`/v1/clinic/deleteDoctorFromClinic/${clinic.idClinicDefault}?idDoctor=${idDoctorUpdate}`).then(response=>{
           getAllDoctorInClinic().then(()=>{
             setIdDoctorUpdate('');
-            toast.success(t(response.message));
+            toast.warning(t(response.message));
           });
           resolve();
         }).catch((err) => {

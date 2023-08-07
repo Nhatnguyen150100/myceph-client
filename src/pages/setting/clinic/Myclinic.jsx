@@ -78,6 +78,7 @@ export default function Myclinic(props){
           dispatch(setIdClinicDefault(result.idClinic));
           dispatch(setRoleOfDoctor('admin'));
           setNewClinic('');
+          toast.success(t(result.message))
           getAllClinicAndSetDefault(false).then(()=>resolve());
         }).catch((err) => {
           if(err.refreshToken){
@@ -117,7 +118,7 @@ export default function Myclinic(props){
       return new Promise((resolve, reject) =>{
         dispatch(setLoadingModal(true));
         deleteToServerWithToken(`/v1/clinic/deleteClinic/${clinic.idClinicDefault}`).then((result) => {
-          toast.success(t(result.message));
+          toast.warning(t(result.message));
           setOpenDeleteConfirm(false);
           setEditMode(false);
           getAllClinicAndSetDefault(true).then(()=>resolve());

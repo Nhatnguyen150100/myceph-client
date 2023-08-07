@@ -1312,10 +1312,10 @@ export default function LateralCeph(props) {
                               markerPoints && imageObject && stageMode === 1 && drawHeightAndWidthCustomShape
                             }
                             {
-                              markerPoints && imageObject && stageMode === 1 && drawMarkerPointsCurve
+                              markerPoints && imageObject && stageMode === 1 && !selectedCurve && drawCustomShapeHover
                             }
                             {
-                              markerPoints && imageObject && stageMode === 1 && drawCustomShapeHover
+                              markerPoints && imageObject && stageMode === 1 && drawMarkerPointsCurve
                             }
                             {
                               markerPoints && imageObject && stageMode === 1 && drawMarkerPointsMultiCurve
