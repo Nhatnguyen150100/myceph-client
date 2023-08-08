@@ -19,7 +19,7 @@ const AVATAR_HEIGHT = "40px";
 const AVATAR_WIDTH = "40px";
 
 const WIDTH_NAME= "200px";
-const WIDTH_ATTRIBUTES ="80px";
+const WIDTH_ATTRIBUTES ="130px";
 
 export default function SharePatientSettingForDoctor(props){
   const doctor = useSelector(state=>state.doctor.data);
@@ -341,11 +341,11 @@ export default function SharePatientSettingForDoctor(props){
                       <span className="mc-color" style={{fontSize:FONT_SIZE}}>{doctor.email}</span>
                       <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{doctor.fullName?doctor.fullName:t('no data')}</span>
                     </div>
-                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
+                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{maxWidth:WIDTH_ATTRIBUTES}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
-                      <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{doctor.gender?doctor.gender:t('no data')}</span>
+                      <span style={{fontSize:FONT_SIZE}}>{doctor.gender?doctor.gender:t('no data')}</span>
                     </div>
-                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
+                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{maxWidth:WIDTH_ATTRIBUTES}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>
                       <span style={{fontSize:FONT_SIZE}}>{doctor.birthday?convertISOToVNDateString(toISODateString(new Date(doctor.birthday))):t('no data')}</span>
                     </div>
@@ -375,7 +375,7 @@ export default function SharePatientSettingForDoctor(props){
                     <span className="mc-color" style={{fontSize:FONT_SIZE}}>{newDoctor.email}</span>
                     <span className="text-capitalize text-white" style={{fontSize:FONT_SIZE}}>{'('}{newDoctor.fullName?newDoctor.fullName:t('no data')}{')'}</span>
                   </div>
-                  <span className="text-capitalize mx-2 text-white" style={{fontSize:FONT_SIZE}}>{t('this doctor have not been shared patients')}</span>
+                  <span className="text-capitalize mx-2 text-white" style={{fontSize:FONT_SIZE,maxWidth:"230px"}}>{t('this doctor have not been shared patients')}</span>
                 </button>
                 <div className="border-start mx-2 d-flex align-items-center justify-content-center">
                   <IconButtonComponent className="btn-outline-danger border-0 h-100 ms-2" icon="delete" onClick={e=>{setNewDoctor('')}} FONT_SIZE_ICON={"30px"} title={t("delete this doctor")}/>
@@ -434,11 +434,11 @@ export default function SharePatientSettingForDoctor(props){
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('full name')}</span>
                       <span className="text-wrap" style={{fontSize:FONT_SIZE}}>{patient.fullName}</span>
                     </div>
-                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center d-none" style={{width:WIDTH_ATTRIBUTES}}>
+                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{minWidth:WIDTH_ATTRIBUTES}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
-                      <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyDoctor?.key,encryptKeyDoctor?.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
+                      <span className="text-capitalize" style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?t(deCryptData(encryptKeyDoctor?.key,encryptKeyDoctor?.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted)):t(patient.gender)}</span>
                     </div>
-                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{width:WIDTH_ATTRIBUTES}}>
+                    <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{minWidth:WIDTH_ATTRIBUTES}}>
                       <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>
                       <span style={{fontSize:FONT_SIZE}}>{convertISOToVNDateString(toISODateString(new Date(patient.birthday)))}</span>
                     </div>
@@ -457,7 +457,7 @@ export default function SharePatientSettingForDoctor(props){
             {
               listSharePatient?.map((patient,index) => {
                 return <div key={patient.id} className={`d-flex flex-row align-items-center border rounded p-2 ${(index%2!==0) && 'mc-background-color-white'}`}>
-                  <div className="h-auto" style={{width:WIDTH_HEAD}}>
+                  <div className="h-auto" style={{minWidth:"60px"}}>
                     <img 
                       alt="avatar" 
                       className={`${patient['LibraryImagePatients.linkImage'] ? 'p-0' : 'p-1'} rounded my-1 hoverGreenLight`} 
@@ -465,16 +465,16 @@ export default function SharePatientSettingForDoctor(props){
                       style={{borderStyle:`${(patient.isEncrypted ? (patient['LibraryImagePatients.linkImage'] && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)!=='---'):patient['LibraryImagePatients.linkImage'])?'none':'dashed'}`,borderWidth:"2px",borderColor:"#043d5d",height:AVATAR_HEIGHT,width:AVATAR_WIDTH,objectFit:"contain"}}
                     />
                   </div>
-                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{minWidth:WIDTH_NAME}}>
-                    <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('full name')}</span>
+                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{minWidth:"230px"}}>
+                    <span className="mc-color text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('full name')}</span>
                     <span className={`text-wrap ${patient.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>{patient.fullName}</span>
                   </div>
-                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{minWidth:WIDTH_ATTRIBUTES}}>
-                    <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
-                    <span className={`text-capitalize ${patient.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?deCryptData(encryptKeyDoctor?.key,encryptKeyDoctor?.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted):patient.gender}</span>
+                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{maxWidth:WIDTH_ATTRIBUTES}}>
+                    <span className="mc-color text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('gender')}</span>
+                    <span className={`${patient.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>{patient.isEncrypted?t(deCryptData(encryptKeyDoctor?.key,encryptKeyDoctor?.iv,JSON.parse(patient.gender).tag,JSON.parse(patient.gender).encrypted)):t(patient.gender)}</span>
                   </div>
-                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{minWidth:WIDTH_ATTRIBUTES}}>
-                    <span className="mc-color text-capitalize" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>
+                  <div className="d-flex ms-3 flex-column justify-content-center align-items-center" style={{maxWidth:WIDTH_ATTRIBUTES}}>
+                    <span className="mc-color text-capitalize text-nowrap" style={{fontSize:FONT_SIZE}}>{t('date of birth')}</span>
                     <span className={`${patient.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)==='---' && 'text-danger'}`} style={{fontSize:FONT_SIZE}}>{(patient.isEncrypted && onDecryptedDataPreview(SELECT_PATIENT_MODE.MY_PATIENT,patient?.gender,encryptKeyDoctor,null,null)==='---')?'---':convertISOToVNDateString(toISODateString(new Date(patient.birthday)))}</span>
                   </div>
                   <div className="border-start mx-2 d-flex flex-column align-items-center justify-content-center ps-3">
@@ -492,7 +492,7 @@ export default function SharePatientSettingForDoctor(props){
                         }}/>
                     </div>
                   </div>
-                  <div className="border-start mx-2 d-flex align-items-center justify-content-center">
+                  <div className="border-start mx-2 d-flex align-items-center justify-content-center flex-grow-1">
                     <IconButtonComponent className="btn-outline-danger border-0 h-100 ms-2" icon="delete" onClick={e=>removeSharePatient(patient['SharePatients.idSharedPatient'])} FONT_SIZE_ICON={"30px"} title={t("delete this patient")}/>                 
                   </div>
                 </div>

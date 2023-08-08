@@ -316,7 +316,9 @@
   "Myceph - cephalometric software allows doctors to draw curves on a patient's X-ray film and then conduct simulations by moving bones or teeth. Finally evaluate the degree of displacement of the anatomical points to give results as well as see the appropriate treatment process.": "Myceph - cephalometric software allows doctors to draw curves on a patient's X-ray film and then conduct simulations by moving bones or teeth. Finally evaluate the degree of displacement of the anatomical points to give results as well as see the appropriate treatment process.",
   "automatically detect clinical landmark": "automatically detect clinical landmark",
   "This technique helps to reduce time and effort for dental professionals, while increasing the accuracy and reliability of the diagnostic evaluation process. AI can detect and mark necessary points on the image, such as tooth positions, angles, and jawbone sections. This helps dentists to easily identify the condition of the dental arch and adjust the treatment plan more accurately. In addition, the use of AI also helps to save time and reduce errors in the evaluation process, ensuring a safe and effective treatment process for patients.": "This technique helps to reduce time and effort for dental professionals, while increasing the accuracy and reliability of the diagnostic evaluation process. AI can detect and mark necessary points on the image, such as tooth positions, angles, and jawbone sections. This helps dentists to easily identify the condition of the dental arch and adjust the treatment plan more accurately. In addition, the use of AI also helps to save time and reduce errors in the evaluation process, ensuring a safe and effective treatment process for patients.",
-  "The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product's concept includes design and norm data taken from Viceph software. The product has no value on the market.": "The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product's concept includes design and norm data taken from Viceph software. The product has no value on the market.",
+  "The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product's concept includes design and norm data taken from": "The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product's concept includes design and norm data taken from",
+  "The product has no value on the market.": "The product has no value on the market.",
+  "software": "software",
   "product name": "product name",
   "Failed to fetch": "Can't connect to server",
   "login by google": "login by google",
@@ -579,5 +581,8 @@
   "Update role of doctor successfully": "Update role of doctor successfully",
   "Doctor is not in this clinic": "Doctor is not in this clinic",
   "Doctor deleted successfully": "Doctor deleted successfully",
-  "Clinic deleted successfully": "Clinic deleted successfully"
+  "Clinic deleted successfully": "Clinic deleted successfully",
+  "this doctor have not been shared patients": "this doctor have not been shared patients",
+  "Name of patient is required": "Name of patient is required",
+  "Date of birth cannot be greater than the current date": "Date of birth cannot be greater than the current date"
 }

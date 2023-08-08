@@ -308,7 +308,9 @@
   "Myceph - cephalometric software allows doctors to draw curves on a patient's X-ray film and then conduct simulations by moving bones or teeth. Finally evaluate the degree of displacement of the anatomical points to give results as well as see the appropriate treatment process.": "Myceph - cephalometric cho phép bác sĩ vẽ các đường cong trên phim chụp X-quang của bệnh nhân rồi tiến hành mô phỏng bằng cách di chuyển xương hoặc răng. Cuối cùng đánh giá mức độ di lệch của các điểm giải phẫu để đưa ra kết quả cũng như đưa ra liệu trình điều trị phù hợp.",
   "automatically detect clinical landmark": "tự động đánh điểm trên phim",
   "This technique helps to reduce time and effort for dental professionals, while increasing the accuracy and reliability of the diagnostic evaluation process. AI can detect and mark necessary points on the image, such as tooth positions, angles, and jawbone sections. This helps dentists to easily identify the condition of the dental arch and adjust the treatment plan more accurately. In addition, the use of AI also helps to save time and reduce errors in the evaluation process, ensuring a safe and effective treatment process for patients.": "Kỹ thuật này giúp giảm thiểu thời gian và công sức cho các chuyên gia nha khoa, đồng thời tăng độ chính xác và độ tin cậy của quá trình đánh giá chẩn đoán. AI có thể phát hiện và đánh dấu những điểm cần thiết trên ảnh như vị trí răng, góc độ, phần xương hàm. Điều này giúp nha sĩ dễ dàng xác định tình trạng cung răng và điều chỉnh kế hoạch điều trị chính xác hơn. Ngoài ra, việc sử dụng AI còn giúp tiết kiệm thời gian, giảm sai sót trong quá trình đánh giá, đảm bảo quá trình điều trị an toàn và hiệu quả cho bệnh nhân.",
-  "The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product's concept includes design and norm data taken from Viceph software. The product has no value on the market.": "Phần mềm Myceph - Cephalometric là chương trình do sinh viên tạo ra nhằm mục đích nghiên cứu và hoàn thành luận văn tốt nghiệp. Ý tưởng của sản phẩm bao gồm dữ liệu thiết kế và bộ giá trị tham khảo được tham khảo từ phần mềm Viceph. Sản phẩm không có giá trị trên thị trường.",
+  "The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product's concept includes design and norm data taken from": "Phần mềm Myceph - Cephalometric là chương trình do sinh viên tạo ra nhằm mục đích nghiên cứu và hoàn thành đồ án tốt nghiệp. Ý tưởng của sản phẩm bao gồm dữ liệu thiết kế và bộ giá trị tham khảo được tham khảo từ",
+  "The product has no value on the market.": "Sản phẩm không có giá trị trên thị trường.",
+  "software": "phần mềm",
   "product name": "tên sản phẩm",
   "Failed to fetch": "Không thể kết nối tới server",
   "login by google": "Đăng nhập bằng google",
@@ -579,5 +581,8 @@
   "Update role of doctor successfully": "Cập nhật quyền bác sĩ thành công",
   "Doctor is not in this clinic": "Bác sĩ không ở trong phòng khám này",
   "Doctor deleted successfully": "Xoá bác sĩ thành công",
-  "Clinic deleted successfully": "Xóa phòng khám thành công"
+  "Clinic deleted successfully": "Xóa phòng khám thành công",
+  "this doctor have not been shared patients": "bác sĩ này đang không được chia sẻ bệnh nhân",
+  "Name of patient is required": "Tên bệnh nhân không được để trống",
+  "Date of birth cannot be greater than the current date": "Ngày sinh không được lớn hơn ngày hiện tại"
 }

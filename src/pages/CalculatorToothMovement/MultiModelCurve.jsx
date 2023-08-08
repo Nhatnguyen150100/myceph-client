@@ -4,6 +4,7 @@ import { midPointOfLineSegment } from "./CalculatorToothUtility.jsx";
 export const ORBITAL_CURVE = {
   id: 1,
   name: 'Orbital Curve',
+  toolTipWidth: 85,
   markerPoints: {
     sOr: {
       name: 'Superior Orbital',
@@ -149,6 +150,7 @@ export const ORBITAL_CURVE = {
 export const CRANIAL_BASE = {
   id: 2,
   name: 'Cranial Base',
+  toolTipWidth: 56,
   markerPoints: {
     aC: {
       name: 'Anterior Cranial base',
@@ -332,6 +334,7 @@ export const CRANIAL_BASE = {
 export const UPPER_SOFT_TISSUE = {
   id: 3,
   name: 'Upper soft tissue',
+  toolTipWidth: 112,
   markerPoints: {
     O: {
       name: 'Superior Soft tissue Glabella',
@@ -629,6 +632,7 @@ export const UPPER_SOFT_TISSUE = {
 export const LOWER_SOFT_TISSUE = {
   id: 4,
   name: 'Lower soft tissue',
+  toolTipWidth: 116,
   markerPoints: {
     Stmi: {
       name: 'Stomion inferius',
@@ -888,6 +892,7 @@ export const LOWER_SOFT_TISSUE = {
 export const MANDIBULAR3 = {
   id: 5,
   name: 'mandibular 3',
+  toolTipWidth: 110,
   markerPoints: {
     R1: {
       name: 'R1 point',

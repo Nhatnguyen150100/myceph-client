@@ -365,8 +365,15 @@ export default function HomePage(props) {
                 </div>
               </div>
               <div className="col-md-6">
-                <p className="text-white fst-italic text-center d-flex align-items-center h-100" style={{fontSize:"18px"}}>
-                  "{t('The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product\'s concept includes design and norm data taken from Viceph software. The product has no value on the market.')}"
+                <p className="text-white fst-italic text-center d-flex align-items-center h-100">
+                  <span style={{fontSize:"18px",display:"inline"}}>
+                    "{t('The Myceph - Cephalometric software is a program created by students for the purpose of research and completing their graduation thesis. The product\'s concept includes design and norm data taken from')}
+                    <span className="mx-2 fst-italic" style={{fontSize:"18px"}}>{t('software')}</span>
+                    <a className="fw-bold text-white fst-italic me-2" href="https://viceph.net/" style={{fontSize:"18px"}}>
+                      Viceph.
+                    </a>
+                    {t('The product has no value on the market.')}"
+                  </span>
                 </p>
               </div>
             </div>

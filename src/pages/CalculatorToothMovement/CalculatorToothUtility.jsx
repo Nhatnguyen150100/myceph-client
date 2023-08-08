@@ -68,6 +68,7 @@ export const checkAllPointsExist = (curveModel,markerPointList) => {
 export const UPPER_JAW_BONE_CURVE = {
   id: 1,
   name: 'maxillary',
+  toolTipWidth: 100,
   markerPoints: {
     PNS: {
       name: 'Posterior Nasal Spine',
@@ -315,6 +316,7 @@ export const UPPER_JAW_BONE_CURVE = {
 export const UPPER_INCISOR_CURVE = {
   id: 2,
   name: 'upper incisor',
+  toolTipWidth: 83,
   markerPoints: {
     U1A: {
       name: 'Upper 1 Apex',
@@ -529,6 +531,7 @@ export const UPPER_INCISOR_CURVE = {
 export const UNDER_INCISOR_CURVE = {
   id: 3,
   name: 'under incisor',
+  toolTipWidth: 90,
   markerPoints: {
     L1A: {
       name: 'Under 1 Apex',
@@ -743,6 +746,7 @@ export const UNDER_INCISOR_CURVE = {
 export const MANDIBULAR = {
   id: 4,
   name: 'mandibular',
+  toolTipWidth: 100,
   markerPoints: {
     IdL: {
       name: 'IdL',
@@ -962,6 +966,7 @@ export const MANDIBULAR = {
 export const UPPER_MOLAR = {
   id: 5,
   name: "upper molar",
+  toolTipWidth: 110,
   markerPoints: {
     UP_M1: {
       name: "UP_MOLAR1",
@@ -1397,6 +1402,7 @@ export const UPPER_MOLAR = {
 export const LOWER_MOLAR = {
   id: 6,
   name: 'lower molar',
+  toolTipWidth: 110,
   markerPoints: {
     Md6O: {
       name: 'Distal Cusp of Mandibular First Molar',
@@ -1832,6 +1838,7 @@ export const LOWER_MOLAR = {
 export const MANDIBULAR4 = {
   id: 7,
   name: 'mandibular 4',
+  toolTipWidth: 110,
   markerPoints: {
     R3: {
       name: 'R3 point',
@@ -2202,6 +2209,7 @@ export const MANDIBULAR4 = {
 export const XUONG_CHINH_MUI = {
   id: 8,
   name: 'Nasal bone',
+  toolTipWidth: 103,
   markerPoints: {
     N: {
       name: 'Nasion',

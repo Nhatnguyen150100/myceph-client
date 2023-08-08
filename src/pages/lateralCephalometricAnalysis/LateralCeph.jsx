@@ -77,6 +77,7 @@ export default function LateralCeph(props) {
 
   const [hoverLine,setHoverLine] = useState(null)
   const [hoverNameCircle,setHoverNameCircle] = useState(null)
+  const [hoverCurve,setHoverCurve] = useState(null)
 
   const [crosshairPos, setCrosshairPos] = useState({ x: 0, y: 0 });
   const [currentMarkerPoint, setCurrentMarkerPoint] = useState();
@@ -300,6 +301,32 @@ export default function LateralCeph(props) {
 
   const markerPointToolTip = useMemo(()=>{
     let reactToolTip = null;
+    if(hoverCurve && !isDragImage && !selectedCurve){
+      reactToolTip = <Group key={"hover_text_curve"}>
+        <Rect 
+          x={crosshairPos.x + 10/scale}
+          y={crosshairPos.y - 10/scale}
+          scaleX={scale.x}
+          scaleY={scale.y}
+          width={getModelCurve(hoverCurve).toolTipWidth/scale}
+          height={20/scale}
+          scale={scale}
+          shadowBlur={10}
+          cornerRadius={10}
+          fill="#F9E29C"
+        />
+        <Text 
+          x={crosshairPos.x + 20/scale}
+          y={crosshairPos.y - 5/scale}
+          text={t(hoverCurve)}
+          fill="black"
+          fontStyle="bold"
+          scaleX={scale.x}
+          scaleY={scale.y}
+          fontSize={10/scale}
+        />
+      </Group>
+    }
     if(hoverNameCircle && !isDragImage){
       if(stageMode===1 && !getModelCurve(selectedCurve).markerPoints[hoverNameCircle].isShow) return null;
       const markerPointName = stageMode === 0 ? MARKER_LIST[hoverNameCircle] : getModelCurve(selectedCurve).markerPoints[hoverNameCircle].name
@@ -337,7 +364,7 @@ export default function LateralCeph(props) {
       </Group>
     }
     return reactToolTip
-  },[hoverNameCircle,scale,isDragImage,stageMode,crosshairPos,selectedCurve])
+  },[hoverNameCircle,scale,isDragImage,stageMode,crosshairPos,selectedCurve,hoverCurve])
 
   const drawLines = useMemo(()=>{
     let linesArray = [];
@@ -762,10 +789,12 @@ export default function LateralCeph(props) {
           }}
           onMouseOver={(event) => {
             const shape = event.target;
+            setHoverCurve(curveModel.name)
             shape.fill('#0c1780');
           }}
           onMouseOut={event => {
             const shape = event.target;
+            setHoverCurve(null)
             shape.fill(null)
           }}
           sceneFunc={(context,shape) => {
@@ -790,7 +819,7 @@ export default function LateralCeph(props) {
       }
     }
     return allCustomShapeFromModel;
-  },[markerPointList,selectedCurve,scale,currentMarkerPoint,markerPoints])
+  },[markerPointList,selectedCurve,scale,currentMarkerPoint,markerPoints,roleDoctor])
 
   const drawMarkerPointsMultiCurve = useMemo(()=>{
     let allPointsAndLineFromModel = [];
@@ -1018,7 +1047,7 @@ export default function LateralCeph(props) {
       })
     }
     return allPointsAndLineFromModel
-  },[markerPointList,selectedCurve,scale])
+  },[markerPointList,selectedCurve,scale,roleDoctor])
 
   const drawMultiCurves = useMemo(()=>{
     const allCurveFromMultiModel = [];
@@ -1088,9 +1117,11 @@ export default function LateralCeph(props) {
               }
             }}
             onMouseOver={()=>{
+              setHoverCurve(multiModalCurve.name)
               setHoverLine(subCurve.key)
             }}
             onMouseLeave={()=>{
+              setHoverCurve(null)
               setHoverLine(null)
             }}
             points={[
@@ -1312,16 +1343,16 @@ export default function LateralCeph(props) {
                               markerPoints && imageObject && stageMode === 1 && drawHeightAndWidthCustomShape
                             }
                             {
-                              markerPoints && imageObject && stageMode === 1 && !selectedCurve && drawCustomShapeHover
+                              markerPoints && imageObject && stageMode === 1 && drawCustomShapeHover
                             }
                             {
                               markerPoints && imageObject && stageMode === 1 && drawMarkerPointsCurve
                             }
                             {
-                              markerPoints && imageObject && stageMode === 1 && drawMarkerPointsMultiCurve
+                              markerPoints && imageObject && stageMode === 1 && drawMultiCurvesHover
                             }
                             {
-                              markerPoints && imageObject && stageMode === 1 && drawMultiCurvesHover
+                              markerPoints && imageObject && stageMode === 1 && drawMarkerPointsMultiCurve
                             }
                             {
                               markerPointToolTip 
