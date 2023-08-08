@@ -96,7 +96,7 @@ export default React.memo(function ExtraoralImages(props){
     })
   }
 
-  const updateArrayPatient = (newDate,oldDate) => {
+  const updateArrayImagePatient = (newDate,oldDate) => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
       putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
@@ -110,7 +110,7 @@ export default React.memo(function ExtraoralImages(props){
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
-          refreshToken(nav,dispatch).then(()=>updateArrayPatient(newDate,oldDate));
+          refreshToken(nav,dispatch).then(()=>updateArrayImagePatient(newDate,oldDate));
         }else{
           toast.error(t(err.message));
         }
@@ -288,7 +288,7 @@ export default React.memo(function ExtraoralImages(props){
                   {t('consultation date')}:
                 </span>
                 <fieldset className="border rounded px-1 border-0 " style={{fontSize:"small"}}>
-                  <input className="border-0 p-0 form-input" style={{outline:"none"}} type={"date"} value={toISODateString(new Date(date))} onChange={e=>updateArrayPatient(e.target.value,date)} disabled={!roleCheck}/>
+                  <input className="border-0 p-0 form-input" style={{outline:"none"}} type={"date"} value={toISODateString(new Date(date))} onChange={e=>updateArrayImagePatient(e.target.value,date)} disabled={!roleCheck}/>
                 </fieldset>
               </div>
             </legend>
