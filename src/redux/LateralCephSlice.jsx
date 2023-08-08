@@ -10,6 +10,7 @@ export const LateralCephSlice = createSlice({
     currentNorm: PREDEFINED_NORMS.VIETNAM,
     listImageFontSide: [],
     currentImageAnalysis: null,
+    consultationDate: null,
     scaleImage: null,
     lengthOfRuler: 10,
     noteAnalysis: null,
@@ -33,6 +34,9 @@ export const LateralCephSlice = createSlice({
     },
     setCurrentImageAnalysis: (state,action) => {
       state.currentImageAnalysis = action.payload;
+    },
+    setConsultationDate: (state,action) => {
+      state.consultationDate = action.payload;
     },
     setScaleImage: (state,action) => {
       state.scaleImage = action.payload;
@@ -64,6 +68,7 @@ export const LateralCephSlice = createSlice({
       state.scaleImage = null;
       state.lengthOfRuler = 10;
       state.noteAnalysis = null;
+      state.consultationDate = null;
       state.isVisitableImageAnalysis = true;
       state.isVisitableMarkerPoints = true;
       state.isVisitableAnalysisLines = true;
@@ -75,7 +80,7 @@ export const LateralCephSlice = createSlice({
 export const {
   setCurrentAnalysis, setCurrentNorm, clearLateralCephSlice,setMarkerPoints,
   setListImageFontSide,setCurrentImageAnalysis,setScaleImage,setLengthOfRuler,setNoteAnalysis,
-  setVisitableMarkerPoints,setVisitableAnalysisLines,setIsVisitableHelper,setIsVisitableImageAnalysis
+  setVisitableMarkerPoints,setVisitableAnalysisLines,setIsVisitableHelper,setIsVisitableImageAnalysis,setConsultationDate
 } = LateralCephSlice.actions;
 
 export default LateralCephSlice.reducer;

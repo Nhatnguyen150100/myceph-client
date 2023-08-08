@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken } from "../../services/getAPI.jsx";
-import { setCurrentImageAnalysis, setIsVisitableHelper, setIsVisitableImageAnalysis, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setNoteAnalysis, setScaleImage, setVisitableAnalysisLines, setVisitableMarkerPoints } from "../../redux/LateralCephSlice.jsx";
+import { setConsultationDate, setCurrentImageAnalysis, setIsVisitableHelper, setIsVisitableImageAnalysis, setLengthOfRuler, setListImageFontSide, setMarkerPoints, setNoteAnalysis, setScaleImage, setVisitableAnalysisLines, setVisitableMarkerPoints } from "../../redux/LateralCephSlice.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import UploadImage from "../../common/UploadImage.jsx";
-import { FONT_SIZE, FONT_SIZE_HEAD, getKeyByNameValue, IMAGE_TYPE_LIST, SELECT_PATIENT_MODE, splitAvatar, upLoadImageLibrary } from "../../common/Utility.jsx";
+import { FONT_SIZE, FONT_SIZE_HEAD, getKeyByNameValue, IMAGE_TYPE_LIST, SELECT_PATIENT_MODE, splitAvatar, toISODateString, upLoadImageLibrary } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
 import { Slider } from "@mui/material";
 import { ANALYSIS, MARKER_LIST } from "./LateralCephalometricUtility.jsx";
@@ -733,17 +733,28 @@ const ControlSection = React.memo((props) => {
                   <button 
                     key={image.id} 
                     type="button" 
-                    className="btn btn-primary p-0 me-3 mb-3 transform-hover w-auto" 
+                    className="btn p-0 me-3 mb-3 transform-hover w-auto" 
                     onClick={()=>{
                       getImageAnalysis(image);
+                      dispatch(setConsultationDate(toISODateString(new Date(image.consultationDate))))
                       imageModal.current.hide();
                     }}
                   >
-                    <img 
-                      src={splitAvatar(image.linkImage)}
-                      alt={t('font side image')}
-                      style={{maxHeight:"150px",cursor:"pointer"}}
-                    />
+                    <div className="d-flex flex-column justify-content-center align-items-start border">
+                      <input 
+                        style={{outline:"none",maxWidth:"120px",fontSize:"13px"}} 
+                        type={"date"} 
+                        className="border-0 rounded w-auto text-gray px-2"
+                        value={toISODateString(new Date(image.consultationDate))}
+                        disabled
+                      />
+                      <img 
+                        loading="lazy" 
+                        src={splitAvatar(image.linkImage)}
+                        alt={t('font side image')}
+                        style={{maxHeight:"132px",cursor:"pointer"}}
+                      />
+                    </div>
                   </button>
                 </React.Fragment>
               })

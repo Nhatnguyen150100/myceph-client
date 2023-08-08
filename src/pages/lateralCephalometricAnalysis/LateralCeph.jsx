@@ -41,6 +41,8 @@ export default function LateralCeph(props) {
   const currentPatient = useSelector(state=>state.patient.currentPatient);
   const markerPoints = useSelector(state=>state.lateralCeph.markerPoints);
   const currentImageAnalysis = useSelector(state=>state.lateralCeph.currentImageAnalysis);
+  const consultationDate = useSelector(state=>state.lateralCeph.consultationDate);
+  console.log("🚀 ~ file: LateralCeph.jsx:45 ~ LateralCeph ~ consultationDate:", consultationDate)
   const scaleImage = useSelector(state=>state.lateralCeph.scaleImage);
   const lengthOfRuler = useSelector(state=>state.lateralCeph.lengthOfRuler);
   const isVisitableMarkerPoints = useSelector(state=>state.lateralCeph.isVisitableMarkerPoints);
@@ -1238,18 +1240,34 @@ export default function LateralCeph(props) {
                       onDragImage={value=>setIsDragImage(value)}
                     />
                     <div className="d-flex flex-column flex-grow-1 border-0">
-                      <div className="d-flex justify-content-end align-items-center bg-white border-0 me-2">
-                        <button className={`btn ${stageMode===0 ? 'btn-outline-success':'btn-outline-primary'} p-0 border-0 my-1 ms-2`} type="button" onClick={()=>setStageMode(0)} disabled={stageMode===0}>
-                          <span className="material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}}>
-                            polyline
+                      <div className="d-flex justify-content-between align-items-center bg-white border-0 me-2">
+                        <div className="d-flex flex-row justify-content-center align-items-center">
+                          <span className="px-2 text-capitalize d-md-block d-none fw-bold mc-color" style={{fontSize:FONT_SIZE}}>
+                            {t('consultation date')}:
                           </span>
-                        </button>
-                        <span className="vr mx-2"></span>
-                        <button className={`btn ${stageMode===1 ? 'btn-outline-success':'btn-outline-primary'} p-0 border-0 my-1`} type="button" onClick={()=>setStageMode(1)} disabled={stageMode===1}>
-                          <span className="material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}}>
-                            shape_line
-                          </span>
-                        </button>
+                          {
+                            consultationDate && <input 
+                              style={{outline:"none",maxWidth:"120px",fontSize:FONT_SIZE}} 
+                              type={"date"} 
+                              className="border-0 rounded w-auto text-gray px-2"
+                              value={consultationDate}
+                              disabled
+                            />
+                          }
+                        </div>
+                        <div>
+                          <button className={`btn ${stageMode===0 ? 'btn-outline-success':'btn-outline-primary'} p-0 border-0 my-1 ms-2`} type="button" onClick={()=>setStageMode(0)} disabled={stageMode===0}>
+                            <span className="material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}}>
+                              polyline
+                            </span>
+                          </button>
+                          <span className="vr mx-2"></span>
+                          <button className={`btn ${stageMode===1 ? 'btn-outline-success':'btn-outline-primary'} p-0 border-0 my-1`} type="button" onClick={()=>setStageMode(1)} disabled={stageMode===1}>
+                            <span className="material-symbols-outlined mt-1 mx-1" style={{fontSize:"25px"}}>
+                              shape_line
+                            </span>
+                          </button>
+                        </div>
                       </div>
                       <div 
                         className="h-100 d-flex flex-grow-1 border-0"
