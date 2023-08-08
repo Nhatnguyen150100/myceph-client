@@ -99,7 +99,7 @@ export default React.memo(function ExtraoralImages(props){
   const updateArrayPatient = (newDate,oldDate) => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [5,6,7,8,9],
         newDate: newDate,
@@ -122,7 +122,7 @@ export default React.memo(function ExtraoralImages(props){
   const updateImage = (idImage,consultationDate,typeImage,newUrl) => {
     return new Promise((resolve,reject) => {
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [5,6,7,8,9],
         idImage: idImage,

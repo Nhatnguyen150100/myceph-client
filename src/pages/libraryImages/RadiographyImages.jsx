@@ -73,7 +73,7 @@ export default function RadiographyImages(props){
     return new Promise((resolve, reject) =>{
       dispatch(setLoadingModal(true));
       if(linkImage){
-        postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
+        postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
           idDoctor: doctor.data.id,
           typeImages: [1, 2, 3, 4],
           linkImage: linkImage,
@@ -88,7 +88,7 @@ export default function RadiographyImages(props){
       }else{
         upLoadImageLibrary(image).then(responseData=>{
           const linkImage = responseData.data.secure_url + '|' + responseData.data.public_id;
-          postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
+          postToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
             idDoctor: doctor.data.id,
             typeImages: [1, 2, 3, 4],
             linkImage: linkImage,
@@ -114,7 +114,7 @@ export default function RadiographyImages(props){
   const updateArrayPatient = (newDate,oldDate) => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/updateArrayImage/${props.patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [1, 2, 3, 4],
         newDate: newDate,
@@ -137,7 +137,7 @@ export default function RadiographyImages(props){
   const updateImage = (idImage,consultationDate,typeImage,newUrl) => {
     return new Promise((resolve,reject) => {
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
+      putToServerWithToken(`/v1/libraryImagePatient/${props.patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,{
         idDoctor: doctor.data.id,
         typeImages: [1, 2, 3, 4],
         idImage: idImage,
