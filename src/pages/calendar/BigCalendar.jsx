@@ -338,7 +338,7 @@ export default function BigCalendar(props){
     <AppointmentModal 
       patientSelected={selectedTab === VIEW_CALENDAR.BY_PATIENT ? patient.currentPatient?.id : null}
       namePatientSelected={selectedTab === VIEW_CALENDAR.BY_PATIENT ? patient.currentPatient?.fullName : null}
-      getListAppointmentDateByMode={()=>getListAppointmentDateByMode(true)} 
+      getListAppointmentDateByMode={()=>getListAppointmentDateByMode(true)}
       slotInfo={slotInfo} 
       showAppointmentModal={showAppointmentModal} 
       closeModal={()=>{setShowAppointmentModal(false);setIsCreateAppointment(true)}} 

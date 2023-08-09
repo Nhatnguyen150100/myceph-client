@@ -118,7 +118,7 @@ export default function SharePatientSettingForClinic(props){
         idOwnerDoctor: idOwnerDoctor
       }).then(result => {
         onGetSharePatient({idDoctor:idOwnerDoctor}).then(()=>{
-          toast.success(result.message);
+          toast.success(t(result.message));
           resolve();
         })
       }).catch((err) =>{
@@ -155,7 +155,7 @@ export default function SharePatientSettingForClinic(props){
   const onSetSearchPatient = (newPatient) => {
     if(listSharePatient){
       const checkIsPatient = listSharePatient.filter(patient => patient.id===newPatient.id);
-      if(checkIsPatient.length>0) toast.error(t('this patient already exists'));
+      if(checkIsPatient.length>0) toast.error(t('This patient already exists'));
       else{
         setNameSearch('');
         setSelectedPatient(newPatient);
@@ -177,7 +177,7 @@ export default function SharePatientSettingForClinic(props){
           idOwnerDoctor: selectedDoctor.idDoctor
         }).then(result => {
           onGetSharePatient(selectedDoctor).then(count=>{
-            toast.success(result.message);
+            toast.warn(t(result.message));
             resolve();
           })
         }).catch((err) =>{
@@ -201,7 +201,7 @@ export default function SharePatientSettingForClinic(props){
         roleOfOwnerDoctor: roleOfDoctor
       }).then(result=>{
         onGetSharePatient({idDoctor:idOwnerDoctor}).then(()=>{
-          toast.success(result.message);
+          toast.success(t(result.message));
           resolve();
         })
       }).catch((err) =>{

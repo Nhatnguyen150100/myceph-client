@@ -13,7 +13,7 @@ import SelectPatientComponent from "../../components/SelectPatientComponent.jsx"
 import SoftWareListComponent from "../../components/SoftWareListComponent.jsx";
 import { setSelectedCurve } from "../../redux/CurveSlice.jsx";
 import { setAppName, setLoadingModal } from "../../redux/GeneralSlice.jsx";
-import { setCurrentImageAnalysis, setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
+import { setConsultationDate, setCurrentImageAnalysis, setMarkerPoints, setScaleImage } from "../../redux/LateralCephSlice.jsx";
 import { checkAllPointsExist, getHeightModelCurve, getModelCurve, getWidthModelCurve, LOWER_MOLAR, MANDIBULAR, MANDIBULAR4, UNDER_INCISOR_CURVE, UPPER_INCISOR_CURVE, UPPER_JAW_BONE_CURVE, UPPER_MOLAR, XUONG_CHINH_MUI } from "../CalculatorToothMovement/CalculatorToothUtility.jsx";
 import { CRANIAL_BASE, LOWER_SOFT_TISSUE, MANDIBULAR3, ORBITAL_CURVE, UPPER_SOFT_TISSUE } from "../CalculatorToothMovement/MultiModelCurve.jsx";
 import ControlSection from "./ControlSection.jsx";
@@ -135,10 +135,11 @@ export default function LateralCeph(props) {
 
   useEffect(()=>{
     return ()=>{
-      dispatch(setCurrentImageAnalysis(null))
+      dispatch(setCurrentImageAnalysis(null));
+      dispatch(setConsultationDate(null))
       setImageObject(null);
-      setMarkerPointList(null)
-      dispatch(setScaleImage(null))
+      setMarkerPointList(null);
+      dispatch(setScaleImage(null));
     }
   },[])
 
@@ -1209,13 +1210,13 @@ export default function LateralCeph(props) {
           </div>
           <div className="col-md-9 h-100 border p-0" style={{borderTopRightRadius:"5px",borderBottomRightRadius:"5px"}}>
             <div className="d-flex flex-column w-100 h-100 p-0">
-              <div className="row p-0 d-flex flex-grow-1">
+              <div className="row p-0 d-flex flex-grow-1"> 
                 <div className="col-md-9 d-flex flex-column flex-grow-1 pe-0">
                   <div className="py-1 mc-background px-2 d-flex justify-content-between align-items-center" style={{borderBottomLeftRadius:"5px",borderBottomRightRadius:"5px"}}>
                     <div>
                       <span className="text-white fw-bold text-capitalize" style={{fontSize:FONT_SIZE_HEAD}}>{t('radiography')}</span>
                       {
-                        imageObject && <span className="ms-2 text-white text-capitalize" style={{fontSize:FONT_SIZE}}>( X-ray: {imageObject?.height*2}px x {imageObject?.width*2}px )</span>
+                        imageObject && <span className="ms-2 text-white text-capitalize" style={{fontSize:FONT_SIZE}}>{`( ${t('X-ray')}: ${imageObject?.height*2}px x ${imageObject?.width*2}px )`}</span>
                       }
                     </div>
                     <div className="text-white d-flex">

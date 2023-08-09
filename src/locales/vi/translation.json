@@ -584,5 +584,6 @@
   "Clinic deleted successfully": "Xóa phòng khám thành công",
   "this doctor have not been shared patients": "bác sĩ này đang không được chia sẻ bệnh nhân",
   "Name of patient is required": "Tên bệnh nhân không được để trống",
-  "Date of birth cannot be greater than the current date": "Ngày sinh không được lớn hơn ngày hiện tại"
+  "Date of birth cannot be greater than the current date": "Ngày sinh không được lớn hơn ngày hiện tại",
+  "X-ray": "Phim X-quang"
 }

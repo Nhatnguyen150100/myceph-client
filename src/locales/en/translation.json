@@ -584,5 +584,6 @@
   "Clinic deleted successfully": "Clinic deleted successfully",
   "this doctor have not been shared patients": "this doctor have not been shared patients",
   "Name of patient is required": "Name of patient is required",
-  "Date of birth cannot be greater than the current date": "Date of birth cannot be greater than the current date"
+  "Date of birth cannot be greater than the current date": "Date of birth cannot be greater than the current date",
+  "X-ray": "X-ray"
 }

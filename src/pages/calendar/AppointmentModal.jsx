@@ -2,15 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import * as bootstrap from 'bootstrap';
-import { findObjectFromArray, FONT_SIZE, forMatMoneyVND, getHoursMinutesSeconds, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
+import { findObjectFromArray, FONT_SIZE, forMatMoneyVND, getHoursMinutesSeconds, SOFT_WARE_LIST, toISODateString, VIEW_CALENDAR } from "../../common/Utility.jsx";
 import { toast } from "react-toastify";
-import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
+import { setLoadingModal, setSoftWareSelectedTab } from "../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setListAppointmentDate } from "../../redux/CalendarSlice.jsx";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
 import { LinearProgress } from "@mui/material";
+import { setCurrentPatient } from "../../redux/PatientSlice.jsx";
 
 
 const AppointmentModal = (props) => {
@@ -51,7 +52,7 @@ const AppointmentModal = (props) => {
       setTimeEnd(getHoursMinutesSeconds(props.slotInfo.end));
     }
     if(!props.createAppointment && props.slotInfo){
-      setDoctorSelected(props.slotInfo.doctor.id);
+      setDoctorSelected(props.slotInfo.doctor.idDoctor);
       setPatientSelected(props.slotInfo.idPatient);
       setServiceSelected(props.slotInfo.service.idService);
       setStatusSelected(props.slotInfo.status.idStatus);
@@ -226,34 +227,49 @@ const AppointmentModal = (props) => {
           <div className="d-flex flex-column justify-content-center align-items-start">
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
               <span className="mc-heading text-capitalize">{t("patient")}:</span>
-              <select 
-                className="form-select w-100 text-gray" 
-                style={{fontSize:FONT_SIZE}} 
-                value={patientSelected} 
-                onChange={e=>setPatientSelected(e.target.value)}
-                disabled={clinic.roleOfDoctor==='member'}
-              >
-                {
-                  props.patientSelected ? <option selected disabled>
-                    {props.namePatientSelected}
-                  </option>
-                  :
-                  <React.Fragment>
+              <div className="d-flex flex-row justify-content-center ">
+                <select 
+                  className="form-select w-100 text-gray" 
+                  style={{fontSize:FONT_SIZE}} 
+                  value={patientSelected} 
+                  onChange={e=>setPatientSelected(e.target.value)}
+                  disabled={patientSelected}
+                >
                   {
-                    !patientSelected && <option selected disabled>
-                      {t('Choose a patient')}
+                    props.patientSelected ? <option selected disabled>
+                      {props.namePatientSelected}
                     </option>
-                  }
-                  {
-                    listPatients?.map((value,_)=>{
-                      return <option key={value.id} value={value.id}>
-                        {value.fullName}
+                    :
+                    <React.Fragment>
+                    {
+                      !patientSelected && <option selected disabled>
+                        {t('Choose a patient')}
                       </option>
-                    })
+                    }
+                    {
+                      listPatients?.map((value,_)=>{
+                        return <option key={value.id} value={value.id}>
+                          {value.fullName}
+                        </option>
+                      })
+                    }
+                    </React.Fragment>
                   }
-                  </React.Fragment>
-                }
-              </select>
+                </select>
+                <Link 
+                  onClick={e=>{
+                    appointmentModal.current.hide();
+                    const currentPatient = listPatients.filter(patient => patient.id === patientSelected);
+                    dispatch(setCurrentPatient(currentPatient[0]));
+                    dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.MEDICAL_RECORD))
+                  }} 
+                  to={`/medicalRecord`} 
+                  title={t("MedicalRecord")} 
+                  className="btn btn-outline-info p-1 ms-3 border-0"
+                >
+                  <img src="/assets/images/MedicalRecord.png" width="34" height="34" alt="MedicalRecord"/>
+                </Link>
+              </div>
             </div>
             <div className="d-flex w-100 flex-grow-1 flex-column mb-4">
               <span className="mc-heading text-capitalize">{t("doctor")}:</span>
@@ -268,9 +284,11 @@ const AppointmentModal = (props) => {
                 disabled={clinic.roleOfDoctor==='member' || !patientSelected}
               >
                 {
-                  !doctorSelected && <option selected disabled>
+                  !doctorSelected ? <option selected disabled>
                     {t('Choose a doctor')}
                   </option>
+                  :
+                  ''
                 }
                 {
                 listOfDoctorSharedPatient?.map((value,_)=>{
