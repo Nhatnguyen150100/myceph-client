@@ -134,11 +134,11 @@ export default function MyPatient(props){
               <tr>
                 <td colSpan={8} align='center'>
                   <div className="d-flex flex-grow-1 justify-content-center">
-                  <Pagination 
-                      count={Math.ceil(count/PAGE_SIZE) || 0}
-                      page={page}
-                      onChange={onChangePage}
-                      variant="outlined"
+                    <Pagination 
+                        count={Math.ceil(count/PAGE_SIZE) || 0}
+                        page={page}
+                        onChange={onChangePage}
+                        variant="outlined"
                       color="primary"
                     />
                   </div>

@@ -1,3 +1,4 @@
+import { Pagination } from "@mui/material";
 import React, { useMemo } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -8,10 +9,13 @@ import { toast } from "react-toastify";
 import ConfirmComponent from "../../common/ConfirmComponent.jsx";
 import { deCryptData, encryptData } from "../../common/Crypto.jsx";
 import IconButtonComponent from "../../common/IconButtonComponent.jsx";
-import { FONT_SIZE, SELECT_PATIENT_MODE, toISODateString } from "../../common/Utility.jsx";
+import { FONT_SIZE, SELECT_PATIENT_MODE, splitAvatar, toISODateString } from "../../common/Utility.jsx";
 import { setLoadingModal } from "../../redux/GeneralSlice.jsx";
+import { setCurrentImage } from "../../redux/LibraryImageSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../services/getAPI.jsx";
 import { refreshToken } from "../../services/refreshToken.jsx";
+
+const PAGE_SIZE = 2;
 
 export default function PatientTreatmentHistory(props){
   const isRefresh = useSelector(state=>state.general.isRefresh);
@@ -29,6 +33,8 @@ export default function PatientTreatmentHistory(props){
   const [consultationDate,setConsultationDate] = useState(toISODateString(new Date()));
   const [performedProcedures,setPerformedProcedures] = useState();
   const [currentStatus,setCurrentStatus] = useState();
+  const [page,setPage] = useState(1);
+  const [count,setCount] = useState(0);
 
   const [editHistoryId,setEditHistoryId] = useState();
   const [consultationDateItem,setConsultationDateItem] = useState(toISODateString(new Date()));
@@ -62,12 +68,18 @@ export default function PatientTreatmentHistory(props){
     });
     return listOfHistoryDecrypted;
   }
+
+  useEffect(()=>{
+    if(patient.currentPatient.id) getTreatmentHistory();
+    else toast.error(t('Current patient not found'));
+  },[page])
   
   const getTreatmentHistory = () => {
     return new Promise((resolve, reject) => {
       dispatch(setLoadingModal(true));
-      getToServerWithToken(`/v1/treatmentHistory/${patient.currentPatient.id}`).then(result => {
+      getToServerWithToken(`/v1/treatmentHistory/${patient.currentPatient.id}?page=${page}&pageSize=${PAGE_SIZE}`).then(result => {
         setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
+        setCount(result.count);
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -99,11 +111,12 @@ export default function PatientTreatmentHistory(props){
       dispatch(setLoadingModal(true));
       postToServerWithToken(`/v1/treatmentHistory/createHistory/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor?.data.id}`,infoHistory).then(result => {
         setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
+        setCount(result.count);
         setCurrentStatus('');
         setPerformedProcedures('');
         setConsultationDate(toISODateString(new Date()));
         resolve();
-        toast.success(result.message);
+        toast.success(t(result.message));
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
           refreshToken(nav,dispatch).then(()=>createHistory());
@@ -132,10 +145,11 @@ export default function PatientTreatmentHistory(props){
         consultationDate: consultationDateItem
       }
       dispatch(setLoadingModal(true));
-      putToServerWithToken(`/v1/treatmentHistory/updateHistory/${patient.currentPatient.id}?idHistory=${idHistory}&mode=${props.checkRoleMode}&idDoctor=${doctor?.data.id}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/treatmentHistory/updateHistory/${patient.currentPatient.id}?idHistory=${idHistory}&mode=${props.checkRoleMode}&idDoctor=${doctor?.data.id}&page=${page}&pageSize=${PAGE_SIZE}`,infoUpdate).then(result => {
         setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
+        setCount(result.count);
         setEditHistoryId('');
-        toast.success(result.message);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -153,7 +167,9 @@ export default function PatientTreatmentHistory(props){
       dispatch(setLoadingModal(true));
       deleteToServerWithToken(`/v1/treatmentHistory/deleteHistory/${patient.currentPatient.id}?idHistory=${editHistoryId}&mode=${props.checkRoleMode}&idDoctor=${doctor.data.id}`).then(result => {
         setListOfHistory(isEncrypted?deCryptedListHistory(result.data):result.data);
-        toast.success(result.message);
+        setCount(result.count);
+        setPage(1)
+        toast.warning(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -164,6 +180,10 @@ export default function PatientTreatmentHistory(props){
         reject();
       }).finally(()=>{dispatch(setLoadingModal(false));setEditHistoryId('');setOpenDeleteConfirm(false)});
     });
+  }
+
+  const onChangePage = (event,value) => {
+    setPage(value);
   }
 
   return <div className="w-100">
@@ -270,40 +290,69 @@ export default function PatientTreatmentHistory(props){
                 </div>
               }
             </legend>
-            <div className="row">
-              <div className="col-sm-6">
-                <fieldset className='border-0 rounded me-2 w-100'>
-                  <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
-                    {t('current status')}
-                  </legend>
-                  <textarea 
-                    value={editHistoryId===history.id?currentStatusItem:history.currentStatus}
-                    onChange={e=>{if(editHistoryId===history.id) setCurrentStatusItem(e.target.value)}}
-                    className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
-                    onKeyDown={e=>{if(e.key === "Enter") updateHistory(history.id) ; if(e.key === "Escape") setEditHistoryId('')}} 
-                    style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
-                    disabled={editHistoryId!==history.id}
-                  />
-                </fieldset>
+            <div className="d-flex flex-column">
+              <div className="row mb-3">
+                <div className="col-sm-6">
+                  <fieldset className='border-0 rounded me-2 w-100'>
+                    <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
+                      {t('current status')}
+                    </legend>
+                    <textarea 
+                      value={editHistoryId===history.id?currentStatusItem:history.currentStatus}
+                      onChange={e=>{if(editHistoryId===history.id) setCurrentStatusItem(e.target.value)}}
+                      className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
+                      onKeyDown={e=>{if(e.key === "Enter") updateHistory(history.id) ; if(e.key === "Escape") setEditHistoryId('')}} 
+                      style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
+                      disabled={editHistoryId!==history.id}
+                    />
+                  </fieldset>
+                </div>
+                <div className="col-sm-6">
+                  <fieldset className='border-0 rounded me-2 w-100'>
+                    <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
+                      {t('performed procedures')}
+                    </legend>
+                    <textarea
+                      value={editHistoryId===history.id?performedProceduresItem:history.performedProcedures}
+                      onChange={e=>{if(editHistoryId===history.id) setPerformedProceduresItem(e.target.value)}}
+                      onKeyDown={e=>{if(e.key === "Enter") updateHistory(history.id) ; if(e.key === "Escape") setEditHistoryId('')}} 
+                      className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
+                      style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
+                      disabled={editHistoryId!==history.id}
+                    />
+                  </fieldset>
+                </div>
               </div>
-              <div className="col-sm-6">
-                <fieldset className='border-0 rounded me-2 w-100'>
-                  <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
-                    {t('performed procedures')}
-                  </legend>
-                  <textarea
-                    value={editHistoryId===history.id?performedProceduresItem:history.performedProcedures}
-                    onChange={e=>{if(editHistoryId===history.id) setPerformedProceduresItem(e.target.value)}}
-                    onKeyDown={e=>{if(e.key === "Enter") updateHistory(history.id) ; if(e.key === "Escape") setEditHistoryId('')}} 
-                    className='border-0 px-2 py-2 rounded px-3 mc-background-color-white' 
-                    style={{ width:'100%',height:'100%',outline:'none',fontSize:FONT_SIZE}}
-                    disabled={editHistoryId!==history.id}
-                  />
-                </fieldset>
+              <div className="d-flex flex-row align-items-center justify-content-start flex-wrap">
+                {
+                  history.arrayImages?.map(image => {
+                    return <img 
+                      id={image.id}
+                      loading="lazy"
+                      alt="img" 
+                      className={`rounded mb-2 p-0 transform-hover me-2`} 
+                      src={splitAvatar(image.linkImage)} 
+                      style={{maxHeight:"132px",cursor:"pointer"}}
+                      onClick={()=>dispatch(setCurrentImage(splitAvatar(image.linkImage)))}
+                      title={t('Click to see')}
+                    />
+                  })
+                }
               </div>
             </div>
           </fieldset>
         })
+      }
+    </div>
+    <div className="d-flex flex-grow-1 justify-content-center mt-3 mb-5">
+      {
+        count > 1 && <Pagination 
+            count={Math.ceil(count/PAGE_SIZE) || 0}
+            page={page}
+            onChange={onChangePage}
+            variant="outlined"
+          color="primary"
+        />
       }
     </div>
     <ConfirmComponent 
@@ -312,7 +361,7 @@ export default function PatientTreatmentHistory(props){
       title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this treatment history')}</span>} 
       content={
         <div>
-          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this treatment history, enter the agree button')}</span>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('Do you want to delete this treatment history?')}</span>
         </div>
       }
       handleClose={e=>setOpenDeleteConfirm(false)} 

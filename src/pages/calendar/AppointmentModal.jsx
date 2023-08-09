@@ -455,7 +455,7 @@ const AppointmentModal = (props) => {
       title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this appointment')}</span>} 
       content={
         <div>
-          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this appointment, enter the agree button')}</span>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('Do you want to delete this appointment?')}</span>
         </div>
       }
       handleClose={e=>handleClose()} 

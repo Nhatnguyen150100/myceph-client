@@ -1,3 +1,4 @@
+import { Pagination } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +14,7 @@ import { setLoadingModal } from "../../../redux/GeneralSlice.jsx";
 import { deleteToServerWithToken, getToServerWithToken, postToServerWithToken, putToServerWithToken } from "../../../services/getAPI.jsx";
 import { refreshToken } from "../../../services/refreshToken.jsx";
 
+const PAGE_SIZE = 3;
 
 export default function TreatmentPlan(props){
   const isRefresh = useSelector(state=>state.general.isRefresh);
@@ -35,6 +37,8 @@ export default function TreatmentPlan(props){
   const [planItem,setPlanItem] = useState();
   const [selectedItem,setSelectedItem] = useState();
   const [roleOfDoctor,setRoleOfDoctor] = useState('edit');
+  const [page,setPage] = useState(1);
+  const [count,setCount] = useState(0);
   
   const [listOfPlan,setListOfPlan] = useState();
   
@@ -61,12 +65,18 @@ export default function TreatmentPlan(props){
     return listOfPlanDecrypted;
   }
 
+  useEffect(()=>{
+    if(patient.currentPatient.id) getListOfPlan();
+    else toast.error(t('Current patient not found'));
+  },[page])
+
   const getListOfPlan = () => {
     dispatch(setLoadingModal(true));
     return new Promise((resolve, reject) =>{
-      getToServerWithToken(`/v1/treatmentPlan/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
+      getToServerWithToken(`/v1/treatmentPlan/${patient.currentPatient.id}?mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}&page=${page}&pageSize=${PAGE_SIZE}`).then(result => {
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
         result.roleOfDoctor && setRoleOfDoctor(result.roleOfDoctor)
+        setCount(result.count)
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -98,6 +108,8 @@ export default function TreatmentPlan(props){
         setPlan('');
         setSelected(false);
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
+        setCount(result.count);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -110,6 +122,9 @@ export default function TreatmentPlan(props){
     })
   }
 
+  const onChangePage = (event,value) => {
+    setPage(value);
+  }
 
   const updatePlan = () => {
     dispatch(setLoadingModal(true));
@@ -126,8 +141,10 @@ export default function TreatmentPlan(props){
         plan: planItem,
         selected: selectedItem
       }
-      putToServerWithToken(`/v1/treatmentPlan/updatePlan/${patient.currentPatient.id}?idPlan=${editPlanId}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`,infoUpdate).then(result => {
+      putToServerWithToken(`/v1/treatmentPlan/updatePlan/${patient.currentPatient.id}?idPlan=${editPlanId}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}&page=${page}&pageSize=${PAGE_SIZE}`,infoUpdate).then(result => {
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
+        setCount(result.count);
+        toast.success(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -145,6 +162,9 @@ export default function TreatmentPlan(props){
     return new Promise((resolve, reject) =>{
       deleteToServerWithToken(`/v1/treatmentPlan/deletePlan/${patient.currentPatient.id}?idPlan=${editPlanId}&mode=${props.checkRoleMode}&idDoctor=${doctor.data?.id}`).then(result => {
         setListOfPlan(isEncrypted?deCryptedListPlan(result.data):result.data);
+        setCount(result.count)
+        setPage(1)
+        toast.warning(t(result.message));
         resolve();
       }).catch(err =>{
         if(err.refreshToken && !isRefresh){
@@ -265,7 +285,7 @@ export default function TreatmentPlan(props){
               <div className="w-100">
                 <fieldset className='border-0 rounded me-2 w-100'>
                   <legend style={{ fontSize: '1rem'}} className='w-auto mb-0 ms-2 float-none px-2 text-uppercase fw-bold'>
-                    {t('treatment plan')}{' '}{index+1}
+                    {t('treatment plan')}{' '}{(page-1)*PAGE_SIZE+index+1}
                   </legend>
                   <textarea 
                     onKeyDown={e=>{if(e.key === "Enter") updatePlan(plan.id) ; if(e.key === "Escape"){setEditPlanId('');getListOfPlan()}}} 
@@ -281,13 +301,24 @@ export default function TreatmentPlan(props){
           })
         }
       </div>
+      <div className="d-flex flex-grow-1 justify-content-center mt-3 mb-5">
+      {
+        count > 1 && <Pagination 
+            count={Math.ceil(count/PAGE_SIZE) || 0}
+            page={page}
+            onChange={onChangePage}
+            variant="outlined"
+            color="primary"
+          />
+        }
+      </div>
       <ConfirmComponent 
       FONT_SIZE={FONT_SIZE}
       open={openDeleteConfirm} 
       title={<span className="text-capitalize fw-bold text-danger" style={{fontSize:"20px"}}>{t('confirm delete this treatment plan')}</span>} 
       content={
         <div>
-          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('To delete this treatment plan, enter the agree button')}</span>
+          <span className="me-1" style={{fontSize:FONT_SIZE}}>{t('Do you want to delete this treatment plan?')}</span>
         </div>
       }
       handleClose={e=>setOpenDeleteConfirm(false)} 
