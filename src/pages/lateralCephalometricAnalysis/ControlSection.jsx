@@ -189,7 +189,7 @@ const ControlSection = React.memo((props) => {
     }else{
       return new Promise((resolve, reject) =>{
         dispatch(setLoadingModal(true));
-        postToServerWithToken(`/v1/lateralCeph/setImageAnalysis/${currentImageAnalysis.id}?idDoctor=${doctor.data.id}&mode=${checkRoleMode}`,{
+        postToServerWithToken(`/v1/lateralCeph/setImageAnalysis/${currentImageAnalysis.id}?idPatient=${currentPatient?.id}&idDoctor=${doctor.data.id}&mode=${checkRoleMode}`,{
           idImageAnalysis: currentImageAnalysis.id,
           markerPoints: markerPoints,
           scaleImage: scaleImage,
@@ -214,7 +214,7 @@ const ControlSection = React.memo((props) => {
     return new Promise((resolve,reject) =>{
       setOpenDeleteConfirm(false)
       dispatch(setLoadingModal(true));
-      deleteToServerWithToken(`/v1/lateralCeph/deleteImageAnalysis/${currentImageAnalysis.id}?idDoctor=${doctor.data.id}&mode=${checkRoleMode}`).then(result => {
+      deleteToServerWithToken(`/v1/lateralCeph/deleteImageAnalysis/${currentImageAnalysis.id}?idPatient=${currentPatient?.id}&idDoctor=${doctor.data.id}&mode=${checkRoleMode}`).then(result => {
         dispatch(setMarkerPoints({}));
         props.onSetMarkerPointList({});
         dispatch(setScaleImage(null));
