@@ -600,5 +600,12 @@
   "Do you want to delete this treatment plan?": "Bạn muốn xóa kế hoạch điều trị này?",
   "Do you want to delete this issue?": "Bạn muốn xóa vấn đề này?",
   "confirm delete this treatment plan": "xác nhận xóa kế hoạch điều trị",
-  "confirm delete this issue": "xác nhận xóa vấn đề"
+  "confirm delete this issue": "xác nhận xóa vấn đề",
+  "file change": "thay đổi tệp",
+  "content change": "nội dung thay đổi",
+  "activity history": "lịch sử hoạt động",
+  "doctor is not admin can't available this page": "bác sĩ không phải là quản trị viên không thể sử dụng trang này",
+  "Filter by doctor": "Lọc theo bác sĩ",
+  "Filter by date": "Lọc theo ngày",
+  "All doctor": "Toàn bộ bác sĩ"
 }

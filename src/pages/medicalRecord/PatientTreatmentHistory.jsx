@@ -53,10 +53,6 @@ export default function PatientTreatmentHistory(props){
 
   const roleCheck = ((selectPatientOnMode===SELECT_PATIENT_MODE.CLINIC_PATIENT && clinic.roleOfDoctor === 'admin') || selectPatientOnMode===SELECT_PATIENT_MODE.MY_PATIENT || patient.currentPatient['SharePatients.roleOfOwnerDoctor']==='edit');
 
-  useEffect(()=>{
-    if(patient.currentPatient.id) getTreatmentHistory();
-  },[patient.currentPatient])
-
   const deCryptedListHistory = (listOfHistory) => {
     let listOfHistoryDecrypted = [];
     listOfHistory.length > 0 && listOfHistory.forEach(element => {
@@ -72,7 +68,7 @@ export default function PatientTreatmentHistory(props){
   useEffect(()=>{
     if(patient.currentPatient.id) getTreatmentHistory();
     else toast.error(t('Current patient not found'));
-  },[page])
+  },[page,patient.currentPatient])
   
   const getTreatmentHistory = () => {
     return new Promise((resolve, reject) => {

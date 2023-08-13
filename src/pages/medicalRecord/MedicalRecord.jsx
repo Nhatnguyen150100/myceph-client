@@ -11,6 +11,7 @@ import { setAppName, setMedicalRecordTab } from "../../redux/GeneralSlice.jsx";
 import PatientInformation from "./PatientInformation.jsx";
 import PatientRecord from "./patientRecord/PatientRecord.jsx";
 import PatientTreatmentHistory from "./PatientTreatmentHistory.jsx";
+import ActivityHistory from "./ActivityHistory.jsx";
 
 export default function MedicalRecord(props){
   const dispatch = useDispatch();
@@ -40,6 +41,8 @@ export default function MedicalRecord(props){
     case MEDICAL_RECORD_TABS.RECORD: currentTab = <PatientRecord checkRoleMode={checkRoleMode}/>
       break;
     case MEDICAL_RECORD_TABS.TREATMENT_HISTORY: currentTab = <PatientTreatmentHistory checkRoleMode={checkRoleMode}/>
+      break;
+    case MEDICAL_RECORD_TABS.ACTIVITY_HISTORY: currentTab = <ActivityHistory checkRoleMode={checkRoleMode}/>
       break;
     default: currentTab = <div className="h-100 w-100 d-flex justify-content-center align-items-center">
       <strong className="text-danger fw-bold">{t('page not found')}</strong>    
@@ -84,11 +87,20 @@ export default function MedicalRecord(props){
         <button 
           onClick={e=>dispatch(setMedicalRecordTab(MEDICAL_RECORD_TABS.TREATMENT_HISTORY))} 
           type="button" 
-          className={`border-0 mc-color-hover text-uppercase fw-bold p-1 me-2 ${selectedTab===MEDICAL_RECORD_TABS.TREATMENT_HISTORY?'mc-pale-color':'text-white'}`} 
+          className={`border-0 mc-color-hover text-uppercase fw-bold border-end mx-2 py-1 pe-2 ${selectedTab===MEDICAL_RECORD_TABS.TREATMENT_HISTORY?'mc-pale-color':'text-white'}`} 
           style={{fontSize:FONT_TAB,background:"none"}}
           disabled={selectedTab===MEDICAL_RECORD_TABS.TREATMENT_HISTORY}
           >
             {t('treatment history')}
+        </button>
+        <button 
+          onClick={e=>dispatch(setMedicalRecordTab(MEDICAL_RECORD_TABS.ACTIVITY_HISTORY))} 
+          type="button" 
+          className={`border-0 mc-color-hover text-uppercase fw-bold p-1 me-2 ${selectedTab===MEDICAL_RECORD_TABS.ACTIVITY_HISTORY?'mc-pale-color':'text-white'}`} 
+          style={{fontSize:FONT_TAB,background:"none"}}
+          disabled={selectedTab===MEDICAL_RECORD_TABS.ACTIVITY_HISTORY}
+          >
+            {t('activity history')}
         </button>
       </div>
       {
