@@ -42,10 +42,10 @@ Toàn bộ source code sẽ nằm trong thư mục **src** của dự án. Cụ 
   - NotFoundPage.jsx: Nếu đường dẫn không đúng sẽ đi đến component này
 - **redux**: Lưu trữ store của toàn ứng dụng. Ở đây sử dụng redux là **[Redux-toolkit](https://redux-toolkit.js.org/)**
 - **services**: Lưu trữ các hàm để gọi API cũng như refresh lại token
-
-[Video demo chức năng phân tích sọ nghiêng.](https://youtu.be/2kYSiB9v-e4?si=Xi8D_bHQECcIwxBx)
 - **trasnlation**: dịch toàn bộ ứng dụng bằng config trong thư mục **locales**
 - **App.jsx**: Thiết lập đường dẫn cho các component sử dụng **[React router dom](https://reactrouter.com/)**
 - **index.css**: quy định một vài css chung cho ứng dụng
 
 ### Ngoài ra phần mềm sử dụng [webpack](https://webpack.js.org/) để phát triển cũng như build sản phẩm. Các biến môi trường, cổng, các plugin đều được thiết lập trong webpack
+
+### [Video demo chức năng phân tích sọ nghiêng.](https://youtu.be/2kYSiB9v-e4?si=Xi8D_bHQECcIwxBx)
