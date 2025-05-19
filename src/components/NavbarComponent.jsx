@@ -18,7 +18,7 @@ const FONT_SIZE = '17px';
 export default function NavbarComponent(props) {
   const isRefresh = useSelector(state=>state.general.isRefresh);
   const doctor = useSelector(state=>state.doctor.data);
-  const language = useSelector(state => state.general.language);
+  const language = localStorage.getItem('i18nextLng') || 'en';
   const appName = useSelector(state => state.general.appName);
   const clinic = useSelector(state => state.clinic);
   const dispatch  = useDispatch();
@@ -33,6 +33,7 @@ export default function NavbarComponent(props) {
   },[language])
 
   const changeLanguage = value => {
+    localStorage.setItem('i18nextLng', value);
     i18n.changeLanguage(value);
   }
 
@@ -115,14 +116,14 @@ export default function NavbarComponent(props) {
                 <ul className="dropdown-menu py-0 px-1 border">
                   {
                     language === 'vi' ? <li className="w-auto">
-                      <button className="btn d-flex flex-row align-items-center w-auto border-0" onClick={e=>{dispatch(setLanguage('en'));changeLanguage('en')}}>
+                      <button className="btn d-flex flex-row align-items-center w-auto border-0" onClick={e=>{changeLanguage('en')}}>
                         <img className="me-1" src="/assets/icons/flag-en.png" style={{height:"30px",background:"transparent"}} alt=""/>
                         <span className="text-capitalize mc-color-hover" style={{fontSize:FONT_SIZE,background:"transparent"}}>english</span>
                       </button>
                     </li>
                     :
                     <li className="w-auto">
-                      <button className="btn d-flex flex-row align-items-center w-auto border-0" onClick={e=>{dispatch(setLanguage('vi'));changeLanguage('vi')}}>
+                      <button className="btn d-flex flex-row align-items-center w-auto border-0" onClick={e=>{changeLanguage('vi')}}>
                         <img className="me-1" src="/assets/icons/flag-vi.png" style={{height:"30px",background:"transparent"}} alt=""/>
                         <span className="text-capitalize mc-color-hover" style={{fontSize:FONT_SIZE,background:"transparent"}}>vietnamese</span>
                       </button>

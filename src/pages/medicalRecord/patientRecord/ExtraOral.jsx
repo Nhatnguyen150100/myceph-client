@@ -484,7 +484,7 @@ export default function ExtraOral(props){
             onCancel={onCancel}
             label={t('Incisal Display')+' '+t('maxillary incisor')}
             onUpdate={onUpdateExtraOral}
-            placeholder={t('Enter Incisal Display')}
+            placeholder={t('Enter Incisal Maxillary Display')}
             classNameResult="w-auto"
             type="number"
             unit={'%'+t('maxillary incisor')}
@@ -500,7 +500,7 @@ export default function ExtraOral(props){
             onCancel={onCancel}
             label={t('Incisal Display')+' '+t('mandibular incisor')}
             onUpdate={onUpdateExtraOral}
-            placeholder={t('Enter Incisal Display')}
+            placeholder={t('Enter Mandibular Incisal Display')}
             classNameResult="w-auto"
             type="number"
             unit={'%'+t('mandibular incisor')}

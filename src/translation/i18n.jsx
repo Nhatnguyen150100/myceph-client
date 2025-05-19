@@ -24,7 +24,8 @@ i18n
         debug: false,
         interpolation: {
             escapeValue: false // not needed for react as it escapes by default
-        }
+        },
+        lng: localStorage.getItem('i18nextLng') || 'vi',
     });
 
 export default i18n;

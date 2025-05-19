@@ -43,6 +43,28 @@ const AppointmentModal = (props) => {
   const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
 
   const [loadingListDoctor,setLoadingListDoctor] = useState(false);
+  const [listPatientFetched,setListPatientFetched] = useState([listPatients]);
+
+  const handleGetListPatient = () => {
+    return new Promise((resolve, reject) => {
+      setLoadingListDoctor(true);
+      getToServerWithToken(`/v1/patient/getPatientListForClinic/${clinic.idClinicDefault}?page=1&pageSize=1000&nameSearch=`).then(result => {
+        setListPatientFetched(result.data);
+        resolve();
+      }).catch((err) =>{
+        if(err.refreshToken && !isRefresh){
+          refreshToken(nav,dispatch).then(()=>handleGetListPatient());
+        }else{
+          toast.error(t(err.message));
+        }
+        reject(err);
+      }).finally(()=>setLoadingListDoctor(false))
+    });
+  }
+
+  useEffect(()=>{
+    handleGetListPatient();
+  }, [])
 
   useEffect(()=>{
     if(props.slotInfo){
@@ -247,7 +269,7 @@ const AppointmentModal = (props) => {
                       </option>
                     }
                     {
-                      listPatients?.map((value,_)=>{
+                      listPatientFetched?.map((value,_)=>{
                         return <option key={value.id} value={value.id}>
                           {value.fullName}
                         </option>
@@ -259,7 +281,7 @@ const AppointmentModal = (props) => {
                 <Link 
                   onClick={e=>{
                     appointmentModal.current.hide();
-                    const currentPatient = listPatients.filter(patient => patient.id === patientSelected);
+                    const currentPatient = listPatientFetched.filter(patient => patient.id === patientSelected);
                     dispatch(setCurrentPatient(currentPatient[0]));
                     dispatch(setSoftWareSelectedTab(SOFT_WARE_LIST.MEDICAL_RECORD))
                   }} 

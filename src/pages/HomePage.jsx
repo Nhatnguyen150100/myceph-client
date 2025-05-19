@@ -355,14 +355,14 @@ export default function HomePage(props) {
                     1.0.0
                   </span>
                 </div>
-                <div className="d-flex justify-content-start align-items-center mb-2">
+                {/* <div className="d-flex justify-content-start align-items-center mb-2">
                   <h5 className="me-2 text-capitalize text-white m-0">
                     {t('author of software')}:
                   </h5>
                   <span className="fw-bold mc-color text-uppercase">
                     Nguyễn Xuân Nhất
                   </span>
-                </div>
+                </div> */}
               </div>
               <div className="col-md-6">
                 <p className="text-white fst-italic text-center d-flex align-items-center h-100">
